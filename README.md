@@ -1,0 +1,3 @@
+# Project Kuiper
+
+A turn-based solar system exploration game with a focus research, technology and corporate growth. Starting on Earth, you will draw cards to perform actions such as building research trees, extracting resources, initiate special projects and launch rockets, satellites, space stations and more. There will be an extensive tech tree - or rather, a tech web - but crucially _you will not be able to choose the next tech to research_. Instead, you'll invest and focus in scientific disciplines, such as physics, biology, engineering, psychology and others. Each tech will have a different combination of research requirements, and there will be some randomness in those requirements. Each playthrough will be slightly different.
