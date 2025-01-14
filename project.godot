@@ -17,6 +17,10 @@ run/main_scene="res://src/main/scenes/main_menu.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+GameState="*res://src/main/kotlin/org/liamjd/kuiper/state/GameState.kt"
+
 [display]
 
 window/size/viewport_width=1600

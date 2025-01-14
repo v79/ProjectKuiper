@@ -7,20 +7,22 @@ import godot.Node
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterSignal
-import godot.core.Color
-import godot.core.asCachedStringName
-import godot.core.asNodePath
-import godot.core.signal1
+import godot.core.*
 import godot.extensions.getNodeAs
 import godot.global.GD
-
-data class Country(val id: Int, val name: String, val colour: Color)
+import org.liamjd.kuiper.state.Country
+import org.liamjd.kuiper.state.GameState
 
 @RegisterClass
 class GameSetup : Node() {
 
     @RegisterSignal
     val countrySelectSignal by signal1<Int>("countryId")
+
+    @RegisterSignal
+    val startGameSignal by signal0()
+
+    private var selectedCountry: Int = -1
 
     private val countryList = listOf(
         Country(1, "Europe", Color.blue), Country(2, "North America", Color.red),
@@ -58,8 +60,24 @@ class GameSetup : Node() {
     @RegisterFunction
     fun _onLocationListItemSelected(index: Int) {
         GD.print("Selected country: ${countryList[index].name}")
+        selectedCountry = countryList[index].id
         getNodeAs<ColorRect>("MarginContainer/VBoxContainer/MarginContainer/GridContainer/LocationMap".asNodePath())?.let { map ->
             map.color = countryList[index].colour
         }
+    }
+
+    @RegisterFunction
+    fun _onStartGameButtonPressed() {
+        if (selectedCountry == -1) {
+            GD.print("No country selected!")
+            return
+        }
+        // globals are added to the tree first, so will be the first child
+        val gameState = getTree()?.root?.getChild(0) as GameState
+        GD.print("Got gamestate: ${gameState.stateToString()}, changing year to 1965")
+        gameState.year = 1965
+        gameState.country = countryList[selectedCountry - 1]
+        GD.print("Starting game for country ${countryList[selectedCountry - 1].name}")
+        getTree()?.changeSceneToFile("res://src/main/scenes/game.tscn")
     }
 }
