@@ -27,6 +27,11 @@ class MainMenu : Node() {
 	override fun _process(delta: Double) {
 	}
 
+	@RegisterFunction
+	fun _on_new_game() {
+		GD.print("Setting uo new game")
+		getTree()?.changeSceneToFile("res://src/main/scenes/game_setup.tscn")
+	}
 	/**
 	 * Quit the game
 	 * **signal**: quitGameSignal

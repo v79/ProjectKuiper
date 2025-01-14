@@ -21,5 +21,6 @@ properties = [
 functions = [
     _ready,
 	_process,
+	_on_new_game,
 	_on_quit_game
 ]
