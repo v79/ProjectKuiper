@@ -6,18 +6,19 @@ fqName = org.liamjd.kuiper.GameSetup
 relativeSourcePath = src/main/kotlin/org/liamjd/kuiper/GameSetup.kt
 baseType = Node
 supertypes = [
-    godot.Node,
+	godot.Node,
 	godot.Object,
 	godot.core.KtObject,
 	kotlin.Any
 ]
 signals = [
-    
+	country_select_signal
 ]
 properties = [
-    
+	
 ]
 functions = [
-    _ready,
-	_process
+	_ready,
+	_process,
+	_on_location_list_item_selected
 ]

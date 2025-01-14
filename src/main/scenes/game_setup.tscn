@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://d0w0wqm220vq8"]
 
-[ext_resource type="Script" path="res://src/main/kotlin/org/liamjd/kuiper/GameSetup.kt" id="1_u723i"]
+[ext_resource type="Script" path="res://gdj/org/liamjd/kuiper/GameSetup.gdj" id="1_fdhup"]
 
 [node name="GameSetup" type="Control"]
 layout_mode = 3
@@ -9,7 +9,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_u723i")
+script = ExtResource("1_fdhup")
 
 [node name="Background" type="ColorRect" parent="."]
 layout_mode = 1
@@ -20,36 +20,44 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.125911, 0.125911, 0.125911, 1)
 
-[node name="MarginContainer" type="MarginContainer" parent="Background"]
+[node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
 offset_right = 1152.0
-offset_bottom = 107.0
+offset_bottom = 640.0
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Background/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 custom_minimum_size = Vector2(0, 600)
 layout_mode = 2
 
-[node name="Setup_Label" type="Label" parent="Background/MarginContainer/VBoxContainer"]
+[node name="Setup_Label" type="Label" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/shadow_offset_x = 0
 theme_override_font_sizes/font_size = 48
 text = "Setup new game"
 
-[node name="MarginContainer" type="MarginContainer" parent="Background/MarginContainer/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/margin_top = 20
 
-[node name="GridContainer" type="GridContainer" parent="Background/MarginContainer/VBoxContainer/MarginContainer"]
+[node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/MarginContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 columns = 2
 
-[node name="LocationList" type="ItemList" parent="Background/MarginContainer/VBoxContainer/MarginContainer/GridContainer"]
+[node name="ChooseHQ_Label" type="Label" parent="MarginContainer/VBoxContainer/MarginContainer/GridContainer"]
+layout_mode = 2
+text = "Choose HQ location"
+
+[node name="LocationMap_Label" type="Label" parent="MarginContainer/VBoxContainer/MarginContainer/GridContainer"]
+layout_mode = 2
+text = "Location preview"
+
+[node name="LocationList" type="ItemList" parent="MarginContainer/VBoxContainer/MarginContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -59,25 +67,27 @@ fixed_column_width = 200
 item_0/text = "Location 1"
 item_1/text = "Location 2"
 
-[node name="LocationMap" type="ColorRect" parent="Background/MarginContainer/VBoxContainer/MarginContainer/GridContainer"]
+[node name="LocationMap" type="ColorRect" parent="MarginContainer/VBoxContainer/MarginContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="LocationDescription" type="RichTextLabel" parent="Background/MarginContainer/VBoxContainer/MarginContainer/GridContainer"]
+[node name="LocationDescription" type="RichTextLabel" parent="MarginContainer/VBoxContainer/MarginContainer/GridContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 text = "Here we put some narative text about the selected location. Some background information, lore, and hints about the challenges and benefits of the location."
 
-[node name="LocationStats" type="RichTextLabel" parent="Background/MarginContainer/VBoxContainer/MarginContainer/GridContainer"]
+[node name="LocationStats" type="RichTextLabel" parent="MarginContainer/VBoxContainer/MarginContainer/GridContainer"]
 layout_mode = 2
 text = "List of stats about the location, e.g. number of building location, research bonuses, buffs and debufs."
 fit_content = true
 
-[node name="StartGame_Button" type="Button" parent="Background/MarginContainer/VBoxContainer"]
+[node name="StartGame_Button" type="Button" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 8
 theme_override_font_sizes/font_size = 28
 text = "Start"
 alignment = 2
+
+[connection signal="item_selected" from="MarginContainer/VBoxContainer/MarginContainer/GridContainer/LocationList" to="." method="_on_location_list_item_selected"]
