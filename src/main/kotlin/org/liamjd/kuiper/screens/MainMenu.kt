@@ -1,4 +1,4 @@
-package org.liamjd.kuiper
+package org.liamjd.kuiper.screens
 
 import godot.Node
 import godot.annotation.RegisterClass

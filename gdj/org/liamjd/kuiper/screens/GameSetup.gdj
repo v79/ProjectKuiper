@@ -1,9 +1,9 @@
 // THIS FILE IS GENERATED! DO NOT EDIT OR DELETE IT. EDIT OR DELETE THE ASSOCIATED SOURCE CODE FILE INSTEAD
 // Note: You can however freely move this file inside your godot project if you want. Keep in mind however, that if you rename the originating source code file, this file will be deleted and regenerated as a new file instead of being updated! Other modifications to the source file however, will result in this file being updated.
 
-registeredName = MainMenu
-fqName = org.liamjd.kuiper.MainMenu
-relativeSourcePath = src/main/kotlin/org/liamjd/kuiper/MainMenu.kt
+registeredName = GameSetup
+fqName = org.liamjd.kuiper.screens.GameSetup
+relativeSourcePath = src/main/kotlin/org/liamjd/kuiper/screens/GameSetup.kt
 baseType = Node
 supertypes = [
     godot.Node,
@@ -12,8 +12,8 @@ supertypes = [
 	kotlin.Any
 ]
 signals = [
-    quit_game_signal,
-	new_game_signal
+    country_select_signal,
+	start_game_signal
 ]
 properties = [
     
@@ -21,6 +21,6 @@ properties = [
 functions = [
     _ready,
 	_process,
-	_on_new_game,
-	_on_quit_game
+	_on_location_list_item_selected,
+	_on_start_game_button_pressed
 ]

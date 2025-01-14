@@ -1,10 +1,13 @@
-package org.liamjd.kuiper
+package org.liamjd.kuiper.screens
 
 import godot.Label
 import godot.Node
 import godot.TabBar
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
+import godot.annotation.RegisterSignal
+import godot.core.Signal0
+import godot.core.signal0
 import godot.extensions.getNodeAs
 import godot.global.GD
 import org.liamjd.kuiper.state.GameState
@@ -15,7 +18,11 @@ import org.liamjd.kuiper.state.GameState
 @RegisterClass
 class KuiperGame : Node() {
 
+	// Global state
 	private lateinit var gameState: GameState
+
+	@RegisterSignal
+	val endTurnSignal: Signal0 by signal0()
 
 	// UI elements
 	lateinit var yearLbl: Label
@@ -38,4 +45,11 @@ class KuiperGame : Node() {
 	override fun _process(delta: Double) {
 		yearLbl.text = "Year: ${gameState.year}"
 	}
+
+	@RegisterFunction
+	fun _on_quit_game() {
+		GD.print("KuiperGame Quitting game")
+		getTree()?.quit()
+	}
+
 }

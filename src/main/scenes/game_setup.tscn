@@ -1,9 +1,9 @@
 [gd_scene load_steps=2 format=3 uid="uid://d0w0wqm220vq8"]
 
-[ext_resource type="Script" path="res://gdj/org/liamjd/kuiper/GameSetup.gdj" id="1_fdhup"]
+[ext_resource type="Script" path="res://src/main/kotlin/org/liamjd/kuiper/screens/GameSetup.kt" id="1_f14cn"]
 
 [node name="GameSetup" type="CanvasLayer"]
-script = ExtResource("1_fdhup")
+script = ExtResource("1_f14cn")
 
 [node name="Background" type="ColorRect" parent="."]
 anchors_preset = 15
