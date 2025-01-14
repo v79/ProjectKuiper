@@ -1,4 +1,6 @@
-[gd_scene format=3 uid="uid://d0w0wqm220vq8"]
+[gd_scene load_steps=2 format=3 uid="uid://d0w0wqm220vq8"]
+
+[ext_resource type="Script" path="res://src/main/kotlin/org/liamjd/kuiper/GameSetup.kt" id="1_u723i"]
 
 [node name="GameSetup" type="Control"]
 layout_mode = 3
@@ -7,6 +9,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_u723i")
 
 [node name="Background" type="ColorRect" parent="."]
 layout_mode = 1
