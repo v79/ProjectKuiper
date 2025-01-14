@@ -17,6 +17,11 @@ run/main_scene="res://src/main/scenes/main_menu.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://icon.svg"
 
+[display]
+
+window/size/viewport_width=1600
+window/size/viewport_height=900
+
 [input]
 
 ui_cancel={
