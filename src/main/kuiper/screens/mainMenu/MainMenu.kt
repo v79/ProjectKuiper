@@ -1,4 +1,4 @@
-package org.liamjd.kuiper
+package screens.MainMenu
 
 import godot.Node
 import godot.annotation.RegisterClass
@@ -30,7 +30,7 @@ class MainMenu : Node() {
 	@RegisterFunction
 	fun _on_new_game() {
 		GD.print("Setting uo new game")
-		getTree()?.changeSceneToFile("res://src/main/scenes/game_setup.tscn")
+		getTree()?.changeSceneToFile("res://src/main/kuiper/screens/GameSetup/game_setup.tscn")
 	}
 	/**
 	 * Quit the game

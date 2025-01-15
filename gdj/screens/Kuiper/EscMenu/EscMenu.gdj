@@ -1,19 +1,21 @@
 // THIS FILE IS GENERATED! DO NOT EDIT OR DELETE IT. EDIT OR DELETE THE ASSOCIATED SOURCE CODE FILE INSTEAD
 // Note: You can however freely move this file inside your godot project if you want. Keep in mind however, that if you rename the originating source code file, this file will be deleted and regenerated as a new file instead of being updated! Other modifications to the source file however, will result in this file being updated.
 
-registeredName = MainMenu
-fqName = org.liamjd.kuiper.MainMenu
-relativeSourcePath = src/main/kotlin/org/liamjd/kuiper/MainMenu.kt
-baseType = Node
+registeredName = EscMenu
+fqName = screens.Kuiper.EscMenu.EscMenu
+relativeSourcePath = src/main/kuiper/screens/Kuiper/EscMenu/EscMenu.kt
+baseType = Control
 supertypes = [
-    godot.Node,
+    godot.Control,
+	godot.CanvasItem,
+	godot.Node,
 	godot.Object,
 	godot.core.KtObject,
 	kotlin.Any
 ]
 signals = [
-    quit_game_signal,
-	new_game_signal
+    resume_signal,
+	quit_signal
 ]
 properties = [
     
@@ -21,6 +23,7 @@ properties = [
 functions = [
     _ready,
 	_process,
-	_on_new_game,
-	_on_quit_game
+	_input,
+	_on_resume,
+	_on_quit
 ]

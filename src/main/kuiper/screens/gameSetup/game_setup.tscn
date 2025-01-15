@@ -1,9 +1,9 @@
 [gd_scene load_steps=2 format=3 uid="uid://d0w0wqm220vq8"]
 
-[ext_resource type="Script" path="res://gdj/org/liamjd/kuiper/GameSetup.gdj" id="1_fdhup"]
+[ext_resource type="Script" path="res://src/main/kuiper/screens/GameSetup/GameSetup.kt" id="1_n7xff"]
 
 [node name="GameSetup" type="CanvasLayer"]
-script = ExtResource("1_fdhup")
+script = ExtResource("1_n7xff")
 
 [node name="Background" type="ColorRect" parent="."]
 anchors_preset = 15
@@ -66,6 +66,7 @@ item_1/text = "Location 2"
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+color = Color(0.209429, 0.209429, 0.209429, 1)
 
 [node name="LocationDescription" type="RichTextLabel" parent="MarginContainer/VBoxContainer/MarginContainer/GridContainer"]
 layout_mode = 2
@@ -86,3 +87,4 @@ text = "Start"
 alignment = 2
 
 [connection signal="item_selected" from="MarginContainer/VBoxContainer/MarginContainer/GridContainer/LocationList" to="." method="_on_location_list_item_selected"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/StartGame_Button" to="." method="_on_start_game_button_pressed"]
