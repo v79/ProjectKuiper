@@ -30,7 +30,7 @@ class MainMenu : Node() {
 	@RegisterFunction
 	fun _on_new_game() {
 		GD.print("Setting uo new game")
-		getTree()?.changeSceneToFile("res://src/main/scenes/game_setup.tscn")
+		getTree()?.changeSceneToFile("res://src/main/screens/game_setup.tscn")
 	}
 	/**
 	 * Quit the game

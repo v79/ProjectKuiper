@@ -53,7 +53,7 @@ class GameSetup : Node() {
 	@RegisterFunction
 	override fun _process(delta: Double) {
 		if (Input.isActionPressed("ui_cancel".asCachedStringName())) {
-			getTree()?.changeSceneToFile("res://src/main/scenes/main_menu.tscn")
+			getTree()?.changeSceneToFile("res://src/main/screens/main_menu.tscn")
 		}
 	}
 
@@ -78,6 +78,6 @@ class GameSetup : Node() {
 		gameState.year = 1965
 		gameState.country = countryList[selectedCountry - 1]
 		GD.print("Starting game for country ${countryList[selectedCountry - 1].name}")
-		getTree()?.changeSceneToFile("res://src/main/scenes/game.tscn")
+		getTree()?.changeSceneToFile("res://src/main/screens/game.tscn")
 	}
 }
