@@ -1,4 +1,4 @@
-package org.liamjd.kuiper.state
+package state
 
 import godot.core.Color
 

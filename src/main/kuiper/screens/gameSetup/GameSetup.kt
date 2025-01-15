@@ -1,4 +1,4 @@
-package org.liamjd.kuiper.screens
+package screens.GameSetup
 
 import godot.ColorRect
 import godot.Input
@@ -10,8 +10,8 @@ import godot.annotation.RegisterSignal
 import godot.core.*
 import godot.extensions.getNodeAs
 import godot.global.GD
-import org.liamjd.kuiper.state.Country
-import org.liamjd.kuiper.state.GameState
+import state.Country
+import state.GameState
 
 @RegisterClass
 class GameSetup : Node() {
@@ -53,7 +53,7 @@ class GameSetup : Node() {
 	@RegisterFunction
 	override fun _process(delta: Double) {
 		if (Input.isActionPressed("ui_cancel".asCachedStringName())) {
-			getTree()?.changeSceneToFile("res://src/main/screens/main_menu.tscn")
+			getTree()?.changeSceneToFile("res://src/main/kuiper/screens/mainMenu/main_menu.tscn")
 		}
 	}
 
@@ -78,6 +78,6 @@ class GameSetup : Node() {
 		gameState.year = 1965
 		gameState.country = countryList[selectedCountry - 1]
 		GD.print("Starting game for country ${countryList[selectedCountry - 1].name}")
-		getTree()?.changeSceneToFile("res://src/main/screens/game.tscn")
+		getTree()?.changeSceneToFile("res://src/main/kuiper/screens/kuiper/game.tscn")
 	}
 }

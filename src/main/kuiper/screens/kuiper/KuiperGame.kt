@@ -1,4 +1,4 @@
-package org.liamjd.kuiper.screens
+package screens.Kuiper
 
 import godot.Label
 import godot.Node
@@ -10,7 +10,7 @@ import godot.core.Signal0
 import godot.core.signal0
 import godot.extensions.getNodeAs
 import godot.global.GD
-import org.liamjd.kuiper.state.GameState
+import state.GameState
 
 /**
  * The primary game scene class, the board on which the player plays

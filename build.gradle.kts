@@ -52,3 +52,7 @@ godot {
     //projectName.set("LibraryProjectName")
     //projectName.set("LibraryProjectName")
 }
+
+kotlin.sourceSets.main {
+    kotlin.srcDirs("src/main/kuiper")
+}
