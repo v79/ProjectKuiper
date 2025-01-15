@@ -1,16 +1,16 @@
 package screens.Kuiper
 
-import godot.Label
-import godot.Node
-import godot.TabBar
+import godot.*
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterSignal
 import godot.core.Signal0
+import godot.core.asCachedStringName
 import godot.core.signal0
 import godot.extensions.getNodeAs
 import godot.global.GD
 import state.GameState
+import kotlin.properties.Delegates
 
 /**
  * The primary game scene class, the board on which the player plays
@@ -23,6 +23,15 @@ class KuiperGame : Node() {
 
 	@RegisterSignal
 	val endTurnSignal: Signal0 by signal0()
+
+	@RegisterSignal
+	val escMenuSignal: Signal0 by signal0()
+
+	// UI flags/states
+	// Esc menu visibility trigger
+	var escMenuVisible by Delegates.observable(false) { _, _, newValue ->
+		getNodeAs<Control>("EscMenu")?.visible = newValue
+	}
 
 	// UI elements
 	lateinit var yearLbl: Label
@@ -47,9 +56,23 @@ class KuiperGame : Node() {
 	}
 
 	@RegisterFunction
-	fun _on_quit_game() {
-		GD.print("KuiperGame Quitting game")
-		getTree()?.quit()
+	override fun _input(event: InputEvent?) {
+		if (event != null) {
+			if (event.isActionPressed("ui_cancel".asCachedStringName())) {
+				_on_escape_menu()
+			}
+		}
+	}
+
+	@RegisterFunction
+	fun _on_escape_menu() {
+		escMenuVisible = !escMenuVisible
+	}
+
+	@RegisterFunction
+	fun _on_end_turn() {
+		GD.print("End turn!")
+		gameState.nextTurn()
 	}
 
 }

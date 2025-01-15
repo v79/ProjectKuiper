@@ -22,5 +22,6 @@ functions = [
     _ready,
 	_process,
 	_input,
-	_on_escape_menu
+	_on_escape_menu,
+	_on_end_turn
 ]

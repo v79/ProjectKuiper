@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://dhc5at6r5jl4n"]
+[gd_scene load_steps=3 format=3 uid="uid://dhc5at6r5jl4n"]
 
 [ext_resource type="Script" path="res://src/main/kuiper/screens/Kuiper/KuiperGame.kt" id="1_nlsq8"]
+[ext_resource type="PackedScene" uid="uid://bh0hxtmuthjhi" path="res://src/main/kuiper/screens/Kuiper/EscMenu/esc_menu.tscn" id="2_4tnej"]
 
 [node name="CanvasLayer" type="CanvasLayer"]
 script = ExtResource("1_nlsq8")
@@ -37,6 +38,7 @@ layout_mode = 2
 
 [node name="MenuButton" type="Button" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/PanelContainer"]
 layout_mode = 2
+text = "Menu"
 
 [node name="MarginContainer" type="MarginContainer" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox"]
 layout_mode = 2
@@ -112,3 +114,13 @@ size_flags_horizontal = 8
 layout_mode = 2
 size_flags_horizontal = 8
 text = "End Turn"
+
+[node name="EscMenu" parent="." instance=ExtResource("2_4tnej")]
+visible = false
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 10.0
+offset_bottom = 10.0
+
+[connection signal="pressed" from="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/PanelContainer/MenuButton" to="." method="_on_escape_menu"]
+[connection signal="pressed" from="Background/AspectRatioContainer/VBoxContainer/BottomRow_hbox/EndTurn_btn" to="." method="_on_end_turn"]

@@ -74,10 +74,10 @@ class GameSetup : Node() {
 		}
 		// globals are added to the tree first, so will be the first child
 		val gameState = getTree()?.root?.getChild(0) as GameState
-		GD.print("Got gamestate: ${gameState.stateToString()}, changing year to 1965")
+		GD.print("Got game state: ${gameState.stateToString()}, changing year to 1965")
 		gameState.year = 1965
 		gameState.country = countryList[selectedCountry - 1]
 		GD.print("Starting game for country ${countryList[selectedCountry - 1].name}")
-		getTree()?.changeSceneToFile("res://src/main/kuiper/screens/kuiper/game.tscn")
+		getTree()?.changeSceneToFile("res://src/main/kuiper/screens/Kuiper/game.tscn")
 	}
 }
