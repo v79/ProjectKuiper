@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://dhc5at6r5jl4n"]
 
-[ext_resource type="Script" path="res://src/main/kuiper/screens/Kuiper/KuiperGame.kt" id="1_nlsq8"]
-[ext_resource type="PackedScene" uid="uid://bh0hxtmuthjhi" path="res://src/main/kuiper/screens/Kuiper/EscMenu/esc_menu.tscn" id="2_4tnej"]
+[ext_resource type="Script" path="res://src/main/kuiper/screens/kuiper/KuiperGame.kt" id="1_nlsq8"]
+[ext_resource type="PackedScene" uid="uid://bh0hxtmuthjhi" path="res://src/main/kuiper/screens/kuiper/escMenu/esc_menu.tscn" id="2_4tnej"]
 
 [node name="CanvasLayer" type="CanvasLayer"]
 script = ExtResource("1_nlsq8")

@@ -1,4 +1,4 @@
-package screens.Kuiper
+package screens.kuiper
 
 import godot.*
 import godot.annotation.RegisterClass

@@ -1,4 +1,4 @@
-package screens.Kuiper.EscMenu
+package screens.kuiper.escMenu
 
 import godot.Control
 import godot.InputEvent
@@ -7,7 +7,7 @@ import godot.annotation.RegisterFunction
 import godot.annotation.RegisterSignal
 import godot.core.Signal0
 import godot.core.signal0
-import screens.Kuiper.KuiperGame
+import screens.kuiper.KuiperGame
 
 @RegisterClass
 class EscMenu : Control() {
