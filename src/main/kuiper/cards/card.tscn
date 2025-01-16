@@ -1,0 +1,42 @@
+[gd_scene load_steps=4 format=3 uid="uid://bbm3nt73xikuq"]
+
+[ext_resource type="Script" path="res://src/main/kuiper/cards/Card.kt" id="1_qscpx"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_no8s7"]
+size = Vector2(137, 189)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ckrgh"]
+
+[node name="Card" type="Node2D"]
+script = ExtResource("1_qscpx")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(74.5, 101.5)
+shape = SubResource("RectangleShape2D_no8s7")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+offset_right = 150.0
+offset_bottom = 200.0
+mouse_filter = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_ckrgh")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+mouse_default_cursor_shape = 6
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="CardName" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Build Lab"
+
+[node name="InfluenceCost" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "1"
+
+[connection signal="mouse_entered" from="Area2D" to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Area2D" to="." method="_on_mouse_exited"]
