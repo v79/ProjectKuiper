@@ -3,7 +3,9 @@ package cards
 import godot.*
 import godot.annotation.*
 import godot.core.Signal0
+import godot.core.Vector2
 import godot.core.signal0
+import godot.global.GD
 
 @RegisterClass
 class Card : Node2D() {
@@ -26,12 +28,13 @@ class Card : Node2D() {
 	// drag handling variables
 	private var hasMouse = false
 	private var clickRadius = 150
-	private var dragging = false
+	var dragging = false
+	var startPosition = Vector2()
 
 	// Called when the node enters the scene tree for the first time.
 	@RegisterFunction
 	override fun _ready() {
-
+		startPosition = position
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -40,7 +43,11 @@ class Card : Node2D() {
 		if (dragging && Input.isMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT)) {
 			// While dragging, move the card with the mouse.
 			val pos = getGlobalMousePosition()
-			position = position.lerp(pos, 0.4)
+			position = position.lerp(pos, 4 * delta)
+		}
+		// Return to start position if dragging has stopped
+		if(!dragging && position.distanceTo(startPosition) > 1) {
+			position = position.lerp(startPosition,6 * delta)
 		}
 	}
 
@@ -56,7 +63,10 @@ class Card : Node2D() {
 				}
 				// Stop dragging if the button is released.
 				if (dragging && !event.isPressed()) {
+					// check if we've hit a drag target
+					// if not, return to start position
 					dragging = false;
+
 				}
 			}
 		}

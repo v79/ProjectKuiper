@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://gh3pidgmthgk"]
+
+[ext_resource type="Script" path="res://src/main/kuiper/cards/CardTestScene.kt" id="1_0laoo"]
+[ext_resource type="PackedScene" uid="uid://bbm3nt73xikuq" path="res://src/main/kuiper/cards/card.tscn" id="2_488ut"]
+[ext_resource type="PackedScene" uid="uid://bxu2j7evtujey" path="res://src/main/kuiper/cards/drop_target.tscn" id="3_ginmp"]
+
+[node name="CardTestScene" type="CanvasLayer"]
+script = ExtResource("1_0laoo")
+
+[node name="DropTarget1" parent="." groups=["dropTargets"] instance=ExtResource("3_ginmp")]
+position = Vector2(378, 345)
+
+[node name="DropTarget2" parent="." groups=["dropTargets"] instance=ExtResource("3_ginmp")]
+position = Vector2(1145, 336)
+
+[node name="Card" parent="." instance=ExtResource("2_488ut")]
+position = Vector2(696, 617)
