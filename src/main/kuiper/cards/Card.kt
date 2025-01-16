@@ -5,7 +5,6 @@ import godot.annotation.*
 import godot.core.Signal0
 import godot.core.Vector2
 import godot.core.signal0
-import godot.global.GD
 
 @RegisterClass
 class Card : Node2D() {
@@ -66,7 +65,6 @@ class Card : Node2D() {
 					// check if we've hit a drag target
 					// if not, return to start position
 					dragging = false;
-
 				}
 			}
 		}
