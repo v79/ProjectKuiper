@@ -57,14 +57,14 @@ class Card : Node2D() {
 				if ((event.position - this.position).length() < clickRadius) {
 					// Start dragging if the click is on the sprite.
 					if (!dragging && event.isPressed()) {
-						dragging = true;
+						dragging = true
 					}
 				}
 				// Stop dragging if the button is released.
 				if (dragging && !event.isPressed()) {
 					// check if we've hit a drag target
 					// if not, return to start position
-					dragging = false;
+					dragging = false
 				}
 			}
 		}
