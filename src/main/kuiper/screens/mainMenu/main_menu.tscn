@@ -58,10 +58,10 @@ layout_mode = 2
 disabled = true
 text = "Load"
 
-[node name="Save" type="Button" parent="VBoxContainer/VBoxContainer"]
+[node name="Options" type="Button" parent="VBoxContainer/VBoxContainer"]
 layout_mode = 2
 disabled = true
-text = "Save"
+text = "Options"
 
 [node name="Quit" type="Button" parent="VBoxContainer/VBoxContainer"]
 layout_mode = 2

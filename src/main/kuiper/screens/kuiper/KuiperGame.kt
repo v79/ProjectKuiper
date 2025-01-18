@@ -4,11 +4,10 @@ import godot.*
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterSignal
-import godot.core.Signal0
-import godot.core.asCachedStringName
-import godot.core.signal0
+import godot.core.*
 import godot.extensions.getNodeAs
 import godot.global.GD
+import screens.kuiper.escMenu.EscMenu
 import state.GameState
 import kotlin.properties.Delegates
 
@@ -26,6 +25,7 @@ class KuiperGame : Node() {
 
 	@RegisterSignal
 	val escMenuSignal: Signal0 by signal0()
+
 
 	// UI flags/states
 	// Esc menu visibility trigger
@@ -59,20 +59,30 @@ class KuiperGame : Node() {
 	override fun _input(event: InputEvent?) {
 		if (event != null) {
 			if (event.isActionPressed("ui_cancel".asCachedStringName())) {
-				_on_escape_menu()
+				on_escape_menu()
 			}
 		}
 	}
 
 	@RegisterFunction
-	fun _on_escape_menu() {
-		escMenuVisible = !escMenuVisible
+	fun on_escape_menu() {
+		hideEscapeMenu()
 	}
 
 	@RegisterFunction
-	fun _on_end_turn() {
+	fun on_end_turn() {
 		GD.print("End turn!")
 		gameState.nextTurn()
 	}
 
+	@RegisterFunction
+	fun on_esc_save_game() {
+		GD.print("Game: Save button pressed")
+		hideEscapeMenu()
+		gameState.save()
+	}
+
+	private fun hideEscapeMenu() {
+		escMenuVisible = !escMenuVisible
+	}
 }

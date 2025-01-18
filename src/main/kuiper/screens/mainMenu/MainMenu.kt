@@ -41,4 +41,6 @@ class MainMenu : Node() {
 		GD.print("Quitting game")
 		getTree()?.quit()
 	}
+
+
 }
