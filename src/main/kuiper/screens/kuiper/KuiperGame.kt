@@ -4,10 +4,11 @@ import godot.*
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterSignal
-import godot.core.*
+import godot.core.Signal0
+import godot.core.asCachedStringName
+import godot.core.signal0
 import godot.extensions.getNodeAs
 import godot.global.GD
-import screens.kuiper.escMenu.EscMenu
 import state.GameState
 import kotlin.properties.Delegates
 
@@ -61,6 +62,9 @@ class KuiperGame : Node() {
 			if (event.isActionPressed("ui_cancel".asCachedStringName())) {
 				on_escape_menu()
 			}
+			if(event.isActionPressed("game_save".asCachedStringName())) {
+				on_esc_save_game()
+			}
 		}
 	}
 
@@ -78,7 +82,7 @@ class KuiperGame : Node() {
 	@RegisterFunction
 	fun on_esc_save_game() {
 		GD.print("Game: Save button pressed")
-		hideEscapeMenu()
+		escMenuVisible = false
 		gameState.save()
 	}
 

@@ -41,15 +41,15 @@ object GDColorSerializer : KSerializer<Color> {
 @Serializable
 @SerialName("Color")
 private class GDColorSurrogate(
-    val r: Double,
-    val g: Double,
-    val b: Double,
-    val a: Double,
-    val r8: Int,
-    val g8: Int,
-    val b8: Int,
-    val a8: Int,
-    val h: Double,
-    val s: Double,
-    val v: Double
+    val r: Double = 0.0,
+    val g: Double = 0.0,
+    val b: Double = 0.0,
+    val a: Double = 0.0,
+    val r8: Int = 0,
+    val g8: Int = 0,
+    val b8: Int = 0,
+    val a8: Int = 0,
+    val h: Double = 0.0,
+    val s: Double = 0.0,
+    val v: Double = 0.0
 )
