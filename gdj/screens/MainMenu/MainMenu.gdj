@@ -22,5 +22,7 @@ functions = [
     _ready,
 	_process,
 	_on_new_game,
-	_on_quit_game
+	_on_quit_game,
+	_on_continue_game,
+	load_game
 ]

@@ -58,7 +58,7 @@ text = "Influence"
 layout_mode = 2
 text = "Money"
 
-[node name="Label" type="Label" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox"]
+[node name="ProjectKuiperHeading" type="Label" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.952941, 0.509804, 0.0705882, 1)

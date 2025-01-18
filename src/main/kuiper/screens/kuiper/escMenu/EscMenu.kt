@@ -2,15 +2,12 @@ package screens.kuiper.escMenu
 
 import godot.Control
 import godot.InputEvent
-import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterSignal
 import godot.core.Signal0
-import godot.core.connect
 import godot.core.signal0
 import godot.global.GD
-import screens.kuiper.KuiperGame
 
 @RegisterClass
 class EscMenu : Control() {

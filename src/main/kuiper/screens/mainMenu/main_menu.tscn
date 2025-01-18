@@ -45,7 +45,6 @@ size_flags_stretch_ratio = 0.0
 
 [node name="Continue" type="Button" parent="VBoxContainer/VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 4
 disabled = true
 text = "Continue"
 
@@ -67,5 +66,6 @@ text = "Options"
 layout_mode = 2
 text = "Quit"
 
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/Continue" to="." method="_on_continue_game"]
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/NewGame" to="." method="_on_new_game"]
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/Quit" to="." method="_on_quit_game"]
