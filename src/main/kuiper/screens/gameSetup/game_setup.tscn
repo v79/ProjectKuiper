@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://d0w0wqm220vq8"]
 
-[ext_resource type="Script" path="res://src/main/kuiper/screens/GameSetup/GameSetup.kt" id="1_n7xff"]
+[ext_resource type="Script" path="res://src/main/kuiper/screens/gameSetup/GameSetup.kt" id="1_n7xff"]
 
 [node name="GameSetup" type="CanvasLayer"]
 script = ExtResource("1_n7xff")

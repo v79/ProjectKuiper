@@ -2,8 +2,8 @@
 // Note: You can however freely move this file inside your godot project if you want. Keep in mind however, that if you rename the originating source code file, this file will be deleted and regenerated as a new file instead of being updated! Other modifications to the source file however, will result in this file being updated.
 
 registeredName = KuiperGame
-fqName = screens.Kuiper.KuiperGame
-relativeSourcePath = src/main/kuiper/screens/Kuiper/KuiperGame.kt
+fqName = screens.kuiper.KuiperGame
+relativeSourcePath = src/main/kuiper/screens/kuiper/KuiperGame.kt
 baseType = Node
 supertypes = [
     godot.Node,

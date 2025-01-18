@@ -1,4 +1,4 @@
-package screens.GameSetup
+package screens.gameSetup
 
 import godot.ColorRect
 import godot.Input
@@ -78,6 +78,6 @@ class GameSetup : Node() {
 		gameState.year = 1965
 		gameState.country = countryList[selectedCountry - 1]
 		GD.print("Starting game for country ${countryList[selectedCountry - 1].name}")
-		getTree()?.changeSceneToFile("res://src/main/kuiper/screens/Kuiper/game.tscn")
+		getTree()?.changeSceneToFile("res://src/main/kuiper/screens/kuiper/game.tscn")
 	}
 }

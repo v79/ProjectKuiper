@@ -1,6 +1,7 @@
 [gd_scene load_steps=2 format=3 uid="uid://bh0hxtmuthjhi"]
 
-[ext_resource type="Script" path="res://src/main/kuiper/screens/Kuiper/EscMenu/EscMenu.kt" id="1_eefbu"]
+[ext_resource type="Script" path="res://src/main/kuiper/screens/kuiper/escMenu/EscMenu.kt" id="1_eefbu"]
+
 
 [node name="EscMenu" type="Control"]
 layout_mode = 3
