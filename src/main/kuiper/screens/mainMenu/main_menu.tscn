@@ -67,7 +67,5 @@ text = "Save"
 layout_mode = 2
 text = "Quit"
 
-[connection signal="new_game_signal" from="." to="." method="_on_new_game"]
-[connection signal="quit_game_signal" from="." to="." method="_on_quit_game"]
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/NewGame" to="." method="_on_new_game"]
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/Quit" to="." method="_on_quit_game"]
