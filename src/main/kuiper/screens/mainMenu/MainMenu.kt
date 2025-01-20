@@ -2,6 +2,7 @@ package screens.mainMenu
 
 import godot.Button
 import godot.FileAccess
+import godot.FileDialog
 import godot.Node
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
@@ -26,12 +27,21 @@ class MainMenu : Node() {
 	private lateinit var gameConfig: GameConfig
 	private lateinit var loadButton: Button
 	private lateinit var continueButton: Button
+	private lateinit var loadFileDialog: FileDialog
 
 	// Called when the node enters the scene tree for the first time.
 	@RegisterFunction
 	override fun _ready() {
 		loadButton = getNodeAs("VBoxContainer/VBoxContainer/Load")!!
 		continueButton = getNodeAs("VBoxContainer/VBoxContainer/Continue")!!
+		loadFileDialog = getNodeAs("LoadFileDialog")!!
+		GD.print("Main Menu ready - got file dialog: $loadFileDialog")
+		loadFileDialog.let {
+			it.setCurrentPath("user://saves/")
+			it.clearFilters()
+			it.addFilter("*.json","Saved JSON games")
+		}
+		GD.print(loadFileDialog.currentPath)
 		gameConfig = loadConfiguration()
 		if (gameConfig.lastSaveFile != null) {
 			GD.print("Last save file: ${gameConfig.lastSaveFile}")
@@ -82,6 +92,16 @@ class MainMenu : Node() {
 	@RegisterFunction
 	fun _on_continue_game() {
 		loadGame(gameConfig.lastSaveFile!!)
+	}
+
+	@RegisterFunction
+	fun _on_load_button_pressed() {
+		loadFileDialog.visible = true
+	}
+
+	@RegisterFunction
+	fun _on_load_file_selected(file: String) {
+		loadGame(file)
 	}
 
 	@RegisterFunction

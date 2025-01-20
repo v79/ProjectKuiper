@@ -37,6 +37,7 @@ class KuiperGame : Node() {
     // UI elements
     lateinit var yearLbl: Label
     lateinit var eraTabBar: TabBar
+    lateinit var companyNameHeader: Label
 
     // Called when the node enters the scene tree for the first time.
     @RegisterFunction
@@ -48,6 +49,9 @@ class KuiperGame : Node() {
         yearLbl = getNodeAs("Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/PanelContainer2/Year_lbl")!!
         eraTabBar = getNodeAs("Background/AspectRatioContainer/VBoxContainer/TabBar")!!
         eraTabBar.setTabTitle(0, gameState.country?.name ?: "No country selected")
+        companyNameHeader =
+            getNodeAs("Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/ProjectKuiperHeading")!!
+        companyNameHeader.text = "Project Kuiper - ${gameState.companyName}"
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.

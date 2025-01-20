@@ -24,5 +24,7 @@ functions = [
 	_on_new_game,
 	_on_quit_game,
 	_on_continue_game,
+	_on_load_button_pressed,
+	_on_load_file_selected,
 	load_game
 ]

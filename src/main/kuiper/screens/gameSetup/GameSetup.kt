@@ -81,6 +81,7 @@ class GameSetup : Node() {
 		GD.print("Got game state: ${gameState.stateToString()}, changing year to 1965")
 		gameState.year = 1965
 		gameState.country = countryList[selectedCountry - 1]
+		gameState.companyName = companyNameEdit.text
 		GD.print("Starting game for country ${countryList[selectedCountry - 1].name}")
 		getTree()?.changeSceneToFile("res://src/main/kuiper/screens/kuiper/game.tscn")
 	}

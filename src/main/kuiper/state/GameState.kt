@@ -12,6 +12,7 @@ import godot.global.GD
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlinx.serialization.json.Json
+import java.util.*
 
 /**
  * Complete game state which is persisted between scenes and will be serialized to disk to save the game
@@ -54,8 +55,10 @@ class GameState : Node() {
         if (!DirAccess.dirExistsAbsolute("user://saves")) {
             DirAccess.makeDirRecursiveAbsolute("user://saves")
         }
-        val saveFile = FileAccess.open("user://saves/savegame-kuiper.json", FileAccess.ModeFlags.WRITE)
-        // In windows, this will be saved to C:\Users\<username>\AppData\Roaming\Godot\app_userdata\<project_name>\saves\savegame-kuiper.json
+        // TODO: Need to be a lot more careful with the file name
+        val fileName = this.companyName.replace(" ", "_").lowercase(Locale.getDefault())
+        val saveFile = FileAccess.open("user://saves/savegame-$fileName-kuiper.json", FileAccess.ModeFlags.WRITE)
+        // In windows, this will be saved to C:\Users\<username>\AppData\Roaming\Godot\app_userdata\<project_name>\saves\savegame-<filename>-kuiper.json
         GD.print("Saving file ${ProjectSettings.globalizePath(saveFile?.getPath() ?: "null")}")
         saveFile?.let {
             it.storeString(jsonString)
