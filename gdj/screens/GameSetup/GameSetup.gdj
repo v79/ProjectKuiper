@@ -22,5 +22,8 @@ functions = [
     _ready,
 	_process,
 	_on_location_list_item_selected,
-	_on_start_game_button_pressed
+	_on_start_game_button_pressed,
+	_on_next_button_pressed,
+	_on_company_name_text_changed,
+	_on_company_panel_back_pressed
 ]

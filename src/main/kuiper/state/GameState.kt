@@ -23,7 +23,7 @@ class GameState : Node() {
     @RegisterProperty
     @Export
     var year: Int = 1980
-
+    var companyName: String = ""
     var country: Country? = null
 
     fun nextTurn() {
@@ -44,6 +44,7 @@ class GameState : Node() {
     fun deepCopy(sourceState: GameState) {
         this.year = sourceState.year
         this.country = sourceState.country
+        this.companyName = sourceState.companyName
     }
 
     @RegisterFunction
