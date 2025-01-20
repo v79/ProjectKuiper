@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" path="res://src/main/kuiper/screens/kuiper/escMenu/EscMenu.kt" id="1_eefbu"]
 
-
 [node name="EscMenu" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -40,9 +39,19 @@ layout_mode = 2
 layout_mode = 2
 text = "Resume"
 
+[node name="Save" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Save"
+
+[node name="ExitToMainMenu" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Exit to Main Menu"
+
 [node name="Quit" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Quit"
 
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/Resume" to="." method="_on_resume"]
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/Save" to="." method="_on_save"]
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/ExitToMainMenu" to="." method="_on_return_to_main_menu"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/Quit" to="." method="_on_quit"]

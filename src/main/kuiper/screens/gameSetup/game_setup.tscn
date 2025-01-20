@@ -71,20 +71,89 @@ color = Color(0.209429, 0.209429, 0.209429, 1)
 [node name="LocationDescription" type="RichTextLabel" parent="MarginContainer/VBoxContainer/MarginContainer/GridContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-text = "Here we put some narative text about the selected location. Some background information, lore, and hints about the challenges and benefits of the location."
+text = "Here we put some narrative text about the selected location. Some background information, lore, and hints about the challenges and benefits of the location."
 
 [node name="LocationStats" type="RichTextLabel" parent="MarginContainer/VBoxContainer/MarginContainer/GridContainer"]
 layout_mode = 2
 text = "List of stats about the location, e.g. number of building location, research bonuses, buffs and debufs."
 fit_content = true
 
-[node name="StartGame_Button" type="Button" parent="MarginContainer/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 2
+
+[node name="NextButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Next"
+
+[node name="CompanyNamePanel" type="PanelContainer" parent="."]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CompanyNamePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="HBoxContainer" type="VBoxContainer" parent="CompanyNamePanel/MarginContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="CompanyNamePanel/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Enter your company name"
+vertical_alignment = 1
+
+[node name="CompanyNameEdit" type="TextEdit" parent="CompanyNamePanel/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Your company name will be used when saving your game."
+theme_override_font_sizes/font_size = 24
+placeholder_text = "Name your company"
+caret_blink = true
+caret_multiple = false
+
+[node name="VBoxContainer" type="HBoxContainer" parent="CompanyNamePanel/MarginContainer/HBoxContainer"]
+layout_mode = 2
+alignment = 2
+
+[node name="Back_Button" type="Button" parent="CompanyNamePanel/MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Back"
+
+[node name="Margin" type="MarginContainer" parent="CompanyNamePanel/MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="StartGame_Button" type="Button" parent="CompanyNamePanel/MarginContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 8
 theme_override_font_sizes/font_size = 28
+disabled = true
 text = "Start"
 alignment = 2
 
 [connection signal="item_selected" from="MarginContainer/VBoxContainer/MarginContainer/GridContainer/LocationList" to="." method="_on_location_list_item_selected"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/StartGame_Button" to="." method="_on_start_game_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer2/NextButton" to="." method="_on_next_button_pressed"]
+[connection signal="text_changed" from="CompanyNamePanel/MarginContainer/HBoxContainer/CompanyNameEdit" to="." method="_on_company_name_text_changed"]
+[connection signal="pressed" from="CompanyNamePanel/MarginContainer/HBoxContainer/VBoxContainer/Back_Button" to="." method="_on_company_panel_back_pressed"]
+[connection signal="pressed" from="CompanyNamePanel/MarginContainer/HBoxContainer/VBoxContainer/StartGame_Button" to="." method="_on_start_game_button_pressed"]

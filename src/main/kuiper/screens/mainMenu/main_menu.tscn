@@ -45,7 +45,6 @@ size_flags_stretch_ratio = 0.0
 
 [node name="Continue" type="Button" parent="VBoxContainer/VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 4
 disabled = true
 text = "Continue"
 
@@ -58,14 +57,27 @@ layout_mode = 2
 disabled = true
 text = "Load"
 
-[node name="Save" type="Button" parent="VBoxContainer/VBoxContainer"]
+[node name="Options" type="Button" parent="VBoxContainer/VBoxContainer"]
 layout_mode = 2
 disabled = true
-text = "Save"
+text = "Options"
 
 [node name="Quit" type="Button" parent="VBoxContainer/VBoxContainer"]
 layout_mode = 2
 text = "Quit"
 
+[node name="LoadFileDialog" type="FileDialog" parent="."]
+title = "Load saved game"
+initial_position = 1
+size = Vector2i(500, 500)
+min_size = Vector2i(400, 500)
+ok_button_text = "Load"
+mode_overrides_title = false
+file_mode = 0
+access = 1
+
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/Continue" to="." method="_on_continue_game"]
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/NewGame" to="." method="_on_new_game"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/Load" to="." method="_on_load_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/Quit" to="." method="_on_quit_game"]
+[connection signal="file_selected" from="LoadFileDialog" to="." method="_on_load_file_selected"]

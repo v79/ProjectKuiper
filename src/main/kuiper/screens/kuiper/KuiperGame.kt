@@ -18,61 +18,79 @@ import kotlin.properties.Delegates
 @RegisterClass
 class KuiperGame : Node() {
 
-	// Global state
-	private lateinit var gameState: GameState
+    // Global state
+    private lateinit var gameState: GameState
 
-	@RegisterSignal
-	val endTurnSignal: Signal0 by signal0()
+    @RegisterSignal
+    val endTurnSignal: Signal0 by signal0()
 
-	@RegisterSignal
-	val escMenuSignal: Signal0 by signal0()
+    @RegisterSignal
+    val escMenuSignal: Signal0 by signal0()
 
-	// UI flags/states
-	// Esc menu visibility trigger
-	var escMenuVisible by Delegates.observable(false) { _, _, newValue ->
-		getNodeAs<Control>("EscMenu")?.visible = newValue
-	}
 
-	// UI elements
-	lateinit var yearLbl: Label
-	lateinit var eraTabBar: TabBar
+    // UI flags/states
+    // Esc menu visibility trigger
+    var escMenuVisible by Delegates.observable(false) { _, _, newValue ->
+        getNodeAs<Control>("EscMenu")?.visible = newValue
+    }
 
-	// Called when the node enters the scene tree for the first time.
-	@RegisterFunction
-	override fun _ready() {
-		GD.print("KuiperGame: _Loading game state")
-		gameState = getTree()?.root?.getChild(0) as GameState
-		GD.print(gameState.stateToString())
-		// Get UI elements
-		yearLbl = getNodeAs("Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/PanelContainer2/Year_lbl")!!
-		eraTabBar = getNodeAs("Background/AspectRatioContainer/VBoxContainer/TabBar")!!
-		eraTabBar.setTabTitle(0, gameState.country?.name ?: "No country selected")
-	}
+    // UI elements
+    lateinit var yearLbl: Label
+    lateinit var eraTabBar: TabBar
+    lateinit var companyNameHeader: Label
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	@RegisterFunction
-	override fun _process(delta: Double) {
-		yearLbl.text = "Year: ${gameState.year}"
-	}
+    // Called when the node enters the scene tree for the first time.
+    @RegisterFunction
+    override fun _ready() {
+        GD.print("KuiperGame: Loading game state")
+        gameState = getTree()?.root?.getChild(0) as GameState
+        GD.print(gameState.stateToString())
+        // Get UI elements
+        yearLbl = getNodeAs("Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/PanelContainer2/Year_lbl")!!
+        eraTabBar = getNodeAs("Background/AspectRatioContainer/VBoxContainer/TabBar")!!
+        eraTabBar.setTabTitle(0, gameState.country?.name ?: "No country selected")
+        companyNameHeader =
+            getNodeAs("Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/ProjectKuiperHeading")!!
+        companyNameHeader.text = "Project Kuiper - ${gameState.companyName}"
+    }
 
-	@RegisterFunction
-	override fun _input(event: InputEvent?) {
-		if (event != null) {
-			if (event.isActionPressed("ui_cancel".asCachedStringName())) {
-				_on_escape_menu()
-			}
-		}
-	}
+    // Called every frame. 'delta' is the elapsed time since the previous frame.
+    @RegisterFunction
+    override fun _process(delta: Double) {
+        yearLbl.text = "Year: ${gameState.year}"
+    }
 
-	@RegisterFunction
-	fun _on_escape_menu() {
-		escMenuVisible = !escMenuVisible
-	}
+    @RegisterFunction
+    override fun _input(event: InputEvent?) {
+        if (event != null) {
+            if (event.isActionPressed("ui_cancel".asCachedStringName())) {
+                on_escape_menu()
+            }
+            if (event.isActionPressed("game_save".asCachedStringName())) {
+                on_esc_save_game()
+            }
+        }
+    }
 
-	@RegisterFunction
-	fun _on_end_turn() {
-		GD.print("End turn!")
-		gameState.nextTurn()
-	}
+    @RegisterFunction
+    fun on_escape_menu() {
+        hideEscapeMenu()
+    }
 
+    @RegisterFunction
+    fun on_end_turn() {
+        GD.print("End turn!")
+        gameState.nextTurn()
+    }
+
+    @RegisterFunction
+    fun on_esc_save_game() {
+        GD.print("Game: Save button pressed")
+        escMenuVisible = false
+        gameState.save()
+    }
+
+    private fun hideEscapeMenu() {
+        escMenuVisible = !escMenuVisible
+    }
 }

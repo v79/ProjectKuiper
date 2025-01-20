@@ -1,9 +1,6 @@
 package screens.gameSetup
 
-import godot.ColorRect
-import godot.Input
-import godot.ItemList
-import godot.Node
+import godot.*
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterSignal
@@ -33,11 +30,13 @@ class GameSetup : Node() {
 		Country(7, "Antarctica", Color.white)
 	)
 
+	lateinit var companyNamePanel: PanelContainer
+	lateinit var startGameButton: Button
+	lateinit var companyNameEdit: TextEdit
+
 	// Called when the node enters the scene tree for the first time.
 	@RegisterFunction
 	override fun _ready() {
-		GD.print("GameSetup: _ready()")
-
 		val locationList =
 			getNodeAs<ItemList>("MarginContainer/VBoxContainer/MarginContainer/GridContainer/LocationList".asNodePath())
 		locationList?.let { list ->
@@ -47,6 +46,11 @@ class GameSetup : Node() {
 				list.addItem(country.name)
 			}
 		}
+
+		companyNamePanel = getNodeAs("CompanyNamePanel".asNodePath())!!
+		startGameButton =
+			getNodeAs("CompanyNamePanel/MarginContainer/HBoxContainer/VBoxContainer/StartGame_Button".asNodePath())!!
+		companyNameEdit = getNodeAs("CompanyNamePanel/MarginContainer/HBoxContainer/CompanyNameEdit".asNodePath())!!
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -77,7 +81,27 @@ class GameSetup : Node() {
 		GD.print("Got game state: ${gameState.stateToString()}, changing year to 1965")
 		gameState.year = 1965
 		gameState.country = countryList[selectedCountry - 1]
+		gameState.companyName = companyNameEdit.text
 		GD.print("Starting game for country ${countryList[selectedCountry - 1].name}")
 		getTree()?.changeSceneToFile("res://src/main/kuiper/screens/kuiper/game.tscn")
+	}
+
+	@RegisterFunction
+	fun _on_next_button_pressed() {
+		companyNamePanel.visible = true
+	}
+
+	@RegisterFunction
+	fun _on_company_name_text_changed() {
+		if (companyNameEdit.text.length > 10) {
+			startGameButton.disabled = false
+		} else {
+			startGameButton.disabled = true
+		}
+	}
+
+	@RegisterFunction
+	fun _on_company_panel_back_pressed() {
+		companyNamePanel.visible = false
 	}
 }

@@ -1,5 +1,8 @@
 package state
 
 import godot.core.Color
+import kotlinx.serialization.Serializable
+import serializers.GDColorSerializer
 
-data class Country(val id: Int, val name: String, val colour: Color)
+@Serializable
+data class Country(val id: Int, val name: String, @Serializable(with = GDColorSerializer::class) val colour: Color)

@@ -15,7 +15,9 @@ supertypes = [
 ]
 signals = [
     resume_signal,
-	quit_signal
+	quit_signal,
+	return_to_main_menu_signal,
+	please_save_signal
 ]
 properties = [
     
@@ -25,5 +27,7 @@ functions = [
 	_process,
 	_input,
 	_on_resume,
-	_on_quit
+	_on_quit,
+	_on_return_to_main_menu,
+	_on_save
 ]

@@ -22,6 +22,7 @@ functions = [
     _ready,
 	_process,
 	_input,
-	_on_escape_menu,
-	_on_end_turn
+	on_escape_menu,
+	on_end_turn,
+	on_esc_save_game
 ]

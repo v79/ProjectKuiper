@@ -1,5 +1,7 @@
 plugins {
     id("com.utopia-rise.godot-kotlin-jvm") version "0.11.0-4.3"
+    // godot-kotlin-jvm uses Kotlin 2.0.20
+    kotlin("plugin.serialization") version "2.0.20"
 }
 
 repositories {
@@ -8,6 +10,10 @@ repositories {
 
 kotlin {
     jvmToolchain(17)
+}
+
+dependencies {
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
 }
 
 godot {

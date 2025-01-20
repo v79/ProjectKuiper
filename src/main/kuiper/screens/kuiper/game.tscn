@@ -58,7 +58,7 @@ text = "Influence"
 layout_mode = 2
 text = "Money"
 
-[node name="Label" type="Label" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox"]
+[node name="ProjectKuiperHeading" type="Label" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.952941, 0.509804, 0.0705882, 1)
@@ -122,5 +122,9 @@ offset_top = 10.0
 offset_right = 10.0
 offset_bottom = 10.0
 
-[connection signal="pressed" from="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/PanelContainer/MenuButton" to="." method="_on_escape_menu"]
-[connection signal="pressed" from="Background/AspectRatioContainer/VBoxContainer/BottomRow_hbox/EndTurn_btn" to="." method="_on_end_turn"]
+[connection signal="end_turn_signal" from="." to="." method="on_end_turn"]
+[connection signal="esc_menu_signal" from="." to="." method="on_escape_menu"]
+[connection signal="pressed" from="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/PanelContainer/MenuButton" to="." method="on_escape_menu"]
+[connection signal="pressed" from="Background/AspectRatioContainer/VBoxContainer/BottomRow_hbox/EndTurn_btn" to="." method="on_end_turn"]
+[connection signal="please_save_signal" from="EscMenu" to="." method="on_esc_save_game"]
+[connection signal="resume_signal" from="EscMenu" to="." method="on_escape_menu"]
