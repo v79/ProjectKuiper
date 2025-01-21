@@ -46,6 +46,7 @@ theme_override_constants/margin_left = 120
 
 [node name="ResourcesPanel" type="PanelContainer" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox"]
 layout_mode = 2
+mouse_filter = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/ResourcesPanel"]
 layout_mode = 2
@@ -66,20 +67,9 @@ theme_override_font_sizes/font_size = 20
 text = "Project Kuiper"
 horizontal_alignment = 1
 
-[node name="ResearchPanel" type="PanelContainer" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox"]
+[node name="SciencePanel" type="HBoxContainer" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox"]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/ResearchPanel"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/ResearchPanel/HBoxContainer"]
-layout_mode = 2
-text = "Physics"
-
-[node name="Label2" type="Label" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/ResearchPanel/HBoxContainer"]
-layout_mode = 2
-text = "Biology
-"
 
 [node name="MarginContainer2" type="MarginContainer" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox"]
 layout_mode = 2

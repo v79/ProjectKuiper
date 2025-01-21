@@ -1,7 +1,6 @@
 package screens.kuiper.escMenu
 
 import godot.Control
-import godot.InputEvent
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterSignal
@@ -31,23 +30,6 @@ class EscMenu : Control() {
 
 	@RegisterSignal
 	val pleaseSaveSignal: Signal0 by signal0()
-
-	// Called when the node enters the scene tree for the first time.
-	@RegisterFunction
-	override fun _ready() {
-
-	}
-
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	@RegisterFunction
-	override fun _process(delta: Double) {
-
-	}
-
-	@RegisterFunction
-	override fun _input(event: InputEvent?) {
-
-	}
 
 	/**
 	 * Resume the game by closing the escape menu

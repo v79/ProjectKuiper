@@ -27,7 +27,6 @@ class KuiperGame : Node() {
     @RegisterSignal
     val escMenuSignal: Signal0 by signal0()
 
-
     // UI flags/states
     // Esc menu visibility trigger
     var escMenuVisible by Delegates.observable(false) { _, _, newValue ->
@@ -38,6 +37,7 @@ class KuiperGame : Node() {
     lateinit var yearLbl: Label
     lateinit var eraTabBar: TabBar
     lateinit var companyNameHeader: Label
+    lateinit var sciencePanel: HBoxContainer
 
     // Called when the node enters the scene tree for the first time.
     @RegisterFunction
@@ -45,13 +45,26 @@ class KuiperGame : Node() {
         GD.print("KuiperGame: Loading game state")
         gameState = getTree()?.root?.getChild(0) as GameState
         GD.print(gameState.stateToString())
+
         // Get UI elements
         yearLbl = getNodeAs("Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/PanelContainer2/Year_lbl")!!
         eraTabBar = getNodeAs("Background/AspectRatioContainer/VBoxContainer/TabBar")!!
         eraTabBar.setTabTitle(0, gameState.country?.name ?: "No country selected")
         companyNameHeader =
             getNodeAs("Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/ProjectKuiperHeading")!!
-        companyNameHeader.text = "Project Kuiper - ${gameState.companyName}"
+        companyNameHeader.text = "Project Kuiper - ${gameState.company.name}"
+        sciencePanel = getNodeAs("Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/SciencePanel")!!
+
+        // populate science panel
+        gameState.company.sciences.forEach { (science, rate) ->
+            val sciencePanelItem =
+                ResourceLoader.load("res://src/main/kuiper/screens/kuiper/science_rates.tscn") as PackedScene
+            val item = sciencePanelItem.instantiate() as ScienceRate
+            item.rateLabel = "%.2f".format(gameState.company.sciences[science])
+            item.colour = science.color
+            item.description = science.name
+            sciencePanel.addChild(item)
+        }
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -86,6 +99,7 @@ class KuiperGame : Node() {
     @RegisterFunction
     fun on_esc_save_game() {
         GD.print("Game: Save button pressed")
+        GD.print(gameState.stateToString())
         escMenuVisible = false
         gameState.save()
     }

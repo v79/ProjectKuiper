@@ -1,9 +1,9 @@
 // THIS FILE IS GENERATED! DO NOT EDIT OR DELETE IT. EDIT OR DELETE THE ASSOCIATED SOURCE CODE FILE INSTEAD
 // Note: You can however freely move this file inside your godot project if you want. Keep in mind however, that if you rename the originating source code file, this file will be deleted and regenerated as a new file instead of being updated! Other modifications to the source file however, will result in this file being updated.
 
-registeredName = EscMenu
-fqName = screens.kuiper.escMenu.EscMenu
-relativeSourcePath = src/main/kuiper/screens/kuiper/escMenu/EscMenu.kt
+registeredName = ScienceRate
+fqName = screens.kuiper.ScienceRate
+relativeSourcePath = src/main/kuiper/screens/kuiper/ScienceRate.kt
 baseType = Control
 supertypes = [
     godot.Control,
@@ -14,17 +14,14 @@ supertypes = [
 	kotlin.Any
 ]
 signals = [
-    resume_signal,
-	quit_signal,
-	return_to_main_menu_signal,
-	please_save_signal
-]
-properties = [
     
 ]
+properties = [
+    rate_label,
+	colour,
+	description
+]
 functions = [
-    _on_resume,
-	_on_quit,
-	_on_return_to_main_menu,
-	_on_save
+    _ready,
+	_process
 ]
