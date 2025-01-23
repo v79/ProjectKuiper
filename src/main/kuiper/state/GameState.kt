@@ -25,8 +25,7 @@ class GameState : Node() {
     @Export
     var year: Int = 1980
 
-    @Serializable
-    var company: Company = Company("Project Kuiper", mutableMapOf())
+    var company: Company = Company("Kuiper", mutableMapOf())
     var country: Country? = null
 
     fun nextTurn() {
@@ -53,11 +52,6 @@ class GameState : Node() {
     @RegisterFunction
     fun save() {
         GD.print("GameState: Saving game state")
-        GD.printErr((this as Any))
-        GD.print(this.company.name)
-        GD.print(this.country)
-        GD.print(this.year)
-        GD.print(this.company.sciences.size)
         val jsonString = json.encodeToString(serializer(), this)
         GD.print(jsonString)
         if (!DirAccess.dirExistsAbsolute("user://saves")) {

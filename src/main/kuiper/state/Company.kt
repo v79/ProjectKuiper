@@ -7,9 +7,4 @@ import kotlinx.serialization.Serializable
  * It will likely have many other properties over time
  */
 @Serializable
-class Company(var name: String, var sciences: MutableMap<Science, Float>) {
-
-   /* companion object {
-        val VOID: Company = Company("VOID", mutableMapOf())
-    }*/
-}
+class Company(var name: String, var sciences: MutableMap<Science, Float>)

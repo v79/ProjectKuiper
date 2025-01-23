@@ -24,5 +24,6 @@ functions = [
 	_input,
 	on_escape_menu,
 	on_end_turn,
-	on_esc_save_game
+	on_esc_save_game,
+	_on_science_panel_clicked
 ]

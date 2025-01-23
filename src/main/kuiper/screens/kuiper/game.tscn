@@ -68,8 +68,9 @@ text = "Project Kuiper"
 horizontal_alignment = 1
 
 [node name="SciencePanel" type="HBoxContainer" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox"]
-custom_minimum_size = Vector2(200, 0)
+custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
+mouse_filter = 0
 
 [node name="MarginContainer2" type="MarginContainer" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox"]
 layout_mode = 2
@@ -107,14 +108,30 @@ text = "End Turn"
 
 [node name="EscMenu" parent="." instance=ExtResource("2_4tnej")]
 visible = false
+visibility_layer = 2
 offset_left = 10.0
 offset_top = 10.0
 offset_right = 10.0
 offset_bottom = 10.0
 
+[node name="ScienceSummaryPanel" type="PanelContainer" parent="."]
+visible = false
+visibility_layer = 4
+anchors_preset = -1
+anchor_left = 0.762
+anchor_right = 0.762
+offset_left = -13.2001
+offset_top = -42.0
+offset_right = 26.7999
+offset_bottom = -2.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScienceSummaryPanel"]
+layout_mode = 2
+
 [connection signal="end_turn_signal" from="." to="." method="on_end_turn"]
 [connection signal="esc_menu_signal" from="." to="." method="on_escape_menu"]
 [connection signal="pressed" from="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/PanelContainer/MenuButton" to="." method="on_escape_menu"]
+[connection signal="gui_input" from="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/SciencePanel" to="." method="_on_science_panel_clicked"]
 [connection signal="pressed" from="Background/AspectRatioContainer/VBoxContainer/BottomRow_hbox/EndTurn_btn" to="." method="on_end_turn"]
 [connection signal="please_save_signal" from="EscMenu" to="." method="on_esc_save_game"]
 [connection signal="resume_signal" from="EscMenu" to="." method="on_escape_menu"]
