@@ -13,7 +13,8 @@ supertypes = [
 ]
 signals = [
     end_turn_signal,
-	esc_menu_signal
+	esc_menu_signal,
+	recalc_pulldown_panel_signal
 ]
 properties = [
     
@@ -24,6 +25,5 @@ functions = [
 	_input,
 	on_escape_menu,
 	on_end_turn,
-	on_esc_save_game,
-	_on_science_panel_clicked
+	on_esc_save_game
 ]

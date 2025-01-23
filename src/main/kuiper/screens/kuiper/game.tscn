@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://dhc5at6r5jl4n"]
+[gd_scene load_steps=4 format=3 uid="uid://dhc5at6r5jl4n"]
 
 [ext_resource type="Script" path="res://src/main/kuiper/screens/kuiper/KuiperGame.kt" id="1_nlsq8"]
 [ext_resource type="PackedScene" uid="uid://bh0hxtmuthjhi" path="res://src/main/kuiper/screens/kuiper/escMenu/esc_menu.tscn" id="2_4tnej"]
+[ext_resource type="PackedScene" uid="uid://cun66228bprqh" path="res://src/main/kuiper/screens/kuiper/pullDownPanel/pulldown_panel.tscn" id="3_ecgw1"]
 
 [node name="CanvasLayer" type="CanvasLayer"]
 script = ExtResource("1_nlsq8")
@@ -67,10 +68,31 @@ theme_override_font_sizes/font_size = 20
 text = "Project Kuiper"
 horizontal_alignment = 1
 
-[node name="SciencePanel" type="HBoxContainer" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox"]
+[node name="Container" type="Control" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox"]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 1
+
+[node name="SciencePanel" type="HBoxContainer" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/Container"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+offset_left = 4.0
+offset_right = 404.0
+offset_bottom = 31.0
 mouse_filter = 0
+
+[node name="PulldownPanel" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/Container" node_paths=PackedStringArray("contents") instance=ExtResource("3_ecgw1")]
+layout_mode = 2
+offset_top = 50.0
+offset_bottom = 100.0
+contents = NodePath("ScienceSummaryContents")
+
+[node name="ScienceSummaryContents" type="VBoxContainer" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/Container/PulldownPanel"]
+visible = false
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 1
+offset_right = 200.0
 
 [node name="MarginContainer2" type="MarginContainer" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox"]
 layout_mode = 2
@@ -114,24 +136,10 @@ offset_top = 10.0
 offset_right = 10.0
 offset_bottom = 10.0
 
-[node name="ScienceSummaryPanel" type="PanelContainer" parent="."]
-visible = false
-visibility_layer = 4
-anchors_preset = -1
-anchor_left = 0.762
-anchor_right = 0.762
-offset_left = -13.2001
-offset_top = -42.0
-offset_right = 26.7999
-offset_bottom = -2.0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="ScienceSummaryPanel"]
-layout_mode = 2
-
 [connection signal="end_turn_signal" from="." to="." method="on_end_turn"]
 [connection signal="esc_menu_signal" from="." to="." method="on_escape_menu"]
+[connection signal="recalc_pulldown_panel_signal" from="." to="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/Container/PulldownPanel" method="_recalculate_pulldown_dimensions"]
 [connection signal="pressed" from="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/PanelContainer/MenuButton" to="." method="on_escape_menu"]
-[connection signal="gui_input" from="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/SciencePanel" to="." method="_on_science_panel_clicked"]
 [connection signal="pressed" from="Background/AspectRatioContainer/VBoxContainer/BottomRow_hbox/EndTurn_btn" to="." method="on_end_turn"]
 [connection signal="please_save_signal" from="EscMenu" to="." method="on_esc_save_game"]
 [connection signal="resume_signal" from="EscMenu" to="." method="on_escape_menu"]

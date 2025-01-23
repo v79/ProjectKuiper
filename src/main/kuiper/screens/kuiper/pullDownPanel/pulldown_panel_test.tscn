@@ -11,6 +11,7 @@ layout_mode = 1
 key = 174
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="PulldownPanel"]
+visible = false
 clip_contents = true
 layout_mode = 1
 offset_right = 63.0
