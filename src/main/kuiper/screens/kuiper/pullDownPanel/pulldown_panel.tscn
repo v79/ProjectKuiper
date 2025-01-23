@@ -17,7 +17,7 @@ offset_right = 40.0
 offset_bottom = 40.0
 
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
-custom_minimum_size = Vector2(200, 50)
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 
 [node name="Handle" type="ColorRect" parent="VBoxContainer"]
@@ -25,3 +25,5 @@ custom_minimum_size = Vector2(50, 25)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
+
+[connection signal="gui_input" from="VBoxContainer/Handle" to="." method="_on_handle_gui_input"]
