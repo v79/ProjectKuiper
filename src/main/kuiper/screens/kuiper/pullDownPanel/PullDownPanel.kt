@@ -126,6 +126,11 @@ class PullDownPanel : Control() {
 		}
 		if (event is InputEventMouseButton) {
 			if (event.getButtonIndex() == MouseButton.MOUSE_BUTTON_LEFT) {
+				if(event.doubleClick) {
+					GD.print("Double click")
+					// double click to expand or shrink the panel
+					direction = if (isExpanded) -1 else 1
+				}
 				isDragging = event.pressed
 				if (isDragging) {
 					contents?.visible = true
@@ -136,6 +141,9 @@ class PullDownPanel : Control() {
 		if (pulldownPanel.size == initialSize) {
 			isExpanded = false
 			direction = 0
+			if(!isDragging) {
+				contents?.visible = false
+			}
 		}
 	}
 
@@ -145,7 +153,6 @@ class PullDownPanel : Control() {
 	@RegisterFunction
 	override fun _process(delta: Double) {
 		val currentY = pulldownPanel.getRect().size.y
-//		GD.print("currentY: $currentY - maxHeight: $maxHeight - minHeight: $minHeight")
 		when (direction) {
 			1 -> {
 				if (currentY < maxHeight) {
@@ -157,7 +164,6 @@ class PullDownPanel : Control() {
 					)
 					handle.setPosition(Vector2(handle.position.x, currentY + handle.getRect().size.y))
 					contents?.setPosition(Vector2(contents!!.position.x, currentY + avgChildHeight - maxHeight))
-					GD.print("Panel expanding")
 				} else {
 					direction = 0
 					isExpanded = true
@@ -178,9 +184,9 @@ class PullDownPanel : Control() {
 					)
 					handle.setPosition(Vector2(handle.position.x, currentY - handle.getRect().size.y))
 					contents?.setPosition(Vector2(contents!!.position.x, contents!!.position.y - avgChildHeight))
-					GD.print("Panel shrinking")
 				} else {
 					direction = 0
+					contents?.visible = false
 					isExpanded = false
 				}
 			}

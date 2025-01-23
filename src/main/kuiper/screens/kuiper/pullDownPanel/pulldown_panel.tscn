@@ -25,5 +25,6 @@ custom_minimum_size = Vector2(50, 25)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
+mouse_default_cursor_shape = 9
 
 [connection signal="gui_input" from="VBoxContainer/Handle" to="." method="_on_handle_gui_input"]

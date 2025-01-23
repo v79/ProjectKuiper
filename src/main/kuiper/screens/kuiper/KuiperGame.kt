@@ -49,7 +49,7 @@ class KuiperGame : Node() {
 
 		// Get UI elements
 		yearLbl = getNodeAs("Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/PanelContainer2/Year_lbl")!!
-		eraTabBar = getNodeAs("Background/AspectRatioContainer/VBoxContainer/TabBar")!!
+		eraTabBar = getNodeAs("Background/AspectRatioContainer/VBoxContainer/TabBarContainer/TabBar")!!
 		eraTabBar.setTabTitle(0, gameState.country?.name ?: "No country selected")
 		companyNameHeader =
 			getNodeAs("Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/ProjectKuiperHeading")!!
@@ -84,13 +84,7 @@ class KuiperGame : Node() {
 	@RegisterFunction
 	override fun _process(delta: Double) {
 		yearLbl.text = "Year: ${gameState.year}"
-		/*// the science summary panel needs to sit centred under the sciencePanel - wish I didn't have to do it in _process()
-		scienceSummaryPanel.setPosition(Vector2(
-			(sciencePanel.globalPosition.x + scienceSummaryPanel.getRect().size.x) / 2,
-			sciencePanel.getRect().size.y + 10.0
-		))*/
 	}
-
 
 
 	@RegisterFunction
