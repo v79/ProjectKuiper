@@ -1,0 +1,36 @@
+[gd_scene load_steps=2 format=3 uid="uid://5unxo5wmblfy"]
+
+[ext_resource type="PackedScene" uid="uid://cun66228bprqh" path="res://src/main/kuiper/screens/kuiper/pullDownPanel/pulldown_panel.tscn" id="1_0f0k1"]
+
+[node name="PulldownPanelTest" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PulldownPanel" parent="." instance=ExtResource("1_0f0k1")]
+layout_mode = 1
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="PulldownPanel"]
+visible = false
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="PulldownPanel/VBoxContainer2"]
+layout_mode = 2
+text = "First"
+
+[node name="Label2" type="Label" parent="PulldownPanel/VBoxContainer2"]
+layout_mode = 2
+text = "Second"
+
+[node name="Label3" type="Label" parent="PulldownPanel/VBoxContainer2"]
+layout_mode = 2
+text = "Third"
