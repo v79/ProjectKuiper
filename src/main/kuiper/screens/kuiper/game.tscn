@@ -72,19 +72,22 @@ horizontal_alignment = 1
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 size_flags_horizontal = 4
+mouse_filter = 1
 
 [node name="SciencePanel" type="HBoxContainer" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/Container"]
 z_index = 1
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 offset_right = 400.0
+offset_bottom = 50.0
 
 [node name="PulldownPanel" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/Container" node_paths=PackedStringArray("contents") instance=ExtResource("3_ecgw1")]
 custom_minimum_size = Vector2(250, 50)
 layout_mode = 2
-offset_top = 50.0
-offset_right = 400.0
-offset_bottom = 100.0
+offset_left = 50.0
+offset_top = 40.0
+offset_right = 450.0
+offset_bottom = 90.0
 contents = NodePath("ScienceSummaryContents")
 
 [node name="ScienceSummaryContents" type="VBoxContainer" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/Container/PulldownPanel"]
