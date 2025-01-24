@@ -61,9 +61,9 @@ class KuiperGame : Node() {
 		// populate science panel
 		GD.print("Populating science panel with ${gameState.company.sciences.size} sciences")
 		GD.print("ScienceSummaryPanel currently has ${scienceSummaryPanel.getChildCount()} children")
+		val sciencePanelItem =
+			ResourceLoader.load("res://src/main/kuiper/screens/kuiper/science_rates.tscn") as PackedScene
 		gameState.company.sciences.forEach { (science, rate) ->
-			val sciencePanelItem =
-				ResourceLoader.load("res://src/main/kuiper/screens/kuiper/science_rates.tscn") as PackedScene
 			val item = sciencePanelItem.instantiate() as ScienceRate
 			item.rateLabel = "%.2f".format(gameState.company.sciences[science])
 			item.colour = science.color
