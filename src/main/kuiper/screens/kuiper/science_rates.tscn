@@ -1,0 +1,32 @@
+[gd_scene load_steps=2 format=3 uid="uid://dy3jkykq03k3s"]
+
+[ext_resource type="Script" path="res://src/main/kuiper/screens/kuiper/ScienceRate.kt" id="1_n4ira"]
+
+[node name="ScienceRate" type="Control"]
+custom_minimum_size = Vector2(65, 0)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_n4ira")
+rate_label = "12.3"
+colour = Color(0.583424, 0.388814, 0.567801, 1)
+description = "Psychology"
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="ColorRect" type="ColorRect" parent="MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+
+[node name="Rate" type="Label" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+text = "12.3"
