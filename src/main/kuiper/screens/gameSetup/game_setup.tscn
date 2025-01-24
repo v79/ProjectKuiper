@@ -126,6 +126,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 tooltip_text = "Your company name will be used when saving your game."
 theme_override_font_sizes/font_size = 24
+text = "EuroStellar Space Co"
 placeholder_text = "Name your company"
 caret_blink = true
 caret_multiple = false

@@ -1,0 +1,30 @@
+[gd_scene load_steps=2 format=3 uid="uid://cun66228bprqh"]
+
+[ext_resource type="Script" path="res://src/main/kuiper/screens/kuiper/pullDownPanel/PullDownPanel.kt" id="1_211j7"]
+
+[node name="PulldownPanel" type="Control"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 200.0
+offset_bottom = 50.0
+script = ExtResource("1_211j7")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(200, 25)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+
+[node name="Handle" type="ColorRect" parent="VBoxContainer"]
+custom_minimum_size = Vector2(50, 25)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_default_cursor_shape = 9
+
+[connection signal="gui_input" from="VBoxContainer/Handle" to="." method="_on_handle_gui_input"]
