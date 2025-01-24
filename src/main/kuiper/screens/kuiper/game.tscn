@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://dhc5at6r5jl4n"]
+[gd_scene load_steps=4 format=3 uid="uid://dhc5at6r5jl4n"]
 
 [ext_resource type="Script" path="res://src/main/kuiper/screens/kuiper/KuiperGame.kt" id="1_nlsq8"]
 [ext_resource type="PackedScene" uid="uid://bh0hxtmuthjhi" path="res://src/main/kuiper/screens/kuiper/escMenu/esc_menu.tscn" id="2_4tnej"]
+[ext_resource type="PackedScene" uid="uid://cun66228bprqh" path="res://src/main/kuiper/screens/kuiper/pullDownPanel/pulldown_panel.tscn" id="3_ecgw1"]
 
 [node name="CanvasLayer" type="CanvasLayer"]
 script = ExtResource("1_nlsq8")
@@ -46,6 +47,7 @@ theme_override_constants/margin_left = 120
 
 [node name="ResourcesPanel" type="PanelContainer" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox"]
 layout_mode = 2
+mouse_filter = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/ResourcesPanel"]
 layout_mode = 2
@@ -66,20 +68,33 @@ theme_override_font_sizes/font_size = 20
 text = "Project Kuiper"
 horizontal_alignment = 1
 
-[node name="ResearchPanel" type="PanelContainer" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox"]
+[node name="Container" type="Control" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox"]
+custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/ResearchPanel"]
+[node name="SciencePanel" type="HBoxContainer" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/Container"]
+z_index = 1
+custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
+offset_right = 400.0
+offset_bottom = 50.0
 
-[node name="Label" type="Label" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/ResearchPanel/HBoxContainer"]
+[node name="PulldownPanel" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/Container" node_paths=PackedStringArray("contents") instance=ExtResource("3_ecgw1")]
+custom_minimum_size = Vector2(250, 50)
 layout_mode = 2
-text = "Physics"
+offset_left = 50.0
+offset_top = 40.0
+offset_right = 450.0
+offset_bottom = 90.0
+contents = NodePath("ScienceSummaryContents")
 
-[node name="Label2" type="Label" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/ResearchPanel/HBoxContainer"]
-layout_mode = 2
-text = "Biology
-"
+[node name="ScienceSummaryContents" type="VBoxContainer" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/Container/PulldownPanel"]
+visible = false
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 1
+offset_right = 200.0
 
 [node name="MarginContainer2" type="MarginContainer" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox"]
 layout_mode = 2
@@ -93,14 +108,27 @@ layout_mode = 2
 size_flags_horizontal = 8
 text = "Year"
 
-[node name="TabBar" type="TabBar" parent="Background/AspectRatioContainer/VBoxContainer"]
+[node name="TabBarContainer" type="HBoxContainer" parent="Background/AspectRatioContainer/VBoxContainer"]
 layout_mode = 2
+alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="Background/AspectRatioContainer/VBoxContainer/TabBarContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TabBar" type="TabBar" parent="Background/AspectRatioContainer/VBoxContainer/TabBarContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 current_tab = 0
 tab_alignment = 1
 tab_count = 3
 tab_0/title = "Earth"
 tab_1/title = "Near Earth Orbit"
 tab_2/title = "Mars"
+
+[node name="MarginContainer2" type="MarginContainer" parent="Background/AspectRatioContainer/VBoxContainer/TabBarContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="MarginContainer" type="MarginContainer" parent="Background/AspectRatioContainer/VBoxContainer"]
 layout_mode = 2
@@ -117,13 +145,16 @@ text = "End Turn"
 
 [node name="EscMenu" parent="." instance=ExtResource("2_4tnej")]
 visible = false
+visibility_layer = 2
 offset_left = 10.0
 offset_top = 10.0
 offset_right = 10.0
 offset_bottom = 10.0
+mouse_filter = 1
 
 [connection signal="end_turn_signal" from="." to="." method="on_end_turn"]
 [connection signal="esc_menu_signal" from="." to="." method="on_escape_menu"]
+[connection signal="recalc_pulldown_panel_signal" from="." to="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/Container/PulldownPanel" method="_recalculate_pulldown_dimensions"]
 [connection signal="pressed" from="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/PanelContainer/MenuButton" to="." method="on_escape_menu"]
 [connection signal="pressed" from="Background/AspectRatioContainer/VBoxContainer/BottomRow_hbox/EndTurn_btn" to="." method="on_end_turn"]
 [connection signal="please_save_signal" from="EscMenu" to="." method="on_esc_save_game"]

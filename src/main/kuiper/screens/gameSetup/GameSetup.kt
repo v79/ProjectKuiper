@@ -9,6 +9,7 @@ import godot.extensions.getNodeAs
 import godot.global.GD
 import state.Country
 import state.GameState
+import state.Science
 
 @RegisterClass
 class GameSetup : Node() {
@@ -81,8 +82,11 @@ class GameSetup : Node() {
 		GD.print("Got game state: ${gameState.stateToString()}, changing year to 1965")
 		gameState.year = 1965
 		gameState.country = countryList[selectedCountry - 1]
-		gameState.companyName = companyNameEdit.text
+		gameState.company.name = companyNameEdit.text
+		gameState.company.sciences = generateStartingScienceRates().toMutableMap()
 		GD.print("Starting game for country ${countryList[selectedCountry - 1].name}")
+		GD.print("Company name: ${gameState.company.name}")
+		GD.print("Science rates: ${gameState.company.sciences}")
 		getTree()?.changeSceneToFile("res://src/main/kuiper/screens/kuiper/game.tscn")
 	}
 
@@ -103,5 +107,17 @@ class GameSetup : Node() {
 	@RegisterFunction
 	fun _on_company_panel_back_pressed() {
 		companyNamePanel.visible = false
+	}
+
+	/**
+	 * Create some random starting science rates
+	 * Later these will be based on the country selected and loaded from reference data
+	 */
+	private fun generateStartingScienceRates(): Map<Science, Float> {
+		val scienceRates = mutableMapOf<Science, Float>()
+		Science.entries.forEach { science ->
+			scienceRates[science] = GD.randfRange(1.0f, 10.0f)
+		}
+		return scienceRates
 	}
 }

@@ -46,4 +46,6 @@ game_save={
 
 [layer_names]
 
+2d_render/layer_2="Modals"
+2d_render/layer_3="InfoPanels"
 2d_physics/layer_1="Card"

@@ -1,0 +1,58 @@
+[gd_scene load_steps=2 format=3 uid="uid://5unxo5wmblfy"]
+
+[ext_resource type="PackedScene" uid="uid://cun66228bprqh" path="res://src/main/kuiper/screens/kuiper/pullDownPanel/pulldown_panel.tscn" id="1_0f0k1"]
+
+[node name="PulldownPanelTest" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+
+[node name="PulldownPanel" parent="." instance=ExtResource("1_0f0k1")]
+layout_mode = 1
+key = 174
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="PulldownPanel"]
+visible = false
+clip_contents = true
+layout_mode = 1
+offset_right = 63.0
+offset_bottom = 266.0
+
+[node name="Label" type="Label" parent="PulldownPanel/VBoxContainer2"]
+layout_mode = 2
+text = "First"
+
+[node name="Label2" type="Label" parent="PulldownPanel/VBoxContainer2"]
+layout_mode = 2
+text = "Second"
+
+[node name="Label3" type="Label" parent="PulldownPanel/VBoxContainer2"]
+layout_mode = 2
+text = "Third"
+
+[node name="Label4" type="Label" parent="PulldownPanel/VBoxContainer2"]
+layout_mode = 2
+text = "Forth"
+
+[node name="Label5" type="Label" parent="PulldownPanel/VBoxContainer2"]
+layout_mode = 2
+text = "Fifth"
+
+[node name="Label6" type="Label" parent="PulldownPanel/VBoxContainer2"]
+layout_mode = 2
+text = "Sixth"
+
+[node name="Label7" type="Label" parent="PulldownPanel/VBoxContainer2"]
+layout_mode = 2
+text = "Seventh"
+
+[node name="Label8" type="Label" parent="PulldownPanel/VBoxContainer2"]
+layout_mode = 2
+text = "Eighth"
+
+[node name="Label9" type="Label" parent="PulldownPanel/VBoxContainer2"]
+layout_mode = 2
+text = "Nineth"
+
+[node name="Label10" type="Label" parent="PulldownPanel/VBoxContainer2"]
+layout_mode = 2
+text = "Tenth"
