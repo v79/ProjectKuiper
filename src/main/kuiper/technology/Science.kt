@@ -1,4 +1,4 @@
-package state
+package technology
 
 import godot.core.Color
 import kotlinx.serialization.Serializable

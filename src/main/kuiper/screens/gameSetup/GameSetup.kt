@@ -9,7 +9,7 @@ import godot.extensions.getNodeAs
 import godot.global.GD
 import state.Country
 import state.GameState
-import state.Science
+import technology.Science
 
 @RegisterClass
 class GameSetup : Node() {
