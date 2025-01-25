@@ -20,30 +20,42 @@ class TechWeb {
 @Serializable
 class Technology(val id: Int, val title: String, val description: String, val tier: TechTier) {
 
-//    val progressPct: Float
-//        get() = if (researched) 1f else progress / cost
+    val progressPct: Double
+        get() = if (researched) 1.0 else ((100.0 / totalCost) * progress)
 
     val researched: Boolean
-        get() = unlockRequirements.values.all { it.progress >= it.required }
+        get() = unlockRequirements.values.all { it.progress >= it.cost }
 
-    // I think this should be a map instead?
-    val unlockRequirements: MutableMap<Science
-            , ResearchProgress> = mutableMapOf()
+    val unlockRequirements: MutableMap<Science, ResearchProgress> = mutableMapOf()
 
-    val totalCost: Float
-        get() = unlockRequirements.values.sumOf { it.required.toDouble() }.toFloat()
-    val progress: Float
-        get() = unlockRequirements.values.sumOf { it.progress.toDouble() }.toFloat()
+    val totalCost: Int
+        get() = unlockRequirements.values.sumOf { it.cost }
+    val progress: Int
+        get() = unlockRequirements.values.sumOf { it.progress }
 
-    fun addProgress(science: Science, amount: Float) {
-        unlockRequirements[science]?.let {
-            it.progress += amount
+    fun addProgress(science: Science, amount: Int) {
+        val reqs = unlockRequirements[science]
+        if (reqs != null) {
+            if (reqs.progress + amount >= reqs.cost) {
+                reqs.progress = reqs.cost
+            } else {
+                reqs.progress += amount
+            }
         }
+
     }
 
     var requires: MutableList<Int> = mutableListOf()
     var actionsUnlocked: MutableList<Action> = mutableListOf()
     var actionsDeprecated: MutableList<Action> = mutableListOf()
+
+    override fun toString(): String {
+        return "Technology(id=$id, title='$title', tier=$tier. progress=$progress, totalCost=$totalCost, researched=$researched)"
+    }
+
+    fun scienceProgressComplete(science: Science): Boolean {
+        return unlockRequirements[science]?.progress == unlockRequirements[science]?.cost
+    }
 
 }
 
@@ -59,4 +71,4 @@ enum class TechTier(val description: String) {
 }
 
 @Serializable
-class ResearchProgress(val required: Float, var progress: Float = 0.0f)
+data class ResearchProgress(val cost: Int, var progress: Int = 0)

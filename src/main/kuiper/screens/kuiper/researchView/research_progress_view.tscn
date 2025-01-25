@@ -39,3 +39,10 @@ layout_mode = 2
 offset_right = 200.0
 offset_bottom = 27.0
 show_percentage = false
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+
+[node name="ScienceProgressContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer"]
+layout_mode = 2

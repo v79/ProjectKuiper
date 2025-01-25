@@ -40,21 +40,22 @@ class ResearchViewTest : Control() {
 		message = getNodeAs("Label")!!
 
 		// randomise tech science requirements and add techs to UI
-		val techItemScene =
+		val researchView =
 			ResourceLoader.load("res://src/main/kuiper/screens/kuiper/researchView/research_progress_view.tscn") as PackedScene
-		techList.forEach {
-			GD.print("Populating tech ${it.title}")
+		techList.forEach { tech ->
+			GD.print("Populating tech ${tech.title}")
 			Science.entries.forEach { science ->
-				val req = GD.randfRange(1.0f, 10.0f)
-				val progress = GD.randfRange(0.0f, req)
-				it.unlockRequirements[science] = ResearchProgress(req, progress)
+				val req = GD.randiRange(10, 100)
+				val progress = 0
+				tech.unlockRequirements[science] = ResearchProgress(req, progress)
 			}
-			val techItem = techItemScene.instantiate() as ResearchProgressView
+			val techItem = researchView.instantiate() as ResearchProgressView
+			techItem.title = tech.title
+			techItem.progressPct = tech.progressPct
+			techItem.cost = tech.totalCost
+			techItem.id = tech.id
+
 			techItemList.add(techItem)
-			techItem.title = it.title
-			techItem.progress = it.progress
-			techItem.cost = it.totalCost
-			techItem.id = it.id
 			listBox.addChild(techItem)
 			listBox.resetSize()
 		}
@@ -75,10 +76,21 @@ class ResearchViewTest : Control() {
 	@RegisterFunction
 	fun _on_button_pressed() {
 		msgText = "Researching!"
-		techList.forEach {
+		techList.forEach { tech ->
+			val researchView = techItemList.find { it.id == tech.id }
+			researchView?.sciSummary = ""
 			Science.entries.forEach { science ->
-				it.addProgress(science, GD.randfRange(0.0f, 10.0f))
-				GD.print("Tech ${it.title} ${science.label} progress: ${it.progress} / ${it.unlockRequirements[science]?.required}}")
+				val growth = GD.randiRange(0, 10)
+				tech.addProgress(science, growth)
+				if (tech.totalCost > 0) {
+					if (tech.unlockRequirements[science]?.progress == tech.unlockRequirements[science]?.cost) {
+						researchView?.addCompletedScience(science)
+					}
+					researchView?.progressPct = if (tech.progressPct == 1.0) 100.0 else tech.progressPct
+				}
+			}
+			if (tech.researched) {
+				msgText = "Researched ${tech.title}!"
 			}
 		}
 	}

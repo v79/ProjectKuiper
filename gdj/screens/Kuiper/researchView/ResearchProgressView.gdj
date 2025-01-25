@@ -21,9 +21,12 @@ properties = [
 	title,
 	progress,
 	cost,
-	done
+	done,
+	sci_summary,
+	progress_pct
 ]
 functions = [
     _ready,
-	_process
+	_process,
+	add_completed_science
 ]

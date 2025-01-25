@@ -15,17 +15,17 @@ theme_override_constants/separation = 40
 
 [node name="Button" type="Button" parent="."]
 layout_mode = 0
-offset_left = 287.0
-offset_top = 171.0
-offset_right = 371.0
-offset_bottom = 202.0
+offset_left = 497.0
+offset_top = 32.0
+offset_right = 581.0
+offset_bottom = 63.0
 text = "Research!"
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 0
-offset_left = 292.0
-offset_top = 214.0
-offset_right = 332.0
-offset_bottom = 237.0
+offset_left = 507.0
+offset_top = 76.0
+offset_right = 547.0
+offset_bottom = 99.0
 
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
