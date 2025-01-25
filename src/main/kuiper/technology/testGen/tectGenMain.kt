@@ -2,6 +2,7 @@ package technology.testGen
 
 import kotlinx.serialization.json.Json
 import technology.TechTier
+import technology.TechWeb
 import technology.Technology
 
 fun main() {
@@ -64,7 +65,7 @@ fun main() {
         requires.add(2)
     }
 
-    val techWeb = mutableListOf(
+    val allTechs = mutableListOf(
         integratedCircuits,
         lightweightAlloys,
         multiStageRockets,
@@ -73,8 +74,14 @@ fun main() {
         solidRocketFuels
     )
 
-    val Json = Json { prettyPrint = true }
-    val jsonTechWeb = Json.encodeToString(techWeb)
+    val Json = Json { prettyPrint = true; encodeDefaults = true }
+    val jsonTechWeb = Json.encodeToString(allTechs)
     println(jsonTechWeb)
+
+    val techWeb = TechWeb()
+    techWeb.technologies.addAll(allTechs)
+
+    println("Technology ${startingPoint.title} unlocks:")
+    println("  ${techWeb.unlockedBy(startingPoint).joinToString { it.title }}")
 
 }
