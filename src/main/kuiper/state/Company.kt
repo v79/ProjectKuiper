@@ -1,6 +1,7 @@
 package state
 
 import kotlinx.serialization.Serializable
+import technology.Science
 
 /**
  * The company that the player is running

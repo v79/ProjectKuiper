@@ -8,6 +8,7 @@ import godot.core.*
 import godot.extensions.getNodeAs
 import godot.global.GD
 import state.GameState
+import technology.Science
 import kotlin.properties.Delegates
 
 /**
@@ -56,7 +57,8 @@ class KuiperGame : Node() {
 		companyNameHeader.text = "Project Kuiper - ${gameState.company.name}"
 		sciencePanel =
 			getNodeAs("Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/Container/SciencePanel")!!
-		scienceSummaryPanel = getNodeAs("Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/Container/PulldownPanel/ScienceSummaryContents")!!
+		scienceSummaryPanel =
+			getNodeAs("Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/Container/PulldownPanel/ScienceSummaryContents")!!
 
 		// populate science panel
 		GD.print("Populating science panel with ${gameState.company.sciences.size} sciences")
@@ -66,7 +68,7 @@ class KuiperGame : Node() {
 				ResourceLoader.load("res://src/main/kuiper/screens/kuiper/science_rates.tscn") as PackedScene
 			val item = sciencePanelItem.instantiate() as ScienceRate
 			item.rateLabel = "%.2f".format(gameState.company.sciences[science])
-			item.colour = science.color
+			item.colour = science.color()
 			item.description = science.label
 			item.setMouseFilter(Control.MouseFilter.MOUSE_FILTER_PASS)
 			sciencePanel.addChild(item)
