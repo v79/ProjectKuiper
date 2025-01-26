@@ -1,0 +1,31 @@
+[gd_scene load_steps=2 format=3 uid="uid://bpefw1aavtrmo"]
+
+[ext_resource type="Script" path="res://src/main/kuiper/screens/kuiper/researchView/ResearchViewTest.kt" id="1_4em10"]
+
+[node name="ResearchViewTest" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_4em10")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 330.0
+offset_bottom = 300.0
+theme_override_constants/separation = 40
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_left = 497.0
+offset_top = 32.0
+offset_right = 581.0
+offset_bottom = 63.0
+text = "Research!"
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 507.0
+offset_top = 76.0
+offset_right = 547.0
+offset_bottom = 99.0
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
