@@ -1,0 +1,24 @@
+{
+  "actionDefs": [
+    {
+      "id": 1,
+      "name": "Add gold",
+      "description": "Add gold to the player's inventory",
+      "duration": 0,
+      "mutations": [
+        {
+          "type": "add",
+          "target": "gold",
+          "value": 100,
+          "yearly": false
+        }
+      ],
+      "costs": [
+        {
+          "type": "influence",
+          "value": 1
+        }
+      ]
+    }
+  ]
+}
