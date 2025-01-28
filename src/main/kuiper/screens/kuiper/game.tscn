@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://dhc5at6r5jl4n"]
+[gd_scene load_steps=6 format=3 uid="uid://dhc5at6r5jl4n"]
 
 [ext_resource type="Script" path="res://src/main/kuiper/screens/kuiper/KuiperGame.kt" id="1_nlsq8"]
 [ext_resource type="PackedScene" uid="uid://bh0hxtmuthjhi" path="res://src/main/kuiper/screens/kuiper/escMenu/esc_menu.tscn" id="2_4tnej"]
+[ext_resource type="PackedScene" uid="uid://yrhn5sd7iho2" path="res://src/main/kuiper/screens/kuiper/actions/active_action_list.tscn" id="3_dmo6v"]
 [ext_resource type="PackedScene" uid="uid://cun66228bprqh" path="res://src/main/kuiper/screens/kuiper/pullDownPanel/pulldown_panel.tscn" id="3_ecgw1"]
+[ext_resource type="PackedScene" uid="uid://bcnrl5714e1pe" path="res://src/main/kuiper/actions/available_actions_fan.tscn" id="4_o0igw"]
 
 [node name="CanvasLayer" type="CanvasLayer"]
 script = ExtResource("1_nlsq8")
@@ -13,6 +15,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 color = Color(0.125911, 0.125911, 0.125911, 1)
 
 [node name="AspectRatioContainer" type="MarginContainer" parent="Background"]
@@ -29,6 +32,7 @@ theme_override_constants/margin_bottom = 10
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Background/AspectRatioContainer"]
 layout_mode = 2
+mouse_filter = 2
 
 [node name="TopRow_hbox" type="HBoxContainer" parent="Background/AspectRatioContainer/VBoxContainer"]
 layout_mode = 2
@@ -143,15 +147,30 @@ layout_mode = 2
 size_flags_horizontal = 8
 text = "End Turn"
 
+[node name="ActiveActionList" parent="." instance=ExtResource("3_dmo6v")]
+visibility_layer = 5
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 10.0
+offset_top = 80.0
+offset_right = 10.0
+offset_bottom = 855.0
+grow_horizontal = 1
+grow_vertical = 1
+
 [node name="EscMenu" parent="." instance=ExtResource("2_4tnej")]
 visible = false
-visibility_layer = 2
+visibility_layer = 4
 offset_left = 10.0
 offset_top = 10.0
 offset_right = 10.0
 offset_bottom = 10.0
 mouse_filter = 1
 
+[node name="AvailableActionsFan" parent="." instance=ExtResource("4_o0igw")]
+
+[connection signal="card_added" from="." to="AvailableActionsFan" method="add_action_string"]
 [connection signal="end_turn_signal" from="." to="." method="on_end_turn"]
 [connection signal="esc_menu_signal" from="." to="." method="on_escape_menu"]
 [connection signal="recalc_pulldown_panel_signal" from="." to="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/Container/PulldownPanel" method="_recalculate_pulldown_dimensions"]

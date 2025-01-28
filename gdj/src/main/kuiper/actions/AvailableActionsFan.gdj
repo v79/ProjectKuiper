@@ -1,30 +1,26 @@
 // THIS FILE IS GENERATED! DO NOT EDIT OR DELETE IT. EDIT OR DELETE THE ASSOCIATED SOURCE CODE FILE INSTEAD
 // Note: You can however freely move this file inside your godot project if you want. Keep in mind however, that if you rename the originating source code file, this file will be deleted and regenerated as a new file instead of being updated! Other modifications to the source file however, will result in this file being updated.
 
-registeredName = KuiperGame
-fqName = screens.kuiper.KuiperGame
-relativeSourcePath = src/main/kuiper/screens/kuiper/KuiperGame.kt
-baseType = Node
+registeredName = AvailableActionsFan
+fqName = actions.AvailableActionsFan
+relativeSourcePath = src/main/kuiper/actions/AvailableActionsFan.kt
+baseType = Node2D
 supertypes = [
-    godot.Node,
+    godot.Node2D,
+	godot.CanvasItem,
+	godot.Node,
 	godot.Object,
 	godot.core.KtObject,
 	kotlin.Any
 ]
 signals = [
-    end_turn_signal,
-	esc_menu_signal,
-	card_added,
-	recalc_pulldown_panel_signal
+    
 ]
 properties = [
-    
+    action_card_ids
 ]
 functions = [
     _ready,
 	_process,
-	_input,
-	on_escape_menu,
-	on_end_turn,
-	on_esc_save_game
+	add_action_string
 ]
