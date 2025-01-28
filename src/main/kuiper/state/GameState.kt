@@ -25,11 +25,16 @@ class GameState : Node() {
     @Export
     var year: Int = 1980
 
-    var company: Company = Company("Kuiper", mutableMapOf())
+    var company: Company = Company("Kuiper")
     var country: Country? = null
 
+    /**
+     * On turn end, we need to update the game state
+     */
     fun nextTurn() {
         GD.print("GameState: Next turn")
+        company.nextTurn()
+        // increment the year
         year++
     }
 

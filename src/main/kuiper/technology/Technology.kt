@@ -1,5 +1,6 @@
 package technology
 
+import actions.Action
 import kotlinx.serialization.Serializable
 
 class TechWeb {
