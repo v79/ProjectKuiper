@@ -2,9 +2,10 @@ package state
 
 import actions.Action
 import actions.MutationType
+import actions.ResourceMutation
+import actions.ScienceMutation
 import kotlinx.serialization.Serializable
 import technology.Science
-import kotlin.contracts.ExperimentalContracts
 
 /**
  * The company that the player is running
@@ -22,7 +23,6 @@ class Company(var name: String) {
     // Currently active actions which have a limited duration
     var activeActions: MutableList<Action> = mutableListOf()
 
-    // is this where I put all the mutator functions?
     /**
      * Update the given resource by the given amount
      * Use a negative amount to subtract
@@ -31,32 +31,87 @@ class Company(var name: String) {
         resources.merge(type, amount, Int::plus)
     }
 
+    /**
+     * Set the resource to the given amount
+     */
     fun setResource(type: ResourceType, amount: Int) {
         resources[type] = amount
     }
 
-    @OptIn(ExperimentalContracts::class)
+    /**
+     * Multiply the resource by the given amount. Useful for sciences.
+     */
+    fun multiplyResource(type: ResourceType, multiplier: Float) {
+        resources[type] = (resources[type]!! * multiplier).toInt()
+    }
+
+    /**
+     * Perform all active actions, update company resources and sciences,
+     * spend science on research, and so on
+     */
     fun nextTurn() {
-        activeActions.forEach { action ->
+
+        // spend science amongst technologies, i.e. perform research
+        // for now, just reset to zero!
+//        sciences.replaceAll { _, _ -> 0.0f }
+
+        // perform actions
+        // perform ongoing action (if any)
+        activeActions.forEach act@{ action ->
             val mutations = action.getMutations()
             mutations.forEach { mutation ->
-                if (mutation.amountPerYear != 0) {
-                    println("Executing mutation: ${action.id} $mutation")
-                    when (mutation.effect) {
-                        MutationType.ADD -> addResource(mutation.property, mutation.amountPerYear)
-                        MutationType.CHANGE -> setResource(mutation.property, mutation.amountPerYear)
+                when (mutation) {
+                    is ResourceMutation -> {
+                        if (mutation.amountPerYear != 0) {
+                            println("Executing mutation: ${action.id} $mutation")
+                            when (mutation.type) {
+                                MutationType.ADD -> addResource(mutation.resource, mutation.amountPerYear)
+                                MutationType.SET -> setResource(mutation.resource, mutation.amountPerYear)
+                                MutationType.RATE_MULTIPLY -> multiplyResource(mutation.resource, mutation.amountPerYear.toFloat())
+                            }
+                        }
+                    }
+
+                    is ScienceMutation -> {
+                        if (mutation.amount != 0.0f) {
+                            println("Executing science mutation: ${action.id} $mutation")
+                            when (mutation.type) {
+                                MutationType.ADD -> sciences.merge(
+                                    mutation.science,
+                                    mutation.amount,
+                                    Float::plus
+                                )
+                                MutationType.SET -> sciences[mutation.science] = mutation.amount
+                                MutationType.RATE_MULTIPLY -> sciences.merge(
+                                    mutation.science,
+                                    mutation.amount,
+                                    Float::times
+                                )
+                            }
+                        }
                     }
                 }
+
             }
             action.turnsRemaining--
-            // perform ongoing action (if any)
+            // perform completion mutations, which happen when the action expires
             if (action.turnsRemaining == 0) {
-                if (mutations.any { it.completionAmount != null }) {
-                    mutations.forEach { mutation ->
-                        println("Executing completion mutation: ${action.id} $mutation")
-                        when (mutation.effect) {
-                            MutationType.ADD -> addResource(mutation.property, mutation.completionAmount!!)
-                            MutationType.CHANGE -> setResource(mutation.property, mutation.completionAmount!!)
+                mutations.forEach mut@{ mutation ->
+                    when (mutation) {
+                        is ResourceMutation -> {
+                            if (mutation.completionAmount == null) {
+                                return@mut
+                            }
+                            println("Executing completion mutation: ${action.id} $mutation")
+                            when (mutation.type) {
+                                MutationType.ADD -> addResource(mutation.resource, mutation.completionAmount)
+                                MutationType.SET -> setResource(mutation.resource, mutation.completionAmount)
+                                MutationType.RATE_MULTIPLY -> TODO()
+                            }
+                        }
+                        is ScienceMutation -> {
+                            // it doesn't make sense to have a completion mutation for science
+                            println("Error: completion mutation for science doesn't make sense: $mutation")
                         }
                     }
                 }
@@ -64,6 +119,10 @@ class Company(var name: String) {
         }
         // clean up any expired actions
         activeActions.removeIf { it.turnsRemaining == 0 }
+
+        // recalculate science rates
+
+        // update company resources
     }
 }
 

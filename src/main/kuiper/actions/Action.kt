@@ -28,7 +28,7 @@ class Action(val id: Int, val name: String, val description: String, var duratio
     )
 
     // some actions may consume science, reducing the amount of science available for technology research
-    var scienceCost: Science? = null
+    // var scienceCost: Science? = null
 
     // actions have prerequisites, such as having researched a certain technology
     // but maybe I don't need to capture this in the Action class?
@@ -36,9 +36,8 @@ class Action(val id: Int, val name: String, val description: String, var duratio
     // actions can be deprecated, meaning they are no longer available to the player
     // does this need to be captured in the Action class?
 
-    // actions have an effect, such as increasing a science research rate, or increasing the company's influence
-    // actions can have effect once completed, or they have an effect for each turn that they are active
-    // but how do I encode this in the Action class?
+    // ✅ actions have an effect, such as increasing a science research rate, or increasing the company's influence
+    // ✅ actions can have effect once completed, or they have an effect for each turn that they are active
     // Better if the action takes place on the target, e.g. on the ScienceRate object?
 
     // actions either happen each turn, or at expiry
@@ -55,13 +54,9 @@ class Action(val id: Int, val name: String, val description: String, var duratio
     // completionAmount should only be used with CHANGE mutations, and is the final value of the property
     private var completionAmount: Int? = null
 
-    class Mutation(
-        val property: ResourceType, val effect: MutationType, val amountPerYear: Int, val completionAmount: Int? = null
-    ) {
-        override fun toString(): String {
-            return "$effect $property by ${amountPerYear}, to completion amount $completionAmount"
-        }
-    }
+    // science mutations are different from regular mutations
+    private var scienceToMutate: Science? = null
+    private var scienceRateAmount: Float = 0.0f
 
     /**
      * Actions perform mutations on the company state
@@ -69,12 +64,20 @@ class Action(val id: Int, val name: String, val description: String, var duratio
      * There may be additional mutations, such as costs
      */
     fun getMutations(): Set<Mutation> {
+        // there's always a zero-value gold mutation? Probably don't want that.
         val costs = actionCosts.filter { it.value != 0 }.map { (resourceType, amount) ->
-            Mutation(resourceType, MutationType.ADD, -amount, 0)
+            ResourceMutation(resourceType, MutationType.ADD, -amount, 0)
         }
-        return setOf(
-            Mutation(propertyToMutate, mutationEffect, amountPerYear, completionAmount)
-        ).plus(costs)
+        val resourceMutation =
+            listOf(ResourceMutation(propertyToMutate, mutationEffect, amountPerYear, completionAmount))
+        val scienceMutation = if (scienceToMutate != null) listOf(
+            ScienceMutation(
+                scienceToMutate!!,
+                mutationEffect,
+                scienceRateAmount
+            )
+        ) else emptyList()
+        return (costs + resourceMutation + scienceMutation).toSet()
     }
 
     /**
@@ -89,6 +92,14 @@ class Action(val id: Int, val name: String, val description: String, var duratio
         this.completionAmount = completionAmount
     }
 
+    fun addScienceMutation(
+        science: Science, mutationType: MutationType, amount: Float
+    ) {
+        scienceToMutate = science
+        mutationEffect = mutationType
+        scienceRateAmount = amount
+    }
+
     /**
      * Builder function to add a cost to the action
      */
@@ -98,13 +109,9 @@ class Action(val id: Int, val name: String, val description: String, var duratio
 
 
     override fun toString(): String {
-        return "Action(id=$id, name='$name', description='$description', duration=$duration, turnsRemaining=$turnsRemaining, actionCosts=$actionCosts, scienceCost=$scienceCost)"
+        return "Action(id=$id, name='$name', description='$description', duration=$duration, turnsRemaining=$turnsRemaining, actionCosts=$actionCosts)"
     }
 
-}
-
-enum class MutationType {
-    ADD, CHANGE
 }
 
 
@@ -120,3 +127,5 @@ enum class MutationType {
  * change_science_rate(science: Science, amount: Int)
  * change_production/influence/gold(amount: Int)
  */
+
+
