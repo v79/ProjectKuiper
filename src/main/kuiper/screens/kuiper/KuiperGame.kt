@@ -113,6 +113,9 @@ class KuiperGame : Node() {
         val stubAction = Action(1, "Stub action", "This is a stub action")
         stubAction.addMutation(ResourceType.GOLD, MutationType.ADD, 100)
         cardAdded.emit(stubAction.name)
+        val secondAction = Action(2, "Second action", "This is a second action")
+        secondAction.addMutation(ResourceType.GOLD, MutationType.ADD, 200)
+        cardAdded.emit(secondAction.name)
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
