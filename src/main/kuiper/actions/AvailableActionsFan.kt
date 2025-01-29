@@ -16,12 +16,17 @@ import godot.global.GD
 @RegisterClass
 class AvailableActionsFan : Node2D() {
 
-	// UI elements
-	private val fanContainer: CenterContainer by lazy { getNodeAs("HBoxContainer/FanContainer")!! }
-
 	@Export
 	@RegisterProperty
 	var actionCardIds: VariantArray<Int> = VariantArray()
+	val cardCount: Int
+		get() = actionCardIds.size
+
+	val maxWidth = 500f
+	val cardWidth = 200f
+
+	// UI elements
+	private val fanContainer: CenterContainer by lazy { getNodeAs("HBoxContainer/FanContainer")!! }
 
 	// packed scenes
 	private val actionCardScene = ResourceLoader.load("res://src/main/kuiper/actions/action_card.tscn") as PackedScene
@@ -29,10 +34,7 @@ class AvailableActionsFan : Node2D() {
 
 	@RegisterFunction
 	override fun _ready() {
-		actionCardIds.forEach {
-			GD.print("onReady: Card ID: $it")
-		}
-		GD.print("There are ${actionCardIds.size} cards!")
+
 	}
 
 	@RegisterFunction
@@ -40,12 +42,17 @@ class AvailableActionsFan : Node2D() {
 
 	}
 
+	// TODO: I really want to pass the whole Action here, but that is not possible with Godot/JVM
 	@RegisterFunction
 	fun addActionString(w: String) {
 		GD.print("Adding card: $w")
+		// the cards seem to merge when I drag them, as if they share state
 		val card = actionCardScene.instantiate() as ActionCard
+		card.positionMutate {
+			x = ((maxWidth / 2f - cardWidth / 1.5f) * cardCount).toDouble()
+		}
 		card.cardName = w
-		actionCardIds.add(1) // should actually be the card ID
+		actionCardIds.add(cardCount+1) // should actually be the card ID
 		fanContainer.callDeferred(::addChild, card)
 	}
 

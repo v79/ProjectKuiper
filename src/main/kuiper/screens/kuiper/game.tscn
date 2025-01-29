@@ -111,6 +111,9 @@ layout_mode = 2
 size_flags_horizontal = 8
 text = "Year"
 
+[node name="CenterContainer" type="CenterContainer" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox"]
+layout_mode = 2
+
 [node name="TabBarContainer" type="HBoxContainer" parent="Background/AspectRatioContainer/VBoxContainer"]
 layout_mode = 2
 alignment = 1

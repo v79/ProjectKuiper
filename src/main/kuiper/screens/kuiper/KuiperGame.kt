@@ -109,7 +109,7 @@ class KuiperGame : Node() {
         }
 
         // available actions fan
-        GD.print("KuiperGame: Populating available actions fan")
+        GD.print("KuiperGame: Populating available actions fan with two dummy action cards")
         val stubAction = Action(1, "Stub action", "This is a stub action")
         stubAction.addMutation(ResourceType.GOLD, MutationType.ADD, 100)
         cardAdded.emit(stubAction.name)
