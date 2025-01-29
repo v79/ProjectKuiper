@@ -14,12 +14,12 @@ supertypes = [
 	kotlin.Any
 ]
 signals = [
-    mouse_entered,
-	mouse_exited
+    
 ]
 properties = [
     card_name,
-	influence_cost
+	influence_cost,
+	click_radius
 ]
 functions = [
     _ready,
