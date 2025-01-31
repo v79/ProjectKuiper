@@ -23,5 +23,6 @@ functions = [
     _ready,
 	_process,
 	add_new_card,
-	add_action_string
+	add_action_string,
+	place_cards
 ]

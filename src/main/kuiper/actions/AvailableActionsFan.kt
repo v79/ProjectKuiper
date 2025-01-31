@@ -52,20 +52,18 @@ class AvailableActionsFan : Node2D() {
 		GD.print("Adding card: $w")
 		// the cards seem to merge when I drag them, as if they share state
 		val card = actionCardScene.instantiate() as ActionCard
-		/*        card.positionMutate {
-		//			x = ((maxWidth / 2f - cardWidth / 1.5f) * cardCount).toDouble()
-					x = cardCount + 200.0
-				}*/
 		card.cardName = w
 		actionCardIds.add(cardCount + 1) // should actually be the card ID
 		fanContainer.callDeferred(::addChild, card)
 	}
 
+	@RegisterFunction
 	fun placeCards() {
 		actionCardIds.forEachIndexed { index, _ ->
 			val card = fanContainer.getChild(index) as ActionCard
 			card.positionMutate {
 				x = index * 300.0
+				card.startPosition.x = x
 			}
 		}
 	}
