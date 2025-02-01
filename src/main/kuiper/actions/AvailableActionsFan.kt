@@ -16,6 +16,7 @@ class AvailableActionsFan : Node2D() {
 
 	private val cardCount: Int
 		get() = actionCards.size
+	private var cardIdCounter: Int = 0
 
 	// Card curve properties
 	@RegisterProperty
@@ -64,7 +65,7 @@ class AvailableActionsFan : Node2D() {
 	// temp function to create new cards on demand for testing
 	@RegisterFunction
 	fun addCard() {
-		addActionCard(cardCount + 1)
+		addActionCard(++cardIdCounter)
 	}
 
 	// temp function to remove a random card for testing
@@ -73,6 +74,7 @@ class AvailableActionsFan : Node2D() {
 		if (actionCards.isNotEmpty()) {
 			val index = (0 until actionCards.size).random()
 			val card = fanContainer.getChild(index) as ActionCard?
+			GD.print("Removing card: idx: $index - ${card?.cardId}")
 			if (card != null) {
 				fanContainer.removeChild(card)
 				actionCards.remove(card.cardId)
@@ -146,7 +148,7 @@ class AvailableActionsFan : Node2D() {
 			}
 			index++
 		}
-		GD.printErr("Card not found, returning -1")
+		GD.printErr("While searching for card $id, it was not found. Returning -1")
 		return -1
 	}
 
@@ -187,7 +189,7 @@ class AvailableActionsFan : Node2D() {
 		card.cardId = id
 		card.cardName = "Card $id"
 
-		actionCards[cardCount + 1] = card
+		actionCards[id] = card
 		fanContainer.addChild(card)
 
 		// connect signals
@@ -200,7 +202,7 @@ class AvailableActionsFan : Node2D() {
 		card.isDraggingCard.connect { c ->
 			disableOtherCards(c)
 		}
-		card.draggingStopped.connect { c ->
+		card.draggingStopped.connect {
 			enableAllCards()
 		}
 
