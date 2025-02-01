@@ -15,7 +15,9 @@ supertypes = [
 ]
 signals = [
     mouse_entered,
-	mouse_exited
+	mouse_exited,
+	is_dragging_card,
+	dragging_stopped
 ]
 properties = [
     card_name,

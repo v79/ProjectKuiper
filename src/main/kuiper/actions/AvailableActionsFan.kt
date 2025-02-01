@@ -5,7 +5,6 @@ import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
-import godot.core.VariantArray
 import godot.core.connect
 import godot.extensions.getNodeAs
 import godot.global.GD
@@ -13,11 +12,10 @@ import godot.global.GD
 @RegisterClass
 class AvailableActionsFan : Node2D() {
 
-	@Export
-	@RegisterProperty
-	var actionCardIds: VariantArray<Int> = VariantArray()
+	private var actionCards: MutableMap<Int, ActionCard> = mutableMapOf()
+
 	private val cardCount: Int
-		get() = actionCardIds.size
+		get() = actionCards.size
 
 	// Card curve properties
 	@RegisterProperty
@@ -44,7 +42,7 @@ class AvailableActionsFan : Node2D() {
 	@Export
 	var maxRotationDegrees: Float = 10f
 
-	private val maxWidth = 1400f
+	private val maxWidth = 1200f
 	private val cardWidth = 200f
 
 	// UI elements
@@ -69,14 +67,15 @@ class AvailableActionsFan : Node2D() {
 		addActionCard(cardCount + 1)
 	}
 
+	// temp function to remove a random card for testing
 	@RegisterFunction
 	fun removeRandomCard() {
-		if (actionCardIds.size > 0) {
-			val index = (0 until actionCardIds.size).random()
+		if (actionCards.isNotEmpty()) {
+			val index = (0 until actionCards.size).random()
 			val card = fanContainer.getChild(index) as ActionCard?
 			if (card != null) {
 				fanContainer.removeChild(card)
-				actionCardIds.remove(index)
+				actionCards.remove(card.cardId)
 				updateCardPlacements()
 			}
 		}
@@ -97,60 +96,100 @@ class AvailableActionsFan : Node2D() {
 
 		val offset = (maxWidth - allCardsSize) / 2
 
-		actionCardIds.forEachIndexed { index, _ ->
-			if (fanContainer.getChild(index) == null) {
-				GD.printErr("Failed to get card at index $index from actionCards array")
-			} else {
-				val card = fanContainer.getChild(index) as ActionCard?
-				if (card != null) {
-					var yMultiplier = placementCurve.sample((1.0 / (cardCount - 1) * index).toFloat())
-					var rotMultiplier = rotationCurve.sample((1.0 / (cardCount - 1) * index).toFloat())
+		actionCards.forEach { (id, card) ->
+			val index = getIndexForCardId(id)
+			var yMultiplier = placementCurve.sample((1.0 / (cardCount - 1) * index).toFloat())
+			var rotMultiplier = rotationCurve.sample((1.0 / (cardCount - 1) * index).toFloat())
 
-					if (cardCount == 1) {
-						yMultiplier = 0.0f
-						rotMultiplier = 0.0f
-					}
+			if (cardCount == 1) {
+				yMultiplier = 0.0f
+				rotMultiplier = 0.0f
+			}
 
-					val finalX = offset + cardWidth * index + finalXSep * index
-					val finalY = yMin + yMax * yMultiplier
+			val finalX = offset + cardWidth * index + finalXSep * index
+			val finalY = yMin + yMax * yMultiplier
 
-					GD.print("Placing card $index to position ($finalX, $finalY), rotated ${rotMultiplier * maxRotationDegrees}")
-					card.positionMutate {
-						x = finalX.toDouble()
-						y = finalY.toDouble()
-					}
-					card.startPosition = card.position
-					card.rotationDegrees = maxRotationDegrees * rotMultiplier
-					card.startRotation = card.rotationDegrees
-				} else {
-					GD.printErr("Got a null card for index $index. Somehow.")
+			card.positionMutate {
+				x = finalX.toDouble()
+				y = finalY.toDouble()
+			}
+			card.startPosition = card.position
+			card.rotationDegrees = maxRotationDegrees * rotMultiplier
+			card.startRotation = card.rotationDegrees
+		}
+	}
+
+	/**
+	 * Scan the fan for a card with a given ID
+	 */
+	fun getCardNodeById(id: Int): ActionCard? {
+		fanContainer.getChildren().forEach { child ->
+			if (child is ActionCard) {
+				if (child.cardId == id) {
+					return child
 				}
 			}
+		}
+		return null
+	}
+
+	/**
+	 * Get the index of a card in the fan
+	 */
+	private fun getIndexForCardId(id: Int): Int {
+		var index = 0
+		fanContainer.getChildren().forEach {
+			if (it is ActionCard) {
+				if (it.cardId == id) {
+					return index
+				}
+			}
+			index++
+		}
+		GD.printErr("Card not found, returning -1")
+		return -1
+	}
+
+	@RegisterFunction
+	fun cardEnteredHandler(id: Int) {
+		actionCards[id]?.highlight()
+	}
+
+	@RegisterFunction
+	fun cardExitHandler(id: Int) {
+		actionCards[id]?.unhighlight()
+	}
+
+	@RegisterFunction
+	fun disableOtherCards(id: Int) {
+		actionCards.filterNot { it.key == id }.forEach { (_, card) ->
+			card.disabled = true
 		}
 	}
 
 	@RegisterFunction
-	fun cardEnteredHandler(card: ActionCard) {
-		card.highlight()
-
+	fun enableAllCards() {
+		actionCards.forEach { (_, card) ->
+			card.disabled = false
+		}
 	}
 
-	@RegisterFunction
-	fun cardExitHandler(card: ActionCard) {
-		card.unhighlight()
-	}
 
-	// TODO: I really want to pass the whole Action here, but that is not possible with Godot/JVM
+	/**
+	 * Add a new action card to the fan
+	 * @param id The ID of the action card, to be fetched from the data store
+	 */
 	@RegisterFunction
 	fun addActionCard(id: Int) {
 		GD.print("Adding card: $id")
-		// the cards seem to merge when I drag them, as if they share state
 		val card = actionCardScene.instantiate() as ActionCard
+		// In reality, I'd be loading the action from a data store
+		card.cardId = id
 		card.cardName = "Card $id"
-		actionCardIds.add(id) // I wish this could be the card but it can't
-		GD.print("Card count: $cardCount")
-		GD.print("Card IDs: ${actionCardIds.size}")
+
+		actionCards[cardCount + 1] = card
 		fanContainer.addChild(card)
+
 		// connect signals
 		card.mouseEntered.connect { c ->
 			cardEnteredHandler(c)
@@ -158,6 +197,14 @@ class AvailableActionsFan : Node2D() {
 		card.mouseExited.connect { c ->
 			cardExitHandler(c)
 		}
+		card.isDraggingCard.connect { c ->
+			disableOtherCards(c)
+		}
+		card.draggingStopped.connect { c ->
+			enableAllCards()
+		}
+
+		// draw the fan
 		updateCardPlacements()
 	}
 }

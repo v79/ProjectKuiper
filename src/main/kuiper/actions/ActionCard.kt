@@ -28,6 +28,7 @@ class ActionCard : Node2D() {
     var clickRadius = 200
     private var dragging = false
     private var isDraggable = false
+    var disabled = false
     private var offset = Vector2()
 
     // properties set during placement in the fan
@@ -42,10 +43,16 @@ class ActionCard : Node2D() {
 
     // signals
     @RegisterSignal
-    val mouseEntered by signal1<ActionCard>("card_id")
+    val mouseEntered by signal1<Int>("card_id")
 
     @RegisterSignal
-    val mouseExited by signal1<ActionCard>("card_id")
+    val mouseExited by signal1<Int>("card_id")
+
+    @RegisterSignal
+    val isDraggingCard by signal1<Int>("card_id")
+
+    @RegisterSignal
+    val draggingStopped by signal1<Int>("card_id")
 
 
     @RegisterFunction
@@ -59,23 +66,35 @@ class ActionCard : Node2D() {
         // tell the fan that I am here?
     }
 
+
+    private val topLeftLimit = Vector2(100f, 100f)
+    private val widthLimit = 1200f
+
     @RegisterFunction
     override fun _process(delta: Double) {
-        if (isDraggable) {
+        if (isDraggable && !disabled) {
             if (Input.isActionJustPressed("mouse_left_click".asStringName())) {
                 offset = getGlobalMousePosition() - globalPosition
             }
             if (Input.isActionPressed("mouse_left_click".asStringName())) {
                 dragging = true
-                globalPosition = getGlobalMousePosition() - offset
+                isDraggingCard.emitSignal(this.cardId)
+                // limit drags to bounding box
+                val newPosition = getGlobalMousePosition() - offset
+                if (newPosition.x < topLeftLimit.x || newPosition.x > topLeftLimit.x + widthLimit) {
+                    newPosition.x = if (newPosition.x < topLeftLimit.x) topLeftLimit.x else topLeftLimit.x + widthLimit
+                }
+                if (newPosition.y < topLeftLimit.y) {
+                    newPosition.y = topLeftLimit.y
+                }
+                globalPosition = newPosition
+
                 // clear rotation when dragging but revert when released
                 getTree()!!.createTween()?.tweenProperty(this, "rotation".asNodePath(), GD.degToRad(0.0f), 0.5)
-
-                // I'd like to clamp the position to a bounding box, not yet defined
-//				GD.print("Global: $globalPosition - Local: $position")
             } else if (Input.isActionJustReleased("mouse_left_click".asStringName())) {
                 getTree()!!.createTween()?.tweenProperty(this, "position".asNodePath(), startPosition, 0.5)
                 dragging = false
+                draggingStopped.emitSignal(this.cardId)
                 getTree()!!.createTween()?.tweenProperty(this, "rotation".asNodePath(), GD.degToRad(startRotation), 0.5)
             }
         }
@@ -83,7 +102,7 @@ class ActionCard : Node2D() {
 
     @RegisterFunction
     fun _on_area_2d_mouse_entered() {
-        mouseEntered.emitSignal(this)
+        mouseEntered.emitSignal(this.cardId)
         if (!dragging) {
             isDraggable = true
         }
@@ -91,7 +110,7 @@ class ActionCard : Node2D() {
 
     @RegisterFunction
     fun _on_area_2d_mouse_exited() {
-        mouseExited.emitSignal(this)
+        mouseExited.emitSignal(this.cardId)
         if (!dragging) {
             isDraggable = false
         }
@@ -114,5 +133,4 @@ class ActionCard : Node2D() {
     fun unhighlight() {
         cardImage.modulate = Color(1.0, 1.0, 1.0, 1.0)
     }
-
 }

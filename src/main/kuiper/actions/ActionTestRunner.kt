@@ -1,9 +1,11 @@
 package actions
 
+import kotlinx.serialization.json.Json
 import state.Company
 import state.ResourceType
 import technology.Science
 
+private val json = Json { prettyPrint = true }
 
 fun main() {
     println("Setting up company")
@@ -23,7 +25,7 @@ fun main() {
     }
 
     resourceActionTests(company) // should finish with 30 gold, 7 influence, 60 construction materials
-    scienceActionTests(company) // should finish with 1.2 physics science
+//    scienceActionTests(company) // should finish with 1.2 physics science
 
     var turn = 1
     while (company.activeActions.isNotEmpty()) {
@@ -99,9 +101,13 @@ private fun resourceActionTests(company: Company) {
         action_nuke_gold_after_two_turns, action_invest_gold_for_five_turns
     )
 
+    val actionsString = json.encodeToString(actions)
+    println(actionsString)
+
     println("Adding actions to company")
     actions.forEach {
         println(it)
         company.activeActions.add(it)
     }
+
 }

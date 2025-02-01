@@ -1,6 +1,7 @@
 package screens.kuiper
 
 import actions.Action
+import actions.ActionCard
 import actions.MutationType
 import godot.*
 import godot.annotation.RegisterClass
@@ -29,7 +30,7 @@ class KuiperGame : Node() {
 	@RegisterSignal
 	val escMenuSignal: Signal0 by signal0()
 
-	// Signals
+	// Signals - signals need to be valid Variant types https://docs.godotengine.org/en/stable/contributing/development/core_and_modules/variant_class.html
 	@RegisterSignal
 	val cardAdded by signal1<Int>("card_id")
 
@@ -105,16 +106,6 @@ class KuiperGame : Node() {
 			activeActionView.turnsLeft = it.duration.toString()
 			activeActionList.addChild(activeActionView)
 		}
-
-		// available actions fan
-        // this isn't really supposed to be responsible for this, but I need to test the fan
-		GD.print("KuiperGame: Populating available actions fan with two dummy action cards")
-		val stubAction = Action(1, "First action", "This is the first action")
-		stubAction.addMutation(ResourceType.GOLD, MutationType.ADD, 100)
-		cardAdded.emit(stubAction.id)
-//		val secondAction = Action(2, "Second action", "This is a second action")
-//		secondAction.addMutation(ResourceType.GOLD, MutationType.ADD, 200)
-//		cardAdded.emit(secondAction.id)
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -150,7 +141,6 @@ class KuiperGame : Node() {
 
 	@RegisterFunction
 	fun on_esc_save_game() {
-		GD.print("Game: Save button pressed")
 		GD.print(gameState.stateToString())
 		escMenuVisible = false
 		gameState.save()

@@ -17,8 +17,7 @@ signals = [
     
 ]
 properties = [
-    action_card_ids,
-	placement_curve,
+    placement_curve,
 	rotation_curve,
 	x_sep,
 	y_min,
@@ -33,5 +32,7 @@ functions = [
 	update_card_placements,
 	card_entered_handler,
 	card_exit_handler,
+	disable_other_cards,
+	enable_all_cards,
 	add_action_card
 ]
