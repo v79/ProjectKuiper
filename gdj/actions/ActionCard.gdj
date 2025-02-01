@@ -14,7 +14,8 @@ supertypes = [
 	kotlin.Any
 ]
 signals = [
-    
+    mouse_entered,
+	mouse_exited
 ]
 properties = [
     card_name,

@@ -38,7 +38,7 @@ text = "Build Lab"
 
 [node name="InfluenceCost" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "1"
+text = "..."
 
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
 [connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]

@@ -6,7 +6,7 @@ import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
 import godot.core.VariantArray
-import godot.extensions.callDeferred
+import godot.core.connect
 import godot.extensions.getNodeAs
 import godot.global.GD
 
@@ -61,7 +61,6 @@ class AvailableActionsFan : Node2D() {
 
 	@RegisterFunction
 	override fun _process(delta: Double) {
-
 	}
 
 	// temp function to create new cards on demand for testing
@@ -130,6 +129,17 @@ class AvailableActionsFan : Node2D() {
 		}
 	}
 
+	@RegisterFunction
+	fun cardEnteredHandler(card: ActionCard) {
+		card.highlight()
+
+	}
+
+	@RegisterFunction
+	fun cardExitHandler(card: ActionCard) {
+		card.unhighlight()
+	}
+
 	// TODO: I really want to pass the whole Action here, but that is not possible with Godot/JVM
 	@RegisterFunction
 	fun addActionCard(id: Int) {
@@ -141,9 +151,13 @@ class AvailableActionsFan : Node2D() {
 		GD.print("Card count: $cardCount")
 		GD.print("Card IDs: ${actionCardIds.size}")
 		fanContainer.addChild(card)
+		// connect signals
+		card.mouseEntered.connect { c ->
+			cardEnteredHandler(c)
+		}
+		card.mouseExited.connect { c ->
+			cardExitHandler(c)
+		}
 		updateCardPlacements()
-//		fanContainer.callDeferred(::addChild, card).also {
-//			updateCardPlacements()
-//		}
 	}
 }
