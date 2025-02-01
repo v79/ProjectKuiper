@@ -33,8 +33,11 @@ class ActionCard : Node2D() {
 	var clickRadius = 200
 	private var dragging = false
 	private var isDraggable = false
-	var startPosition = Vector2()
 	private var offset = Vector2()
+
+	// properties set during placement in the fan
+	var startPosition = Vector2()
+	var startRotation: Float = 0.0f
 
 	// UI elements
 	private val cardNameLabel: Label by lazy { getNodeAs("PanelContainer/VBoxContainer/HBoxContainer/CardName")!! }
@@ -62,6 +65,8 @@ class ActionCard : Node2D() {
 			if (Input.isActionPressed("mouse_left_click".asStringName())) {
 				dragging = true
 				globalPosition = getGlobalMousePosition() - offset
+				// clear rotation when dragging but revert when released
+				rotationDegrees = 0.0f
 
 				// I'd like to clamp the position to a bounding box, not yet defined
 //				GD.print("Global: $globalPosition - Local: $position")
@@ -70,6 +75,7 @@ class ActionCard : Node2D() {
 				GD.print("Tweening from $position to $startPosition")
 				getTree()!!.createTween()?.tweenProperty(this, "position".asNodePath(), startPosition, 0.5)
 				dragging = false
+				getTree()!!.createTween()?.tweenProperty(this, "rotation".asNodePath(), GD.degToRad(startRotation), 0.5)
 			}
 		}
 	}

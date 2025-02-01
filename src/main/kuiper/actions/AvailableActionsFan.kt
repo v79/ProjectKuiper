@@ -122,6 +122,7 @@ class AvailableActionsFan : Node2D() {
 					}
 					card.startPosition = card.position
 					card.rotationDegrees = maxRotationDegrees * rotMultiplier
+					card.startRotation = card.rotationDegrees
 				} else {
 					GD.printErr("Got a null card for index $index. Somehow.")
 				}

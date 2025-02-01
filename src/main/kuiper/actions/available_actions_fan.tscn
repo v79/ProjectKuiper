@@ -19,8 +19,6 @@ mouse_filter = 1
 script = ExtResource("1_nignc")
 placement_curve = ExtResource("2_s4gae")
 rotation_curve = ExtResource("3_ifbuw")
-y_min = 70.0
-y_max = -70.0
 metadata/_edit_use_anchors_ = true
 
 [node name="DropZoneBounds" type="Control" parent="."]
