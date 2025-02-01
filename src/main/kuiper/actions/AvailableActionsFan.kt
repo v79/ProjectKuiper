@@ -1,9 +1,6 @@
 package actions
 
-import godot.CenterContainer
-import godot.Node2D
-import godot.PackedScene
-import godot.ResourceLoader
+import godot.*
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
@@ -22,11 +19,37 @@ class AvailableActionsFan : Node2D() {
 	private val cardCount: Int
 		get() = actionCardIds.size
 
-	private val maxWidth = 500f
+	// Card curve properties
+	@RegisterProperty
+	@Export
+	var placementCurve: Curve = Curve()
+
+	@RegisterProperty
+	@Export
+	var rotationCurve: Curve = Curve()
+
+	@RegisterProperty
+	@Export
+	var xSep: Float = 10f
+
+	@RegisterProperty
+	@Export
+	var yMin: Float = 70f
+
+	@RegisterProperty
+	@Export
+	var yMax: Float = -70f
+
+	@RegisterProperty
+	@Export
+	var maxRotationDegrees: Float = 10f
+
+	private val maxWidth = 1400f
 	private val cardWidth = 200f
 
 	// UI elements
 	private val fanContainer: CenterContainer by lazy { getNodeAs("HBoxContainer/FanContainer")!! }
+	private val dropZoneBounds: Control by lazy { getNodeAs("DropZoneBounds")!! }
 
 	// packed scenes
 	private val actionCardScene = ResourceLoader.load("res://src/main/kuiper/actions/action_card.tscn") as PackedScene
@@ -38,34 +61,88 @@ class AvailableActionsFan : Node2D() {
 
 	@RegisterFunction
 	override fun _process(delta: Double) {
-		placeCards()
+
+	}
+
+	// temp function to create new cards on demand for testing
+	@RegisterFunction
+	fun addCard() {
+		addActionCard(cardCount + 1)
 	}
 
 	@RegisterFunction
-	fun addNewCard() {
-		addActionString("New Card ${cardCount + 1}")
-	}
-
-	// TODO: I really want to pass the whole Action here, but that is not possible with Godot/JVM
-	@RegisterFunction
-	fun addActionString(w: String) {
-		GD.print("Adding card: $w")
-		// the cards seem to merge when I drag them, as if they share state
-		val card = actionCardScene.instantiate() as ActionCard
-		card.cardName = w
-		actionCardIds.add(cardCount + 1) // should actually be the card ID
-		fanContainer.callDeferred(::addChild, card)
-	}
-
-	@RegisterFunction
-	fun placeCards() {
-		actionCardIds.forEachIndexed { index, _ ->
-			val card = fanContainer.getChild(index) as ActionCard
-			card.positionMutate {
-				x = index * 300.0
-				card.startPosition.x = x
+	fun removeRandomCard() {
+		if (actionCardIds.size > 0) {
+			val index = (0 until actionCardIds.size).random()
+			val card = fanContainer.getChild(index) as ActionCard?
+			if (card != null) {
+				fanContainer.removeChild(card)
+				actionCardIds.remove(index)
+				updateCardPlacements()
 			}
 		}
 	}
 
+	/**
+	 * Card fan placement algorithm from https://github.com/guladam/godot_2d_card_fanning/blob/main/hand.gd
+	 */
+	@RegisterFunction
+	fun updateCardPlacements() {
+		var allCardsSize = cardWidth * cardCount + xSep * (cardCount - 1)
+		var finalXSep = xSep
+
+		if (allCardsSize > maxWidth) {
+			finalXSep = (maxWidth - cardWidth * cardCount) / (cardCount - 1)
+			allCardsSize = maxWidth
+		}
+
+		val offset = (maxWidth - allCardsSize) / 2
+
+		actionCardIds.forEachIndexed { index, _ ->
+			if (fanContainer.getChild(index) == null) {
+				GD.printErr("Failed to get card at index $index from actionCards array")
+			} else {
+				val card = fanContainer.getChild(index) as ActionCard?
+				if (card != null) {
+					var yMultiplier = placementCurve.sample((1.0 / (cardCount - 1) * index).toFloat())
+					var rotMultiplier = rotationCurve.sample((1.0 / (cardCount - 1) * index).toFloat())
+
+					if (cardCount == 1) {
+						yMultiplier = 0.0f
+						rotMultiplier = 0.0f
+					}
+
+					val finalX = offset + cardWidth * index + finalXSep * index
+					val finalY = yMin + yMax * yMultiplier
+
+					GD.print("Placing card $index to position ($finalX, $finalY), rotated ${rotMultiplier * maxRotationDegrees}")
+					card.positionMutate {
+						x = finalX.toDouble()
+						y = finalY.toDouble()
+					}
+					card.startPosition = card.position
+					card.rotationDegrees = maxRotationDegrees * rotMultiplier
+				} else {
+					GD.printErr("Got a null card for index $index. Somehow.")
+				}
+			}
+		}
+	}
+
+	// TODO: I really want to pass the whole Action here, but that is not possible with Godot/JVM
+	@RegisterFunction
+	fun addActionCard(id: Int) {
+		GD.print("Adding card: $id")
+		// the cards seem to merge when I drag them, as if they share state
+		val card = actionCardScene.instantiate() as ActionCard
+		card.cardName = "Card $id"
+		actionCardIds.add(id) // I wish this could be the card but it can't
+		GD.print("Card count: $cardCount")
+		GD.print("Card IDs: ${actionCardIds.size}")
+		fanContainer.addChild(card)
+		updateCardPlacements()
+//		fanContainer.callDeferred(::addChild, card).also {
+//			updateCardPlacements()
+//		}
+	}
 }

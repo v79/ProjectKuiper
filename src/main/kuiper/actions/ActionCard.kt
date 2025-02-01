@@ -1,9 +1,6 @@
 package actions
 
-import godot.Input
-import godot.Label
-import godot.Node2D
-import godot.StaticBody2D
+import godot.*
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
@@ -23,6 +20,10 @@ class ActionCard : Node2D() {
 
 	@RegisterProperty
 	@Export
+	var cardId: Int = 0
+
+	@RegisterProperty
+	@Export
 	var influenceCost = 3
 
 	private var action: Action? = null
@@ -38,7 +39,7 @@ class ActionCard : Node2D() {
 	// UI elements
 	private val cardNameLabel: Label by lazy { getNodeAs("PanelContainer/VBoxContainer/HBoxContainer/CardName")!! }
 	private lateinit var influenceCostLabel: Label
-	private val parentNode = getParent()
+	private lateinit var parentNode: Node
 
 
 	@RegisterFunction
@@ -61,6 +62,7 @@ class ActionCard : Node2D() {
 			if (Input.isActionPressed("mouse_left_click".asStringName())) {
 				dragging = true
 				globalPosition = getGlobalMousePosition() - offset
+
 				// I'd like to clamp the position to a bounding box, not yet defined
 //				GD.print("Global: $globalPosition - Local: $position")
 			} else if (Input.isActionJustReleased("mouse_left_click".asStringName())) {

@@ -18,6 +18,7 @@ signals = [
 ]
 properties = [
     card_name,
+	card_id,
 	influence_cost,
 	click_radius
 ]

@@ -31,7 +31,7 @@ class KuiperGame : Node() {
 
 	// Signals
 	@RegisterSignal
-	val cardAdded by signal1<String>("card_name")
+	val cardAdded by signal1<Int>("card_id")
 
 
 	@RegisterSignal
@@ -107,13 +107,14 @@ class KuiperGame : Node() {
 		}
 
 		// available actions fan
+        // this isn't really supposed to be responsible for this, but I need to test the fan
 		GD.print("KuiperGame: Populating available actions fan with two dummy action cards")
 		val stubAction = Action(1, "First action", "This is the first action")
 		stubAction.addMutation(ResourceType.GOLD, MutationType.ADD, 100)
-		cardAdded.emit(stubAction.name)
-		val secondAction = Action(2, "Second action", "This is a second action")
-		secondAction.addMutation(ResourceType.GOLD, MutationType.ADD, 200)
-		cardAdded.emit(secondAction.name)
+		cardAdded.emit(stubAction.id)
+//		val secondAction = Action(2, "Second action", "This is a second action")
+//		secondAction.addMutation(ResourceType.GOLD, MutationType.ADD, 200)
+//		cardAdded.emit(secondAction.id)
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

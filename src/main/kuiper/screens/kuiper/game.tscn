@@ -169,6 +169,14 @@ offset_bottom = 8.0
 rotation = 0.000297717
 text = "Add card"
 
+[node name="RemoveCardButton" type="Button" parent="ActiveActionList"]
+layout_mode = 0
+offset_top = 40.0
+offset_right = 109.0
+offset_bottom = 71.0
+rotation = 0.000297717
+text = "Remove card"
+
 [node name="EscMenu" parent="." instance=ExtResource("2_4tnej")]
 visible = false
 visibility_layer = 4
@@ -181,12 +189,13 @@ mouse_filter = 1
 [node name="AvailableActionsFan" parent="." instance=ExtResource("4_o0igw")]
 mouse_filter = 2
 
-[connection signal="card_added" from="." to="AvailableActionsFan" method="add_action_string"]
+[connection signal="card_added" from="." to="AvailableActionsFan" method="add_action_card"]
 [connection signal="end_turn_signal" from="." to="." method="on_end_turn"]
 [connection signal="esc_menu_signal" from="." to="." method="on_escape_menu"]
 [connection signal="recalc_pulldown_panel_signal" from="." to="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/Container/PulldownPanel" method="_recalculate_pulldown_dimensions"]
 [connection signal="pressed" from="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/PanelContainer/MenuButton" to="." method="on_escape_menu"]
 [connection signal="pressed" from="Background/AspectRatioContainer/VBoxContainer/BottomRow_hbox/EndTurn_btn" to="." method="on_end_turn"]
-[connection signal="pressed" from="ActiveActionList/Button" to="AvailableActionsFan" method="add_new_card"]
+[connection signal="pressed" from="ActiveActionList/Button" to="AvailableActionsFan" method="add_card"]
+[connection signal="pressed" from="ActiveActionList/RemoveCardButton" to="AvailableActionsFan" method="remove_random_card"]
 [connection signal="please_save_signal" from="EscMenu" to="." method="on_esc_save_game"]
 [connection signal="resume_signal" from="EscMenu" to="." method="on_escape_menu"]
