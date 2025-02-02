@@ -35,21 +35,20 @@ class HexDropTarget : Marker2D() {
 
 	@RegisterFunction
 	override fun _draw() {
+
 		val a = 2 * Math.PI / 6
 		val r = 100.0
 		var p1 = Vector2(100.0, 0.0)
 		val font = FontVariation()
 		for (i in 1..6) {
 			val p2 = Vector2(r * cos(a * i), r * sin(a * i))
-			GD.print(p2)
 			drawLine(
 				p1,
 				p2,
-				colour,
+			colour,
 				2.0f
 			)
 			if (fillTriangles[i - 1]) {
-				GD.print("filling triangle $i")
 				val fillPolys = PackedVector2Array()
 				fillPolys.insert(0, Vector2(0.0, 0.0))
 				fillPolys.insert(1, p1)
@@ -71,15 +70,12 @@ class HexDropTarget : Marker2D() {
 					1.0f
 				)
 			}
-
 		}
-
 	}
 
 	@RegisterFunction
 	override fun _ready() {
 		fillTriangles.resize(6)
-//		fillTriangles.fill(false)
 	}
 
 

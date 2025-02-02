@@ -10,6 +10,5 @@ script = ExtResource("1_6jr4r")
 [node name="Marker2D" type="Marker2D" parent="."]
 script = ExtResource("2_wqt7c")
 draw_internals = true
-numbered = true
-fill_triangles = Array[bool]([true, false, true])
+fill_triangles = Array[bool]([true])
 colour = Color(1, 1, 0, 1)

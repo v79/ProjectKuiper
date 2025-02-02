@@ -15,7 +15,7 @@ offset_top = -800.0
 grow_horizontal = 2
 grow_vertical = 0
 size_flags_vertical = 8
-mouse_filter = 1
+mouse_filter = 2
 script = ExtResource("1_nignc")
 placement_curve = ExtResource("2_s4gae")
 rotation_curve = ExtResource("3_ifbuw")
@@ -31,9 +31,11 @@ offset_top = -210.0
 offset_bottom = -10.0
 grow_horizontal = 2
 grow_vertical = 0
+mouse_filter = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="HBoxContainer"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/margin_right = 200
 
 [node name="FanContainer" type="CenterContainer" parent="HBoxContainer"]
@@ -43,6 +45,7 @@ size_flags_horizontal = 3
 
 [node name="MarginContainer2" type="MarginContainer" parent="HBoxContainer"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/margin_left = 200
 
 [node name="DropZoneBounds" type="Control" parent="."]

@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://dhc5at6r5jl4n"]
+[gd_scene load_steps=7 format=3 uid="uid://dhc5at6r5jl4n"]
 
 [ext_resource type="Script" path="res://src/main/kuiper/screens/kuiper/KuiperGame.kt" id="1_nlsq8"]
 [ext_resource type="PackedScene" uid="uid://bh0hxtmuthjhi" path="res://src/main/kuiper/screens/kuiper/escMenu/esc_menu.tscn" id="2_4tnej"]
 [ext_resource type="PackedScene" uid="uid://yrhn5sd7iho2" path="res://src/main/kuiper/screens/kuiper/actions/active_action_list.tscn" id="3_dmo6v"]
 [ext_resource type="PackedScene" uid="uid://cun66228bprqh" path="res://src/main/kuiper/screens/kuiper/pullDownPanel/pulldown_panel.tscn" id="3_ecgw1"]
 [ext_resource type="PackedScene" uid="uid://bcnrl5714e1pe" path="res://src/main/kuiper/actions/available_actions_fan.tscn" id="4_o0igw"]
+[ext_resource type="PackedScene" uid="uid://e6ba6jfglfp5" path="res://src/main/kuiper/hexgrid/Hex.tscn" id="6_khr4p"]
 
 [node name="CanvasLayer" type="CanvasLayer"]
 script = ExtResource("1_nlsq8")
@@ -187,7 +188,9 @@ offset_bottom = 10.0
 mouse_filter = 1
 
 [node name="AvailableActionsFan" parent="." instance=ExtResource("4_o0igw")]
-mouse_filter = 2
+
+[node name="Hex" parent="." instance=ExtResource("6_khr4p")]
+position = Vector2(1143, 305)
 
 [connection signal="card_added" from="." to="AvailableActionsFan" method="add_action_card"]
 [connection signal="end_turn_signal" from="." to="." method="on_end_turn"]
