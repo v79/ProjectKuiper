@@ -27,7 +27,6 @@ properties = [
 ]
 functions = [
     _ready,
-	_enter_tree,
 	_process,
 	_on_area_2d_mouse_entered,
 	_on_area_2d_mouse_exited,

@@ -1,13 +1,17 @@
 package actions
 
+import SignalBus
 import godot.*
 import godot.annotation.*
 import godot.core.*
 import godot.extensions.getNodeAs
 import godot.global.GD
+import godot.util.toRealT
 
 @RegisterClass
 class ActionCard : Node2D() {
+
+	lateinit var signalBus: SignalBus
 
 	@RegisterProperty
 	@Export
@@ -26,6 +30,12 @@ class ActionCard : Node2D() {
 	@RegisterProperty
 	@Export
 	var clickRadius = 200
+
+	companion object {
+		const val CARD_WIDTH = 150f
+		const val CARD_HEIGHT = 200f
+	}
+
 	private var dragging = false
 	private var isDraggable = false
 	var disabled = false
@@ -54,21 +64,21 @@ class ActionCard : Node2D() {
 	@RegisterSignal
 	val draggingStopped by signal1<Int>("card_id")
 
+	private var topLeftLimit = Vector2(100f, 100f)
+	private var widthLimit = 1200f
 
 	@RegisterFunction
 	override fun _ready() {
+		signalBus = getNodeAs("/root/SignalBus")!!
 		startPosition = position
 		cardNameLabel.text = cardName
+
+		// when screen is resized, update the width limit to constrain dragging
+		signalBus.onScreenResized.connect { width, _ ->
+			widthLimit = (width - 100f - offset.x - CARD_WIDTH).toFloat()
+		}
 	}
 
-	@RegisterFunction
-	override fun _enterTree() {
-		// tell the fan that I am here?
-	}
-
-
-	private var topLeftLimit = Vector2(100f, 100f)
-	private val widthLimit = 1200f
 
 	@RegisterFunction
 	override fun _process(delta: Double) {
@@ -81,8 +91,11 @@ class ActionCard : Node2D() {
 				isDraggingCard.emitSignal(this.cardId)
 				// limit drags to bounding box
 				val newPosition = getGlobalMousePosition() - offset
-				if (newPosition.x < topLeftLimit.x || newPosition.x > topLeftLimit.x + widthLimit) {
-					newPosition.x = if (newPosition.x < topLeftLimit.x) topLeftLimit.x else topLeftLimit.x + widthLimit
+				if (newPosition.x < topLeftLimit.x) {
+					newPosition.x = topLeftLimit.x
+				}
+				if (newPosition.x > widthLimit) {
+					newPosition.x = widthLimit.toRealT()
 				}
 				if (newPosition.y < topLeftLimit.y) {
 					newPosition.y = topLeftLimit.y
