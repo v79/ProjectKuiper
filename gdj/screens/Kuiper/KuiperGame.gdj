@@ -4,9 +4,13 @@
 registeredName = KuiperGame
 fqName = screens.kuiper.KuiperGame
 relativeSourcePath = src/main/kuiper/screens/kuiper/KuiperGame.kt
-baseType = Node
+baseType = PanelContainer
 supertypes = [
-    godot.Node,
+    godot.PanelContainer,
+	godot.Container,
+	godot.Control,
+	godot.CanvasItem,
+	godot.Node,
 	godot.Object,
 	godot.core.KtObject,
 	kotlin.Any
@@ -15,6 +19,7 @@ signals = [
     end_turn_signal,
 	esc_menu_signal,
 	card_added,
+	screen_resized,
 	recalc_pulldown_panel_signal
 ]
 properties = [

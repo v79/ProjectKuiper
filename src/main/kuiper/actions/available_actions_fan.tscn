@@ -5,7 +5,6 @@
 [ext_resource type="Curve" uid="uid://d2x7gnrh830bd" path="res://src/main/kuiper/actions/card_rotation_curve.tres" id="3_ifbuw"]
 
 [node name="AvailableActionsFan" type="Control"]
-custom_minimum_size = Vector2(600, 200)
 layout_mode = 3
 anchors_preset = 12
 anchor_top = 1.0

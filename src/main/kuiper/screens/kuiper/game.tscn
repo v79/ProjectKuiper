@@ -7,15 +7,19 @@
 [ext_resource type="PackedScene" uid="uid://bcnrl5714e1pe" path="res://src/main/kuiper/actions/available_actions_fan.tscn" id="4_o0igw"]
 [ext_resource type="PackedScene" uid="uid://e6ba6jfglfp5" path="res://src/main/kuiper/hexgrid/Hex.tscn" id="6_khr4p"]
 
-[node name="CanvasLayer" type="CanvasLayer"]
-script = ExtResource("1_nlsq8")
-
-[node name="Background" type="ColorRect" parent="."]
+[node name="CanvasLayer" type="PanelContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+script = ExtResource("1_nlsq8")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 2
 mouse_filter = 1
 color = Color(0.125911, 0.125911, 0.125911, 1)
 
@@ -109,6 +113,7 @@ theme_override_constants/margin_left = 120
 layout_mode = 2
 
 [node name="Year_lbl" type="Label" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/PanelContainer2"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
 text = "Year"
@@ -153,41 +158,36 @@ text = "End Turn"
 
 [node name="ActiveActionList" parent="." instance=ExtResource("3_dmo6v")]
 visibility_layer = 5
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = 10.0
-offset_top = 80.0
-offset_right = 10.0
-offset_bottom = 855.0
-grow_horizontal = 1
-grow_vertical = 1
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
 
-[node name="Button" type="Button" parent="ActiveActionList"]
-layout_mode = 0
-offset_right = 8.0
-offset_bottom = 8.0
-rotation = 0.000297717
+[node name="VBoxContainer2" type="VBoxContainer" parent="ActiveActionList"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -33.0
+offset_right = 109.0
+offset_bottom = 33.0
+grow_vertical = 2
+
+[node name="Button" type="Button" parent="ActiveActionList/VBoxContainer2"]
+layout_mode = 2
 text = "Add card"
 
-[node name="RemoveCardButton" type="Button" parent="ActiveActionList"]
-layout_mode = 0
-offset_top = 40.0
-offset_right = 109.0
-offset_bottom = 71.0
-rotation = 0.000297717
+[node name="RemoveCardButton" type="Button" parent="ActiveActionList/VBoxContainer2"]
+layout_mode = 2
 text = "Remove card"
 
 [node name="EscMenu" parent="." instance=ExtResource("2_4tnej")]
 visible = false
 visibility_layer = 4
-offset_left = 10.0
-offset_top = 10.0
-offset_right = 10.0
-offset_bottom = 10.0
+layout_mode = 2
 mouse_filter = 1
 
 [node name="AvailableActionsFan" parent="." instance=ExtResource("4_o0igw")]
+layout_mode = 2
 
 [node name="Hex" parent="." instance=ExtResource("6_khr4p")]
 position = Vector2(1143, 305)
@@ -198,7 +198,7 @@ position = Vector2(1143, 305)
 [connection signal="recalc_pulldown_panel_signal" from="." to="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/Container/PulldownPanel" method="_recalculate_pulldown_dimensions"]
 [connection signal="pressed" from="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/PanelContainer/MenuButton" to="." method="on_escape_menu"]
 [connection signal="pressed" from="Background/AspectRatioContainer/VBoxContainer/BottomRow_hbox/EndTurn_btn" to="." method="on_end_turn"]
-[connection signal="pressed" from="ActiveActionList/Button" to="AvailableActionsFan" method="add_card"]
-[connection signal="pressed" from="ActiveActionList/RemoveCardButton" to="AvailableActionsFan" method="remove_random_card"]
+[connection signal="pressed" from="ActiveActionList/VBoxContainer2/Button" to="AvailableActionsFan" method="add_card"]
+[connection signal="pressed" from="ActiveActionList/VBoxContainer2/RemoveCardButton" to="AvailableActionsFan" method="remove_random_card"]
 [connection signal="please_save_signal" from="EscMenu" to="." method="on_esc_save_game"]
 [connection signal="resume_signal" from="EscMenu" to="." method="on_escape_menu"]

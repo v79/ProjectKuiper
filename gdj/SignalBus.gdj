@@ -1,39 +1,22 @@
 // THIS FILE IS GENERATED! DO NOT EDIT OR DELETE IT. EDIT OR DELETE THE ASSOCIATED SOURCE CODE FILE INSTEAD
 // Note: You can however freely move this file inside your godot project if you want. Keep in mind however, that if you rename the originating source code file, this file will be deleted and regenerated as a new file instead of being updated! Other modifications to the source file however, will result in this file being updated.
 
-registeredName = AvailableActionsFan
-fqName = actions.AvailableActionsFan
-relativeSourcePath = src/main/kuiper/actions/AvailableActionsFan.kt
-baseType = Node2D
+registeredName = SignalBus
+fqName = SignalBus
+relativeSourcePath = src/main/kuiper/SignalBus.kt
+baseType = Node
 supertypes = [
-    godot.Node2D,
-	godot.CanvasItem,
-	godot.Node,
+    godot.Node,
 	godot.Object,
 	godot.core.KtObject,
 	kotlin.Any
 ]
 signals = [
-    
+    on_screen_resized
 ]
 properties = [
-    placement_curve,
-	rotation_curve,
-	x_sep,
-	y_min,
-	y_max,
-	max_rotation_degrees
+    
 ]
 functions = [
-    _ready,
-	_process,
-	add_card,
-	remove_random_card,
-	update_card_placements,
-	screen_resized,
-	card_entered_handler,
-	card_exit_handler,
-	disable_other_cards,
-	enable_all_cards,
-	add_action_card
+    
 ]
