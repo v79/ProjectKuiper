@@ -2,10 +2,10 @@
 
 [ext_resource type="Script" path="res://src/main/kuiper/screens/kuiper/KuiperGame.kt" id="1_nlsq8"]
 [ext_resource type="PackedScene" uid="uid://bh0hxtmuthjhi" path="res://src/main/kuiper/screens/kuiper/escMenu/esc_menu.tscn" id="2_4tnej"]
+[ext_resource type="PackedScene" uid="uid://cusua3qup71ky" path="res://src/main/kuiper/hexgrid/hex_grid.tscn" id="3_7ao4g"]
 [ext_resource type="PackedScene" uid="uid://yrhn5sd7iho2" path="res://src/main/kuiper/screens/kuiper/actions/active_action_list.tscn" id="3_dmo6v"]
 [ext_resource type="PackedScene" uid="uid://cun66228bprqh" path="res://src/main/kuiper/screens/kuiper/pullDownPanel/pulldown_panel.tscn" id="3_ecgw1"]
 [ext_resource type="PackedScene" uid="uid://bcnrl5714e1pe" path="res://src/main/kuiper/actions/available_actions_fan.tscn" id="4_o0igw"]
-[ext_resource type="PackedScene" uid="uid://e6ba6jfglfp5" path="res://src/main/kuiper/hexgrid/Hex.tscn" id="6_khr4p"]
 
 [node name="CanvasLayer" type="PanelContainer"]
 anchors_preset = 15
@@ -44,6 +44,7 @@ alignment = 1
 
 [node name="PanelContainer" type="PanelContainer" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox"]
 layout_mode = 2
+mouse_filter = 1
 
 [node name="MenuButton" type="Button" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/PanelContainer"]
 layout_mode = 2
@@ -67,6 +68,10 @@ text = "Influence"
 [node name="Label2" type="Label" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/ResourcesPanel/HBoxContainer"]
 layout_mode = 2
 text = "Money"
+
+[node name="Label3" type="Label" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/ResourcesPanel/HBoxContainer"]
+layout_mode = 2
+text = "ConMats"
 
 [node name="ProjectKuiperHeading" type="Label" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox"]
 layout_mode = 2
@@ -156,6 +161,9 @@ layout_mode = 2
 size_flags_horizontal = 8
 text = "End Turn"
 
+[node name="HexGrid" parent="." instance=ExtResource("3_7ao4g")]
+layout_mode = 2
+
 [node name="ActiveActionList" parent="." instance=ExtResource("3_dmo6v")]
 visibility_layer = 5
 layout_mode = 2
@@ -188,9 +196,6 @@ mouse_filter = 1
 
 [node name="AvailableActionsFan" parent="." instance=ExtResource("4_o0igw")]
 layout_mode = 2
-
-[node name="Hex" parent="." instance=ExtResource("6_khr4p")]
-position = Vector2(1143, 305)
 
 [connection signal="card_added" from="." to="AvailableActionsFan" method="add_action_card"]
 [connection signal="end_turn_signal" from="." to="." method="on_end_turn"]
