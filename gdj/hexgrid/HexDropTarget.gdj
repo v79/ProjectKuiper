@@ -18,7 +18,8 @@ signals = [
     
 ]
 properties = [
-    draw_internals,
+    is_selected,
+	draw_internals,
 	numbered,
 	fill_triangles,
 	colour
@@ -26,5 +27,7 @@ properties = [
 functions = [
     _draw,
 	_ready,
-	_process
+	_process,
+	highlight,
+	unhighlight
 ]

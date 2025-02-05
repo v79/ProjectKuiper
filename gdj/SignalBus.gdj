@@ -12,7 +12,9 @@ supertypes = [
 	kotlin.Any
 ]
 signals = [
-    on_screen_resized
+    on_screen_resized,
+	dragging_card,
+	dropped_card
 ]
 properties = [
     

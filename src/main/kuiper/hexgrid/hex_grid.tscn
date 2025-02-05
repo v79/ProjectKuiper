@@ -49,61 +49,61 @@ columns = 5
 [node name="BoxContainer" type="BoxContainer" parent="HBoxContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
-[node name="Hex" parent="HBoxContainer/VBoxContainer/GridContainer/BoxContainer" instance=ExtResource("2_4b4sr")]
+[node name="Hex1" parent="HBoxContainer/VBoxContainer/GridContainer/BoxContainer" groups=["hexDropTargets"] instance=ExtResource("2_4b4sr")]
 position = Vector2(274, 175)
 
 [node name="BoxContainer2" type="BoxContainer" parent="HBoxContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
-[node name="Hex2" parent="HBoxContainer/VBoxContainer/GridContainer/BoxContainer2" instance=ExtResource("2_4b4sr")]
+[node name="Hex2" parent="HBoxContainer/VBoxContainer/GridContainer/BoxContainer2" groups=["hexDropTargets"] instance=ExtResource("2_4b4sr")]
 position = Vector2(274, 175)
 
 [node name="BoxContainer3" type="BoxContainer" parent="HBoxContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
-[node name="Hex2" parent="HBoxContainer/VBoxContainer/GridContainer/BoxContainer3" instance=ExtResource("2_4b4sr")]
+[node name="Hex3" parent="HBoxContainer/VBoxContainer/GridContainer/BoxContainer3" groups=["hexDropTargets"] instance=ExtResource("2_4b4sr")]
 position = Vector2(274, 175)
 
 [node name="BoxContainer4" type="BoxContainer" parent="HBoxContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
-[node name="Hex2" parent="HBoxContainer/VBoxContainer/GridContainer/BoxContainer4" instance=ExtResource("2_4b4sr")]
+[node name="Hex4" parent="HBoxContainer/VBoxContainer/GridContainer/BoxContainer4" groups=["hexDropTargets"] instance=ExtResource("2_4b4sr")]
 position = Vector2(274, 175)
 
 [node name="BoxContainer5" type="BoxContainer" parent="HBoxContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
-[node name="Hex2" parent="HBoxContainer/VBoxContainer/GridContainer/BoxContainer5" instance=ExtResource("2_4b4sr")]
+[node name="Hex5" parent="HBoxContainer/VBoxContainer/GridContainer/BoxContainer5" groups=["hexDropTargets"] instance=ExtResource("2_4b4sr")]
 position = Vector2(274, 175)
 
 [node name="BoxContainer6" type="BoxContainer" parent="HBoxContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
-[node name="Hex2" parent="HBoxContainer/VBoxContainer/GridContainer/BoxContainer6" instance=ExtResource("2_4b4sr")]
+[node name="Hex6" parent="HBoxContainer/VBoxContainer/GridContainer/BoxContainer6" groups=["hexDropTargets"] instance=ExtResource("2_4b4sr")]
 position = Vector2(274, 175)
 
 [node name="BoxContainer7" type="BoxContainer" parent="HBoxContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
-[node name="Hex2" parent="HBoxContainer/VBoxContainer/GridContainer/BoxContainer7" instance=ExtResource("2_4b4sr")]
+[node name="Hex7" parent="HBoxContainer/VBoxContainer/GridContainer/BoxContainer7" groups=["hexDropTargets"] instance=ExtResource("2_4b4sr")]
 position = Vector2(274, 175)
 
 [node name="BoxContainer8" type="BoxContainer" parent="HBoxContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
-[node name="Hex2" parent="HBoxContainer/VBoxContainer/GridContainer/BoxContainer8" instance=ExtResource("2_4b4sr")]
+[node name="Hex8" parent="HBoxContainer/VBoxContainer/GridContainer/BoxContainer8" groups=["hexDropTargets"] instance=ExtResource("2_4b4sr")]
 position = Vector2(274, 175)
 
 [node name="BoxContainer9" type="BoxContainer" parent="HBoxContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
-[node name="Hex2" parent="HBoxContainer/VBoxContainer/GridContainer/BoxContainer9" instance=ExtResource("2_4b4sr")]
+[node name="Hex9" parent="HBoxContainer/VBoxContainer/GridContainer/BoxContainer9" groups=["hexDropTargets"] instance=ExtResource("2_4b4sr")]
 position = Vector2(274, 175)
 
 [node name="BoxContainer10" type="BoxContainer" parent="HBoxContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
-[node name="Hex2" parent="HBoxContainer/VBoxContainer/GridContainer/BoxContainer10" instance=ExtResource("2_4b4sr")]
+[node name="Hex10" parent="HBoxContainer/VBoxContainer/GridContainer/BoxContainer10" groups=["hexDropTargets"] instance=ExtResource("2_4b4sr")]
 position = Vector2(274, 175)
 
 [node name="MarginContainer2" type="MarginContainer" parent="HBoxContainer/VBoxContainer"]

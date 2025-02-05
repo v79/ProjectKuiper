@@ -11,9 +11,16 @@ import godot.global.GD
 import kotlin.math.cos
 import kotlin.math.sin
 
+/**
+ * A HexDropTarget is the drop-target for a hexagon.
+ * It currently renders the Hexagon but this will change later.
+ */
 @Tool
 @RegisterClass
 class HexDropTarget : Marker2D() {
+
+	@RegisterProperty
+	var isSelected = false
 
 	@Export
 	@RegisterProperty
@@ -31,11 +38,19 @@ class HexDropTarget : Marker2D() {
 	@Export
 	@RegisterProperty
 	var colour: Color = Color(1.0, 1.0, 1.0, 1.0)
+	private var originalColor: Color = colour
 
+	var hex = Hex()
 
+	companion object {
+		const val HEX_RADIUS = 50.0
+	}
+
+	/**
+	 * Draw the hexagon using draw calls. To be replaced with artwork later.
+	 */
 	@RegisterFunction
 	override fun _draw() {
-
 		val a = 2 * Math.PI / 6
 		val r = 100.0
 		var p1 = Vector2(100.0, 0.0)
@@ -45,7 +60,7 @@ class HexDropTarget : Marker2D() {
 			drawLine(
 				p1,
 				p2,
-			colour,
+				colour,
 				2.0f
 			)
 			if (fillTriangles[i - 1]) {
@@ -82,5 +97,20 @@ class HexDropTarget : Marker2D() {
 	@RegisterFunction
 	override fun _process(delta: Double) {
 
+	}
+
+	@RegisterFunction
+	fun highlight() {
+		GD.print("Highlighting dropTarget")
+		colour = Color(1.0, 0.8, 0.8, 1.0)
+		queueRedraw()
+		isSelected = true
+	}
+
+	@RegisterFunction
+	fun unhighlight() {
+		colour = originalColor
+		queueRedraw()
+		isSelected = false
 	}
 }

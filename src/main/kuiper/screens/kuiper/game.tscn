@@ -162,6 +162,7 @@ size_flags_horizontal = 8
 text = "End Turn"
 
 [node name="HexGrid" parent="." instance=ExtResource("3_7ao4g")]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="ActiveActionList" parent="." instance=ExtResource("3_dmo6v")]
