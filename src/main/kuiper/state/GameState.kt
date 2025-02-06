@@ -1,5 +1,6 @@
 package state
 
+import actions.Action
 import godot.DirAccess
 import godot.FileAccess
 import godot.Node
@@ -27,6 +28,7 @@ class GameState : Node() {
 
     var company: Company = Company("Kuiper")
     var country: Country? = null
+    var availableActions: MutableList<Action> = mutableListOf()
 
     /**
      * On turn end, we need to update the game state

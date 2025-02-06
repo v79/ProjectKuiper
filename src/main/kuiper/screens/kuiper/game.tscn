@@ -1,87 +1,99 @@
-[gd_scene load_steps=4 format=3 uid="uid://dhc5at6r5jl4n"]
+[gd_scene load_steps=7 format=3 uid="uid://dhc5at6r5jl4n"]
 
 [ext_resource type="Script" path="res://src/main/kuiper/screens/kuiper/KuiperGame.kt" id="1_nlsq8"]
 [ext_resource type="PackedScene" uid="uid://bh0hxtmuthjhi" path="res://src/main/kuiper/screens/kuiper/escMenu/esc_menu.tscn" id="2_4tnej"]
+[ext_resource type="PackedScene" uid="uid://cusua3qup71ky" path="res://src/main/kuiper/hexgrid/hex_grid.tscn" id="3_7ao4g"]
+[ext_resource type="PackedScene" uid="uid://yrhn5sd7iho2" path="res://src/main/kuiper/screens/kuiper/actions/active_action_list.tscn" id="3_dmo6v"]
 [ext_resource type="PackedScene" uid="uid://cun66228bprqh" path="res://src/main/kuiper/screens/kuiper/pullDownPanel/pulldown_panel.tscn" id="3_ecgw1"]
+[ext_resource type="PackedScene" uid="uid://bcnrl5714e1pe" path="res://src/main/kuiper/actions/available_actions_fan.tscn" id="4_o0igw"]
 
-[node name="CanvasLayer" type="CanvasLayer"]
+[node name="CanvasLayer" type="PanelContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
 script = ExtResource("1_nlsq8")
 
 [node name="Background" type="ColorRect" parent="."]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
+mouse_filter = 1
 color = Color(0.125911, 0.125911, 0.125911, 1)
 
-[node name="AspectRatioContainer" type="MarginContainer" parent="Background"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="AspectRatioContainer" type="MarginContainer" parent="."]
+layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Background/AspectRatioContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="AspectRatioContainer"]
 layout_mode = 2
 
-[node name="TopRow_hbox" type="HBoxContainer" parent="Background/AspectRatioContainer/VBoxContainer"]
+[node name="TopRow_hbox" type="HBoxContainer" parent="AspectRatioContainer/VBoxContainer"]
 layout_mode = 2
 alignment = 1
 
-[node name="PanelContainer" type="PanelContainer" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox"]
-layout_mode = 2
-
-[node name="MenuButton" type="Button" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/PanelContainer"]
-layout_mode = 2
-text = "Menu"
-
-[node name="MarginContainer" type="MarginContainer" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox"]
-layout_mode = 2
-theme_override_constants/margin_left = 120
-
-[node name="ResourcesPanel" type="PanelContainer" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox"]
+[node name="PanelContainer" type="PanelContainer" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox"]
 layout_mode = 2
 mouse_filter = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/ResourcesPanel"]
+[node name="MainMenuButton" type="Button" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox/PanelContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Menu"
+
+[node name="MarginContainer" type="MarginContainer" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox"]
+layout_mode = 2
+theme_override_constants/margin_left = 120
+
+[node name="ResourcesPanel" type="PanelContainer" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox"]
+layout_mode = 2
+mouse_filter = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox/ResourcesPanel"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/ResourcesPanel/HBoxContainer"]
+[node name="Label" type="Label" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox/ResourcesPanel/HBoxContainer"]
 layout_mode = 2
 text = "Influence"
 
-[node name="Label2" type="Label" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/ResourcesPanel/HBoxContainer"]
+[node name="Label2" type="Label" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox/ResourcesPanel/HBoxContainer"]
 layout_mode = 2
 text = "Money"
 
-[node name="ProjectKuiperHeading" type="Label" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox"]
+[node name="Label3" type="Label" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox/ResourcesPanel/HBoxContainer"]
+layout_mode = 2
+text = "ConMats"
+
+[node name="ProjectKuiperHeading" type="Label" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.952941, 0.509804, 0.0705882, 1)
 theme_override_font_sizes/font_size = 20
 text = "Project Kuiper"
 horizontal_alignment = 1
+text_overrun_behavior = 3
 
-[node name="Container" type="Control" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox"]
+[node name="Container" type="Control" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox"]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 1
 
-[node name="SciencePanel" type="HBoxContainer" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/Container"]
+[node name="SciencePanel" type="HBoxContainer" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox/Container"]
+unique_name_in_owner = true
 z_index = 1
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 offset_right = 400.0
 offset_bottom = 50.0
 
-[node name="PulldownPanel" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/Container" node_paths=PackedStringArray("contents") instance=ExtResource("3_ecgw1")]
+[node name="PulldownPanel" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox/Container" node_paths=PackedStringArray("contents") instance=ExtResource("3_ecgw1")]
 custom_minimum_size = Vector2(250, 50)
 layout_mode = 2
 offset_left = 50.0
@@ -90,33 +102,40 @@ offset_right = 450.0
 offset_bottom = 90.0
 contents = NodePath("ScienceSummaryContents")
 
-[node name="ScienceSummaryContents" type="VBoxContainer" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/Container/PulldownPanel"]
+[node name="ScienceSummaryContents" type="VBoxContainer" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox/Container/PulldownPanel"]
+unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 1
 offset_right = 200.0
 
-[node name="MarginContainer2" type="MarginContainer" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox"]
+[node name="MarginContainer2" type="MarginContainer" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox"]
 layout_mode = 2
 theme_override_constants/margin_left = 120
 
-[node name="PanelContainer2" type="PanelContainer" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox"]
+[node name="PanelContainer2" type="PanelContainer" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox"]
 layout_mode = 2
 
-[node name="Year_lbl" type="Label" parent="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/PanelContainer2"]
+[node name="Year_lbl" type="Label" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox/PanelContainer2"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
 text = "Year"
 
-[node name="TabBarContainer" type="HBoxContainer" parent="Background/AspectRatioContainer/VBoxContainer"]
+[node name="CenterContainer" type="CenterContainer" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox"]
 layout_mode = 2
-alignment = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="Background/AspectRatioContainer/VBoxContainer/TabBarContainer"]
+[node name="TabBarContainer" type="HBoxContainer" parent="AspectRatioContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="AspectRatioContainer/VBoxContainer/TabBarContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 2
 
-[node name="TabBar" type="TabBar" parent="Background/AspectRatioContainer/VBoxContainer/TabBarContainer"]
+[node name="EraTabBar" type="TabBar" parent="AspectRatioContainer/VBoxContainer/TabBarContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 current_tab = 0
@@ -126,36 +145,68 @@ tab_0/title = "Earth"
 tab_1/title = "Near Earth Orbit"
 tab_2/title = "Mars"
 
-[node name="MarginContainer2" type="MarginContainer" parent="Background/AspectRatioContainer/VBoxContainer/TabBarContainer"]
+[node name="MarginContainer2" type="MarginContainer" parent="AspectRatioContainer/VBoxContainer/TabBarContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="Background/AspectRatioContainer/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="AspectRatioContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="BottomRow_hbox" type="HBoxContainer" parent="Background/AspectRatioContainer/VBoxContainer"]
+[node name="BottomRow_hbox" type="HBoxContainer" parent="AspectRatioContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 8
 
-[node name="EndTurn_btn" type="Button" parent="Background/AspectRatioContainer/VBoxContainer/BottomRow_hbox"]
+[node name="EndTurn_btn" type="Button" parent="AspectRatioContainer/VBoxContainer/BottomRow_hbox"]
 layout_mode = 2
 size_flags_horizontal = 8
 text = "End Turn"
 
+[node name="HexGrid" parent="." instance=ExtResource("3_7ao4g")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ActiveActionList" parent="." instance=ExtResource("3_dmo6v")]
+visibility_layer = 5
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="ActiveActionList"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -33.0
+offset_right = 109.0
+offset_bottom = 33.0
+grow_vertical = 2
+
+[node name="Button" type="Button" parent="ActiveActionList/VBoxContainer2"]
+layout_mode = 2
+text = "Add card"
+
+[node name="RemoveCardButton" type="Button" parent="ActiveActionList/VBoxContainer2"]
+layout_mode = 2
+text = "Remove card"
+
 [node name="EscMenu" parent="." instance=ExtResource("2_4tnej")]
 visible = false
-visibility_layer = 2
-offset_left = 10.0
-offset_top = 10.0
-offset_right = 10.0
-offset_bottom = 10.0
+visibility_layer = 4
+layout_mode = 2
 mouse_filter = 1
 
+[node name="AvailableActionsFan" parent="." instance=ExtResource("4_o0igw")]
+layout_mode = 2
+
+[connection signal="card_added" from="." to="AvailableActionsFan" method="add_action_card"]
 [connection signal="end_turn_signal" from="." to="." method="on_end_turn"]
 [connection signal="esc_menu_signal" from="." to="." method="on_escape_menu"]
-[connection signal="recalc_pulldown_panel_signal" from="." to="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/Container/PulldownPanel" method="_recalculate_pulldown_dimensions"]
-[connection signal="pressed" from="Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/PanelContainer/MenuButton" to="." method="on_escape_menu"]
-[connection signal="pressed" from="Background/AspectRatioContainer/VBoxContainer/BottomRow_hbox/EndTurn_btn" to="." method="on_end_turn"]
+[connection signal="recalc_pulldown_panel_signal" from="." to="AspectRatioContainer/VBoxContainer/TopRow_hbox/Container/PulldownPanel" method="_recalculate_pulldown_dimensions"]
+[connection signal="pressed" from="AspectRatioContainer/VBoxContainer/TopRow_hbox/PanelContainer/MainMenuButton" to="." method="on_escape_menu"]
+[connection signal="pressed" from="AspectRatioContainer/VBoxContainer/BottomRow_hbox/EndTurn_btn" to="." method="on_end_turn"]
+[connection signal="pressed" from="ActiveActionList/VBoxContainer2/Button" to="AvailableActionsFan" method="add_card"]
+[connection signal="pressed" from="ActiveActionList/VBoxContainer2/RemoveCardButton" to="AvailableActionsFan" method="remove_random_card"]
 [connection signal="please_save_signal" from="EscMenu" to="." method="on_esc_save_game"]
 [connection signal="resume_signal" from="EscMenu" to="." method="on_escape_menu"]

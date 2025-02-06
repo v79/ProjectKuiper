@@ -1,14 +1,12 @@
 // THIS FILE IS GENERATED! DO NOT EDIT OR DELETE IT. EDIT OR DELETE THE ASSOCIATED SOURCE CODE FILE INSTEAD
 // Note: You can however freely move this file inside your godot project if you want. Keep in mind however, that if you rename the originating source code file, this file will be deleted and regenerated as a new file instead of being updated! Other modifications to the source file however, will result in this file being updated.
 
-registeredName = KuiperGame
-fqName = screens.kuiper.KuiperGame
-relativeSourcePath = src/main/kuiper/screens/kuiper/KuiperGame.kt
-baseType = PanelContainer
+registeredName = ActionCard
+fqName = actions.ActionCard
+relativeSourcePath = src/main/kuiper/actions/ActionCard.kt
+baseType = Node2D
 supertypes = [
-    godot.PanelContainer,
-	godot.Container,
-	godot.Control,
+    godot.Node2D,
 	godot.CanvasItem,
 	godot.Node,
 	godot.Object,
@@ -16,20 +14,22 @@ supertypes = [
 	kotlin.Any
 ]
 signals = [
-    end_turn_signal,
-	esc_menu_signal,
-	card_added,
-	screen_resized,
-	recalc_pulldown_panel_signal
+    mouse_entered,
+	mouse_exited,
+	is_dragging_card,
+	dragging_stopped
 ]
 properties = [
-    
+    card_name,
+	card_id,
+	influence_cost,
+	click_radius
 ]
 functions = [
     _ready,
 	_process,
-	_input,
-	on_escape_menu,
-	on_end_turn,
-	on_esc_save_game
+	_on_area_2d_mouse_entered,
+	_on_area_2d_mouse_exited,
+	_on_area_2d_body_entered,
+	_on_area_2d_body_exited
 ]

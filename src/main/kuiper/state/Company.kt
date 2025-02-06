@@ -67,7 +67,10 @@ class Company(var name: String) {
                             when (mutation.type) {
                                 MutationType.ADD -> addResource(mutation.resource, mutation.amountPerYear)
                                 MutationType.SET -> setResource(mutation.resource, mutation.amountPerYear)
-                                MutationType.RATE_MULTIPLY -> multiplyResource(mutation.resource, mutation.amountPerYear.toFloat())
+                                MutationType.RATE_MULTIPLY -> multiplyResource(
+                                    mutation.resource,
+                                    mutation.amountPerYear.toFloat()
+                                )
                             }
                         }
                     }
@@ -81,6 +84,7 @@ class Company(var name: String) {
                                     mutation.amount,
                                     Float::plus
                                 )
+
                                 MutationType.SET -> sciences[mutation.science] = mutation.amount
                                 MutationType.RATE_MULTIPLY -> sciences.merge(
                                     mutation.science,
@@ -109,6 +113,7 @@ class Company(var name: String) {
                                 MutationType.RATE_MULTIPLY -> TODO()
                             }
                         }
+
                         is ScienceMutation -> {
                             // it doesn't make sense to have a completion mutation for science
                             println("Error: completion mutation for science doesn't make sense: $mutation")

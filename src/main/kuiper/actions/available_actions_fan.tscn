@@ -1,0 +1,48 @@
+[gd_scene load_steps=4 format=3 uid="uid://bcnrl5714e1pe"]
+
+[ext_resource type="Script" path="res://src/main/kuiper/actions/AvailableActionsFan.kt" id="1_nignc"]
+[ext_resource type="Curve" uid="uid://b3oexi4y4kret" path="res://src/main/kuiper/actions/card_placement_curve.tres" id="2_s4gae"]
+[ext_resource type="Curve" uid="uid://d2x7gnrh830bd" path="res://src/main/kuiper/actions/card_rotation_curve.tres" id="3_ifbuw"]
+
+[node name="AvailableActionsFan" type="Control"]
+layout_mode = 3
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -800.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_vertical = 8
+mouse_filter = 2
+script = ExtResource("1_nignc")
+placement_curve = ExtResource("2_s4gae")
+rotation_curve = ExtResource("3_ifbuw")
+metadata/_edit_use_anchors_ = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -210.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_right = 200
+
+[node name="FanContainer" type="CenterContainer" parent="HBoxContainer"]
+z_index = 1
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer2" type="MarginContainer" parent="HBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 200
