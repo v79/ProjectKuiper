@@ -1,8 +1,12 @@
 package hexgrid
 
-import godot.Marker2D
+import godot.Node2D
+import godot.annotation.Export
+import godot.annotation.RegisterClass
+import godot.annotation.RegisterFunction
+import godot.annotation.RegisterProperty
+import godot.extensions.getNodeAs
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
 
 /**
  * A Hex represents a location in the world/region map.
@@ -10,17 +14,24 @@ import kotlinx.serialization.Transient
  * A facility may span more than one site/triangle
  * There are two special Hexes - the company HQ, and the space launch centre
  */
-@Serializable
-class Hex {
+@RegisterClass
+class Hex : Node2D() {
 
-	// link to the Node that represents this hex. This is not serialised
-	@Transient
-	var node: Marker2D? = null
+	@Export
+	@RegisterProperty
+	var id: Int = 0
+
+	private lateinit var marker: HexDropTarget
 
 
 	var hexName: String = ""
 	var sites: Array<Site> = arrayOf()
 
+	@RegisterFunction
+	override fun _ready() {
+		marker = getNodeAs("Marker2D")!!
+		marker.hex = this
+	}
 
 	// possible functions:
 	// - buildFacility(size: Int, site: Int)

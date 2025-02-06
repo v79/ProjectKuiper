@@ -101,7 +101,7 @@ class HexDropTarget : Marker2D() {
 
 	@RegisterFunction
 	fun highlight() {
-		GD.print("Highlighting dropTarget")
+		GD.print("Highlighting dropTarget ${hex.id}")
 		colour = Color(1.0, 0.8, 0.8, 1.0)
 		queueRedraw()
 		isSelected = true

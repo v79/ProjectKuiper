@@ -51,60 +51,70 @@ layout_mode = 2
 
 [node name="Hex1" parent="HBoxContainer/VBoxContainer/GridContainer/BoxContainer" groups=["hexDropTargets"] instance=ExtResource("2_4b4sr")]
 position = Vector2(274, 175)
+id = 1
 
 [node name="BoxContainer2" type="BoxContainer" parent="HBoxContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
 [node name="Hex2" parent="HBoxContainer/VBoxContainer/GridContainer/BoxContainer2" groups=["hexDropTargets"] instance=ExtResource("2_4b4sr")]
 position = Vector2(274, 175)
+id = 2
 
 [node name="BoxContainer3" type="BoxContainer" parent="HBoxContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
 [node name="Hex3" parent="HBoxContainer/VBoxContainer/GridContainer/BoxContainer3" groups=["hexDropTargets"] instance=ExtResource("2_4b4sr")]
 position = Vector2(274, 175)
+id = 3
 
 [node name="BoxContainer4" type="BoxContainer" parent="HBoxContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
 [node name="Hex4" parent="HBoxContainer/VBoxContainer/GridContainer/BoxContainer4" groups=["hexDropTargets"] instance=ExtResource("2_4b4sr")]
 position = Vector2(274, 175)
+id = 4
 
 [node name="BoxContainer5" type="BoxContainer" parent="HBoxContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
 [node name="Hex5" parent="HBoxContainer/VBoxContainer/GridContainer/BoxContainer5" groups=["hexDropTargets"] instance=ExtResource("2_4b4sr")]
 position = Vector2(274, 175)
+id = 5
 
 [node name="BoxContainer6" type="BoxContainer" parent="HBoxContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
 [node name="Hex6" parent="HBoxContainer/VBoxContainer/GridContainer/BoxContainer6" groups=["hexDropTargets"] instance=ExtResource("2_4b4sr")]
 position = Vector2(274, 175)
+id = 6
 
 [node name="BoxContainer7" type="BoxContainer" parent="HBoxContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
 [node name="Hex7" parent="HBoxContainer/VBoxContainer/GridContainer/BoxContainer7" groups=["hexDropTargets"] instance=ExtResource("2_4b4sr")]
 position = Vector2(274, 175)
+id = 7
 
 [node name="BoxContainer8" type="BoxContainer" parent="HBoxContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
 [node name="Hex8" parent="HBoxContainer/VBoxContainer/GridContainer/BoxContainer8" groups=["hexDropTargets"] instance=ExtResource("2_4b4sr")]
 position = Vector2(274, 175)
+id = 8
 
 [node name="BoxContainer9" type="BoxContainer" parent="HBoxContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
 [node name="Hex9" parent="HBoxContainer/VBoxContainer/GridContainer/BoxContainer9" groups=["hexDropTargets"] instance=ExtResource("2_4b4sr")]
 position = Vector2(274, 175)
+id = 9
 
 [node name="BoxContainer10" type="BoxContainer" parent="HBoxContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
 [node name="Hex10" parent="HBoxContainer/VBoxContainer/GridContainer/BoxContainer10" groups=["hexDropTargets"] instance=ExtResource("2_4b4sr")]
 position = Vector2(274, 175)
+id = 10
 
 [node name="MarginContainer2" type="MarginContainer" parent="HBoxContainer/VBoxContainer"]
 layout_mode = 2

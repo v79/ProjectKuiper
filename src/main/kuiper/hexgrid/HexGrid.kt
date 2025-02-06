@@ -11,7 +11,6 @@ import godot.core.asCachedStringName
 import godot.core.connect
 import godot.core.toVariantArray
 import godot.extensions.getNodeAs
-import godot.global.GD
 
 @RegisterClass
 class HexGrid : Control() {
@@ -26,16 +25,19 @@ class HexGrid : Control() {
 		val dropNodes =
 			getTree()?.getNodesInGroup("hexDropTargets".asCachedStringName())?.map { it as Node2D }?.toVariantArray()
 				?: VariantArray<Node2D>()
+
+		// find the dropTarget nodes
 		dropTargets = dropNodes.map {
 			it.getChild(0) as HexDropTarget
 		}.toVariantArray()
+
+		// connect to card dragging signals
 		signalBus.draggingCard.connect { card ->
 			this.card = card
 		}
-		signalBus.droppedCard.connect { card ->
+		signalBus.droppedCard.connect {
 			this.card = null
 		}
-		GD.print("HexGrid ready")
 	}
 
 	@RegisterFunction
