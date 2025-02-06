@@ -48,9 +48,7 @@ class PullDownPanel : Control() {
 
 		// if the contents are not set, we can't do anything yet
 		// but if they are, we can calculate the dimensions of the panel
-		GD.print("_ready childCount: ${getChildCount()}")
 		if (getChildCount() > 1) {
-			GD.print("Getting 1st child")
 			contents = getChild(1) as Control?
 			_recalculate_pulldown_dimensions(contents!!)
 		}
@@ -66,12 +64,7 @@ class PullDownPanel : Control() {
 	fun _recalculate_pulldown_dimensions(control: Control) {
 		contents = control
 		contents?.let {
-			GD.print("Recalculating panel dimensions for $it (${it.getChildCount()} children)")
-			it.getChildren().forEach { child ->
-				GD.print("\tChild: $child")
-			}
 			maxHeight = it.getRect().size.y
-			GD.print("maxHeight: $maxHeight")
 			it.setPosition(Vector2(this.position.x, -maxHeight))
 			avgChildHeight = (it.getRect().size.y / it.getChildCount())
 		}
@@ -127,7 +120,6 @@ class PullDownPanel : Control() {
 		if (event is InputEventMouseButton) {
 			if (event.getButtonIndex() == MouseButton.MOUSE_BUTTON_LEFT) {
 				if(event.doubleClick) {
-					GD.print("Double click")
 					// double click to expand or shrink the panel
 					direction = if (isExpanded) -1 else 1
 				}

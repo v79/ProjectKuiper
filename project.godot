@@ -20,6 +20,7 @@ config/icon="res://assets/saturn-1024.png"
 [autoload]
 
 GameState="*res://src/main/kuiper/state/GameState.kt"
+SignalBus="*res://src/main/kuiper/SignalBus.kt"
 
 [display]
 
