@@ -66,15 +66,15 @@ class KuiperGame : PanelContainer() {
 
         // Get UI elements
         yearLbl = getNodeAs("%Year_lbl")!!
-        eraTabBar = getNodeAs("Background/AspectRatioContainer/VBoxContainer/TabBarContainer/TabBar")!!
+        eraTabBar = getNodeAs("%EraTabBar")!!
         eraTabBar.setTabTitle(0, gameState.country?.name ?: "No country selected")
         companyNameHeader =
-            getNodeAs("Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/ProjectKuiperHeading")!!
+            getNodeAs("%ProjectKuiperHeading")!!
         companyNameHeader.text = "Project Kuiper - ${gameState.company.name}"
         sciencePanel =
-            getNodeAs("Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/Container/SciencePanel")!!
+            getNodeAs("%SciencePanel")!!
         scienceSummaryPanel =
-            getNodeAs("Background/AspectRatioContainer/VBoxContainer/TopRow_hbox/Container/PulldownPanel/ScienceSummaryContents")!!
+            getNodeAs("%ScienceSummaryContents")!!
         activeActionList =
             getNodeAs("ActiveActionList")!!
 
@@ -85,7 +85,7 @@ class KuiperGame : PanelContainer() {
             item.rateLabel = "%.2f".format(gameState.company.sciences[science])
             item.colour = science.color()
             item.description = science.label
-            item.setMouseFilter(Control.MouseFilter.MOUSE_FILTER_PASS)
+            item.setMouseFilter(Control.MouseFilter.MOUSE_FILTER_IGNORE)
             sciencePanel.addChild(item)
             scienceSummaryPanel.addChild(Label().apply {
                 text = "${science.label}: ${gameState.company.sciences[science]}"

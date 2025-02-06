@@ -45,7 +45,7 @@ class HexGrid : Control() {
 		card?.let { card ->
 			if (card.dragging) {
 				for (dropTarget in dropTargets) {
-					if (card.globalPosition.distanceTo(dropTarget.globalPosition) < card.clickRadius) {
+					if (card.globalPosition.distanceTo(dropTarget.globalPosition) < card.clickRadius / 2) {
 						dropTarget.highlight()
 					} else {
 						dropTarget.unhighlight()
