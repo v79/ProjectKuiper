@@ -21,8 +21,7 @@ properties = [
     is_selected,
 	draw_internals,
 	numbered,
-	fill_triangles,
-	colour
+	fill_triangles
 ]
 functions = [
     _draw,

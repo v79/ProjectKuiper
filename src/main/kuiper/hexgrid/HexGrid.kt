@@ -7,6 +7,7 @@ import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.core.*
 import godot.extensions.getNodeAs
+import godot.extensions.instantiateAs
 import godot.global.GD
 
 @RegisterClass
@@ -19,6 +20,10 @@ class HexGrid : Control() {
     private var dropTargets: VariantArray<HexDropTarget> = VariantArray()
     private lateinit var hexGridContainer: GridContainer
     private lateinit var gridPlacementContainer: HBoxContainer
+
+    // Packed scenes
+    private val hexScene =
+        ResourceLoader.load("res://src/main/kuiper/hexgrid/Hex.tscn") as PackedScene
 
     private val hexes: MutableList<Hex> = mutableListOf()
     private var card: ActionCard? = null
@@ -41,6 +46,14 @@ class HexGrid : Control() {
             GD.print("Creating hex $i")
             createHex(i)
         }
+        // set up the HQ hex, which is unlocked and has a label
+        assert(hexes.size >= 3) {
+            "Not enough hexes created"
+        }
+        val hqHex = hexes[2]
+        hqHex.hexUnlocked = true
+        hqHex.locationName = "HQ"
+        hqHex.marker.queueRedraw()
 
         // connect to card dragging signals
         signalBus.draggingCard.connect { card ->
@@ -49,7 +62,7 @@ class HexGrid : Control() {
         signalBus.droppedCard.connect {
             this.card = null
         }
-        signalBus.onScreenResized.connect { w, h ->
+        signalBus.onScreenResized.connect { _, _ ->
             // recalculate grid placement
             val newPlacement = getGridPlacement()
             gridPlacementContainer.setPosition(newPlacement)
@@ -60,20 +73,24 @@ class HexGrid : Control() {
      * Create a hexagon and add it to the grid
      * Assign the hexagon's drop target to the group "hexDropTargets"
      */
-    private fun createHex(i: Int) {
-        val hex = Hex()
+    private fun createHex(i: Int, unlocked: Boolean = false) {
+        val hex = hexScene.instantiateAs<Hex>()!!
         hex.id = i
         hex.locationName = "Hex $i"
-        hex.hexUnlocked = true
+        hex.hexUnlocked = unlocked
         val dropTarget = HexDropTarget()
         dropTarget.addToGroup("hexDropTargets".asCachedStringName())
         dropTarget.setName("HexDropTarget$i")
+        dropTarget.hex = hex
         dropTargets.add(dropTarget)
         hex.marker = dropTarget
         hex.addChild(dropTarget)
         hex.setName("Hex$i")
         val boxContainer = BoxContainer()
         boxContainer.addChild(hex)
+        val label = Label()
+        label.text = hex.locationName
+        boxContainer.addChild(label)
         hexGridContainer.addChild(boxContainer)
         hexes.add(hex)
     }
@@ -91,15 +108,20 @@ class HexGrid : Control() {
         card?.let { card ->
             if (card.dragging) {
                 for (dropTarget in dropTargets) {
-                    if (card.globalPosition.distanceTo(dropTarget.globalPosition) < card.clickRadius / 2) {
-                        dropTarget.highlight()
-                    } else {
-                        dropTarget.unhighlight()
+                    if (dropTarget.hex != null) {
+                        if (dropTarget.hex!!.hexUnlocked) {
+                            if (card.globalPosition.distanceTo(dropTarget.globalPosition) < card.clickRadius / 2) {
+                                dropTarget.highlight()
+                            } else {
+                                dropTarget.unhighlight()
+                            }
+                        }
                     }
                 }
             }
         } ?: run {
             for (dropTarget in dropTargets) {
+                // This redraws every frame, which is inefficient
                 dropTarget.unhighlight()
             }
         }

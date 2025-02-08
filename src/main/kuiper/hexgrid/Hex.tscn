@@ -4,11 +4,8 @@
 [ext_resource type="Script" path="res://src/main/kuiper/hexgrid/hexDropTarget.kt" id="2_wqt7c"]
 
 [node name="Hex" type="Node2D"]
-position = Vector2(284, 175)
 script = ExtResource("1_8qct6")
 
 [node name="Marker2D" type="Marker2D" parent="."]
 script = ExtResource("2_wqt7c")
-draw_internals = true
-fill_triangles = Array[bool]([true])
-colour = Color(1, 1, 0, 1)
+fill_triangles = Array[bool]([false])

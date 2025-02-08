@@ -31,11 +31,14 @@ class Hex : Node2D() {
 
 	lateinit var marker: HexDropTarget
 
-	var sites: Array<Site> = arrayOf()
 
 	@RegisterFunction
 	override fun _ready() {
-//		marker.hex = this
+	}
+
+	@RegisterFunction
+	override fun _process(delta: Double) {
+
 	}
 
 	// possible functions:
@@ -43,7 +46,6 @@ class Hex : Node2D() {
 	// - removeFacility(size: Int, site: Int)
 }
 
-@Serializable
 class Site(var empty: Boolean = true)
 
 class Facility(var size: Int = 1)

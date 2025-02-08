@@ -22,5 +22,6 @@ properties = [
 	hex_unlocked
 ]
 functions = [
-    _ready
+    _ready,
+	_process
 ]
