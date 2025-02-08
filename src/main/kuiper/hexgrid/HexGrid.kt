@@ -78,19 +78,17 @@ class HexGrid : Control() {
         hex.id = i
         hex.locationName = "Hex $i"
         hex.hexUnlocked = unlocked
-        val dropTarget = HexDropTarget()
+        val dropTarget = hex.getNodeAs<HexDropTarget>("%HexDropTarget")!!
         dropTarget.addToGroup("hexDropTargets".asCachedStringName())
         dropTarget.setName("HexDropTarget$i")
         dropTarget.hex = hex
         dropTargets.add(dropTarget)
         hex.marker = dropTarget
-        hex.addChild(dropTarget)
         hex.setName("Hex$i")
+        val label = hex.getNodeAs<Label>("%LocationLabel")!!
         val boxContainer = BoxContainer()
         boxContainer.addChild(hex)
-        val label = Label()
         label.text = hex.locationName
-        boxContainer.addChild(label)
         hexGridContainer.addChild(boxContainer)
         hexes.add(hex)
     }
@@ -121,8 +119,12 @@ class HexGrid : Control() {
             }
         } ?: run {
             for (dropTarget in dropTargets) {
-                // This redraws every frame, which is inefficient
-                dropTarget.unhighlight()
+                // This redraws every frame, which is inefficient, so only do it for unlocked hexes. Tiny saving.
+                dropTarget.hex?.let {
+                    if (it.hexUnlocked) {
+                        dropTarget.unhighlight()
+                    }
+                }
             }
         }
     }

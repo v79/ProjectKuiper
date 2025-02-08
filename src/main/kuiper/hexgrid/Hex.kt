@@ -1,5 +1,6 @@
 package hexgrid
 
+import godot.Label
 import godot.Node2D
 import godot.annotation.Export
 import godot.annotation.RegisterClass
@@ -29,16 +30,21 @@ class Hex : Node2D() {
 	@RegisterProperty
 	var hexUnlocked: Boolean = false
 
+	// UI elements
+	private lateinit var locationLabel: Label
+
 	lateinit var marker: HexDropTarget
 
 
 	@RegisterFunction
 	override fun _ready() {
+		locationLabel = getNodeAs("%LocationLabel")!!
+		locationLabel.text = locationName
 	}
 
 	@RegisterFunction
 	override fun _process(delta: Double) {
-
+		locationLabel.text = locationName
 	}
 
 	// possible functions:
