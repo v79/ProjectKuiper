@@ -1,7 +1,7 @@
 import actions.ActionCard
 import godot.Node
-import godot.annotation.RegisterClass
-import godot.annotation.RegisterSignal
+import godot.annotation.*
+import godot.core.connect
 import godot.core.signal1
 import godot.core.signal2
 
@@ -12,6 +12,12 @@ import godot.core.signal2
  */
 @RegisterClass
 class SignalBus : Node() {
+
+    var screenWidth: Int = 1600
+        private set
+    var screenHeight: Int = 900
+        private set
+
     // Screen has been resized
     @RegisterSignal
     val onScreenResized by signal2<Int, Int>("width", "height")
@@ -22,4 +28,17 @@ class SignalBus : Node() {
 
     @RegisterSignal
     val droppedCard by signal1<ActionCard>("card")
+
+
+    @RegisterFunction
+    override fun _ready() {
+        onScreenResized.connect { w, h ->
+            updateScreenSize(w, h)
+        }
+    }
+
+    private fun updateScreenSize(width: Int, height: Int) {
+        screenWidth = width
+        screenHeight = height
+    }
 }

@@ -74,8 +74,9 @@ class ActionCard : Node2D() {
         cardNameLabel.text = cardName
 
         // when screen is resized, update the width limit to constrain dragging
+        calcWidthLimit(signalBus.screenWidth)
         signalBus.onScreenResized.connect { width, _ ->
-            widthLimit = (width - 100f - offset.x - CARD_WIDTH).toFloat()
+            calcWidthLimit(width)
         }
     }
 
@@ -145,5 +146,12 @@ class ActionCard : Node2D() {
 
     fun unhighlight() {
         cardImage.modulate = Color(1.0, 1.0, 1.0, 1.0)
+    }
+
+    /**
+     *  Calculate the right limit for dragging
+     */
+    private fun calcWidthLimit(width: Int) {
+        widthLimit = (width - 100f - offset.x - CARD_WIDTH).toFloat()
     }
 }

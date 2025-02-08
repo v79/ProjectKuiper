@@ -20,5 +20,5 @@ properties = [
     
 ]
 functions = [
-    
+    _ready
 ]

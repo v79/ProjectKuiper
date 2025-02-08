@@ -18,6 +18,8 @@ import kotlin.math.sin
 @RegisterClass
 class HexDropTarget : Marker2D() {
 
+	var hex = Hex()
+
 	@RegisterProperty
 	var isSelected = false
 
@@ -38,12 +40,6 @@ class HexDropTarget : Marker2D() {
 	@RegisterProperty
 	var colour: Color = Color(1.0, 1.0, 1.0, 1.0)
 	private var originalColor: Color = colour
-
-	var hex = Hex()
-
-	companion object {
-		const val HEX_RADIUS = 50.0
-	}
 
 	/**
 	 * Draw the hexagon using draw calls. To be replaced with artwork later.

@@ -21,16 +21,21 @@ class Hex : Node2D() {
 	@RegisterProperty
 	var id: Int = 0
 
-	private lateinit var marker: HexDropTarget
+	@Export
+	@RegisterProperty
+	var locationName: String = ""
 
+	@Export
+	@RegisterProperty
+	var hexUnlocked: Boolean = false
 
-	var hexName: String = ""
+	lateinit var marker: HexDropTarget
+
 	var sites: Array<Site> = arrayOf()
 
 	@RegisterFunction
 	override fun _ready() {
-		marker = getNodeAs("Marker2D")!!
-		marker.hex = this
+//		marker.hex = this
 	}
 
 	// possible functions:

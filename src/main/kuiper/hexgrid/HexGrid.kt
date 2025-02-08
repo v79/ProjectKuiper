@@ -2,60 +2,106 @@ package hexgrid
 
 import SignalBus
 import actions.ActionCard
-import godot.Control
-import godot.Node2D
+import godot.*
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
-import godot.core.VariantArray
-import godot.core.asCachedStringName
-import godot.core.connect
-import godot.core.toVariantArray
+import godot.core.*
 import godot.extensions.getNodeAs
+import godot.global.GD
 
 @RegisterClass
 class HexGrid : Control() {
 
-	private lateinit var signalBus: SignalBus
-	private lateinit var dropTargets: VariantArray<HexDropTarget>
-	private var card: ActionCard? = null
+    // Globals
+    private lateinit var signalBus: SignalBus
 
-	@RegisterFunction
-	override fun _ready() {
-		signalBus = getNodeAs("/root/SignalBus")!!
-		val dropNodes =
-			getTree()?.getNodesInGroup("hexDropTargets".asCachedStringName())?.map { it as Node2D }?.toVariantArray()
-				?: VariantArray<Node2D>()
+    // UI elements
+    private var dropTargets: VariantArray<HexDropTarget> = VariantArray()
+    private lateinit var hexGridContainer: GridContainer
+    private lateinit var gridPlacementContainer: HBoxContainer
 
-		// find the dropTarget nodes
-		dropTargets = dropNodes.map {
-			it.getChild(0) as HexDropTarget
-		}.toVariantArray()
+    private val hexes: MutableList<Hex> = mutableListOf()
+    private var card: ActionCard? = null
 
-		// connect to card dragging signals
-		signalBus.draggingCard.connect { card ->
-			this.card = card
-		}
-		signalBus.droppedCard.connect {
-			this.card = null
-		}
-	}
+    private val MAX_HEXES = 10
+    private val GRID_COLUMNS = 5
+    private val HEX_WIDTH = 200
 
-	@RegisterFunction
-	override fun _process(delta: Double) {
-		card?.let { card ->
-			if (card.dragging) {
-				for (dropTarget in dropTargets) {
-					if (card.globalPosition.distanceTo(dropTarget.globalPosition) < card.clickRadius / 2) {
-						dropTarget.highlight()
-					} else {
-						dropTarget.unhighlight()
-					}
-				}
-			}
-		} ?: run {
-			for (dropTarget in dropTargets) {
-				dropTarget.unhighlight()
-			}
-		}
-	}
+    @RegisterFunction
+    override fun _ready() {
+        signalBus = getNodeAs("/root/SignalBus")!!
+        hexGridContainer = getNodeAs("%HexGridContainer")!!
+        gridPlacementContainer = getNodeAs("%GridPlacementContainer")!!
+
+        // calculate grid placement
+        val gridPlacement = getGridPlacement()
+        gridPlacementContainer.setPosition(gridPlacement)
+
+        for (i in 0 until MAX_HEXES) {
+            GD.print("Creating hex $i")
+            createHex(i)
+        }
+
+        // connect to card dragging signals
+        signalBus.draggingCard.connect { card ->
+            this.card = card
+        }
+        signalBus.droppedCard.connect {
+            this.card = null
+        }
+        signalBus.onScreenResized.connect { w, h ->
+            // recalculate grid placement
+            val newPlacement = getGridPlacement()
+            gridPlacementContainer.setPosition(newPlacement)
+        }
+    }
+
+    /**
+     * Create a hexagon and add it to the grid
+     * Assign the hexagon's drop target to the group "hexDropTargets"
+     */
+    private fun createHex(i: Int) {
+        val hex = Hex()
+        hex.id = i
+        hex.locationName = "Hex $i"
+        hex.hexUnlocked = true
+        val dropTarget = HexDropTarget()
+        dropTarget.addToGroup("hexDropTargets".asCachedStringName())
+        dropTarget.setName("HexDropTarget$i")
+        dropTargets.add(dropTarget)
+        hex.marker = dropTarget
+        hex.addChild(dropTarget)
+        hex.setName("Hex$i")
+        val boxContainer = BoxContainer()
+        boxContainer.addChild(hex)
+        hexGridContainer.addChild(boxContainer)
+        hexes.add(hex)
+    }
+
+    // Calculate the position of the grid
+    private fun getGridPlacement(): Vector2 {
+        val gridWidth = GRID_COLUMNS * HEX_WIDTH
+        val xOffset = (signalBus.screenWidth - gridWidth) / 2
+        val yOffset = 150
+        return Vector2(xOffset, yOffset)
+    }
+
+    @RegisterFunction
+    override fun _process(delta: Double) {
+        card?.let { card ->
+            if (card.dragging) {
+                for (dropTarget in dropTargets) {
+                    if (card.globalPosition.distanceTo(dropTarget.globalPosition) < card.clickRadius / 2) {
+                        dropTarget.highlight()
+                    } else {
+                        dropTarget.unhighlight()
+                    }
+                }
+            }
+        } ?: run {
+            for (dropTarget in dropTargets) {
+                dropTarget.unhighlight()
+            }
+        }
+    }
 }
