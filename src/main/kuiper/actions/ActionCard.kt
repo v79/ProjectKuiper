@@ -7,6 +7,7 @@ import godot.core.*
 import godot.extensions.getNodeAs
 import godot.global.GD
 import godot.util.toRealT
+import hexgrid.Hex
 
 @RegisterClass
 class ActionCard : Node2D() {
@@ -25,8 +26,6 @@ class ActionCard : Node2D() {
     @Export
     var influenceCost = 3
 
-    private var action: Action? = null
-
     @RegisterProperty
     @Export
     var clickRadius = 200
@@ -36,12 +35,17 @@ class ActionCard : Node2D() {
         const val CARD_HEIGHT = 200f
     }
 
-    var dragging = false
+    var status = CardStatus.IN_FAN
+
+    //    var dragging = false
     private var isDraggable = false
-    var disabled = false
-    private var offset = Vector2()
+
+    //    var disabled = false
+    private var placedOnHex: Hex? = null
+
 
     // properties set during placement in the fan
+    private var offset = Vector2()
     var startPosition = Vector2()
     var startRotation: Float = 0.0f
 
@@ -78,17 +82,26 @@ class ActionCard : Node2D() {
         signalBus.onScreenResized.connect { width, _ ->
             calcWidthLimit(width)
         }
+
+        // if the card is placed on a hex, disable dragging and ... do stuff?
+        signalBus.cardOnHex.connect { h ->
+            placedOnHex = h
+        }
+
+        signalBus.cardOffHex.connect { h ->
+            placedOnHex = null
+        }
     }
 
 
     @RegisterFunction
     override fun _process(delta: Double) {
-        if (isDraggable && !disabled) {
+        if (isDraggable && status != CardStatus.DISABLED) {
             if (Input.isActionJustPressed("mouse_left_click".asStringName())) {
                 offset = getGlobalMousePosition() - globalPosition
             }
             if (Input.isActionPressed("mouse_left_click".asStringName())) {
-                dragging = true
+                status = CardStatus.DRAGGING
                 isDraggingCard.emitSignal(this)
                 // limit drags to bounding box
                 val newPosition = getGlobalMousePosition() - offset
@@ -106,10 +119,20 @@ class ActionCard : Node2D() {
                 // clear rotation when dragging but revert when released
                 getTree()!!.createTween()?.tweenProperty(this, "rotation".asNodePath(), GD.degToRad(0.0f), 0.5)
             } else if (Input.isActionJustReleased("mouse_left_click".asStringName())) {
-                getTree()!!.createTween()?.tweenProperty(this, "position".asNodePath(), startPosition, 0.5)
-                dragging = false
-                draggingStopped.emitSignal(this)
-                getTree()!!.createTween()?.tweenProperty(this, "rotation".asNodePath(), GD.degToRad(startRotation), 0.5)
+                if (placedOnHex != null) {
+                    GD.print("Card placed on hex ${placedOnHex?.locationName}")
+                    status = CardStatus.PLACED_ON_HEX
+
+                    // now we trigger the confirmation dialog and other cool stuff.
+
+                } else {
+                    status = CardStatus.IN_FAN
+                    draggingStopped.emitSignal(this)
+                    getTree()!!.createTween()?.tweenProperty(this, "position".asNodePath(), startPosition, 0.5)
+
+                    getTree()!!.createTween()
+                        ?.tweenProperty(this, "rotation".asNodePath(), GD.degToRad(startRotation), 0.5)
+                }
             }
         }
     }
@@ -117,7 +140,7 @@ class ActionCard : Node2D() {
     @RegisterFunction
     fun _on_area_2d_mouse_entered() {
         mouseEntered.emitSignal(this.cardId)
-        if (!dragging) {
+        if (status != CardStatus.DRAGGING) {
             isDraggable = true
         }
     }
@@ -125,19 +148,9 @@ class ActionCard : Node2D() {
     @RegisterFunction
     fun _on_area_2d_mouse_exited() {
         mouseExited.emitSignal(this.cardId)
-        if (!dragging) {
+        if (status != CardStatus.DRAGGING) {
             isDraggable = false
         }
-    }
-
-    @RegisterFunction
-    fun _on_area_2d_body_entered(body: StaticBody2D) {
-
-    }
-
-    @RegisterFunction
-    fun _on_area_2d_body_exited() {
-
     }
 
     fun highlight() {
@@ -154,4 +167,8 @@ class ActionCard : Node2D() {
     private fun calcWidthLimit(width: Int) {
         widthLimit = (width - 100f - offset.x - CARD_WIDTH).toFloat()
     }
+}
+
+enum class CardStatus {
+    IN_FAN, DRAGGING, PLACED_ON_HEX, DISABLED
 }

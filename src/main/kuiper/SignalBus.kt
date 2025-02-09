@@ -1,9 +1,12 @@
 import actions.ActionCard
 import godot.Node
-import godot.annotation.*
+import godot.annotation.RegisterClass
+import godot.annotation.RegisterFunction
+import godot.annotation.RegisterSignal
 import godot.core.connect
 import godot.core.signal1
 import godot.core.signal2
+import hexgrid.Hex
 
 /**
  * A global signal bus for the game
@@ -28,6 +31,13 @@ class SignalBus : Node() {
 
     @RegisterSignal
     val droppedCard by signal1<ActionCard>("card")
+
+    // Signals relating to hexes
+    @RegisterSignal
+    val cardOnHex by signal1<Hex>("hex")
+
+    @RegisterSignal
+    val cardOffHex by signal1<Hex>("hex")
 
 
     @RegisterFunction

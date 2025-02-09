@@ -14,7 +14,9 @@ supertypes = [
 signals = [
     on_screen_resized,
 	dragging_card,
-	dropped_card
+	dropped_card,
+	card_on_hex,
+	card_off_hex
 ]
 properties = [
     
