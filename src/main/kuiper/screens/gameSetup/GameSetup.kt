@@ -8,6 +8,7 @@ import godot.core.*
 import godot.extensions.getNodeAs
 import godot.global.GD
 import state.GameState
+import state.Location
 import state.Sponsor
 import state.Zone
 import technology.Science
@@ -24,7 +25,8 @@ class GameSetup : Node() {
     private var selectedCountry: Int = -1
 
     private val sponsorList = listOf(
-        Sponsor(1, "Europe", Color.blue), Sponsor(2, "North America", Color.red),
+        Sponsor(1, "Europe", Color.blue),
+        Sponsor(2, "North America", Color.red),
         Sponsor(3, "South America", Color.yellow),
         Sponsor(4, "Asia", Color.tan),
         Sponsor(5, "Africa", Color.green),
@@ -39,8 +41,7 @@ class GameSetup : Node() {
     // Called when the node enters the scene tree for the first time.
     @RegisterFunction
     override fun _ready() {
-        val hqSponsorListPanel =
-            getNodeAs<ItemList>("%HQSponsorList".asNodePath())
+        val hqSponsorListPanel = getNodeAs<ItemList>("%HQSponsorList".asNodePath())
         hqSponsorListPanel?.let { list ->
             list.clear()
             sponsorList.forEach { sponsor ->
@@ -86,21 +87,31 @@ class GameSetup : Node() {
         gameState.company.name = companyNameEdit.text
         gameState.company.sciences = generateStartingScienceRates().toMutableMap()
         gameState.zones = setupZones(sponsor)
+
         GD.print("Starting game for country ${sponsorList[selectedCountry - 1].name}")
         GD.print("Company name: ${gameState.company.name}")
         GD.print("Science rates: ${gameState.company.sciences}")
+
         getTree()?.changeSceneToFile("res://src/main/kuiper/screens/kuiper/game.tscn")
     }
 
     private fun setupZones(sponsor: Sponsor): List<Zone> {
-        return listOf(
-            Zone(sponsor.name, true),
-            Zone("Near Earth Orbit"),
-            Zone("Mars"),
-            Zone("Asteroid Belt"),
-            Zone("Jupiter"),
-            Zone("Kuiper Belt")
+        val zoneList = listOf(
+            Zone(1, sponsor.name, true),
+            Zone(2, "Near Earth Orbit"),
+            Zone(3, "Mars"),
+            Zone(4, "Asteroid Belt"),
+            Zone(5, "Jupiter"),
+            Zone(6, "Kuiper Belt")
         )
+        zoneList[0].apply {
+            description = "Your home zone, where your headquarters is located. HQ can be moved in the future."
+            locations.add(Location("${sponsor.name} HQ", true))
+            for (i in 1..9) {
+                locations.add(Location("Location $i"))
+            }
+        }
+        return zoneList
     }
 
     @RegisterFunction

@@ -11,13 +11,15 @@ import godot.core.asCachedStringName
 import godot.core.connect
 import godot.extensions.getNodeAs
 import godot.extensions.instantiateAs
-import godot.global.GD
+import state.GameState
+import state.Location
 
 @RegisterClass
 class HexGrid : Control() {
 
 	// Globals
 	private lateinit var signalBus: SignalBus
+	private lateinit var gameState: GameState
 
 	// UI elements
 	private var dropTargets: MutableList<HexDropTarget> = mutableListOf()
@@ -38,6 +40,8 @@ class HexGrid : Control() {
 	@RegisterFunction
 	override fun _ready() {
 		signalBus = getNodeAs("/root/SignalBus")!!
+		gameState = getNodeAs("/root/GameState")!!
+
 		hexGridContainer = getNodeAs("%HexGridContainer")!!
 		gridPlacementContainer = getNodeAs("%GridPlacementContainer")!!
 
@@ -45,18 +49,11 @@ class HexGrid : Control() {
 		val gridPlacement = getGridPlacement()
 		gridPlacementContainer.setPosition(gridPlacement)
 
-		for (i in 0 until MAX_HEXES) {
-			GD.print("Creating hex $i")
-			createHex(i)
+		gameState.zones[0].locations.forEachIndexed { index, location ->
+			createHex(index, location)
 		}
+
 		// set up the HQ hex, which is unlocked and has a label
-		assert(hexes.size >= 3) {
-			"Not enough hexes created"
-		}
-		val hqHex = hexes[2]
-		hqHex.hexUnlocked = true
-		hqHex.locationName = "HQ"
-		hqHex.marker.queueRedraw()
 
 		// connect to card dragging signals
 		signalBus.draggingCard.connect { card ->
@@ -76,11 +73,11 @@ class HexGrid : Control() {
 	 * Create a hexagon and add it to the grid
 	 * Assign the hexagon's drop target to the group "hexDropTargets"
 	 */
-	private fun createHex(i: Int, unlocked: Boolean = false) {
+	private fun createHex(i: Int, location: Location) {
 		val hex = hexScene.instantiateAs<Hex>()!!
 		hex.id = i
-		hex.locationName = "Hex $i"
-		hex.hexUnlocked = unlocked
+		hex.locationName = location.name
+		hex.hexUnlocked = location.unlocked
 		val dropTarget = hex.getNodeAs<HexDropTarget>("%HexDropTarget")!!
 		dropTarget.addToGroup("hexDropTargets".asCachedStringName())
 		dropTarget.setName("HexDropTarget$i")
