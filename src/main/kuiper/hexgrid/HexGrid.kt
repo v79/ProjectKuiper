@@ -6,7 +6,6 @@ import actions.CardStatus
 import godot.*
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
-import godot.core.VariantArray
 import godot.core.Vector2
 import godot.core.asCachedStringName
 import godot.core.connect
@@ -21,7 +20,7 @@ class HexGrid : Control() {
 	private lateinit var signalBus: SignalBus
 
 	// UI elements
-	private var dropTargets: VariantArray<HexDropTarget> = VariantArray()
+	private var dropTargets: MutableList<HexDropTarget> = mutableListOf()
 	private lateinit var hexGridContainer: GridContainer
 	private lateinit var gridPlacementContainer: HBoxContainer
 

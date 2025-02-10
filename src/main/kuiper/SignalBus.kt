@@ -4,6 +4,7 @@ import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterSignal
 import godot.core.connect
+import godot.core.signal0
 import godot.core.signal1
 import godot.core.signal2
 import hexgrid.Hex
@@ -38,6 +39,12 @@ class SignalBus : Node() {
 
     @RegisterSignal
     val cardOffHex by signal1<Hex>("hex")
+
+    @RegisterSignal
+    val showActionConfirmation by signal2<Hex, ActionCard>("hex", "card")
+
+    @RegisterSignal
+    val cancelActionConfirmation by signal0()
 
 
     @RegisterFunction

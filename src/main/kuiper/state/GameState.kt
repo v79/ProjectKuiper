@@ -27,7 +27,10 @@ class GameState : Node() {
     var year: Int = 1980
 
     var company: Company = Company("Kuiper")
-    var country: Country? = null
+    var sponsor: Sponsor? = null
+    var zones: List<Zone> = listOf()
+
+    // actions
     var availableActions: MutableList<Action> = mutableListOf()
 
     /**
@@ -41,7 +44,7 @@ class GameState : Node() {
     }
 
     fun stateToString(): String {
-        return "GameState(country=${country?.name}, ${company.name}, ${company.sciences.size} sciences, year=$year)"
+        return "GameState(sponsor=${sponsor?.name}, ${company.name}, ${company.sciences.size} sciences, year=$year)"
     }
 
     @Transient
@@ -49,11 +52,13 @@ class GameState : Node() {
 
     /**
      * I can't use a data class for GameState because it extends Node, so I have to manually implement a deep copy method
+     * Add each new property to this method to ensure it is loaded correctly
      */
     fun deepCopy(sourceState: GameState) {
         this.year = sourceState.year
-        this.country = sourceState.country
+        this.sponsor = sourceState.sponsor
         this.company = sourceState.company
+        this.zones = sourceState.zones
     }
 
     @RegisterFunction
@@ -98,5 +103,4 @@ class GameState : Node() {
             }
         }
     }
-
 }

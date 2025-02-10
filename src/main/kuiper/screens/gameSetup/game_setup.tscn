@@ -52,7 +52,8 @@ text = "Choose HQ location"
 layout_mode = 2
 text = "Location preview"
 
-[node name="LocationList" type="ItemList" parent="MarginContainer/VBoxContainer/MarginContainer/GridContainer"]
+[node name="HQSponsorList" type="ItemList" parent="MarginContainer/VBoxContainer/MarginContainer/GridContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -153,7 +154,7 @@ disabled = true
 text = "Start"
 alignment = 2
 
-[connection signal="item_selected" from="MarginContainer/VBoxContainer/MarginContainer/GridContainer/LocationList" to="." method="_on_location_list_item_selected"]
+[connection signal="item_selected" from="MarginContainer/VBoxContainer/MarginContainer/GridContainer/HQSponsorList" to="." method="_on_location_list_item_selected"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer2/NextButton" to="." method="_on_next_button_pressed"]
 [connection signal="text_changed" from="CompanyNamePanel/MarginContainer/HBoxContainer/CompanyNameEdit" to="." method="_on_company_name_text_changed"]
 [connection signal="pressed" from="CompanyNamePanel/MarginContainer/HBoxContainer/VBoxContainer/Back_Button" to="." method="_on_company_panel_back_pressed"]

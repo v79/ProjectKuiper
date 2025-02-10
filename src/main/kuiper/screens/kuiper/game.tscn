@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://dhc5at6r5jl4n"]
+[gd_scene load_steps=8 format=3 uid="uid://dhc5at6r5jl4n"]
 
 [ext_resource type="Script" path="res://src/main/kuiper/screens/kuiper/KuiperGame.kt" id="1_nlsq8"]
 [ext_resource type="PackedScene" uid="uid://bh0hxtmuthjhi" path="res://src/main/kuiper/screens/kuiper/escMenu/esc_menu.tscn" id="2_4tnej"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://yrhn5sd7iho2" path="res://src/main/kuiper/screens/kuiper/actions/active_action_list.tscn" id="3_dmo6v"]
 [ext_resource type="PackedScene" uid="uid://cun66228bprqh" path="res://src/main/kuiper/screens/kuiper/pullDownPanel/pulldown_panel.tscn" id="3_ecgw1"]
 [ext_resource type="PackedScene" uid="uid://bcnrl5714e1pe" path="res://src/main/kuiper/actions/available_actions_fan.tscn" id="4_o0igw"]
+[ext_resource type="PackedScene" uid="uid://cpwrm52thlo67" path="res://src/main/kuiper/confirm_action/confirm_action.tscn" id="6_ts3vi"]
 
 [node name="CanvasLayer" type="PanelContainer"]
 anchors_preset = 15
@@ -125,30 +126,10 @@ text = "Year"
 [node name="CenterContainer" type="CenterContainer" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox"]
 layout_mode = 2
 
-[node name="TabBarContainer" type="HBoxContainer" parent="AspectRatioContainer/VBoxContainer"]
-layout_mode = 2
-mouse_filter = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="AspectRatioContainer/VBoxContainer/TabBarContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-mouse_filter = 2
-
-[node name="EraTabBar" type="TabBar" parent="AspectRatioContainer/VBoxContainer/TabBarContainer"]
+[node name="EraTabBar" type="TabBar" parent="AspectRatioContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-current_tab = 0
-tab_alignment = 1
-tab_count = 3
-tab_0/title = "Earth"
-tab_1/title = "Near Earth Orbit"
-tab_2/title = "Mars"
-
-[node name="MarginContainer2" type="MarginContainer" parent="AspectRatioContainer/VBoxContainer/TabBarContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-mouse_filter = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="AspectRatioContainer/VBoxContainer"]
 layout_mode = 2
@@ -191,14 +172,19 @@ text = "Add card"
 layout_mode = 2
 text = "Remove card"
 
+[node name="AvailableActionsFan" parent="." instance=ExtResource("4_o0igw")]
+layout_mode = 2
+
+[node name="ConfirmActionScene" parent="." instance=ExtResource("6_ts3vi")]
+unique_name_in_owner = true
+layout_mode = 2
+
 [node name="EscMenu" parent="." instance=ExtResource("2_4tnej")]
 visible = false
 visibility_layer = 4
+z_index = 100
 layout_mode = 2
 mouse_filter = 1
-
-[node name="AvailableActionsFan" parent="." instance=ExtResource("4_o0igw")]
-layout_mode = 2
 
 [connection signal="card_added" from="." to="AvailableActionsFan" method="add_action_card"]
 [connection signal="end_turn_signal" from="." to="." method="on_end_turn"]

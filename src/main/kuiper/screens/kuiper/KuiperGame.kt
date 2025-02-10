@@ -1,6 +1,7 @@
 package screens.kuiper
 
 import SignalBus
+import confirm_action.ConfirmAction
 import godot.*
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
@@ -46,11 +47,12 @@ class KuiperGame : PanelContainer() {
 
     // UI elements
     private lateinit var yearLbl: Label
-    private lateinit var eraTabBar: TabBar
+    private lateinit var zoneTabBar: TabBar
     private lateinit var companyNameHeader: Label
     private lateinit var sciencePanel: HBoxContainer
     private lateinit var scienceSummaryPanel: Control
     private lateinit var activeActionList: Control
+    private lateinit var confirmAction: ConfirmAction
 
     // packed scenes
     private val activeActionScene =
@@ -66,20 +68,18 @@ class KuiperGame : PanelContainer() {
 
         // Get UI elements
         yearLbl = getNodeAs("%Year_lbl")!!
-        eraTabBar = getNodeAs("%EraTabBar")!!
-        eraTabBar.setTabTitle(0, gameState.country?.name ?: "No country selected")
-        companyNameHeader =
-            getNodeAs("%ProjectKuiperHeading")!!
+        zoneTabBar = getNodeAs("%EraTabBar")!!
+        populateZoneTabBar()
+        companyNameHeader = getNodeAs("%ProjectKuiperHeading")!!
         companyNameHeader.text = "Project Kuiper - ${gameState.company.name}"
-        sciencePanel =
-            getNodeAs("%SciencePanel")!!
-        scienceSummaryPanel =
-            getNodeAs("%ScienceSummaryContents")!!
-        activeActionList =
-            getNodeAs("ActiveActionList")!!
+        sciencePanel = getNodeAs("%SciencePanel")!!
+        scienceSummaryPanel = getNodeAs("%ScienceSummaryContents")!!
+        activeActionList = getNodeAs("ActiveActionList")!!
+        confirmAction = getNodeAs("%ConfirmActionScene")!!
+        confirmAction.cancelAction()
 
         // populate science panel
-        GD.print("KuiperGame: Populating science panel")
+        GD.print("Dummy: KuiperGame: Populating science panel")
         gameState.company.sciences.forEach { (science, rate) ->
             val item = sciencePanelItem.instantiate() as ScienceRate
             item.rateLabel = "%.2f".format(gameState.company.sciences[science])
@@ -96,9 +96,8 @@ class KuiperGame : PanelContainer() {
         // I need to get the sliding panel which contains this to recalculate its dimensions
         recalcPulldownPanelSignal.emit(scienceSummaryPanel)
 
-
         // active actions
-        GD.print("KuiperGame: Populating active actions")
+        GD.print("Dummy: KuiperGame: Populating active actions")
         val activeActionView = activeActionScene.instantiate() as ActiveAction
         gameState.availableActions.forEach {
             activeActionView.actName = it.name
@@ -113,6 +112,12 @@ class KuiperGame : PanelContainer() {
             size?.let {
                 signalBus.onScreenResized.emit(size.width, size.height)
             }
+        }
+
+        signalBus.showActionConfirmation.connect { hex, card ->
+            confirmAction.hex = hex
+            confirmAction.card = card
+            confirmAction.fadeIn()
         }
     }
 
@@ -152,6 +157,18 @@ class KuiperGame : PanelContainer() {
         GD.print(gameState.stateToString())
         escMenuVisible = false
         gameState.save()
+    }
+
+    private fun populateZoneTabBar() {
+        gameState.zones.forEachIndexed { index, zone ->
+            GD.print("Adding zone ${zone.name} to tab bar")
+            zoneTabBar.addTab(zone.name)
+            zoneTabBar.setTabDisabled(index, !zone.active)
+            if (!zone.active) {
+                zoneTabBar.setTabTooltip(index, zone.description)
+            }
+        }
+        GD.print(zoneTabBar.getTabCount(), " tabs added")
     }
 
     private fun hideEscapeMenu() {

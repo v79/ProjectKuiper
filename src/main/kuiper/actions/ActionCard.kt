@@ -88,8 +88,16 @@ class ActionCard : Node2D() {
             placedOnHex = h
         }
 
-        signalBus.cardOffHex.connect { h ->
+        signalBus.cardOffHex.connect {
             placedOnHex = null
+        }
+
+        // when the action is confirmed, return the card to the fan
+        signalBus.cancelActionConfirmation.connect { ->
+            status = CardStatus.IN_FAN
+            this.show()
+            draggingStopped.emitSignal(this)
+            returnCardToFan()
         }
     }
 
@@ -123,15 +131,14 @@ class ActionCard : Node2D() {
                     GD.print("Card placed on hex ${placedOnHex?.locationName}")
                     status = CardStatus.PLACED_ON_HEX
 
-                    // now we trigger the confirmation dialog and other cool stuff.
+                    // now we trigger the confirmation dialog and other cool stuff by emitting a signal
+                    this.hide()
+                    signalBus.showActionConfirmation.emitSignal(placedOnHex!!, this)
 
                 } else {
                     status = CardStatus.IN_FAN
                     draggingStopped.emitSignal(this)
-                    getTree()!!.createTween()?.tweenProperty(this, "position".asNodePath(), startPosition, 0.5)
-
-                    getTree()!!.createTween()
-                        ?.tweenProperty(this, "rotation".asNodePath(), GD.degToRad(startRotation), 0.5)
+                    returnCardToFan()
                 }
             }
         }
@@ -151,6 +158,15 @@ class ActionCard : Node2D() {
         if (status != CardStatus.DRAGGING) {
             isDraggable = false
         }
+    }
+
+    /**
+     *  Return the card to its original position in the fan
+     */
+    private fun returnCardToFan() {
+        getTree()!!.createTween()?.tweenProperty(this, "position".asNodePath(), startPosition, 0.5)
+        getTree()!!.createTween()
+            ?.tweenProperty(this, "rotation".asNodePath(), GD.degToRad(startRotation), 0.5)
     }
 
     fun highlight() {
