@@ -13,6 +13,7 @@ import godot.extensions.getNodeAs
 import godot.extensions.instantiateAs
 import state.GameState
 import state.Location
+import state.SectorStatus
 
 @RegisterClass
 class HexGrid : Control() {
@@ -27,8 +28,7 @@ class HexGrid : Control() {
 	private lateinit var gridPlacementContainer: HBoxContainer
 
 	// Packed scenes
-	private val hexScene =
-		ResourceLoader.load("res://src/main/kuiper/hexgrid/Hex.tscn") as PackedScene
+	private val hexScene = ResourceLoader.load("res://src/main/kuiper/hexgrid/Hex.tscn") as PackedScene
 
 	private val hexes: MutableList<Hex> = mutableListOf()
 	private var card: ActionCard? = null
@@ -78,12 +78,21 @@ class HexGrid : Control() {
 		hex.id = i
 		hex.locationName = location.name
 		hex.hexUnlocked = location.unlocked
+
 		val dropTarget = hex.getNodeAs<HexDropTarget>("%HexDropTarget")!!
 		dropTarget.addToGroup("hexDropTargets".asCachedStringName())
 		dropTarget.setName("HexDropTarget$i")
 		dropTarget.hex = hex
+		dropTarget.fillTriangles.resize(6)
 		dropTargets.add(dropTarget)
 		hex.marker = dropTarget
+		location.sectors.forEachIndexed { index, sector ->
+			if (sector.status == SectorStatus.BUILT) {
+				hex.triangles = Array(6) { 0 }
+				hex.triangles[index] = 1
+				hex.marker.fillTriangles[index] = true
+			}
+		}
 		hex.setName("Hex$i")
 		val label = hex.getNodeAs<Label>("%LocationLabel")!!
 		val boxContainer = BoxContainer()

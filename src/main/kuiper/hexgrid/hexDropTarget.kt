@@ -3,7 +3,6 @@ package hexgrid
 import godot.FontVariation
 import godot.Marker2D
 import godot.annotation.*
-import godot.global.GD
 import godot.core.Color
 import godot.core.PackedVector2Array
 import godot.core.VariantArray
@@ -33,14 +32,11 @@ class HexDropTarget : Marker2D() {
 	@RegisterProperty
 	var numbered = false
 
-	@Export
-	@RegisterProperty
 	var fillTriangles: VariantArray<Boolean> = VariantArray()
 
 	private var unlockedColor = Color(1.0, 1.0, 1.0, 1.0)
 	private var lockedColor = Color(0.2, 0.2, 0.2, 1.0)
 	private var highlightColor = Color(1.0, 0.8, 0.8, 1.0)
-
 	var colour: Color = lockedColor // default to dark grey
 
 	/**

@@ -7,7 +7,6 @@ import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
 import godot.extensions.getNodeAs
-import kotlinx.serialization.Serializable
 
 /**
  * A Hex represents a location in the world/region map.
@@ -30,6 +29,8 @@ class Hex : Node2D() {
 	@RegisterProperty
 	var hexUnlocked: Boolean = false
 
+	var triangles = Array(6) { it }
+
 	// UI elements
 	private lateinit var locationLabel: Label
 
@@ -51,7 +52,3 @@ class Hex : Node2D() {
 	// - buildFacility(size: Int, site: Int)
 	// - removeFacility(size: Int, site: Int)
 }
-
-class Site(var empty: Boolean = true)
-
-class Facility(var size: Int = 1)

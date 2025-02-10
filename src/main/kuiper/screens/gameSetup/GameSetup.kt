@@ -7,10 +7,7 @@ import godot.annotation.RegisterSignal
 import godot.core.*
 import godot.extensions.getNodeAs
 import godot.global.GD
-import state.GameState
-import state.Location
-import state.Sponsor
-import state.Zone
+import state.*
 import technology.Science
 
 @RegisterClass
@@ -107,6 +104,11 @@ class GameSetup : Node() {
         zoneList[0].apply {
             description = "Your home zone, where your headquarters is located. HQ can be moved in the future."
             locations.add(Location("${sponsor.name} HQ", true))
+            locations[0].apply {
+                sectors[0].status = SectorStatus.BUILT
+//                sectors[1].status = SectorStatus.BUILT
+                sectors[2].status = SectorStatus.BUILT
+            }
             for (i in 1..9) {
                 locations.add(Location("Location $i"))
             }
