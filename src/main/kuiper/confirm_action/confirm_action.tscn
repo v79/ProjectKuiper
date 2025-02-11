@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://cpwrm52thlo67"]
+[gd_scene load_steps=6 format=3 uid="uid://cpwrm52thlo67"]
 
 [ext_resource type="Script" path="res://src/main/kuiper/confirm_action/ConfirmAction.kt" id="1_po0r3"]
+[ext_resource type="PackedScene" uid="uid://bbsmiefjegk8c" path="res://src/main/kuiper/confirm_action/action_card_details.tscn" id="2_v23dy"]
 
 [sub_resource type="Animation" id="Animation_8g1pu"]
 length = 0.001
@@ -163,26 +164,38 @@ mouse_filter = 2
 [node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel"]
 layout_mode = 2
 
-[node name="ConfirmActionTitle" type="Label" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 10
+
+[node name="ConfirmActionTitle" type="Label" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/MarginContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 20
 text = "Confirm Action on Hex XXX"
 horizontal_alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-alignment = 1
 
-[node name="ReferenceRectHex" type="ReferenceRect" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-editor_only = false
 
-[node name="ReferenceRectCard" type="ReferenceRect" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer"]
+[node name="MarginContainer2" type="MarginContainer" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(700, 0)
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ActionCardDetails" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer2" instance=ExtResource("2_v23dy")]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-editor_only = false
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer"]
 layout_mode = 2

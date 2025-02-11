@@ -1,0 +1,57 @@
+[gd_scene load_steps=3 format=3 uid="uid://bbsmiefjegk8c"]
+
+[ext_resource type="Script" path="res://src/main/kuiper/confirm_action/ActionCardDetails.kt" id="1_esw4y"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nuxtx"]
+bg_color = Color(0.745098, 0.537255, 0.568627, 1)
+
+[node name="ActionCardDetails" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_esw4y")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(300, 400)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_nuxtx")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="CardTitle" type="Label" parent="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "<Action title>"
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+alignment = 2
+
+[node name="Turns" type="Label" parent="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "3t"
+
+[node name="Influence" type="Label" parent="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "2i"

@@ -119,11 +119,18 @@ class KuiperGame : PanelContainer() {
             confirmAction.card = card
             confirmAction.fadeIn()
         }
+
+        // finally, update the UI
+        updateUIOnTurn()
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     @RegisterFunction
     override fun _process(delta: Double) {
+    }
+
+    @RegisterFunction
+    fun updateUIOnTurn() {
         yearLbl.text = "Year: ${gameState.year}"
     }
 
@@ -150,6 +157,7 @@ class KuiperGame : PanelContainer() {
     fun on_end_turn() {
         GD.print("End turn!")
         gameState.nextTurn()
+        updateUIOnTurn()
     }
 
     @RegisterFunction
