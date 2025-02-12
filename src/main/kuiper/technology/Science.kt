@@ -14,7 +14,7 @@ enum class Science(val label: String, var multiplier: Float) {
         override fun color() = Color(0.0, 0.0, 1.0)
     },
     ASTRONOMY("Astronomy", 1.0f) {
-       override fun color() = Color(0.5, 0.0, 0.5)
+        override fun color() = Color(0.5, 0.0, 0.5)
     },
     BIOCHEMISTRY("Biochemistry", 1.0f) {
         override fun color() = Color(0.0, 0.5, 0.5)
@@ -33,4 +33,10 @@ enum class Science(val label: String, var multiplier: Float) {
     };
 
     abstract fun color(): Color
+
+    companion object {
+        fun all(): List<Science> {
+            return listOf(PHYSICS, ASTRONOMY, BIOCHEMISTRY, GEOLOGY, MATHEMATICS, PSYCHOLOGY)
+        }
+    }
 }

@@ -12,18 +12,42 @@ class Location(val name: String, var unlocked: Boolean = false) {
     // locations may have some interesting properties in the future, such as base production rates
 
     // a location is divided into 6 sectors, each of which can be built on
+    // buildings know which sectors they are built on
+    val buildings: Map<Building, IntArray>
+        get() = _buildings
+    private val _buildings: MutableMap<Building, IntArray> = mutableMapOf()
+    
     val sectors = Array(6) { Sector(it) }
 
     @Transient
     val hex: Hex? = null
+
+    /**
+     * Add a building to this location
+     * @param building the building to add
+     * @param sectorIds the sector ids that the building will occupy
+     * @param alreadyBuilt whether the building is already built or not, e.g. will it be "Built" or "Constructing"
+     */
+    fun addBuilding(building: Building, sectorIds: IntArray, alreadyBuilt: Boolean = false) {
+        _buildings[building] = sectorIds
+        sectorIds.forEach { sectors[it].status = if (alreadyBuilt) SectorStatus.BUILT else SectorStatus.CONSTRUCTING }
+    }
 }
 
+/**
+ * A Sector represents a single buildable sector within a Location, and is represented by a triangle within a Hex
+ */
 @Serializable
-class Sector(val id: Int, var status: SectorStatus = SectorStatus.EMPTY)
+class Sector(val id: Int, var status: SectorStatus = SectorStatus.EMPTY) {
 
+}
+
+/**
+ * The status of a Sector
+ */
 enum class SectorStatus {
     EMPTY,
-    BUILDING,
+    CONSTRUCTING,
     BUILT,
     DESTROYED
 }

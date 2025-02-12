@@ -1,6 +1,7 @@
 package actions
 
 import kotlinx.serialization.Serializable
+import state.Building
 import state.ResourceType
 import technology.Science
 
@@ -39,11 +40,10 @@ class Action(val id: Int, val name: String, val description: String, var duratio
     // ✅ actions have an effect, such as increasing a science research rate, or increasing the company's influence
     // ✅ actions can have effect once completed, or they have an effect for each turn that they are active
     // Better if the action takes place on the target, e.g. on the ScienceRate object?
-
+    // actions can alter a Location/Hex or sector, e.g. by building a structure
     // actions either happen each turn, or at expiry
 
 
-    // but how do I encode all this in text/json format?
     private var propertyToMutate: ResourceType =
         ResourceType.GOLD
     private var mutationEffect: MutationType = MutationType.ADD
@@ -57,6 +57,8 @@ class Action(val id: Int, val name: String, val description: String, var duratio
     // science mutations are different from regular mutations
     private var scienceToMutate: Science? = null
     private var scienceRateAmount: Float = 0.0f
+
+    private var buildingToConstruct: Building? = null
 
     /**
      * Actions perform mutations on the company state
@@ -98,6 +100,16 @@ class Action(val id: Int, val name: String, val description: String, var duratio
         scienceToMutate = science
         mutationEffect = mutationType
         scienceRateAmount = amount
+    }
+
+    fun addAllScienceMutation(mutationType: MutationType, amount: Float) {
+        Science.entries.forEach {
+            addScienceMutation(it, mutationType, amount)
+        }
+    }
+
+    fun constructBuilding(building: Building) {
+        buildingToConstruct = building
     }
 
     /**

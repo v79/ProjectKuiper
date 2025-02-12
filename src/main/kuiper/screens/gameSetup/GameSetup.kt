@@ -1,5 +1,6 @@
 package screens.gameSetup
 
+import actions.Action
 import godot.*
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
@@ -7,6 +8,7 @@ import godot.annotation.RegisterSignal
 import godot.core.*
 import godot.extensions.getNodeAs
 import godot.global.GD
+import kotlinx.serialization.json.Json
 import state.*
 import technology.Science
 
@@ -31,6 +33,10 @@ class GameSetup : Node() {
         Sponsor(7, "Antarctica", Color.white)
     )
 
+    // file paths
+    private val actionsJsonPath = "res://assets/data/actions/actions.json"
+
+    // UI elements
     lateinit var companyNamePanel: PanelContainer
     lateinit var startGameButton: Button
     lateinit var companyNameEdit: TextEdit
@@ -75,6 +81,10 @@ class GameSetup : Node() {
             GD.print("No country selected!")
             return
         }
+
+        // load data assets
+        val actionData = loadActionsData()
+
         // globals are added to the tree first, so will be the first child
         val gameState = getTree()?.root?.getChild(0) as GameState
         val sponsor = sponsorList[selectedCountry - 1]
@@ -84,6 +94,8 @@ class GameSetup : Node() {
         gameState.company.name = companyNameEdit.text
         gameState.company.sciences = generateStartingScienceRates().toMutableMap()
         gameState.zones = setupZones(sponsor)
+
+        gameState.availableActions = actionData.toMutableList()
 
         GD.print("Starting game for country ${sponsorList[selectedCountry - 1].name}")
         GD.print("Company name: ${gameState.company.name}")
@@ -105,9 +117,7 @@ class GameSetup : Node() {
             description = "Your home zone, where your headquarters is located. HQ can be moved in the future."
             locations.add(Location("${sponsor.name} HQ", true))
             locations[0].apply {
-                sectors[0].status = SectorStatus.BUILT
-//                sectors[1].status = SectorStatus.BUILT
-                sectors[2].status = SectorStatus.BUILT
+                addBuilding(Building.HQ(), intArrayOf(1), true)
             }
             for (i in 1..9) {
                 locations.add(Location("Location $i"))
@@ -145,5 +155,17 @@ class GameSetup : Node() {
             scienceRates[science] = GD.randfRange(1.0f, 10.0f)
         }
         return scienceRates
+    }
+
+    private fun loadActionsData(): List<Action> {
+        GD.print("Loading actions data...")
+        val actionsFile = FileAccess.open(actionsJsonPath, FileAccess.ModeFlags.READ)
+        if (actionsFile == null) {
+            GD.printErr("Failed to load actions data from $actionsJsonPath")
+            return emptyList()
+        }
+        val actionsJson = Json.decodeFromString<List<Action>>(actionsFile.getAsText())
+        GD.print("Loaded ${actionsJson.size} actions")
+        return actionsJson
     }
 }

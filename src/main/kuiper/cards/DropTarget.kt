@@ -1,4 +1,4 @@
-package src.main.kuiper.cards
+package cards
 
 import godot.Marker2D
 import godot.annotation.RegisterClass
@@ -8,6 +8,7 @@ import godot.core.Color
 import godot.core.Vector2
 import godot.core.asCachedStringName
 
+@Deprecated("This class is not used in the final version of the game")
 @RegisterClass
 class DropTarget : Marker2D() {
 

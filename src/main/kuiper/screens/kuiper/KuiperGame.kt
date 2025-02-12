@@ -106,6 +106,11 @@ class KuiperGame : PanelContainer() {
             activeActionList.addChild(activeActionView)
         }
 
+        // create cards from actions
+        gameState.availableActions.forEach {
+            cardAdded.emit(it.id)
+        }
+
         // Connect signals
         getTree()?.root?.sizeChanged?.connect {
             val size = getTree()?.root?.size

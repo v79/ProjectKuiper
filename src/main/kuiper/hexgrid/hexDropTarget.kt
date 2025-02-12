@@ -56,7 +56,7 @@ class HexDropTarget : Marker2D() {
 				colour,
 				2.0f
 			)
-			if (fillTriangles[i - 1]) {
+			if (fillTriangles[translateHexIdToSectorId(i - 1)]) {
 				val fillPolys = PackedVector2Array()
 				fillPolys.insert(0, Vector2(0.0, 0.0))
 				fillPolys.insert(1, p1)
@@ -67,7 +67,21 @@ class HexDropTarget : Marker2D() {
 				)
 			}
 			if (numbered) {
-				drawChar(font, Vector2((0.0 + p1.x + p2.x) / 3, (0.0 + p1.y + p2.y) / 3), i.toString(), 22, Color.black)
+				drawChar(
+					font,
+					Vector2((0.0 + p1.x + p2.x) / 3, (0.0 + p1.y + p2.y) / 3),
+					i.toString(),
+					22,
+					Color.green
+				)
+				// this draws 0 to 5, but we want 1 to 6
+				drawChar(
+					font,
+					Vector2((24.0 + p1.x + p2.x) / 3, (0.0 + p1.y + p2.y) / 3),
+					translateHexIdToSectorId(i).toString(),
+					22,
+					Color.red
+				)
 			}
 			p1 = p2
 			if (drawInternals) {
@@ -79,6 +93,15 @@ class HexDropTarget : Marker2D() {
 				)
 			}
 		}
+	}
+
+	/**
+	 * Translate the hexagon ID to a sector ID
+	 * Visually, sector IDs start in the 'top left' triangle and go clockwise
+	 * But hex IDs start 3 triangles on (roughly at 4 o'clock) and go clockwise
+	 */
+	private fun translateHexIdToSectorId(hexId: Int): Int {
+		return (hexId + 3) % 6
 	}
 
 	@RegisterFunction

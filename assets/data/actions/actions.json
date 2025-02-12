@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1,
+    "name": "Build Research Lab",
+    "description": "Construct a research lab to increase your science production",
+    "duration": 3,
+    "actionCosts": {
+      "GOLD": 100,
+      "INFLUENCE": 2,
+      "CONSTRUCTION_MATERIALS": 0
+    },
+    "buildingToConstruct": {
+      "type": "state.Building.ScienceLab",
+      "labName": "Research Lab",
+      "labDescription": "A basic research lab",
+      "sectors": 1,
+      "sciencesProduced": {
+        "PHYSICS": 5.0,
+        "ASTRONOMY": 5.0,
+        "BIOCHEMISTRY": 5.0,
+        "GEOLOGY": 5.0,
+        "MATHEMATICS": 5.0,
+        "PSYCHOLOGY": 5.0
+      }
+    }
+  },
+  {
+    "id": 2,
+    "name": "Build Basic Telescope",
+    "description": "Construct a telescope to increase your astronomy science production",
+    "duration": 4,
+    "actionCosts": {
+      "GOLD": 200,
+      "INFLUENCE": 1,
+      "CONSTRUCTION_MATERIALS": 25
+    },
+    "buildingToConstruct": {
+      "type": "state.Building.ScienceLab",
+      "labName": "Basic Telescope",
+      "labDescription": "A basic telescope",
+      "sectors": 1,
+      "baseRunningCost": {
+        "first": "GOLD",
+        "second": 5
+      },
+      "sciencesProduced": {
+        "ASTRONOMY": 10.0,
+        "PHYSICS": 5.0
+      }
+    }
+  }
+]

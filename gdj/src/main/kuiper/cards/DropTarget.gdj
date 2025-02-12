@@ -2,7 +2,7 @@
 // Note: You can however freely move this file inside your godot project if you want. Keep in mind however, that if you rename the originating source code file, this file will be deleted and regenerated as a new file instead of being updated! Other modifications to the source file however, will result in this file being updated.
 
 registeredName = DropTarget
-fqName = src.main.kuiper.cards.DropTarget
+fqName = cards.DropTarget
 relativeSourcePath = src/main/kuiper/cards/DropTarget.kt
 baseType = Marker2D
 supertypes = [
