@@ -1,4 +1,5 @@
 import actions.ActionCard
+import actions.ActionWrapper
 import godot.Node
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
@@ -17,45 +18,51 @@ import hexgrid.Hex
 @RegisterClass
 class SignalBus : Node() {
 
-    var screenWidth: Int = 1600
-        private set
-    var screenHeight: Int = 900
-        private set
+	var screenWidth: Int = 1600
+		private set
+	var screenHeight: Int = 900
+		private set
 
-    // Screen has been resized
-    @RegisterSignal
-    val onScreenResized by signal2<Int, Int>("width", "height")
+	// Screen has been resized
+	@RegisterSignal
+	val onScreenResized by signal2<Int, Int>("width", "height")
 
-    // Signals relating to card dragging
-    @RegisterSignal
-    val draggingCard by signal1<ActionCard>("card")
+	// Signals relating to card dragging
+	@RegisterSignal
+	val draggingCard by signal1<ActionCard>("card")
 
-    @RegisterSignal
-    val droppedCard by signal1<ActionCard>("card")
+	@RegisterSignal
+	val droppedCard by signal1<ActionCard>("card")
 
-    // Signals relating to hexes
-    @RegisterSignal
-    val cardOnHex by signal1<Hex>("hex")
+	// Signals relating to hexes
+	@RegisterSignal
+	val cardOnHex by signal1<Hex>("hex")
 
-    @RegisterSignal
-    val cardOffHex by signal1<Hex>("hex")
+	@RegisterSignal
+	val cardOffHex by signal1<Hex>("hex")
 
-    @RegisterSignal
-    val showActionConfirmation by signal2<Hex, ActionCard>("hex", "card")
+	// Signals relating to playing actions on hexes
+	@RegisterSignal
+	val showActionConfirmation by signal2<Hex, ActionCard>("hex", "card")
 
-    @RegisterSignal
-    val cancelActionConfirmation by signal0()
+	@RegisterSignal
+	val cancelActionConfirmation by signal0()
+
+	// Signals relating to the card deck
+	@RegisterSignal
+	val dealCardFromDeck by signal1<ActionWrapper>("action")
 
 
-    @RegisterFunction
-    override fun _ready() {
-        onScreenResized.connect { w, h ->
-            updateScreenSize(w, h)
-        }
-    }
+	@RegisterFunction
+	override fun _ready() {
+		onScreenResized.connect { w, h ->
+			updateScreenSize(w, h)
+		}
+	}
 
-    private fun updateScreenSize(width: Int, height: Int) {
-        screenWidth = width
-        screenHeight = height
-    }
+	private fun updateScreenSize(width: Int, height: Int) {
+		screenWidth = width
+		screenHeight = height
+	}
+
 }

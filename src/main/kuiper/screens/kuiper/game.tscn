@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://dhc5at6r5jl4n"]
+[gd_scene load_steps=9 format=3 uid="uid://dhc5at6r5jl4n"]
 
 [ext_resource type="Script" path="res://src/main/kuiper/screens/kuiper/KuiperGame.kt" id="1_nlsq8"]
 [ext_resource type="PackedScene" uid="uid://bh0hxtmuthjhi" path="res://src/main/kuiper/screens/kuiper/escMenu/esc_menu.tscn" id="2_4tnej"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://cun66228bprqh" path="res://src/main/kuiper/screens/kuiper/pullDownPanel/pulldown_panel.tscn" id="3_ecgw1"]
 [ext_resource type="PackedScene" uid="uid://bcnrl5714e1pe" path="res://src/main/kuiper/actions/available_actions_fan.tscn" id="4_o0igw"]
 [ext_resource type="PackedScene" uid="uid://cpwrm52thlo67" path="res://src/main/kuiper/confirm_action/confirm_action.tscn" id="6_ts3vi"]
+[ext_resource type="PackedScene" uid="uid://bsyyc75msaxp1" path="res://src/main/kuiper/actions/CardDeck.tscn" id="8_skh3w"]
 
 [node name="CanvasLayer" type="PanelContainer"]
 anchors_preset = 15
@@ -18,6 +19,9 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
 script = ExtResource("1_nlsq8")
+
+[node name="CardDeck" parent="." instance=ExtResource("8_skh3w")]
+unique_name_in_owner = true
 
 [node name="Background" type="ColorRect" parent="."]
 layout_mode = 2
@@ -135,11 +139,12 @@ size_flags_horizontal = 3
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="BottomRow_hbox" type="HBoxContainer" parent="AspectRatioContainer/VBoxContainer"]
+[node name="BottomRow_hbox" type="HBoxContainer" parent="."]
 layout_mode = 2
 size_flags_horizontal = 8
+size_flags_vertical = 8
 
-[node name="EndTurn_btn" type="Button" parent="AspectRatioContainer/VBoxContainer/BottomRow_hbox"]
+[node name="EndTurn_btn" type="Button" parent="BottomRow_hbox"]
 layout_mode = 2
 size_flags_horizontal = 8
 text = "End Turn"
@@ -191,8 +196,8 @@ mouse_filter = 1
 [connection signal="esc_menu_signal" from="." to="." method="on_escape_menu"]
 [connection signal="recalc_pulldown_panel_signal" from="." to="AspectRatioContainer/VBoxContainer/TopRow_hbox/Container/PulldownPanel" method="_recalculate_pulldown_dimensions"]
 [connection signal="pressed" from="AspectRatioContainer/VBoxContainer/TopRow_hbox/PanelContainer/MainMenuButton" to="." method="on_escape_menu"]
-[connection signal="pressed" from="AspectRatioContainer/VBoxContainer/BottomRow_hbox/EndTurn_btn" to="." method="on_end_turn"]
-[connection signal="pressed" from="ActiveActionList/VBoxContainer2/Button" to="AvailableActionsFan" method="add_card"]
+[connection signal="pressed" from="BottomRow_hbox/EndTurn_btn" to="." method="on_end_turn"]
+[connection signal="pressed" from="ActiveActionList/VBoxContainer2/Button" to="CardDeck" method="get_card"]
 [connection signal="pressed" from="ActiveActionList/VBoxContainer2/RemoveCardButton" to="AvailableActionsFan" method="remove_random_card"]
 [connection signal="please_save_signal" from="EscMenu" to="." method="on_esc_save_game"]
 [connection signal="resume_signal" from="EscMenu" to="." method="on_escape_menu"]

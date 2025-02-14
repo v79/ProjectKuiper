@@ -16,7 +16,7 @@ fun main() {
     var id = 1
 
     // start with the simplest 'build a research lab' action
-    val buildResearchLab = createAction(
+    val buildResearchLab: Action = createAction(
         id++, "Build Research Lab", "Construct a research lab to increase your science production", 3
     )
     // add costs

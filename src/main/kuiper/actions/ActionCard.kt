@@ -36,6 +36,7 @@ class ActionCard : Node2D() {
 	}
 
 	var status = CardStatus.IN_FAN
+	private var action: Action? = null
 
 	//    var dragging = false
 	private var isDraggable = false
@@ -182,6 +183,10 @@ class ActionCard : Node2D() {
 	 */
 	private fun calcWidthLimit(width: Int) {
 		widthLimit = (width - 100f - offset.x - CARD_WIDTH).toFloat()
+	}
+
+	fun setAction(action: Action) {
+		this.action = action
 	}
 }
 

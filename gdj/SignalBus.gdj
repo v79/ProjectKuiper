@@ -18,7 +18,8 @@ signals = [
 	card_on_hex,
 	card_off_hex,
 	show_action_confirmation,
-	cancel_action_confirmation
+	cancel_action_confirmation,
+	deal_card_from_deck
 ]
 properties = [
     

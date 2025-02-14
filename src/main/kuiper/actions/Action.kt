@@ -1,9 +1,19 @@
 package actions
 
+import godot.annotation.RegisterClass
 import kotlinx.serialization.Serializable
 import state.Building
 import state.ResourceType
 import technology.Science
+
+@RegisterClass
+class ActionWrapper() : godot.Object() {
+    constructor(action: Action) : this() {
+        this.action = action
+    }
+
+    var action: Action? = null
+}
 
 /**
  * An Action is a task that can be performed by the player.
@@ -11,8 +21,19 @@ import technology.Science
  * They also have a duration, which is the number of turns it takes to complete the action.
  */
 @Serializable
-class Action(val id: Int, val name: String, val description: String, var duration: Int = 1) {
+class Action() {
 
+    constructor(id: Int, name: String, description: String, duration: Int = 1) : this() {
+        this.id = id
+        this.actionName = name
+        this.description = description
+        this.duration = duration
+    }
+
+    var id: Int = -1
+    var actionName: String = ""
+    var description: String = ""
+    var duration: Int = 1
     var turnsRemaining: Int = duration
 
     // an action will usually be performed on an entity, such as a hex on the map
@@ -120,8 +141,8 @@ class Action(val id: Int, val name: String, val description: String, var duratio
     }
 
 
-    override fun toString(): String {
-        return "Action(id=$id, name='$name', description='$description', duration=$duration, turnsRemaining=$turnsRemaining, actionCosts=$actionCosts)"
+    fun toKString(): String {
+        return "Action(id=$id, name='$actionName', description='$description', duration=$duration, turnsRemaining=$turnsRemaining, actionCosts=$actionCosts)"
     }
 
 }

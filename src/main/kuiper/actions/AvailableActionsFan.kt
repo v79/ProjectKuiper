@@ -20,7 +20,8 @@ class AvailableActionsFan : Node2D() {
 
     private val cardCount: Int
         get() = actionCards.size
-    private var cardIdCounter: Int = 0
+
+    private var maxWidth = 1200f
 
     // Card curve properties
     @RegisterProperty
@@ -47,11 +48,8 @@ class AvailableActionsFan : Node2D() {
     @Export
     var maxRotationDegrees: Float = 10f
 
-    private var maxWidth = 1200f
-
-
     // UI elements
-    private val fanContainer: CenterContainer by lazy { getNodeAs("HBoxContainer/FanContainer")!! }
+    private lateinit var fanContainer: CenterContainer
 
     // packed scenes
     private val actionCardScene = ResourceLoader.load("res://src/main/kuiper/actions/action_card.tscn") as PackedScene
@@ -59,6 +57,13 @@ class AvailableActionsFan : Node2D() {
     @RegisterFunction
     override fun _ready() {
         signalBus = getNodeAs("/root/SignalBus")!!
+        fanContainer = getNodeAs("HBoxContainer/FanContainer")!!
+
+        GD.print("AvailableActionsFan ready - connecting signals")
+        // connect signals
+        signalBus.dealCardFromDeck.connect { actionWrapper ->
+            addActionCard(actionWrapper.action)
+        }
         signalBus.onScreenResized.connect { width, height ->
             screenResized(width, height)
         }
@@ -66,12 +71,6 @@ class AvailableActionsFan : Node2D() {
 
     @RegisterFunction
     override fun _process(delta: Double) {
-    }
-
-    // temp function to create new cards on demand for testing
-    @RegisterFunction
-    fun addCard() {
-        addActionCard(++cardIdCounter)
     }
 
     // temp function to remove a random card for testing
@@ -168,6 +167,44 @@ class AvailableActionsFan : Node2D() {
         return -1
     }
 
+    /**
+     * Add a new action card to the fan
+     * @param action The action to add, from the card deck
+     */
+    @RegisterFunction
+    fun addActionCard(action: Action?) {
+        if (action == null) {
+            GD.printErr("Tried to add a null action card")
+            return
+        }
+        GD.print("Adding card: ${action.id}")
+        val card = actionCardScene.instantiate() as ActionCard
+        card.cardId = action.id
+        card.cardName = action.actionName
+
+        actionCards[action.id] = card
+        fanContainer.addChild(card)
+
+        // connect signals
+        card.mouseEntered.connect { c ->
+            cardEnteredHandler(c)
+        }
+        card.mouseExited.connect { c ->
+            cardExitHandler(c)
+        }
+        card.isDraggingCard.connect { c ->
+            disableOtherCards(c.cardId)
+            signalBus.draggingCard.emitSignal(c)
+        }
+        card.draggingStopped.connect { c ->
+            enableAllCards()
+            signalBus.droppedCard.emitSignal(c)
+        }
+
+        // draw the fan
+        updateCardPlacements()
+    }
+
     @RegisterFunction
     fun cardEnteredHandler(id: Int) {
         actionCards[id]?.highlight()
@@ -190,41 +227,5 @@ class AvailableActionsFan : Node2D() {
         actionCards.forEach { (_, card) ->
             card.status = CardStatus.IN_FAN
         }
-    }
-
-
-    /**
-     * Add a new action card to the fan
-     * @param id The ID of the action card, to be fetched from the data store
-     */
-    @RegisterFunction
-    fun addActionCard(id: Int) {
-        GD.print("Adding card: $id")
-        val card = actionCardScene.instantiate() as ActionCard
-        // In reality, I'd be loading the action from a data store
-        card.cardId = id
-        card.cardName = "Card $id"
-
-        actionCards[id] = card
-        fanContainer.addChild(card)
-
-        // connect signals
-        card.mouseEntered.connect { c ->
-            cardEnteredHandler(c)
-        }
-        card.mouseExited.connect { c ->
-            cardExitHandler(c)
-        }
-        card.isDraggingCard.connect { c ->
-            disableOtherCards(c.cardId)
-            signalBus.draggingCard.emitSignal(c)
-        }
-        card.draggingStopped.connect { c ->
-            enableAllCards()
-            signalBus.droppedCard.emitSignal(c)
-        }
-
-        // draw the fan
-        updateCardPlacements()
     }
 }

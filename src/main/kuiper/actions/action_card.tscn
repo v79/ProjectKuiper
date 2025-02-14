@@ -30,10 +30,10 @@ mouse_default_cursor_shape = 6
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2
-alignment = 1
 
 [node name="CardName" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 text = "Build Lab"
 
 [node name="InfluenceCost" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer"]

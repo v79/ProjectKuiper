@@ -1,6 +1,7 @@
 package screens.kuiper
 
 import SignalBus
+import actions.CardDeck
 import confirm_action.ConfirmAction
 import godot.*
 import godot.annotation.RegisterClass
@@ -53,6 +54,7 @@ class KuiperGame : PanelContainer() {
     private lateinit var scienceSummaryPanel: Control
     private lateinit var activeActionList: Control
     private lateinit var confirmAction: ConfirmAction
+    private lateinit var cardDeck: CardDeck
 
     // packed scenes
     private val activeActionScene =
@@ -77,21 +79,10 @@ class KuiperGame : PanelContainer() {
         activeActionList = getNodeAs("ActiveActionList")!!
         confirmAction = getNodeAs("%ConfirmActionScene")!!
         confirmAction.cancelAction()
+        cardDeck = getNodeAs("%CardDeck")!!
 
         // populate science panel
-        GD.print("Dummy: KuiperGame: Populating science panel")
-        gameState.company.sciences.forEach { (science, rate) ->
-            val item = sciencePanelItem.instantiate() as ScienceRate
-            item.rateLabel = "%.2f".format(gameState.company.sciences[science])
-            item.colour = science.color()
-            item.description = science.label
-            item.setMouseFilter(Control.MouseFilter.MOUSE_FILTER_IGNORE)
-            sciencePanel.addChild(item)
-            scienceSummaryPanel.addChild(Label().apply {
-                text = "${science.label}: ${gameState.company.sciences[science]}"
-            })
-        }
-        scienceSummaryPanel.resetSize()
+        populateSciencePanel()
 
         // I need to get the sliding panel which contains this to recalculate its dimensions
         recalcPulldownPanelSignal.emit(scienceSummaryPanel)
@@ -100,10 +91,10 @@ class KuiperGame : PanelContainer() {
         GD.print("Dummy: KuiperGame: Populating active actions")
         val activeActionView = activeActionScene.instantiate() as ActiveAction
         gameState.availableActions.forEach {
-            activeActionView.actName = it.name
+            activeActionView.actName = it.actionName
             activeActionView.actDescription = it.description
             activeActionView.turnsLeft = it.duration.toString()
-            activeActionList.addChild(activeActionView)
+            activeActionList.addChild(activeActionView) // this throws an error
         }
 
         // create cards from actions
@@ -129,6 +120,7 @@ class KuiperGame : PanelContainer() {
         updateUIOnTurn()
     }
 
+
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     @RegisterFunction
     override fun _process(delta: Double) {
@@ -138,7 +130,6 @@ class KuiperGame : PanelContainer() {
     fun updateUIOnTurn() {
         yearLbl.text = "Year: ${gameState.year}"
     }
-
 
     @RegisterFunction
     override fun _input(event: InputEvent?) {
@@ -151,7 +142,6 @@ class KuiperGame : PanelContainer() {
             }
         }
     }
-
 
     @RegisterFunction
     fun on_escape_menu() {
@@ -174,14 +164,28 @@ class KuiperGame : PanelContainer() {
 
     private fun populateZoneTabBar() {
         gameState.zones.forEachIndexed { index, zone ->
-            GD.print("Adding zone ${zone.name} to tab bar")
             zoneTabBar.addTab(zone.name)
             zoneTabBar.setTabDisabled(index, !zone.active)
             if (!zone.active) {
                 zoneTabBar.setTabTooltip(index, zone.description)
             }
         }
-        GD.print(zoneTabBar.getTabCount(), " tabs added")
+    }
+
+    private fun populateSciencePanel() {
+        GD.print("Dummy: KuiperGame: Populating science panel")
+        gameState.company.sciences.forEach { (science, rate) ->
+            val item = sciencePanelItem.instantiate() as ScienceRate
+            item.rateLabel = "%.2f".format(gameState.company.sciences[science])
+            item.colour = science.color()
+            item.description = science.label
+            item.setMouseFilter(MouseFilter.MOUSE_FILTER_IGNORE)
+            sciencePanel.addChild(item)
+            scienceSummaryPanel.addChild(Label().apply {
+                text = "${science.label}: ${gameState.company.sciences[science]}"
+            })
+        }
+        scienceSummaryPanel.resetSize()
     }
 
     private fun hideEscapeMenu() {

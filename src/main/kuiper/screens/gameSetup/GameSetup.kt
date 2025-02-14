@@ -1,6 +1,5 @@
 package screens.gameSetup
 
-import actions.Action
 import godot.*
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
@@ -8,12 +7,15 @@ import godot.annotation.RegisterSignal
 import godot.core.*
 import godot.extensions.getNodeAs
 import godot.global.GD
-import kotlinx.serialization.json.Json
+import loaders.DataLoader
 import state.*
 import technology.Science
 
 @RegisterClass
 class GameSetup : Node() {
+
+    // Global autoloads
+    private lateinit var dataLoader: DataLoader
 
     @RegisterSignal
     val countrySelectSignal by signal1<Int>("countryId")
@@ -23,6 +25,7 @@ class GameSetup : Node() {
 
     private var selectedCountry: Int = -1
 
+    // Move this to a data file later
     private val sponsorList = listOf(
         Sponsor(1, "Europe", Color.blue),
         Sponsor(2, "North America", Color.red),
@@ -33,17 +36,16 @@ class GameSetup : Node() {
         Sponsor(7, "Antarctica", Color.white)
     )
 
-    // file paths
-    private val actionsJsonPath = "res://assets/data/actions/actions.json"
-
     // UI elements
-    lateinit var companyNamePanel: PanelContainer
-    lateinit var startGameButton: Button
-    lateinit var companyNameEdit: TextEdit
+    private lateinit var companyNamePanel: PanelContainer
+    private lateinit var startGameButton: Button
+    private lateinit var companyNameEdit: TextEdit
 
     // Called when the node enters the scene tree for the first time.
     @RegisterFunction
     override fun _ready() {
+        dataLoader = getNodeAs("/root/DataLoader")!!
+
         val hqSponsorListPanel = getNodeAs<ItemList>("%HQSponsorList".asNodePath())
         hqSponsorListPanel?.let { list ->
             list.clear()
@@ -82,9 +84,6 @@ class GameSetup : Node() {
             return
         }
 
-        // load data assets
-        val actionData = loadActionsData()
-
         // globals are added to the tree first, so will be the first child
         val gameState = getTree()?.root?.getChild(0) as GameState
         val sponsor = sponsorList[selectedCountry - 1]
@@ -94,8 +93,6 @@ class GameSetup : Node() {
         gameState.company.name = companyNameEdit.text
         gameState.company.sciences = generateStartingScienceRates().toMutableMap()
         gameState.zones = setupZones(sponsor)
-
-        gameState.availableActions = actionData.toMutableList()
 
         GD.print("Starting game for country ${sponsorList[selectedCountry - 1].name}")
         GD.print("Company name: ${gameState.company.name}")
@@ -157,15 +154,4 @@ class GameSetup : Node() {
         return scienceRates
     }
 
-    private fun loadActionsData(): List<Action> {
-        GD.print("Loading actions data...")
-        val actionsFile = FileAccess.open(actionsJsonPath, FileAccess.ModeFlags.READ)
-        if (actionsFile == null) {
-            GD.printErr("Failed to load actions data from $actionsJsonPath")
-            return emptyList()
-        }
-        val actionsJson = Json.decodeFromString<List<Action>>(actionsFile.getAsText())
-        GD.print("Loaded ${actionsJson.size} actions")
-        return actionsJson
-    }
 }
