@@ -85,7 +85,7 @@ horizontal_alignment = 1
 text_overrun_behavior = 3
 
 [node name="Container" type="Control" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox"]
-custom_minimum_size = Vector2(400, 0)
+custom_minimum_size = Vector2(430, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 1
@@ -110,6 +110,7 @@ contents = NodePath("ScienceSummaryContents")
 [node name="ScienceSummaryContents" type="VBoxContainer" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox/Container/PulldownPanel"]
 unique_name_in_owner = true
 visible = false
+z_index = 5
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 1
 offset_right = 200.0

@@ -31,14 +31,38 @@ mouse_default_cursor_shape = 6
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="CardName" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+[node name="InfluenceCost" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0.772549, 1)
+text = "1i"
+
+[node name="GoldCost" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.788235, 0.698039, 0, 1)
+text = "2g"
+
+[node name="ConMatsCost" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.466667, 0.364706, 0.254902, 1)
+text = "3c"
+
+[node name="Turns" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "5t"
+
+[node name="ActionName" type="Label" parent="."]
+unique_name_in_owner = true
+offset_left = 148.0
+offset_top = 3.0
+offset_right = 298.0
+offset_bottom = 26.0
+rotation = 1.5708
 size_flags_horizontal = 3
 text = "Build Lab"
-
-[node name="InfluenceCost" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-text = "..."
 
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
 [connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]

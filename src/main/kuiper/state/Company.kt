@@ -1,9 +1,6 @@
 package state
 
-import actions.Action
-import actions.MutationType
-import actions.ResourceMutation
-import actions.ScienceMutation
+import actions.*
 import kotlinx.serialization.Serializable
 import technology.Science
 
@@ -66,7 +63,8 @@ class Company(var name: String) {
                             println("Executing mutation: ${action.id} $mutation")
                             when (mutation.type) {
                                 MutationType.ADD -> addResource(mutation.resource, mutation.amountPerYear)
-                                MutationType.SET -> setResource(mutation.resource, mutation.amountPerYear)
+                                MutationType.SUBTRACT -> addResource(mutation.resource, -mutation.amountPerYear)
+                                MutationType.RESET -> setResource(mutation.resource, mutation.amountPerYear)
                                 MutationType.RATE_MULTIPLY -> multiplyResource(
                                     mutation.resource,
                                     mutation.amountPerYear.toFloat()
@@ -84,8 +82,12 @@ class Company(var name: String) {
                                     mutation.amount,
                                     Float::plus
                                 )
-
-                                MutationType.SET -> sciences[mutation.science] = mutation.amount
+                                MutationType.SUBTRACT -> sciences.merge(
+                                    mutation.science,
+                                    mutation.amount,
+                                    Float::minus
+                                )
+                                MutationType.RESET -> sciences[mutation.science] = mutation.amount
                                 MutationType.RATE_MULTIPLY -> sciences.merge(
                                     mutation.science,
                                     mutation.amount,
@@ -109,7 +111,8 @@ class Company(var name: String) {
                             println("Executing completion mutation: ${action.id} $mutation")
                             when (mutation.type) {
                                 MutationType.ADD -> addResource(mutation.resource, mutation.completionAmount)
-                                MutationType.SET -> setResource(mutation.resource, mutation.completionAmount)
+                                MutationType.SUBTRACT -> addResource(mutation.resource, -mutation.completionAmount)
+                                MutationType.RESET -> setResource(mutation.resource, mutation.completionAmount)
                                 MutationType.RATE_MULTIPLY -> TODO()
                             }
                         }
@@ -129,8 +132,4 @@ class Company(var name: String) {
 
         // update company resources
     }
-}
-
-enum class ResourceType {
-    GOLD, INFLUENCE, CONSTRUCTION_MATERIALS
 }

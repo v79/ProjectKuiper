@@ -179,8 +179,7 @@ class AvailableActionsFan : Node2D() {
         }
         GD.print("Adding card: ${action.id}")
         val card = actionCardScene.instantiate() as ActionCard
-        card.cardId = action.id
-        card.cardName = action.actionName
+        card.setAction(action)
 
         actionCards[action.id] = card
         fanContainer.addChild(card)

@@ -93,7 +93,7 @@ class KuiperGame : PanelContainer() {
         gameState.availableActions.forEach {
             activeActionView.actName = it.actionName
             activeActionView.actDescription = it.description
-            activeActionView.turnsLeft = it.duration.toString()
+            activeActionView.turnsLeft = it.turns.toString()
             activeActionList.addChild(activeActionView) // this throws an error
         }
 
@@ -178,11 +178,11 @@ class KuiperGame : PanelContainer() {
             val item = sciencePanelItem.instantiate() as ScienceRate
             item.rateLabel = "%.2f".format(gameState.company.sciences[science])
             item.colour = science.color()
-            item.description = science.label
+            item.description = science.displayName
             item.setMouseFilter(MouseFilter.MOUSE_FILTER_IGNORE)
             sciencePanel.addChild(item)
             scienceSummaryPanel.addChild(Label().apply {
-                text = "${science.label}: ${gameState.company.sciences[science]}"
+                text = "${science.displayName}: ${gameState.company.sciences[science]}"
             })
         }
         scienceSummaryPanel.resetSize()

@@ -1,5 +1,6 @@
 package state
 
+import actions.ResourceType
 import kotlinx.serialization.Serializable
 import technology.Science
 
