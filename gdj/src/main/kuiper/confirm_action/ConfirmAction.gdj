@@ -22,6 +22,7 @@ properties = [
 functions = [
     _ready,
 	update_u_i,
+	reset_u_i,
 	_process,
 	fade_in,
 	cancel_action

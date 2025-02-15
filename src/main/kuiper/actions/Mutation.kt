@@ -42,6 +42,7 @@ class ResourceMutation(
     val amountPerYear: Int,
     val completionAmount: Int? = null
 ) : Mutation {
+
     override fun toString(): String {
         val sBuilder = StringBuilder()
         if (amountPerYear != 0) {

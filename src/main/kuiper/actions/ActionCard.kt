@@ -36,7 +36,8 @@ class ActionCard : Node2D() {
     }
 
     // The action associated with this card
-    private var action: Action? = null
+    var action: Action? = null
+        private set
 
     var status = CardStatus.IN_FAN
 

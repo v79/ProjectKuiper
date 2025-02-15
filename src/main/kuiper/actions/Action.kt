@@ -46,13 +46,18 @@ class Action() {
     val initialCosts: MutableMap<ResourceType, Int> = mutableMapOf()
     private val mutations: MutableSet<ResourceMutation> = mutableSetOf()
     private val scienceMutations: MutableSet<ScienceMutation> = mutableSetOf()
-    private var buildingToConstruct: Building? = null
+    var buildingToConstruct: Building? = null
 
     fun addInitialCost(resourceType: ResourceType, amount: Int) {
         initialCosts[resourceType] = amount
     }
 
-    fun addMutation(resourceType: ResourceType, mutationType: MutationType, amountPerYear: Int, completionAmount: Int? = null) {
+    fun addMutation(
+        resourceType: ResourceType,
+        mutationType: MutationType,
+        amountPerYear: Int,
+        completionAmount: Int? = null
+    ) {
         val mutation = ResourceMutation(resourceType, mutationType, amountPerYear, completionAmount)
         mutations.add(mutation)
     }
@@ -68,6 +73,37 @@ class Action() {
 
     fun getMutations(): Set<Mutation> {
         return (mutations + scienceMutations).toSet()
+    }
+
+    /**
+     * Get the initial cost of the action, and the cost per turn, for the given resource
+     * @param resourceType the type of resource to get the cost for
+     * @return a Pair of the initial cost and the cost per turn
+     */
+    fun getCost(resourceType: ResourceType): Pair<Int?, Int?> {
+        val costPerTurn = mutations.find { it.resource == resourceType }?.amountPerYear
+        return Pair(initialCosts[resourceType], costPerTurn)
+    }
+
+    /**
+     * Get the benefits of the action, for the given resource
+     * A benefit is defined as a positive change in the resource - ADD or RATE_MULTIPLY mutations
+     * @param resourceType the type of resource to get the benefit for
+     * @return a Pair of the benefit per turn and the completion benefit
+     */
+    fun getBenefits(resourceType: ResourceType): Pair<Int?,Int?> {
+        val benefitTypes = setOf(MutationType.ADD, MutationType.RATE_MULTIPLY)
+        val benefitPerTurn = mutations.find { it.resource == resourceType && benefitTypes.contains(it.type) }?.amountPerYear
+        val completionBenefit = mutations.find { it.resource == resourceType && it.completionAmount != null }?.completionAmount
+        return Pair(benefitPerTurn, completionBenefit)
+    }
+
+    fun getScienceBenefit(science: Science): Float? {
+        val benefitPerTurn = scienceMutations.find { it.science == science }?.amount
+        if (benefitPerTurn != null && benefitPerTurn > 0f) {
+            return benefitPerTurn
+        }
+        return null
     }
 
     // some actions may consume science, reducing the amount of science available for technology research
@@ -88,7 +124,7 @@ class Action() {
 }
 
 enum class ActionType {
-   NONE, BUILD, BOOST, INVEST, EXPLORE
+    NONE, BUILD, BOOST, INVEST, EXPLORE
 }
 
 
