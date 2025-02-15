@@ -135,7 +135,7 @@ class ActionCard : Node2D() {
                 getTree()!!.createTween()?.tweenProperty(this, "rotation".asNodePath(), GD.degToRad(0.0f), 0.5)
             } else if (Input.isActionJustReleased("mouse_left_click".asStringName())) {
                 if (placedOnHex != null) {
-                    GD.print("Card placed on hex ${placedOnHex?.locationName}")
+                    GD.print("Card placed on hex ${placedOnHex?.location?.name}")
                     status = CardStatus.PLACED_ON_HEX
 
                     // now we trigger the confirmation dialog and other cool stuff by emitting a signal

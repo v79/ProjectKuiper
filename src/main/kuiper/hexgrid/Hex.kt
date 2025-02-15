@@ -7,6 +7,7 @@ import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
 import godot.extensions.getNodeAs
+import state.Location
 
 /**
  * A Hex represents a location in the world/region map.
@@ -23,10 +24,6 @@ class Hex : Node2D() {
 
 	@Export
 	@RegisterProperty
-	var locationName: String = ""
-
-	@Export
-	@RegisterProperty
 	var hexUnlocked: Boolean = false
 
 	var triangles = Array(6) { it }
@@ -35,17 +32,15 @@ class Hex : Node2D() {
 	private lateinit var locationLabel: Label
 
 	lateinit var marker: HexDropTarget
-
+	lateinit var location: Location
 
 	@RegisterFunction
 	override fun _ready() {
 		locationLabel = getNodeAs("%LocationLabel")!!
-		locationLabel.text = locationName
 	}
 
 	@RegisterFunction
 	override fun _process(delta: Double) {
-		locationLabel.text = locationName
 	}
 
 	// possible functions:

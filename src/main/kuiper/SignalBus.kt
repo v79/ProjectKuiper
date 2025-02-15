@@ -48,6 +48,9 @@ class SignalBus : Node() {
 	@RegisterSignal
 	val cancelActionConfirmation by signal0()
 
+	@RegisterSignal
+	val confirmAction by signal2<Hex, ActionWrapper>("hex", "action")
+
 	// Signals relating to the card deck
 	@RegisterSignal
 	val dealCardFromDeck by signal1<ActionWrapper>("action")

@@ -56,6 +56,7 @@ class AvailableActionsFan : Node2D() {
 
     @RegisterFunction
     override fun _ready() {
+
         signalBus = getNodeAs("/root/SignalBus")!!
         fanContainer = getNodeAs("HBoxContainer/FanContainer")!!
 
@@ -66,6 +67,11 @@ class AvailableActionsFan : Node2D() {
         }
         signalBus.onScreenResized.connect { width, height ->
             screenResized(width, height)
+        }
+        signalBus.confirmAction.connect { _, actionWrapper ->
+            actionWrapper.action?.let { action ->
+                removeCard(action.id)
+            }
         }
     }
 
@@ -225,6 +231,18 @@ class AvailableActionsFan : Node2D() {
     fun enableAllCards() {
         actionCards.forEach { (_, card) ->
             card.status = CardStatus.IN_FAN
+        }
+    }
+
+    @RegisterFunction
+    fun removeCard(id: Int) {
+        GD.print("Removing card: $id")
+        val card = getCardNodeById(id)
+        if (card != null) {
+            fanContainer.removeChild(card)
+            actionCards.remove(id)
+            updateCardPlacements()
+            card.queueFree()
         }
     }
 }

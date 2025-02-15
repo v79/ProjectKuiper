@@ -76,7 +76,7 @@ class HexGrid : Control() {
 	private fun createHex(i: Int, location: Location) {
 		val hex = hexScene.instantiateAs<Hex>()!!
 		hex.id = i
-		hex.locationName = location.name
+		hex.location = location
 		hex.hexUnlocked = location.unlocked
 
 		val dropTarget = hex.getNodeAs<HexDropTarget>("%HexDropTarget")!!
@@ -96,8 +96,9 @@ class HexGrid : Control() {
 		hex.setName("Hex$i")
 		val label = hex.getNodeAs<Label>("%LocationLabel")!!
 		val boxContainer = BoxContainer()
+		boxContainer.setName("Hex${i}_BoxContainer")
 		boxContainer.addChild(hex)
-		label.text = hex.locationName
+		label.text = location.name
 		hexGridContainer.addChild(boxContainer)
 		hexes.add(hex)
 	}

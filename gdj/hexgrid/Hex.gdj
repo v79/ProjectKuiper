@@ -18,7 +18,6 @@ signals = [
 ]
 properties = [
     id,
-	location_name,
 	hex_unlocked
 ]
 functions = [

@@ -34,5 +34,6 @@ functions = [
 	card_entered_handler,
 	card_exit_handler,
 	disable_other_cards,
-	enable_all_cards
+	enable_all_cards,
+	remove_card
 ]
