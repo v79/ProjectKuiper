@@ -1,9 +1,8 @@
 package state
 
-import actions.Action
-import actions.MutationType
-import actions.ResourceMutation
-import actions.ScienceMutation
+import actions.*
+import godot.global.GD
+import hexgrid.Hex
 import kotlinx.serialization.Serializable
 import technology.Science
 
@@ -21,7 +20,16 @@ class Company(var name: String) {
     var sciences: MutableMap<Science, Float> = mutableMapOf()
 
     // Currently active actions which have a limited duration
-    var activeActions: MutableList<Action> = mutableListOf()
+    val activeActions: MutableList<Action> = mutableListOf()
+
+    /**
+     * Activate the given action, adding it to the list of active actions
+     */
+    fun activateAction(hex: Hex, action: Action) {
+        action.turnsRemaining = action.turns
+        activeActions.add(action)
+        GD.print("Company: Activating action $action")
+    }
 
     /**
      * Update the given resource by the given amount
@@ -58,6 +66,11 @@ class Company(var name: String) {
         // perform actions
         // perform ongoing action (if any)
         activeActions.forEach act@{ action ->
+            // construct buildings
+
+            // progress projects
+
+            // mutate resources
             val mutations = action.getMutations()
             mutations.forEach { mutation ->
                 when (mutation) {
@@ -66,7 +79,8 @@ class Company(var name: String) {
                             println("Executing mutation: ${action.id} $mutation")
                             when (mutation.type) {
                                 MutationType.ADD -> addResource(mutation.resource, mutation.amountPerYear)
-                                MutationType.SET -> setResource(mutation.resource, mutation.amountPerYear)
+                                MutationType.SUBTRACT -> addResource(mutation.resource, -mutation.amountPerYear)
+                                MutationType.RESET -> setResource(mutation.resource, mutation.amountPerYear)
                                 MutationType.RATE_MULTIPLY -> multiplyResource(
                                     mutation.resource,
                                     mutation.amountPerYear.toFloat()
@@ -84,8 +98,12 @@ class Company(var name: String) {
                                     mutation.amount,
                                     Float::plus
                                 )
-
-                                MutationType.SET -> sciences[mutation.science] = mutation.amount
+                                MutationType.SUBTRACT -> sciences.merge(
+                                    mutation.science,
+                                    mutation.amount,
+                                    Float::minus
+                                )
+                                MutationType.RESET -> sciences[mutation.science] = mutation.amount
                                 MutationType.RATE_MULTIPLY -> sciences.merge(
                                     mutation.science,
                                     mutation.amount,
@@ -97,6 +115,7 @@ class Company(var name: String) {
                 }
 
             }
+
             action.turnsRemaining--
             // perform completion mutations, which happen when the action expires
             if (action.turnsRemaining == 0) {
@@ -109,7 +128,8 @@ class Company(var name: String) {
                             println("Executing completion mutation: ${action.id} $mutation")
                             when (mutation.type) {
                                 MutationType.ADD -> addResource(mutation.resource, mutation.completionAmount)
-                                MutationType.SET -> setResource(mutation.resource, mutation.completionAmount)
+                                MutationType.SUBTRACT -> addResource(mutation.resource, -mutation.completionAmount)
+                                MutationType.RESET -> setResource(mutation.resource, mutation.completionAmount)
                                 MutationType.RATE_MULTIPLY -> TODO()
                             }
                         }
@@ -129,8 +149,4 @@ class Company(var name: String) {
 
         // update company resources
     }
-}
-
-enum class ResourceType {
-    GOLD, INFLUENCE, CONSTRUCTION_MATERIALS
 }

@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://dhc5at6r5jl4n"]
+[gd_scene load_steps=9 format=3 uid="uid://dhc5at6r5jl4n"]
 
 [ext_resource type="Script" path="res://src/main/kuiper/screens/kuiper/KuiperGame.kt" id="1_nlsq8"]
 [ext_resource type="PackedScene" uid="uid://bh0hxtmuthjhi" path="res://src/main/kuiper/screens/kuiper/escMenu/esc_menu.tscn" id="2_4tnej"]
@@ -6,6 +6,8 @@
 [ext_resource type="PackedScene" uid="uid://yrhn5sd7iho2" path="res://src/main/kuiper/screens/kuiper/actions/active_action_list.tscn" id="3_dmo6v"]
 [ext_resource type="PackedScene" uid="uid://cun66228bprqh" path="res://src/main/kuiper/screens/kuiper/pullDownPanel/pulldown_panel.tscn" id="3_ecgw1"]
 [ext_resource type="PackedScene" uid="uid://bcnrl5714e1pe" path="res://src/main/kuiper/actions/available_actions_fan.tscn" id="4_o0igw"]
+[ext_resource type="PackedScene" uid="uid://cpwrm52thlo67" path="res://src/main/kuiper/confirm_action/confirm_action.tscn" id="6_ts3vi"]
+[ext_resource type="PackedScene" uid="uid://bsyyc75msaxp1" path="res://src/main/kuiper/actions/CardDeck.tscn" id="8_skh3w"]
 
 [node name="CanvasLayer" type="PanelContainer"]
 anchors_preset = 15
@@ -17,6 +19,9 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
 script = ExtResource("1_nlsq8")
+
+[node name="CardDeck" parent="." instance=ExtResource("8_skh3w")]
+unique_name_in_owner = true
 
 [node name="Background" type="ColorRect" parent="."]
 layout_mode = 2
@@ -80,7 +85,7 @@ horizontal_alignment = 1
 text_overrun_behavior = 3
 
 [node name="Container" type="Control" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox"]
-custom_minimum_size = Vector2(400, 0)
+custom_minimum_size = Vector2(430, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 1
@@ -105,6 +110,7 @@ contents = NodePath("ScienceSummaryContents")
 [node name="ScienceSummaryContents" type="VBoxContainer" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox/Container/PulldownPanel"]
 unique_name_in_owner = true
 visible = false
+z_index = 5
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 1
 offset_right = 200.0
@@ -125,40 +131,21 @@ text = "Year"
 [node name="CenterContainer" type="CenterContainer" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox"]
 layout_mode = 2
 
-[node name="TabBarContainer" type="HBoxContainer" parent="AspectRatioContainer/VBoxContainer"]
-layout_mode = 2
-mouse_filter = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="AspectRatioContainer/VBoxContainer/TabBarContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-mouse_filter = 2
-
-[node name="EraTabBar" type="TabBar" parent="AspectRatioContainer/VBoxContainer/TabBarContainer"]
+[node name="EraTabBar" type="TabBar" parent="AspectRatioContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-current_tab = 0
-tab_alignment = 1
-tab_count = 3
-tab_0/title = "Earth"
-tab_1/title = "Near Earth Orbit"
-tab_2/title = "Mars"
-
-[node name="MarginContainer2" type="MarginContainer" parent="AspectRatioContainer/VBoxContainer/TabBarContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-mouse_filter = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="AspectRatioContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="BottomRow_hbox" type="HBoxContainer" parent="AspectRatioContainer/VBoxContainer"]
+[node name="BottomRow_hbox" type="HBoxContainer" parent="."]
 layout_mode = 2
 size_flags_horizontal = 8
+size_flags_vertical = 8
 
-[node name="EndTurn_btn" type="Button" parent="AspectRatioContainer/VBoxContainer/BottomRow_hbox"]
+[node name="EndTurn_btn" type="Button" parent="BottomRow_hbox"]
 layout_mode = 2
 size_flags_horizontal = 8
 text = "End Turn"
@@ -191,22 +178,27 @@ text = "Add card"
 layout_mode = 2
 text = "Remove card"
 
+[node name="AvailableActionsFan" parent="." instance=ExtResource("4_o0igw")]
+layout_mode = 2
+
+[node name="ConfirmActionScene" parent="." instance=ExtResource("6_ts3vi")]
+unique_name_in_owner = true
+layout_mode = 2
+
 [node name="EscMenu" parent="." instance=ExtResource("2_4tnej")]
 visible = false
 visibility_layer = 4
+z_index = 100
 layout_mode = 2
 mouse_filter = 1
-
-[node name="AvailableActionsFan" parent="." instance=ExtResource("4_o0igw")]
-layout_mode = 2
 
 [connection signal="card_added" from="." to="AvailableActionsFan" method="add_action_card"]
 [connection signal="end_turn_signal" from="." to="." method="on_end_turn"]
 [connection signal="esc_menu_signal" from="." to="." method="on_escape_menu"]
 [connection signal="recalc_pulldown_panel_signal" from="." to="AspectRatioContainer/VBoxContainer/TopRow_hbox/Container/PulldownPanel" method="_recalculate_pulldown_dimensions"]
 [connection signal="pressed" from="AspectRatioContainer/VBoxContainer/TopRow_hbox/PanelContainer/MainMenuButton" to="." method="on_escape_menu"]
-[connection signal="pressed" from="AspectRatioContainer/VBoxContainer/BottomRow_hbox/EndTurn_btn" to="." method="on_end_turn"]
-[connection signal="pressed" from="ActiveActionList/VBoxContainer2/Button" to="AvailableActionsFan" method="add_card"]
+[connection signal="pressed" from="BottomRow_hbox/EndTurn_btn" to="." method="on_end_turn"]
+[connection signal="pressed" from="ActiveActionList/VBoxContainer2/Button" to="CardDeck" method="get_card"]
 [connection signal="pressed" from="ActiveActionList/VBoxContainer2/RemoveCardButton" to="AvailableActionsFan" method="remove_random_card"]
 [connection signal="please_save_signal" from="EscMenu" to="." method="on_esc_save_game"]
 [connection signal="resume_signal" from="EscMenu" to="." method="on_escape_menu"]

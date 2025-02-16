@@ -17,8 +17,10 @@ signals = [
     
 ]
 properties = [
-    id
+    id,
+	hex_unlocked
 ]
 functions = [
-    _ready
+    _ready,
+	_process
 ]

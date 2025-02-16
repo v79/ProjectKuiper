@@ -7,12 +7,15 @@ import godot.annotation.RegisterSignal
 import godot.core.*
 import godot.extensions.getNodeAs
 import godot.global.GD
-import state.Country
-import state.GameState
+import loaders.DataLoader
+import state.*
 import technology.Science
 
 @RegisterClass
 class GameSetup : Node() {
+
+	// Global autoloads
+	private lateinit var dataLoader: DataLoader
 
 	@RegisterSignal
 	val countrySelectSignal by signal1<Int>("countryId")
@@ -22,36 +25,41 @@ class GameSetup : Node() {
 
 	private var selectedCountry: Int = -1
 
-	private val countryList = listOf(
-		Country(1, "Europe", Color.blue), Country(2, "North America", Color.red),
-		Country(3, "South America", Color.yellow),
-		Country(4, "Asia", Color.tan),
-		Country(5, "Africa", Color.green),
-		Country(6, "Oceania", Color.cyan),
-		Country(7, "Antarctica", Color.white)
+	// Move this to a data file later
+	private val sponsorList = listOf(
+		Sponsor(1, "Europe", Color.blue),
+		Sponsor(2, "North America", Color.red),
+		Sponsor(3, "South America", Color.yellow),
+		Sponsor(4, "Asia", Color.tan),
+		Sponsor(5, "Africa", Color.green),
+		Sponsor(6, "Oceania", Color.cyan),
+		Sponsor(7, "Antarctica", Color.white)
 	)
 
-	lateinit var companyNamePanel: PanelContainer
-	lateinit var startGameButton: Button
-	lateinit var companyNameEdit: TextEdit
+	// UI elements
+	private lateinit var companyNamePanel: PanelContainer
+	private lateinit var startGameButton: Button
+	private lateinit var companyNameEdit: LineEdit
+	private lateinit var locationMap: ColorRect
+	private lateinit var hqSponsorListPanel: ItemList
 
 	// Called when the node enters the scene tree for the first time.
 	@RegisterFunction
 	override fun _ready() {
-		val locationList =
-			getNodeAs<ItemList>("MarginContainer/VBoxContainer/MarginContainer/GridContainer/LocationList".asNodePath())
-		locationList?.let { list ->
-			GD.print("Clearing and populating location list")
+		dataLoader = getNodeAs("/root/DataLoader")!!
+
+		companyNamePanel = getNodeAs("CompanyNamePanel")!!
+		startGameButton = getNodeAs("%StartGame_Button")!!
+		companyNameEdit = getNodeAs("%CompanyNameEdit")!!
+		locationMap = getNodeAs("%LocationMap")!!
+		hqSponsorListPanel = getNodeAs("%HQSponsorList")!!
+
+		hqSponsorListPanel.let { list ->
 			list.clear()
-			countryList.forEach { country ->
-				list.addItem(country.name)
+			sponsorList.forEach { sponsor ->
+				list.addItem(sponsor.name)
 			}
 		}
-
-		companyNamePanel = getNodeAs("CompanyNamePanel".asNodePath())!!
-		startGameButton =
-			getNodeAs("CompanyNamePanel/MarginContainer/HBoxContainer/VBoxContainer/StartGame_Button".asNodePath())!!
-		companyNameEdit = getNodeAs("CompanyNamePanel/MarginContainer/HBoxContainer/CompanyNameEdit".asNodePath())!!
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -64,11 +72,9 @@ class GameSetup : Node() {
 
 	@RegisterFunction
 	fun _onLocationListItemSelected(index: Int) {
-		GD.print("Selected country: ${countryList[index].name}")
-		selectedCountry = countryList[index].id
-		getNodeAs<ColorRect>("MarginContainer/VBoxContainer/MarginContainer/GridContainer/LocationMap".asNodePath())?.let { map ->
-			map.color = countryList[index].colour
-		}
+		selectedCountry = sponsorList[index].id
+		locationMap.color = sponsorList[index].colour
+		companyNameEdit.text = "${sponsorList[index].name} Space Agency"
 	}
 
 	@RegisterFunction
@@ -77,17 +83,43 @@ class GameSetup : Node() {
 			GD.print("No country selected!")
 			return
 		}
+
 		// globals are added to the tree first, so will be the first child
 		val gameState = getTree()?.root?.getChild(0) as GameState
-		GD.print("Got game state: ${gameState.stateToString()}, changing year to 1965")
+		val sponsor = sponsorList[selectedCountry - 1]
 		gameState.year = 1965
-		gameState.country = countryList[selectedCountry - 1]
+		gameState.sponsor = sponsor
 		gameState.company.name = companyNameEdit.text
 		gameState.company.sciences = generateStartingScienceRates().toMutableMap()
-		GD.print("Starting game for country ${countryList[selectedCountry - 1].name}")
+		gameState.zones = setupZones(sponsor)
+
+		GD.print("Starting game for country ${sponsorList[selectedCountry - 1].name}")
 		GD.print("Company name: ${gameState.company.name}")
 		GD.print("Science rates: ${gameState.company.sciences}")
+
 		getTree()?.changeSceneToFile("res://src/main/kuiper/screens/kuiper/game.tscn")
+	}
+
+	private fun setupZones(sponsor: Sponsor): List<Zone> {
+		val zoneList = listOf(
+			Zone(1, sponsor.name, true),
+			Zone(2, "Near Earth Orbit"),
+			Zone(3, "Mars"),
+			Zone(4, "Asteroid Belt"),
+			Zone(5, "Jupiter"),
+			Zone(6, "Kuiper Belt")
+		)
+		zoneList[0].apply {
+			description = "Your home zone, where your headquarters is located. HQ can be moved in the future."
+			locations.add(Location("${sponsor.name} HQ", true))
+			locations[0].apply {
+				addBuilding(Building.HQ(), intArrayOf(1, 2, 4), true)
+			}
+			for (i in 1..9) {
+				locations.add(Location("Location $i"))
+			}
+		}
+		return zoneList
 	}
 
 	@RegisterFunction
@@ -96,8 +128,8 @@ class GameSetup : Node() {
 	}
 
 	@RegisterFunction
-	fun _on_company_name_text_changed() {
-		if (companyNameEdit.text.length > 10) {
+	fun _on_company_name_text_changed(newText: String) {
+		if(newText.length > 10) {
 			startGameButton.disabled = false
 		} else {
 			startGameButton.disabled = true
@@ -120,4 +152,5 @@ class GameSetup : Node() {
 		}
 		return scienceRates
 	}
+
 }

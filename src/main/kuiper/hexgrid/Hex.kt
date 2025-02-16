@@ -1,12 +1,13 @@
 package hexgrid
 
+import godot.Label
 import godot.Node2D
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
 import godot.extensions.getNodeAs
-import kotlinx.serialization.Serializable
+import state.Location
 
 /**
  * A Hex represents a location in the world/region map.
@@ -21,24 +22,28 @@ class Hex : Node2D() {
 	@RegisterProperty
 	var id: Int = 0
 
-	private lateinit var marker: HexDropTarget
+	@Export
+	@RegisterProperty
+	var hexUnlocked: Boolean = false
 
+	var triangles = Array(6) { it }
 
-	var hexName: String = ""
-	var sites: Array<Site> = arrayOf()
+	// UI elements
+	private lateinit var locationLabel: Label
+
+	lateinit var marker: HexDropTarget
+	lateinit var location: Location
 
 	@RegisterFunction
 	override fun _ready() {
-		marker = getNodeAs("Marker2D")!!
-		marker.hex = this
+		locationLabel = getNodeAs("%LocationLabel")!!
+	}
+
+	@RegisterFunction
+	override fun _process(delta: Double) {
 	}
 
 	// possible functions:
 	// - buildFacility(size: Int, site: Int)
 	// - removeFacility(size: Int, site: Int)
 }
-
-@Serializable
-class Site(var empty: Boolean = true)
-
-class Facility(var size: Int = 1)

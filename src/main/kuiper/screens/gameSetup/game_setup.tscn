@@ -52,7 +52,8 @@ text = "Choose HQ location"
 layout_mode = 2
 text = "Location preview"
 
-[node name="LocationList" type="ItemList" parent="MarginContainer/VBoxContainer/MarginContainer/GridContainer"]
+[node name="HQSponsorList" type="ItemList" parent="MarginContainer/VBoxContainer/MarginContainer/GridContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -63,6 +64,7 @@ item_0/text = "Location 1"
 item_1/text = "Location 2"
 
 [node name="LocationMap" type="ColorRect" parent="MarginContainer/VBoxContainer/MarginContainer/GridContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -83,6 +85,7 @@ layout_mode = 2
 alignment = 2
 
 [node name="NextButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "Next"
@@ -120,7 +123,8 @@ theme_override_font_sizes/font_size = 28
 text = "Enter your company name"
 vertical_alignment = 1
 
-[node name="CompanyNameEdit" type="TextEdit" parent="CompanyNamePanel/MarginContainer/HBoxContainer"]
+[node name="CompanyNameEdit" type="LineEdit" parent="CompanyNamePanel/MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -128,8 +132,8 @@ tooltip_text = "Your company name will be used when saving your game."
 theme_override_font_sizes/font_size = 24
 text = "EuroStellar Space Co"
 placeholder_text = "Name your company"
+max_length = 30
 caret_blink = true
-caret_multiple = false
 
 [node name="VBoxContainer" type="HBoxContainer" parent="CompanyNamePanel/MarginContainer/HBoxContainer"]
 layout_mode = 2
@@ -145,15 +149,15 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="StartGame_Button" type="Button" parent="CompanyNamePanel/MarginContainer/HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 8
 theme_override_font_sizes/font_size = 28
-disabled = true
 text = "Start"
 alignment = 2
 
-[connection signal="item_selected" from="MarginContainer/VBoxContainer/MarginContainer/GridContainer/LocationList" to="." method="_on_location_list_item_selected"]
+[connection signal="item_selected" from="MarginContainer/VBoxContainer/MarginContainer/GridContainer/HQSponsorList" to="." method="_on_location_list_item_selected"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer2/NextButton" to="." method="_on_next_button_pressed"]
 [connection signal="text_changed" from="CompanyNamePanel/MarginContainer/HBoxContainer/CompanyNameEdit" to="." method="_on_company_name_text_changed"]
 [connection signal="pressed" from="CompanyNamePanel/MarginContainer/HBoxContainer/VBoxContainer/Back_Button" to="." method="_on_company_panel_back_pressed"]

@@ -1,8 +1,18 @@
 package actions
 
+import godot.annotation.RegisterClass
 import kotlinx.serialization.Serializable
-import state.ResourceType
+import state.Building
 import technology.Science
+
+@RegisterClass
+class ActionWrapper() : godot.Object() {
+    constructor(action: Action) : this() {
+        this.action = action
+    }
+
+    var action: Action? = null
+}
 
 /**
  * An Action is a task that can be performed by the player.
@@ -10,22 +20,91 @@ import technology.Science
  * They also have a duration, which is the number of turns it takes to complete the action.
  */
 @Serializable
-class Action(val id: Int, val name: String, val description: String, var duration: Int = 1) {
+class Action() {
 
-    var turnsRemaining: Int = duration
+    constructor(id: Int, name: String, description: String, turns: Int = 1, type: ActionType) : this() {
+        this.id = id
+        this.actionName = name
+        this.description = description
+        this.turns = turns
+        this.type = type
+    }
+
+    var id: Int = -1
+    var actionName: String = ""
+    var description: String = ""
+    var turns: Int = 1
+    var turnsRemaining: Int = turns
+    var type: ActionType = ActionType.NONE
 
     // an action will usually be performed on an entity, such as a hex on the map
     // or a character in a game
     // but for now, the only 'entity' would be the company HQ
     // var entity: Entity? = null
 
-    // the cost of performing this action
-    // this cost is expended when the action is played
-    // if a player cannot afford the cost, they cannot perform the action
-    // if the cost is per turn, then it is recorded as an additional mutation
-    private val actionCosts: MutableMap<ResourceType, Int> = mutableMapOf(
-        ResourceType.GOLD to 0, ResourceType.INFLUENCE to 0, ResourceType.CONSTRUCTION_MATERIALS to 0
-    )
+
+    val initialCosts: MutableMap<ResourceType, Int> = mutableMapOf()
+    private val mutations: MutableSet<ResourceMutation> = mutableSetOf()
+    private val scienceMutations: MutableSet<ScienceMutation> = mutableSetOf()
+    var buildingToConstruct: Building? = null
+
+    fun addInitialCost(resourceType: ResourceType, amount: Int) {
+        initialCosts[resourceType] = amount
+    }
+
+    fun addMutation(
+        resourceType: ResourceType,
+        mutationType: MutationType,
+        amountPerYear: Int,
+        completionAmount: Int? = null
+    ) {
+        val mutation = ResourceMutation(resourceType, mutationType, amountPerYear, completionAmount)
+        mutations.add(mutation)
+    }
+
+    fun addScienceMutation(science: Science, mutationType: MutationType, amount: Float) {
+        val mutation = ScienceMutation(science, mutationType, amount)
+        scienceMutations.add(mutation)
+    }
+
+    fun constructBuilding(building: Building) {
+        buildingToConstruct = building
+    }
+
+    fun getMutations(): Set<Mutation> {
+        return (mutations + scienceMutations).toSet()
+    }
+
+    /**
+     * Get the initial cost of the action, and the cost per turn, for the given resource
+     * @param resourceType the type of resource to get the cost for
+     * @return a Pair of the initial cost and the cost per turn
+     */
+    fun getCost(resourceType: ResourceType): Pair<Int?, Int?> {
+        val costPerTurn = mutations.find { it.resource == resourceType }?.amountPerYear
+        return Pair(initialCosts[resourceType], costPerTurn)
+    }
+
+    /**
+     * Get the benefits of the action, for the given resource
+     * A benefit is defined as a positive change in the resource - ADD or RATE_MULTIPLY mutations
+     * @param resourceType the type of resource to get the benefit for
+     * @return a Pair of the benefit per turn and the completion benefit
+     */
+    fun getBenefits(resourceType: ResourceType): Pair<Int?,Int?> {
+        val benefitTypes = setOf(MutationType.ADD, MutationType.RATE_MULTIPLY)
+        val benefitPerTurn = mutations.find { it.resource == resourceType && benefitTypes.contains(it.type) }?.amountPerYear
+        val completionBenefit = mutations.find { it.resource == resourceType && it.completionAmount != null }?.completionAmount
+        return Pair(benefitPerTurn, completionBenefit)
+    }
+
+    fun getScienceBenefit(science: Science): Float? {
+        val benefitPerTurn = scienceMutations.find { it.science == science }?.amount
+        if (benefitPerTurn != null && benefitPerTurn > 0f) {
+            return benefitPerTurn
+        }
+        return null
+    }
 
     // some actions may consume science, reducing the amount of science available for technology research
     // var scienceCost: Science? = null
@@ -39,79 +118,17 @@ class Action(val id: Int, val name: String, val description: String, var duratio
     // ✅ actions have an effect, such as increasing a science research rate, or increasing the company's influence
     // ✅ actions can have effect once completed, or they have an effect for each turn that they are active
     // Better if the action takes place on the target, e.g. on the ScienceRate object?
-
+    // actions can alter a Location/Hex or sector, e.g. by building a structure
     // actions either happen each turn, or at expiry
 
-
-    // but how do I encode all this in text/json format?
-    private var propertyToMutate: ResourceType =
-        ResourceType.GOLD
-    private var mutationEffect: MutationType = MutationType.ADD
-
-    // amountPerYear should only be used with ADD mutations
-    private var amountPerYear: Int = 0
-
-    // completionAmount should only be used with CHANGE mutations, and is the final value of the property
-    private var completionAmount: Int? = null
-
-    // science mutations are different from regular mutations
-    private var scienceToMutate: Science? = null
-    private var scienceRateAmount: Float = 0.0f
-
-    /**
-     * Actions perform mutations on the company state
-     * There is a primary mutation, which is the main effect of the action
-     * There may be additional mutations, such as costs
-     */
-    fun getMutations(): Set<Mutation> {
-        // there's always a zero-value gold mutation? Probably don't want that.
-        val costs = actionCosts.filter { it.value != 0 }.map { (resourceType, amount) ->
-            ResourceMutation(resourceType, MutationType.ADD, -amount, 0)
-        }
-        val resourceMutation =
-            listOf(ResourceMutation(propertyToMutate, mutationEffect, amountPerYear, completionAmount))
-        val scienceMutation = if (scienceToMutate != null) listOf(
-            ScienceMutation(
-                scienceToMutate!!,
-                mutationEffect,
-                scienceRateAmount
-            )
-        ) else emptyList()
-        return (costs + resourceMutation + scienceMutation).toSet()
-    }
-
-    /**
-     * Builder function to add a mutation to the action
-     */
-    fun addMutation(
-        resourceType: ResourceType, mutationType: MutationType, amountPerYear: Int, completionAmount: Int? = null
-    ) {
-        propertyToMutate = resourceType
-        mutationEffect = mutationType
-        this.amountPerYear = amountPerYear
-        this.completionAmount = completionAmount
-    }
-
-    fun addScienceMutation(
-        science: Science, mutationType: MutationType, amount: Float
-    ) {
-        scienceToMutate = science
-        mutationEffect = mutationType
-        scienceRateAmount = amount
-    }
-
-    /**
-     * Builder function to add a cost to the action
-     */
-    fun addCost(resourceType: ResourceType, amount: Int) {
-        actionCosts[resourceType] = amount
-    }
-
-
     override fun toString(): String {
-        return "Action(id=$id, name='$name', description='$description', duration=$duration, turnsRemaining=$turnsRemaining, actionCosts=$actionCosts)"
+        return "Action(id=$id, actionName='$actionName', turns=$turns, type=$type, initialCosts=$initialCosts, mutations=${mutations.size}, scienceMutations=${scienceMutations.size}, buildingToConstruct=${buildingToConstruct})"
     }
 
+}
+
+enum class ActionType {
+    NONE, BUILD, BOOST, INVEST, EXPLORE
 }
 
 

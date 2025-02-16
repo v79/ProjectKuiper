@@ -78,7 +78,7 @@ class ResearchProgressView : Control() {
 			colorRect.color = science.color()
 			colorRect.setCustomMinimumSize(Vector2(20.0, 20.0))
 			colorRect.setSize(Vector2(20.0, 20.0))
-			colorRect.tooltipText = science.label
+			colorRect.tooltipText = science.displayName
 			colorRect.resetSize()
 			scienceProgressContainer.addChild(colorRect)
 		}
