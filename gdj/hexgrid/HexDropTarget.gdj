@@ -20,9 +20,8 @@ signals = [
 properties = [
     is_selected,
 	draw_internals,
-	numbered,
-	fill_triangles,
-	colour
+	name_sectors,
+	numbered
 ]
 functions = [
     _draw,

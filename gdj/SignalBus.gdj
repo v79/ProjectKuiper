@@ -14,11 +14,17 @@ supertypes = [
 signals = [
     on_screen_resized,
 	dragging_card,
-	dropped_card
+	dropped_card,
+	card_on_hex,
+	card_off_hex,
+	show_action_confirmation,
+	cancel_action_confirmation,
+	confirm_action,
+	deal_card_from_deck
 ]
 properties = [
     
 ]
 functions = [
-    
+    _ready
 ]

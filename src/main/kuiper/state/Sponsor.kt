@@ -5,4 +5,4 @@ import kotlinx.serialization.Serializable
 import serializers.GDColorSerializer
 
 @Serializable
-data class Country(val id: Int, val name: String, @Serializable(with = GDColorSerializer::class) val colour: Color)
+data class Sponsor(val id: Int, val name: String, @Serializable(with = GDColorSerializer::class) val colour: Color)

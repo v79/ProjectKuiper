@@ -21,11 +21,17 @@ config/icon="res://assets/saturn-1024.png"
 
 GameState="*res://src/main/kuiper/state/GameState.kt"
 SignalBus="*res://src/main/kuiper/SignalBus.kt"
+DataLoader="*res://src/main/kuiper/loaders/DataLoader.kt"
 
 [display]
 
 window/size/viewport_width=1600
 window/size/viewport_height=900
+
+[gui]
+
+theme/custom="res://assets/themes/theme.tres"
+theme/custom_font="res://assets/fonts/SpaceGrotesk-Medium.ttf"
 
 [input]
 

@@ -28,6 +28,7 @@ properties = [
 functions = [
     _ready,
 	_process,
+	update_u_i_on_turn,
 	_input,
 	on_escape_menu,
 	on_end_turn,

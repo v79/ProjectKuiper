@@ -9,18 +9,15 @@ import kotlinx.serialization.Serializable
  * - a multiplier for the rate of research
  */
 @Serializable
-enum class Science(val label: String, var multiplier: Float) {
+enum class Science(val displayName: String, var multiplier: Float) {
     PHYSICS("Physics", 1.0f) {
         override fun color() = Color(0.0, 0.0, 1.0)
     },
     ASTRONOMY("Astronomy", 1.0f) {
-       override fun color() = Color(0.5, 0.0, 0.5)
+        override fun color() = Color(0.5, 0.0, 0.5)
     },
     BIOCHEMISTRY("Biochemistry", 1.0f) {
         override fun color() = Color(0.0, 0.5, 0.5)
-    },
-    GEOLOGY("Geology", 1.0f) {
-        override fun color() = Color(0.5, 0.25, 0.0)
     },
     MATHEMATICS("Mathematics", 1.0f) {
         override fun color() = Color(1.0, 1.0, 0.0)
@@ -28,9 +25,18 @@ enum class Science(val label: String, var multiplier: Float) {
     PSYCHOLOGY("Psychology & Sociology", 1.0f) {
         override fun color() = Color(0.0, 1.0, 1.0)
     },
+    ENGINEERING("Engineering", 1.0f) {
+        override fun color() = Color(0.5, 0.5, 0.0, 0.0)
+    },
     UNKNOWN("Unknown", 1.0f) {
         override fun color() = Color(0.0, 0.0, 0.0)
     };
 
     abstract fun color(): Color
+
+    companion object {
+        fun all(): List<Science> {
+            return listOf(PHYSICS, ASTRONOMY, BIOCHEMISTRY, ENGINEERING, MATHEMATICS, PSYCHOLOGY)
+        }
+    }
 }

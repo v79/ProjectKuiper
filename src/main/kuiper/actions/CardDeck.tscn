@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bsyyc75msaxp1"]
+
+[ext_resource type="Script" path="res://src/main/kuiper/actions/CardDeck.kt" id="1_mmqms"]
+
+[node name="CardDeck" type="Node"]
+script = ExtResource("1_mmqms")

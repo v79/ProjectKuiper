@@ -18,6 +18,8 @@ import kotlin.math.sin
 @RegisterClass
 class HexDropTarget : Marker2D() {
 
+	var hex: Hex? = null
+
 	@RegisterProperty
 	var isSelected = false
 
@@ -25,25 +27,21 @@ class HexDropTarget : Marker2D() {
 	@RegisterProperty
 	var drawInternals = false
 
+	@Export
+	@RegisterProperty
+	var nameSectors = false
+
 	// for debug
 	@Export
 	@RegisterProperty
 	var numbered = false
 
-	@Export
-	@RegisterProperty
 	var fillTriangles: VariantArray<Boolean> = VariantArray()
 
-	@Export
-	@RegisterProperty
-	var colour: Color = Color(1.0, 1.0, 1.0, 1.0)
-	private var originalColor: Color = colour
-
-	var hex = Hex()
-
-	companion object {
-		const val HEX_RADIUS = 50.0
-	}
+	private var unlockedColor = Color(1.0, 1.0, 1.0, 1.0)
+	private var lockedColor = Color(0.2, 0.2, 0.2, 1.0)
+	private var highlightColor = Color(1.0, 0.8, 0.8, 1.0)
+	var colour: Color = lockedColor // default to dark grey
 
 	/**
 	 * Draw the hexagon using draw calls. To be replaced with artwork later.
@@ -62,7 +60,7 @@ class HexDropTarget : Marker2D() {
 				colour,
 				2.0f
 			)
-			if (fillTriangles[i - 1]) {
+			if (fillTriangles[translateHexIdToSectorId(i - 1)]) {
 				val fillPolys = PackedVector2Array()
 				fillPolys.insert(0, Vector2(0.0, 0.0))
 				fillPolys.insert(1, p1)
@@ -72,8 +70,31 @@ class HexDropTarget : Marker2D() {
 					colour
 				)
 			}
+			if(nameSectors) {
+				drawChar(
+					font,
+					Vector2((0.0 + p1.x + p2.x) / 3, (0.0 + p1.y + p2.y) / 3),
+					translateHexIdToSectorId(i).toString(),
+					22,
+					Color.green
+				)
+			}
 			if (numbered) {
-				drawChar(font, Vector2((0.0 + p1.x + p2.x) / 3, (0.0 + p1.y + p2.y) / 3), i.toString(), 22, Color.black)
+				drawChar(
+					font,
+					Vector2((0.0 + p1.x + p2.x) / 3, (0.0 + p1.y + p2.y) / 3),
+					i.toString(),
+					22,
+					Color.green
+				)
+				// this draws 0 to 5, but we want 1 to 6
+				drawChar(
+					font,
+					Vector2((24.0 + p1.x + p2.x) / 3, (0.0 + p1.y + p2.y) / 3),
+					translateHexIdToSectorId(i).toString(),
+					22,
+					Color.red
+				)
 			}
 			p1 = p2
 			if (drawInternals) {
@@ -87,6 +108,15 @@ class HexDropTarget : Marker2D() {
 		}
 	}
 
+	/**
+	 * Translate the hexagon ID to a sector ID
+	 * Visually, sector IDs start in the 'top left' triangle and go clockwise
+	 * But hex IDs start 3 triangles on (roughly at 4 o'clock) and go clockwise
+	 */
+	private fun translateHexIdToSectorId(hexId: Int): Int {
+		return (hexId + 3) % 6
+	}
+
 	@RegisterFunction
 	override fun _ready() {
 		fillTriangles.resize(6)
@@ -95,20 +125,19 @@ class HexDropTarget : Marker2D() {
 
 	@RegisterFunction
 	override fun _process(delta: Double) {
-
 	}
 
 	@RegisterFunction
 	fun highlight() {
-		colour = Color(1.0, 0.8, 0.8, 1.0)
-		queueRedraw()
+		colour = highlightColor
 		isSelected = true
+		queueRedraw()
 	}
 
 	@RegisterFunction
 	fun unhighlight() {
-		colour = originalColor
-		queueRedraw()
+		colour = if (hex?.hexUnlocked == true) unlockedColor else lockedColor
 		isSelected = false
+		queueRedraw()
 	}
 }
