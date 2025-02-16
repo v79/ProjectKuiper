@@ -48,7 +48,11 @@ class GameState : Node() {
     }
 
     @Transient
-    private val json = Json { prettyPrint = true }
+    private val json = Json {
+        prettyPrint = true
+        encodeDefaults = true
+        allowStructuredMapKeys = true
+    }
 
     /**
      * I can't use a data class for GameState because it extends Node, so I have to manually implement a deep copy method

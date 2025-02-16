@@ -186,6 +186,8 @@ class ConfirmAction : Control() {
                         }
                     }
                 }
+            } else {
+                confirmEnabled = true
             }
 
             confirmButton.disabled = !confirmEnabled

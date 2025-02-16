@@ -26,6 +26,7 @@ class Company(var name: String) {
      * Activate the given action, adding it to the list of active actions
      */
     fun activateAction(hex: Hex, action: Action) {
+        action.turnsRemaining = action.turns
         activeActions.add(action)
         GD.print("Company: Activating action $action")
     }

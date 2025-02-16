@@ -114,7 +114,7 @@ class GameSetup : Node() {
             description = "Your home zone, where your headquarters is located. HQ can be moved in the future."
             locations.add(Location("${sponsor.name} HQ", true))
             locations[0].apply {
-                addBuilding(Building.HQ(), intArrayOf(1), true)
+                addBuilding(Building.HQ(), intArrayOf(1,2,4), true)
             }
             for (i in 1..9) {
                 locations.add(Location("Location $i"))
