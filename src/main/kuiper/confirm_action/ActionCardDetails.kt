@@ -2,15 +2,19 @@ package confirm_action
 
 import SignalBus
 import actions.ActionCard
+import actions.ActionType
 import actions.ResourceType
 import godot.Control
 import godot.Label
+import godot.PanelContainer
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
+import godot.core.asStringName
 import godot.core.connect
 import godot.extensions.getNodeAs
+import godot.global.GD
 
 @RegisterClass
 class ActionCardDetails : Control() {
@@ -29,6 +33,7 @@ class ActionCardDetails : Control() {
     private val influenceLabel: Label by lazy { getNodeAs("%InfluenceCost")!! }
     private val conMatsLabel: Label by lazy { getNodeAs("%ConMatsCost")!! }
     private val descLabel: Label by lazy { getNodeAs("%CardDescription")!! }
+    private val panelContainer: PanelContainer by lazy { getNodeAs("PanelContainer")!! }
 
 
     @RegisterFunction
@@ -44,6 +49,20 @@ class ActionCardDetails : Control() {
     fun updateCard(card: ActionCard) {
         titleLabel.text = card.cardName
         card.action?.let { action ->
+            // set the theme variation to display the correct texture for the card
+            when(action.type) {
+                ActionType.BUILD -> {
+                    GD.print("Setting theme to BuildCard")
+                    panelContainer.setThemeTypeVariation("BuildCard".asStringName())
+                }
+                ActionType.INVEST -> {
+                    panelContainer.setThemeTypeVariation("InvestCard".asStringName())
+                }
+                else -> {
+                    panelContainer.setThemeTypeVariation("PanelContainer".asStringName())
+                }
+            }
+
             turnsLabel.text = action.turns.toString()
             descLabel.text = action.description
             val sBuilder = StringBuilder()

@@ -39,16 +39,11 @@ class ActionCard : Node2D() {
     var action: Action? = null
         private set
 
-    var status = CardStatus.IN_FAN
-
-    //    var dragging = false
     private var isDraggable = false
-
-    //    var disabled = false
     private var placedOnHex: Hex? = null
 
-
     // properties set during placement in the fan
+    var status = CardStatus.IN_FAN
     private var offset = Vector2()
     var startPosition = Vector2()
     var startRotation: Float = 0.0f
@@ -135,7 +130,6 @@ class ActionCard : Node2D() {
                 getTree()!!.createTween()?.tweenProperty(this, "rotation".asNodePath(), GD.degToRad(0.0f), 0.5)
             } else if (Input.isActionJustReleased("mouse_left_click".asStringName())) {
                 if (placedOnHex != null) {
-                    GD.print("Card placed on hex ${placedOnHex?.location?.name}")
                     status = CardStatus.PLACED_ON_HEX
 
                     // now we trigger the confirmation dialog and other cool stuff by emitting a signal
@@ -200,6 +194,20 @@ class ActionCard : Node2D() {
         this.cardId = action.id
         this.cardName = action.actionName
         this.turnsLabel.text = action.turns.toString()
+
+        // set the texture based on the Action type
+        when(action.type) {
+            ActionType.BUILD -> {
+                cardImage.setThemeTypeVariation("BuildCard".asStringName())
+            }
+            ActionType.INVEST -> {
+                cardImage.setThemeTypeVariation("InvestCard".asStringName())
+            }
+            else -> {
+                // stay with default black card
+            }
+        }
+
         val tooltipStringBuilder = StringBuilder()
         tooltipStringBuilder.appendLine(action.description)
         if (action.turns > 0) {
@@ -235,7 +243,7 @@ class ActionCard : Node2D() {
                 }
 
                 ResourceType.NONE -> {
-                     // do nothing
+                    // do nothing
                 }
             }
         }

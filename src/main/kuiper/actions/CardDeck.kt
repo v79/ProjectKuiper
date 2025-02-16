@@ -22,7 +22,6 @@ class CardDeck : Node() {
 	override fun _ready() {
 		dataLoader = getNodeAs("/root/DataLoader")!!
 		signalBus = getNodeAs("/root/SignalBus")!!
-		GD.print("CardDeck ready - ${actions.size} actions loaded")
 		deck.addAll(actions)
 		shuffle()
 	}
@@ -34,9 +33,8 @@ class CardDeck : Node() {
 
 	@RegisterFunction
 	fun getCard() {
-		GD.print("Getting card from deck")
 		if (deck.isEmpty()) {
-			GD.print("Resetting deck as it is empty, probably not the desired behaviour")
+			GD.printErr("Resetting deck as it is empty, probably not the desired behaviour")
 			deck.addAll(actions)
 			shuffle()
 		}
