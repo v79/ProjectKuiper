@@ -53,6 +53,12 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "5t"
 
+[node name="SectorSize" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.388235, 0.509804, 0.870588, 1)
+text = "1s"
+
 [node name="ActionName" type="Label" parent="."]
 unique_name_in_owner = true
 offset_left = 148.0

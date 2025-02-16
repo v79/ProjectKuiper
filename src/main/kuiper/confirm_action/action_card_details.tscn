@@ -76,3 +76,11 @@ theme_override_colors/font_color = Color(0.466667, 0.364706, 0.254902, 1)
 theme_override_font_sizes/font_size = 20
 text = "2c"
 horizontal_alignment = 2
+
+[node name="SectorSize" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.388235, 0.509804, 0.870588, 1)
+theme_override_font_sizes/font_size = 20
+text = "2s"
+horizontal_alignment = 2

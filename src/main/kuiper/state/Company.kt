@@ -1,6 +1,8 @@
 package state
 
 import actions.*
+import godot.global.GD
+import hexgrid.Hex
 import kotlinx.serialization.Serializable
 import technology.Science
 
@@ -18,7 +20,15 @@ class Company(var name: String) {
     var sciences: MutableMap<Science, Float> = mutableMapOf()
 
     // Currently active actions which have a limited duration
-    var activeActions: MutableList<Action> = mutableListOf()
+    val activeActions: MutableList<Action> = mutableListOf()
+
+    /**
+     * Activate the given action, adding it to the list of active actions
+     */
+    fun activateAction(hex: Hex, action: Action) {
+        activeActions.add(action)
+        GD.print("Company: Activating action $action")
+    }
 
     /**
      * Update the given resource by the given amount
@@ -55,6 +65,11 @@ class Company(var name: String) {
         // perform actions
         // perform ongoing action (if any)
         activeActions.forEach act@{ action ->
+            // construct buildings
+
+            // progress projects
+
+            // mutate resources
             val mutations = action.getMutations()
             mutations.forEach { mutation ->
                 when (mutation) {
@@ -99,6 +114,7 @@ class Company(var name: String) {
                 }
 
             }
+
             action.turnsRemaining--
             // perform completion mutations, which happen when the action expires
             if (action.turnsRemaining == 0) {

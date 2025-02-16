@@ -116,6 +116,10 @@ class KuiperGame : PanelContainer() {
             confirmAction.fadeIn()
         }
 
+        signalBus.confirmAction.connect { hex, card ->
+            gameState.company.activateAction(hex, card.action!!)
+        }
+
         // finally, update the UI
         updateUIOnTurn()
     }

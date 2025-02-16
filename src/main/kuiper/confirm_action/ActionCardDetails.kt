@@ -15,6 +15,7 @@ import godot.core.asStringName
 import godot.core.connect
 import godot.extensions.getNodeAs
 import godot.global.GD
+import state.Building
 
 @RegisterClass
 class ActionCardDetails : Control() {
@@ -27,13 +28,14 @@ class ActionCardDetails : Control() {
     var cardTitle: String = ""
 
     // UI elements
+    private val panelContainer: PanelContainer by lazy { getNodeAs("PanelContainer")!! }
     private val titleLabel: Label by lazy { getNodeAs("%CardTitle")!! }
     private val turnsLabel: Label by lazy { getNodeAs("%Turns")!! }
     private val goldLabel: Label by lazy { getNodeAs("%GoldCost")!! }
     private val influenceLabel: Label by lazy { getNodeAs("%InfluenceCost")!! }
     private val conMatsLabel: Label by lazy { getNodeAs("%ConMatsCost")!! }
     private val descLabel: Label by lazy { getNodeAs("%CardDescription")!! }
-    private val panelContainer: PanelContainer by lazy { getNodeAs("PanelContainer")!! }
+    private val sectorSizeLabel: Label by lazy { getNodeAs("%SectorSize")!! }
 
 
     @RegisterFunction
@@ -49,11 +51,12 @@ class ActionCardDetails : Control() {
     fun updateCard(card: ActionCard) {
         titleLabel.text = card.cardName
         card.action?.let { action ->
+        val building: Building? = action.buildingToConstruct
             // set the theme variation to display the correct texture for the card
             when(action.type) {
                 ActionType.BUILD -> {
-                    GD.print("Setting theme to BuildCard")
                     panelContainer.setThemeTypeVariation("BuildCard".asStringName())
+                    sectorSizeLabel.text = building?.sectors.toString()
                 }
                 ActionType.INVEST -> {
                     panelContainer.setThemeTypeVariation("InvestCard".asStringName())
@@ -77,6 +80,7 @@ class ActionCardDetails : Control() {
             val conMatsCost = action.getCost(ResourceType.CONSTRUCTION_MATERIALS)
             buildCostString(conMatsCost, sBuilder)
             conMatsLabel.text = sBuilder.toString()
+            sectorSizeLabel.visible = action.type == ActionType.BUILD
         }
     }
 

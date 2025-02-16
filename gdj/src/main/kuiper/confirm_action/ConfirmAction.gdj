@@ -26,5 +26,6 @@ functions = [
 	_process,
 	fade_in,
 	confirm_action,
-	cancel_action
+	cancel_action,
+	enable_confirm_button
 ]

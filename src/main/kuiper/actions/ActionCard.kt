@@ -8,6 +8,7 @@ import godot.extensions.getNodeAs
 import godot.global.GD
 import godot.util.toRealT
 import hexgrid.Hex
+import state.Building
 
 @RegisterClass
 class ActionCard : Node2D() {
@@ -55,6 +56,7 @@ class ActionCard : Node2D() {
     private val conMatsCostLabel: Label by lazy { getNodeAs("%ConMatsCost")!! }
     private val turnsLabel: Label by lazy { getNodeAs("%Turns")!! }
     private val cardImage: PanelContainer by lazy { getNodeAs("PanelContainer")!! }
+    private val sectorSizeLabel: Label by lazy { getNodeAs("%SectorSize")!! }
     private lateinit var parentNode: Node
 
     // signals
@@ -194,19 +196,24 @@ class ActionCard : Node2D() {
         this.cardId = action.id
         this.cardName = action.actionName
         this.turnsLabel.text = action.turns.toString()
+        val building: Building? = action.buildingToConstruct
 
         // set the texture based on the Action type
-        when(action.type) {
+        when (action.type) {
             ActionType.BUILD -> {
                 cardImage.setThemeTypeVariation("BuildCard".asStringName())
+                sectorSizeLabel.text = building?.sectors.toString()
             }
+
             ActionType.INVEST -> {
                 cardImage.setThemeTypeVariation("InvestCard".asStringName())
             }
+
             else -> {
                 // stay with default black card
             }
         }
+        sectorSizeLabel.visible = action.type == ActionType.BUILD
 
         val tooltipStringBuilder = StringBuilder()
         tooltipStringBuilder.appendLine(action.description)

@@ -27,6 +27,10 @@ class HexDropTarget : Marker2D() {
 	@RegisterProperty
 	var drawInternals = false
 
+	@Export
+	@RegisterProperty
+	var nameSectors = false
+
 	// for debug
 	@Export
 	@RegisterProperty
@@ -64,6 +68,15 @@ class HexDropTarget : Marker2D() {
 				drawColoredPolygon(
 					fillPolys,
 					colour
+				)
+			}
+			if(nameSectors) {
+				drawChar(
+					font,
+					Vector2((0.0 + p1.x + p2.x) / 3, (0.0 + p1.y + p2.y) / 3),
+					translateHexIdToSectorId(i).toString(),
+					22,
+					Color.green
 				)
 			}
 			if (numbered) {

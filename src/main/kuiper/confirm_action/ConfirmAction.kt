@@ -45,10 +45,13 @@ class ConfirmAction : Control() {
     private lateinit var buildingHeading: Label
     private lateinit var hexBoxContainer: CenterContainer
     private lateinit var hexLocationLabel: Label
+    private lateinit var confirmButton: Button
+    private lateinit var chooseSectorsContainer: HBoxContainer
 
     // Packed scenes
     private val hexScene = ResourceLoader.load("res://src/main/kuiper/hexgrid/Hex.tscn") as PackedScene
 
+    private var confirmEnabled = true
 
     @RegisterFunction
     override fun _ready() {
@@ -64,6 +67,9 @@ class ConfirmAction : Control() {
         buildingHeading = getNodeAs("%Building_")!!
         hexBoxContainer = getNodeAs("%HexBoxContainer")!!
         hexLocationLabel = getNodeAs("%HexLocationLabel")!!
+        confirmButton = getNodeAs("%ConfirmButton")!!
+        chooseSectorsContainer = getNodeAs("%ConfirmSectorContainer")!!
+        chooseSectorsContainer.visible = false
 
         signalBus.showActionConfirmation.connect { h, c ->
             hex = h
@@ -134,7 +140,13 @@ class ConfirmAction : Control() {
                 if (action.buildingToConstruct == null) {
                     GD.printErr("A Build action must have a building to construct: ${action.id}->${action.actionName}")
                 } else {
+
+                    // Valid building, so show the building details
+                    confirmEnabled = false
                     val buildingLabel = Label()
+                    chooseSectorsContainer.visible = true
+
+
                     action.buildingToConstruct?.let b@{ building ->
                         when (building) {
                             is Building.HQ -> {
@@ -160,6 +172,13 @@ class ConfirmAction : Control() {
                                 }
                             }
                         }
+                        val sectorCountLabel = Label()
+                        sectorCountLabel.setName("SectorCountLabel_${building.sectors}")
+                        val contiguous = if (building.sectorsMustBeContiguous) " contiguous" else ""
+                        val s = if(building.sectors == 1) "" else "s"
+                        sectorCountLabel.text = "  Requires ${building.sectors}${contiguous} sector$s"
+                        buildingListContainer.addChild(sectorCountLabel)
+
                         if (buildingListContainer.hasChildren()) {
                             buildingHeading.text = "Once construction complete:"
                         } else {
@@ -168,6 +187,8 @@ class ConfirmAction : Control() {
                     }
                 }
             }
+
+            confirmButton.disabled = !confirmEnabled
         }
     }
 
@@ -182,6 +203,7 @@ class ConfirmAction : Control() {
         dropTarget.hex = hexToRender
         dropTarget.fillTriangles.resize(6)
         dropTarget.drawInternals = true
+        dropTarget.nameSectors = true
         dropTarget.colour = Color.white
         hex.marker = dropTarget
         location.sectors.forEachIndexed { index, sector ->
@@ -237,5 +259,10 @@ class ConfirmAction : Control() {
     fun cancelAction() {
         hide()
         signalBus.cancelActionConfirmation.emit()
+    }
+
+    @RegisterFunction
+    fun enableConfirmButton() {
+        confirmButton.disabled = false
     }
 }

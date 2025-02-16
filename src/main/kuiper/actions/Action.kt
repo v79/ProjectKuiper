@@ -121,6 +121,10 @@ class Action() {
     // actions can alter a Location/Hex or sector, e.g. by building a structure
     // actions either happen each turn, or at expiry
 
+    override fun toString(): String {
+        return "Action(id=$id, actionName='$actionName', turns=$turns, type=$type, initialCosts=$initialCosts, mutations=${mutations.size}, scienceMutations=${scienceMutations.size}, buildingToConstruct=${buildingToConstruct})"
+    }
+
 }
 
 enum class ActionType {
