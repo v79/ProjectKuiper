@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://dwd5bpnoghggx"]
+[gd_scene load_steps=3 format=3 uid="uid://dwd5bpnoghggx"]
 
 [ext_resource type="Script" path="res://src/main/kuiper/screens/mainMenu/MainMenu.kt" id="1_jfeih"]
+[ext_resource type="Theme" uid="uid://dwjw02q78v0i1" path="res://assets/themes/theme.tres" id="2_7sj80"]
 
 [node name="MainMenu" type="CanvasLayer"]
 script = ExtResource("1_jfeih")
@@ -26,6 +27,7 @@ offset_bottom = 127.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 0
+theme = ExtResource("2_7sj80")
 
 [node name="GameTitle" type="Label" parent="VBoxContainer"]
 layout_mode = 2

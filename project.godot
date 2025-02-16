@@ -28,6 +28,11 @@ DataLoader="*res://src/main/kuiper/loaders/DataLoader.kt"
 window/size/viewport_width=1600
 window/size/viewport_height=900
 
+[gui]
+
+theme/custom="res://assets/themes/theme.tres"
+theme/custom_font="res://assets/fonts/SpaceGrotesk-Medium.ttf"
+
 [input]
 
 ui_cancel={
