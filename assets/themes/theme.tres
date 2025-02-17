@@ -1,6 +1,7 @@
 [gd_resource type="Theme" load_steps=2 format=3 uid="uid://dwjw02q78v0i1"]
 
-[ext_resource type="FontFile" uid="uid://c0ao7wshx3lvp" path="res://assets/fonts/SpaceGrotesk-Medium.ttf" id="1_50xns"]
+[ext_resource type="FontFile" uid="uid://c0ao7wshx3lvp" path="res://assets/SpaceGrotesk-Medium.ttf" id="1_50xns"]
+
 
 [resource]
 default_font = ExtResource("1_50xns")

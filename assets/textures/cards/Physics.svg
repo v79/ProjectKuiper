@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<svg width="640" height="480" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+ <!-- Created with SVG-edit - https://github.com/SVG-Edit/svgedit-->
+ <g class="layer">
+  <title>Layer 1</title>
+  <ellipse cx="333.67" cy="241" fill="none" id="svg_1" rx="48" ry="173" stroke="#000000" stroke-width="5"/>
+  <ellipse cx="545.95" cy="683.35" fill="none" id="svg_2" rx="48" ry="173" stroke="#000000" stroke-width="5" transform="matrix(0.5 0.866025 -0.866025 0.5 647.49 -571.486)"/>
+  <ellipse cx="333.67" cy="242" fill="none" id="svg_3" rx="48" ry="173" stroke="#000000" stroke-width="5" transform="rotate(90 334 242)"/>
+  <ellipse cx="341.51" cy="241.36" fill="none" id="svg_5" rx="48" ry="173" stroke="#000000" stroke-width="5" transform="matrix(1 0 0 1 0 0) matrix(-0.573576 0.819152 -0.819152 -0.573576 735.099 100.056)"/>
+  <ellipse cx="335.67" cy="241" fill="#000000" id="svg_6" rx="17" ry="17" stroke="#000000" stroke-width="5"/>
+  <ellipse cx="305.67" cy="103" fill="#000000" id="svg_7" rx="10" ry="10" stroke="#000000" stroke-width="5"/>
+  <ellipse cx="415.67" cy="336" fill="#000000" id="svg_8" rx="10" ry="10" stroke="#000000" stroke-width="5"/>
+  <ellipse cx="422.67" cy="151" fill="#000000" id="svg_9" rx="10" ry="10" stroke="#000000" stroke-width="5"/>
+ </g>
+</svg>
