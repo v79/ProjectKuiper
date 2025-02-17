@@ -83,24 +83,30 @@ class ConfirmAction : Control() {
 
     @RegisterFunction
     fun updateUI() {
+        val plus = "[b][color=WEB_GREEN]+[/color][/b]"
+        val minus = "[b][color=WEB_MAROON]-[/color][/b]"
         resetUI()
         renderHex(hex, location)
         titleLabel.text = "Play ${card.cardName}?"
         card.action?.let { action ->
             actionCardDetails.updateCard(card)
             action.initialCosts.forEach { (resourceType, amount) ->
-                costsList.appendText("[b][color=WEB_MAROON]-[/color][/b] $amount [b]${resourceType.displayName}[b]\n")
+                costsList.appendText(minus)
+                costsList.appendText("[img=32]${resourceType.spritePath}[/img]")
+                costsList.appendText("$amount [b]${resourceType.displayName}[b]\n")
             }
             ResourceType.entries.forEach { resourceType ->
                 val cost = action.getCost(resourceType)
                 if (cost.second != null) {
-                    costsPerTurnList.appendText("[b][color=WEB_MAROON]-[/color][/b] ${cost.second} ${resourceType.displayName}\n")
+                    costsPerTurnList.appendText(minus)
+                    costsPerTurnList.appendText("[img=32]${resourceType.spritePath}[/img]")
+                    costsPerTurnList.appendText("${cost.second} ${resourceType.displayName}\n")
                 }
                 val benefits = action.getBenefits(resourceType)
                 benefits.let { (perTurn, completion) ->
                     val sBuilder = StringBuilder()
                     if (perTurn != null && perTurn > 0) {
-                        sBuilder.append("[b][color=WEB_GREEN]+[/color][/b] $perTurn ${resourceType.displayName} per turn\n")
+                        sBuilder.append("$plus $perTurn ${resourceType.displayName} per turn\n")
                     }
                     if (completion != null) {
                         if (sBuilder.isNotEmpty()) {
@@ -120,8 +126,7 @@ class ConfirmAction : Control() {
                         "[img=32]${science.spritePath}[/img][b]$benefit ${science.displayName}[/b] per turn\n"
                     )
                 }
-            }
-            /* if (costsPerTurnList.getChildCount() == 0) {
+            }/* if (costsPerTurnList.getChildCount() == 0) {
                  val costLabel = Label()
                  costLabel.setName("CostLabel_NONE")
                  costLabel.text = "  -- None --" // Would be nice if this were in italics
@@ -147,11 +152,11 @@ class ConfirmAction : Control() {
                                 buildingSummary.appendText("  New ${building.labName} at ${hex.location.name}")
                                 building.baseRunningCost.let { (resourceType, amount) ->
                                     costsPerTurnList.appendText(
-                                        "[b][color=WEB_MAROON]- $amount ${resourceType.displayName}[/color][/b] per turn\n"
+                                        "$minus [img=32]${resourceType.spritePath}[/img] $amount ${resourceType.displayName} per turn\n"
                                     )
                                 }
                                 building.sciencesProduced.forEach { (science, amount) ->
-                                    buildingsList.appendText(if (amount > 0) "[b][color=WEB_GREEN]+[/color][/b]" else "[b][color=WEB_MAROON]-[/color][/b]")
+                                    buildingsList.appendText(if (amount > 0) plus else minus)
                                     buildingsList.appendText(
                                         "[img=32]${science.spritePath}[/img][b]$amount ${science.displayName}[/b] per turn\n"
                                     )
