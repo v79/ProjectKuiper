@@ -199,7 +199,7 @@ layout_mode = 2
 visibility_layer = 5
 layout_mode = 2
 size_flags_horizontal = 0
-mouse_filter = 2
+mouse_filter = 1
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="ActiveActionList"]
 layout_mode = 1

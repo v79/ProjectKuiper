@@ -20,4 +20,5 @@ BuildCard/base_type = &"PanelContainer"
 BuildCard/styles/panel = SubResource("StyleBoxTexture_3y32d")
 InvestCard/base_type = &"PanelContainer"
 InvestCard/styles/panel = SubResource("StyleBoxTexture_sum7c")
+Label/font_sizes/font_size = 18
 PanelContainer/styles/panel = SubResource("StyleBoxTexture_lmbqy")

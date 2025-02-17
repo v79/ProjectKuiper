@@ -5,6 +5,9 @@
 [ext_resource type="FontFile" uid="uid://dj1phu0an3pb8" path="res://assets/fonts/SpaceGrotesk-Regular.ttf" id="3_lyckk"]
 
 [resource]
+BoldLabel/base_type = &"Label"
+BoldLabel/fonts/font = ExtResource("1_a44ge")
+Label/font_sizes/font_size = 18
 RichTextLabel/fonts/bold_font = ExtResource("1_a44ge")
 RichTextLabel/fonts/mono_font = ExtResource("2_xhs75")
 RichTextLabel/fonts/normal_font = ExtResource("3_lyckk")

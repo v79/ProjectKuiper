@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://d0w0wqm220vq8"]
+[gd_scene load_steps=3 format=3 uid="uid://d0w0wqm220vq8"]
 
 [ext_resource type="Script" path="res://src/main/kuiper/screens/gameSetup/GameSetup.kt" id="1_n7xff"]
+[ext_resource type="Theme" uid="uid://dwjw02q78v0i1" path="res://assets/themes/theme.tres" id="2_pk6mu"]
 
 [node name="GameSetup" type="CanvasLayer"]
 script = ExtResource("1_n7xff")
@@ -19,6 +20,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("2_pk6mu")
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
@@ -46,10 +48,12 @@ columns = 2
 
 [node name="ChooseHQ_Label" type="Label" parent="MarginContainer/VBoxContainer/MarginContainer/GridContainer"]
 layout_mode = 2
+theme_type_variation = &"BoldLabel"
 text = "Choose HQ location"
 
 [node name="LocationMap_Label" type="Label" parent="MarginContainer/VBoxContainer/MarginContainer/GridContainer"]
 layout_mode = 2
+theme_type_variation = &"BoldLabel"
 text = "Location preview"
 
 [node name="HQSponsorList" type="ItemList" parent="MarginContainer/VBoxContainer/MarginContainer/GridContainer"]
