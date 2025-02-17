@@ -1,7 +1,10 @@
-[gd_resource type="Theme" load_steps=2 format=3 uid="uid://dwjw02q78v0i1"]
+[gd_resource type="Theme" load_steps=4 format=3 uid="uid://dwjw02q78v0i1"]
 
-[ext_resource type="FontFile" uid="uid://c0ao7wshx3lvp" path="res://assets/SpaceGrotesk-Medium.ttf" id="1_50xns"]
-
+[ext_resource type="FontFile" uid="uid://b6e76vuwpv16x" path="res://assets/fonts/SpaceGrotesk-SemiBold.ttf" id="1_a44ge"]
+[ext_resource type="FontFile" uid="uid://bl4qevyosfvxy" path="res://assets/fonts/SpaceMono-Regular.ttf" id="2_xhs75"]
+[ext_resource type="FontFile" uid="uid://dj1phu0an3pb8" path="res://assets/fonts/SpaceGrotesk-Regular.ttf" id="3_lyckk"]
 
 [resource]
-default_font = ExtResource("1_50xns")
+RichTextLabel/fonts/bold_font = ExtResource("1_a44ge")
+RichTextLabel/fonts/mono_font = ExtResource("2_xhs75")
+RichTextLabel/fonts/normal_font = ExtResource("3_lyckk")

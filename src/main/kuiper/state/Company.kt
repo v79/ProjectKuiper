@@ -17,7 +17,7 @@ class Company(var name: String) {
         ResourceType.GOLD to 0, ResourceType.INFLUENCE to 0, ResourceType.CONSTRUCTION_MATERIALS to 0
     )
 
-    var sciences: MutableMap<Science, Float> = mutableMapOf()
+    val sciences: MutableMap<Science, Float> = mutableMapOf()
 
     // Currently active actions which have a limited duration
     val activeActions: MutableList<Action> = mutableListOf()
@@ -98,11 +98,13 @@ class Company(var name: String) {
                                     mutation.amount,
                                     Float::plus
                                 )
+
                                 MutationType.SUBTRACT -> sciences.merge(
                                     mutation.science,
                                     mutation.amount,
                                     Float::minus
                                 )
+
                                 MutationType.RESET -> sciences[mutation.science] = mutation.amount
                                 MutationType.RATE_MULTIPLY -> sciences.merge(
                                     mutation.science,
@@ -146,7 +148,7 @@ class Company(var name: String) {
         activeActions.removeIf { it.turnsRemaining == 0 }
 
         // recalculate science rates
-
+        sciences.replaceAll { _, rate -> rate + 1.0f }
         // update company resources
     }
 }

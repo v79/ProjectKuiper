@@ -1,13 +1,21 @@
-[gd_scene load_steps=9 format=3 uid="uid://dhc5at6r5jl4n"]
+[gd_scene load_steps=17 format=3 uid="uid://dhc5at6r5jl4n"]
 
+[ext_resource type="Theme" uid="uid://dwjw02q78v0i1" path="res://assets/themes/theme.tres" id="1_ewrs8"]
 [ext_resource type="Script" path="res://src/main/kuiper/screens/kuiper/KuiperGame.kt" id="1_nlsq8"]
 [ext_resource type="PackedScene" uid="uid://bh0hxtmuthjhi" path="res://src/main/kuiper/screens/kuiper/escMenu/esc_menu.tscn" id="2_4tnej"]
 [ext_resource type="PackedScene" uid="uid://cusua3qup71ky" path="res://src/main/kuiper/hexgrid/hex_grid.tscn" id="3_7ao4g"]
 [ext_resource type="PackedScene" uid="uid://yrhn5sd7iho2" path="res://src/main/kuiper/screens/kuiper/actions/active_action_list.tscn" id="3_dmo6v"]
 [ext_resource type="PackedScene" uid="uid://cun66228bprqh" path="res://src/main/kuiper/screens/kuiper/pullDownPanel/pulldown_panel.tscn" id="3_ecgw1"]
+[ext_resource type="PackedScene" uid="uid://dxi8kllwh6e0g" path="res://src/main/kuiper/science/science_display.tscn" id="3_tdfu4"]
 [ext_resource type="PackedScene" uid="uid://bcnrl5714e1pe" path="res://src/main/kuiper/actions/available_actions_fan.tscn" id="4_o0igw"]
+[ext_resource type="Texture2D" uid="uid://dsrevsf2xlgb2" path="res://assets/textures/icons/icon-physics-128x128.png" id="4_q6bqi"]
+[ext_resource type="Texture2D" uid="uid://5rdv2depis0x" path="res://assets/textures/icons/icon-astronomy-128x128.png" id="4_x5wq5"]
+[ext_resource type="Texture2D" uid="uid://uumx5o2xkx6o" path="res://assets/textures/icons/icon-biochem-128x128.png" id="6_0f8xg"]
 [ext_resource type="PackedScene" uid="uid://cpwrm52thlo67" path="res://src/main/kuiper/confirm_action/confirm_action.tscn" id="6_ts3vi"]
+[ext_resource type="Texture2D" uid="uid://chboy3ckqgt2q" path="res://assets/textures/icons/icon-psychology-128x128.png" id="7_8qis5"]
 [ext_resource type="PackedScene" uid="uid://bsyyc75msaxp1" path="res://src/main/kuiper/actions/CardDeck.tscn" id="8_skh3w"]
+[ext_resource type="Texture2D" uid="uid://b4305gkr4kvle" path="res://assets/textures/icons/icon-maths-128x128.png" id="8_xcykd"]
+[ext_resource type="Texture2D" uid="uid://dl3780ti5pvsa" path="res://assets/textures/icons/icon-engineering-128x128.png" id="9_nbjpo"]
 
 [node name="CanvasLayer" type="PanelContainer"]
 anchors_preset = 15
@@ -18,6 +26,7 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
+theme = ExtResource("1_ewrs8")
 script = ExtResource("1_nlsq8")
 
 [node name="CardDeck" parent="." instance=ExtResource("8_skh3w")]
@@ -92,14 +101,45 @@ mouse_filter = 1
 
 [node name="SciencePanel" type="HBoxContainer" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox/Container"]
 unique_name_in_owner = true
-z_index = 1
+z_index = 5
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 offset_right = 400.0
 offset_bottom = 50.0
+theme_override_constants/separation = 75
+
+[node name="PHYSICS" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox/Container/SciencePanel" instance=ExtResource("3_tdfu4")]
+layout_mode = 2
+science_name = "Physics"
+icon = ExtResource("4_q6bqi")
+
+[node name="ASTRONOMY" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox/Container/SciencePanel" instance=ExtResource("3_tdfu4")]
+layout_mode = 2
+science_name = "Astronomy"
+icon = ExtResource("4_x5wq5")
+
+[node name="BIOCHEMISTRY" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox/Container/SciencePanel" instance=ExtResource("3_tdfu4")]
+layout_mode = 2
+science_name = "Biochemistry"
+icon = ExtResource("6_0f8xg")
+
+[node name="PSYCHOLOGY" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox/Container/SciencePanel" instance=ExtResource("3_tdfu4")]
+layout_mode = 2
+science_name = "Pychology & Sociology"
+icon = ExtResource("7_8qis5")
+
+[node name="MATHEMATICS" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox/Container/SciencePanel" instance=ExtResource("3_tdfu4")]
+layout_mode = 2
+science_name = "Mathematics"
+icon = ExtResource("8_xcykd")
+
+[node name="ENGINEERING" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox/Container/SciencePanel" instance=ExtResource("3_tdfu4")]
+layout_mode = 2
+science_name = "Engineering"
+icon = ExtResource("9_nbjpo")
 
 [node name="PulldownPanel" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox/Container" node_paths=PackedStringArray("contents") instance=ExtResource("3_ecgw1")]
-custom_minimum_size = Vector2(250, 50)
+custom_minimum_size = Vector2(400, 50)
 layout_mode = 2
 offset_left = 50.0
 offset_top = 40.0
@@ -110,16 +150,17 @@ contents = NodePath("ScienceSummaryContents")
 [node name="ScienceSummaryContents" type="VBoxContainer" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox/Container/PulldownPanel"]
 unique_name_in_owner = true
 visible = false
-z_index = 5
+z_index = 4
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 1
-offset_right = 200.0
+offset_right = 400.0
 
 [node name="MarginContainer2" type="MarginContainer" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox"]
 layout_mode = 2
 theme_override_constants/margin_left = 120
 
 [node name="PanelContainer2" type="PanelContainer" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox"]
+custom_minimum_size = Vector2(125, 0)
 layout_mode = 2
 
 [node name="Year_lbl" type="Label" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox/PanelContainer2"]

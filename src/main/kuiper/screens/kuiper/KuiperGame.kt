@@ -10,8 +10,10 @@ import godot.annotation.RegisterSignal
 import godot.core.*
 import godot.extensions.getNodeAs
 import godot.global.GD
+import science.ScienceDisplay
 import screens.kuiper.actions.ActiveAction
 import state.GameState
+import technology.Science
 import kotlin.properties.Delegates
 
 /**
@@ -132,6 +134,9 @@ class KuiperGame : PanelContainer() {
 
     @RegisterFunction
     fun updateUIOnTurn() {
+        gameState.company.sciences.forEach { (science, rate) ->
+            signalBus.updateScience.emit(science.displayName, rate)
+        }
         yearLbl.text = "Year: ${gameState.year}"
     }
 
@@ -179,15 +184,19 @@ class KuiperGame : PanelContainer() {
     private fun populateSciencePanel() {
         GD.print("Dummy: KuiperGame: Populating science panel")
         gameState.company.sciences.forEach { (science, rate) ->
-            val item = sciencePanelItem.instantiate() as ScienceRate
-            item.rateLabel = "%.2f".format(gameState.company.sciences[science])
-            item.colour = science.color()
-            item.description = science.displayName
-            item.setMouseFilter(MouseFilter.MOUSE_FILTER_IGNORE)
-            sciencePanel.addChild(item)
-            scienceSummaryPanel.addChild(Label().apply {
-                text = "${science.displayName}: ${gameState.company.sciences[science]}"
-            })
+            if (science != Science.EUREKA) {
+                sciencePanel.getNodeAs<ScienceDisplay>(science.name)?.apply { updateValue(rate) }
+                // this is all wrong anyway. Probably needs its own script and a signal to update the value
+                val label = RichTextLabel().apply {
+                    bbcodeEnabled = true
+                    scrollActive = false
+                    scrollToLine(0)
+                    customMinimumSize = Vector2(300.0, 30.0)
+                    setName("${science.name}_summary")
+                    text = "[img=25]${science.spritePath}[/img] [b]${science.displayName}:[/b] %.2f".format(rate)
+                }
+                scienceSummaryPanel.addChild(label)
+            }
         }
         scienceSummaryPanel.resetSize()
     }
