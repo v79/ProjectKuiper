@@ -34,13 +34,17 @@ class Action() {
     var actionName: String = ""
     var description: String = ""
     var turns: Int = 1
-    var turnsRemaining: Int = turns
+    var turnsRemaining: Int = 1
     var type: ActionType = ActionType.NONE
 
     // an action will usually be performed on an entity, such as a hex on the map
     // or a character in a game
     // but for now, the only 'entity' would be the company HQ
     // var entity: Entity? = null
+
+    init {
+        turnsRemaining = turns
+    }
 
 
     val initialCosts: MutableMap<ResourceType, Int> = mutableMapOf()
@@ -91,10 +95,12 @@ class Action() {
      * @param resourceType the type of resource to get the benefit for
      * @return a Pair of the benefit per turn and the completion benefit
      */
-    fun getBenefits(resourceType: ResourceType): Pair<Int?,Int?> {
+    fun getBenefits(resourceType: ResourceType): Pair<Int?, Int?> {
         val benefitTypes = setOf(MutationType.ADD, MutationType.RATE_MULTIPLY)
-        val benefitPerTurn = mutations.find { it.resource == resourceType && benefitTypes.contains(it.type) }?.amountPerYear
-        val completionBenefit = mutations.find { it.resource == resourceType && it.completionAmount != null }?.completionAmount
+        val benefitPerTurn =
+            mutations.find { it.resource == resourceType && benefitTypes.contains(it.type) }?.amountPerYear
+        val completionBenefit =
+            mutations.find { it.resource == resourceType && it.completionAmount != null }?.completionAmount
         return Pair(benefitPerTurn, completionBenefit)
     }
 

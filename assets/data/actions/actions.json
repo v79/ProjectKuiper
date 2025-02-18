@@ -4,7 +4,6 @@
     "actionName": "Build Research Lab",
     "description": "Construct a research lab to increase your science production",
     "turns": 3,
-    "turnsRemaining": 1,
     "type": "BUILD",
     "initialCosts": {
       "GOLD": 100,
@@ -30,7 +29,6 @@
     "actionName": "Build Basic Telescope",
     "description": "Construct a telescope to increase your astronomy science production",
     "turns": 4,
-    "turnsRemaining": 1,
     "type": "BUILD",
     "initialCosts": {
       "GOLD": 200,
@@ -57,7 +55,6 @@
     "actionName": "Invest Cash",
     "description": "Invest in the stock market for a potential return",
     "turns": 5,
-    "turnsRemaining": 1,
     "type": "INVEST",
     "initialCosts": {
       "GOLD": 100,
@@ -77,7 +74,6 @@
     "actionName": "Build Spaceship",
     "description": "Construct a spaceship to explore the galaxy",
     "turns": 10,
-    "turnsRemaining": 1,
     "type": "EXPLORE",
     "initialCosts": {
       "GOLD": 1000,
