@@ -4,7 +4,6 @@ import godot.*
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterSignal
-import godot.core.Color
 import godot.core.asCachedStringName
 import godot.core.signal0
 import godot.core.signal1
@@ -27,17 +26,7 @@ class GameSetup : Node() {
     val startGameSignal by signal0()
 
     private var selectedCountry: Int = -1
-
-    // Move this to a data file later
-    private val sponsorList = listOf(
-        Sponsor(1, "Europe", Color.blue),
-        Sponsor(2, "North America", Color.red),
-        Sponsor(3, "South America", Color.yellow),
-        Sponsor(4, "Asia", Color.tan),
-        Sponsor(5, "Africa", Color.green),
-        Sponsor(6, "Oceania", Color.cyan),
-        Sponsor(7, "Antarctica", Color.white)
-    )
+    private val sponsorList = mutableListOf<Sponsor>()
 
     // UI elements
     private lateinit var companyNamePanel: PanelContainer
@@ -56,6 +45,8 @@ class GameSetup : Node() {
         companyNameEdit = getNodeAs("%CompanyNameEdit")!!
         locationMap = getNodeAs("%LocationMap")!!
         hqSponsorListPanel = getNodeAs("%HQSponsorList")!!
+
+        sponsorList.addAll(dataLoader.loadSponsorData())
 
         hqSponsorListPanel.let { list ->
             list.clear()
