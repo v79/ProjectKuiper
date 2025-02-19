@@ -11,18 +11,22 @@ import godot.extensions.getNodeAs
 import godot.global.GD
 
 @RegisterClass
-class ScienceDisplay : Control() {
+class ResourceDisplay : Control() {
 
 	// Globals
-	lateinit var signalBus: SignalBus
+	private lateinit var signalBus: SignalBus
 
 	@RegisterProperty
 	@Export
-	var scienceName: String = ""
+	var resourceName: String = ""
 
 	@RegisterProperty
 	@Export
 	lateinit var icon: Resource
+
+	@RegisterProperty
+	@Export
+	var isScience: Boolean = true
 
 	@RegisterProperty
 	@Export
@@ -37,16 +41,24 @@ class ScienceDisplay : Control() {
 		signalBus = getNodeAs("/root/SignalBus")!!
 
 		label = getNodeAs("%RateLabel")!!
-		iconTexture = getNodeAs("%ScienceIcon")!!
+		iconTexture = getNodeAs("%ResourceIcon")!!
 
 		val png = GD.load<CompressedTexture2D>(icon.resourcePath)
 		iconTexture.texture = png
 
-		setTooltipText("$scienceName: $value")
+		setTooltipText("${resourceName}: $value")
 
-		signalBus.updateScience.connect { science, value ->
-			if (science.lowercase() == scienceName.lowercase()) {
-				updateValue(value)
+		if (isScience) {
+			signalBus.updateScience.connect { science, value ->
+				if (science.lowercase() == resourceName.lowercase()) {
+					updateValue(value)
+				}
+			}
+		} else {
+			signalBus.updateResource.connect { resourceName, value ->
+				if (resourceName.lowercase() == resourceName.lowercase()) {
+					updateValue(value)
+				}
 			}
 		}
 	}
@@ -55,7 +67,7 @@ class ScienceDisplay : Control() {
 	fun updateValue(value: Float) {
 		this.value = value
 		label.text = "%.1f".format(value)
-		setTooltipText("$scienceName: %.2f".format(value))
+		setTooltipText("$resourceName: %.2f".format(value))
 	}
 
 }

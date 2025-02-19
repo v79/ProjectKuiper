@@ -1,8 +1,8 @@
 [gd_scene load_steps=2 format=3 uid="uid://dxi8kllwh6e0g"]
 
-[ext_resource type="Script" path="res://src/main/kuiper/science/ScienceDisplay.kt" id="1_4awxv"]
+[ext_resource type="Script" path="res://src/main/kuiper/science/ResourceDisplay.kt" id="1_8hicj"]
 
-[node name="ScienceDisplay" type="Control"]
+[node name="ResourceDisplay" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -10,14 +10,14 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-script = ExtResource("1_4awxv")
+script = ExtResource("1_8hicj")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="ScienceIcon" type="TextureRect" parent="HBoxContainer"]
+[node name="ResourceIcon" type="TextureRect" parent="HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2

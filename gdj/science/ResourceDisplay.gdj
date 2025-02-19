@@ -1,9 +1,9 @@
 // THIS FILE IS GENERATED! DO NOT EDIT OR DELETE IT. EDIT OR DELETE THE ASSOCIATED SOURCE CODE FILE INSTEAD
 // Note: You can however freely move this file inside your godot project if you want. Keep in mind however, that if you rename the originating source code file, this file will be deleted and regenerated as a new file instead of being updated! Other modifications to the source file however, will result in this file being updated.
 
-registeredName = ScienceDisplay
-fqName = science.ScienceDisplay
-relativeSourcePath = src/main/kuiper/science/ScienceDisplay.kt
+registeredName = ResourceDisplay
+fqName = science.ResourceDisplay
+relativeSourcePath = src/main/kuiper/science/ResourceDisplay.kt
 baseType = Control
 supertypes = [
     godot.Control,
@@ -17,8 +17,9 @@ signals = [
     
 ]
 properties = [
-    science_name,
+    resource_name,
 	icon,
+	is_science,
 	value
 ]
 functions = [
