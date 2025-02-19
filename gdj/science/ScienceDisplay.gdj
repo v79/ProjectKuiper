@@ -1,12 +1,12 @@
 // THIS FILE IS GENERATED! DO NOT EDIT OR DELETE IT. EDIT OR DELETE THE ASSOCIATED SOURCE CODE FILE INSTEAD
 // Note: You can however freely move this file inside your godot project if you want. Keep in mind however, that if you rename the originating source code file, this file will be deleted and regenerated as a new file instead of being updated! Other modifications to the source file however, will result in this file being updated.
 
-registeredName = Card
-fqName = cards.Card
-relativeSourcePath = src/main/kuiper/cards/Card.kt
-baseType = Node2D
+registeredName = ScienceDisplay
+fqName = science.ScienceDisplay
+relativeSourcePath = src/main/kuiper/science/ScienceDisplay.kt
+baseType = Control
 supertypes = [
-    godot.Node2D,
+    godot.Control,
 	godot.CanvasItem,
 	godot.Node,
 	godot.Object,
@@ -14,17 +14,14 @@ supertypes = [
 	kotlin.Any
 ]
 signals = [
-    mouse_entered,
-	mouse_exited
+    
 ]
 properties = [
-    card_name,
-	influence_cost
+    science_name,
+	icon,
+	value
 ]
 functions = [
     _ready,
-	_process,
-	_input,
-	_on_mouse_entered,
-	_on_mouse_exited
+	update_value
 ]

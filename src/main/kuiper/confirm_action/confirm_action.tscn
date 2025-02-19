@@ -256,36 +256,64 @@ size_flags_horizontal = 3
 
 [node name="Costs_" type="Label" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer"]
 layout_mode = 2
+theme_type_variation = &"BoldLabel"
 text = "Upfront costs:"
 
-[node name="CostsList" type="VBoxContainer" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer"]
+[node name="CostsList" type="RichTextLabel" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
 
 [node name="CostsPerTurn_" type="Label" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer"]
 layout_mode = 2
+theme = ExtResource("1_qg714")
+theme_type_variation = &"BoldLabel"
 text = "Costs per turn:"
 
-[node name="CostsPerTurnList" type="VBoxContainer" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer"]
+[node name="CostsPerTurnList" type="RichTextLabel" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
 
 [node name="Benefits_" type="Label" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer"]
 layout_mode = 2
+theme_type_variation = &"BoldLabel"
 text = "Benefits:"
 
-[node name="BenefitsList" type="VBoxContainer" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer"]
+[node name="BenefitsList" type="RichTextLabel" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
 
 [node name="Building_" type="Label" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_type_variation = &"BoldLabel"
 text = "Building:"
 
-[node name="BuildingList" type="VBoxContainer" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer"]
+[node name="BuildingSummary_" type="RichTextLabel" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+
+[node name="BuildingList" type="RichTextLabel" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+
+[node name="SectorCountLabel_" type="RichTextLabel" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
 
 [node name="BottomRow" type="MarginContainer" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer"]
 layout_mode = 2

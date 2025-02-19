@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://d0w0wqm220vq8"]
+[gd_scene load_steps=3 format=3 uid="uid://d0w0wqm220vq8"]
 
 [ext_resource type="Script" path="res://src/main/kuiper/screens/gameSetup/GameSetup.kt" id="1_n7xff"]
+[ext_resource type="Theme" uid="uid://dwjw02q78v0i1" path="res://assets/themes/theme.tres" id="2_pk6mu"]
 
 [node name="GameSetup" type="CanvasLayer"]
 script = ExtResource("1_n7xff")
@@ -19,6 +20,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("2_pk6mu")
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
@@ -46,10 +48,12 @@ columns = 2
 
 [node name="ChooseHQ_Label" type="Label" parent="MarginContainer/VBoxContainer/MarginContainer/GridContainer"]
 layout_mode = 2
-text = "Choose HQ location"
+theme_type_variation = &"BoldLabel"
+text = "Choose sponsor and HQ location"
 
 [node name="LocationMap_Label" type="Label" parent="MarginContainer/VBoxContainer/MarginContainer/GridContainer"]
 layout_mode = 2
+theme_type_variation = &"BoldLabel"
 text = "Location preview"
 
 [node name="HQSponsorList" type="ItemList" parent="MarginContainer/VBoxContainer/MarginContainer/GridContainer"]
@@ -70,15 +74,41 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 color = Color(0.209429, 0.209429, 0.209429, 1)
 
-[node name="LocationDescription" type="RichTextLabel" parent="MarginContainer/VBoxContainer/MarginContainer/GridContainer"]
+[node name="SponsorDescription" type="RichTextLabel" parent="MarginContainer/VBoxContainer/MarginContainer/GridContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
+bbcode_enabled = true
 text = "Here we put some narrative text about the selected location. Some background information, lore, and hints about the challenges and benefits of the location."
 
-[node name="LocationStats" type="RichTextLabel" parent="MarginContainer/VBoxContainer/MarginContainer/GridContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer/GridContainer"]
 layout_mode = 2
-text = "List of stats about the location, e.g. number of building location, research bonuses, buffs and debufs."
-fit_content = true
+
+[node name="SponsorSummary" type="RichTextLabel" parent="MarginContainer/VBoxContainer/MarginContainer/GridContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+size_flags_horizontal = 3
+bbcode_enabled = true
+text = "List of stats about the location, e.g. number of building location, research bonuses, buffs and debufs.
+[hint=influence is very important]about influence[/hint]"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer/GridContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BaseResources" type="RichTextLabel" parent="MarginContainer/VBoxContainer/MarginContainer/GridContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+bbcode_enabled = true
+text = "resource summary"
+
+[node name="BaseSciences" type="RichTextLabel" parent="MarginContainer/VBoxContainer/MarginContainer/GridContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "science summary"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2

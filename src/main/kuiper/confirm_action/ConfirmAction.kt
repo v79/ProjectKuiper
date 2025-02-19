@@ -9,7 +9,6 @@ import godot.*
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.core.Color
-import godot.core.asCachedStringName
 import godot.core.asStringName
 import godot.core.connect
 import godot.extensions.getNodeAs
@@ -22,7 +21,6 @@ import state.Location
 import state.SectorStatus
 import technology.Science
 import utils.clearChildren
-import utils.hasChildren
 
 @RegisterClass
 class ConfirmAction : Control() {
@@ -38,11 +36,13 @@ class ConfirmAction : Control() {
     private lateinit var titleLabel: Label
     private lateinit var animationPlayer: AnimationPlayer
     private lateinit var actionCardDetails: ActionCardDetails
-    private lateinit var costsListContainer: VBoxContainer
-    private lateinit var costsPerTurnContainer: VBoxContainer
-    private lateinit var benefitsListContainer: VBoxContainer
-    private lateinit var buildingListContainer: VBoxContainer
+    private lateinit var costsList: RichTextLabel
+    private lateinit var costsPerTurnList: RichTextLabel
+    private lateinit var benefitsList: RichTextLabel
+    private lateinit var buildingsList: RichTextLabel
     private lateinit var buildingHeading: Label
+    private lateinit var buildingSummary: RichTextLabel
+    private lateinit var sectorCountLabel: RichTextLabel
     private lateinit var hexBoxContainer: CenterContainer
     private lateinit var hexLocationLabel: Label
     private lateinit var confirmButton: Button
@@ -60,14 +60,16 @@ class ConfirmAction : Control() {
         titleLabel = getNodeAs("%ConfirmActionTitle")!!
         animationPlayer = getNodeAs("AnimationPlayer")!!
         actionCardDetails = getNodeAs("%ActionCardDetails")!!
-        costsListContainer = getNodeAs("%CostsList")!!
-        benefitsListContainer = getNodeAs("%BenefitsList")!!
-        costsPerTurnContainer = getNodeAs("%CostsPerTurnList")!!
-        buildingListContainer = getNodeAs("%BuildingList")!!
+        costsList = getNodeAs("%CostsList")!!
+        benefitsList = getNodeAs("%BenefitsList")!!
+        costsPerTurnList = getNodeAs("%CostsPerTurnList")!!
+        buildingsList = getNodeAs("%BuildingList")!!
         buildingHeading = getNodeAs("%Building_")!!
         hexBoxContainer = getNodeAs("%HexBoxContainer")!!
         hexLocationLabel = getNodeAs("%HexLocationLabel")!!
         confirmButton = getNodeAs("%ConfirmButton")!!
+        buildingSummary = getNodeAs("%BuildingSummary_")!!
+        sectorCountLabel = getNodeAs("%SectorCountLabel_")!!
         chooseSectorsContainer = getNodeAs("%ConfirmSectorContainer")!!
         chooseSectorsContainer.visible = false
 
@@ -81,71 +83,63 @@ class ConfirmAction : Control() {
 
     @RegisterFunction
     fun updateUI() {
+        val plus = "[b][color=WEB_GREEN]+[/color][/b]"
+        val minus = "[b][color=WEB_MAROON]-[/color][/b]"
         resetUI()
         renderHex(hex, location)
         titleLabel.text = "Play ${card.cardName}?"
         card.action?.let { action ->
             actionCardDetails.updateCard(card)
             action.initialCosts.forEach { (resourceType, amount) ->
-                val costLabel = Label()
-                costLabel.setName("CostLabel_${resourceType.name}")
-                costLabel.text = "  $amount ${resourceType.displayName}"
-                costsListContainer.addChild(costLabel)
+                costsList.appendText(minus)
+                costsList.appendText("[img=32]${resourceType.spritePath}[/img]")
+                costsList.appendText("$amount [b]${resourceType.displayName}[b]\n")
             }
             ResourceType.entries.forEach { resourceType ->
                 val cost = action.getCost(resourceType)
                 if (cost.second != null) {
-                    val costLabel = Label()
-                    costLabel.setName("CPTLabel_${resourceType.name}")
-                    costLabel.text = "  ${cost.second} ${resourceType.displayName}"
-                    costsPerTurnContainer.addChild(costLabel)
+                    costsPerTurnList.appendText(minus)
+                    costsPerTurnList.appendText("[img=32]${resourceType.spritePath}[/img]")
+                    costsPerTurnList.appendText("${cost.second} ${resourceType.displayName}\n")
                 }
                 val benefits = action.getBenefits(resourceType)
                 benefits.let { (perTurn, completion) ->
-                    val benefitLabel = Label()
-                    benefitLabel.setName("BenefitLabel_${resourceType.name}")
-                    benefitLabel.autowrapMode = TextServer.AutowrapMode.AUTOWRAP_WORD
                     val sBuilder = StringBuilder()
                     if (perTurn != null && perTurn > 0) {
-                        sBuilder.append("  $perTurn ${resourceType.displayName} per turn")
+                        sBuilder.append("$plus $perTurn ${resourceType.displayName} per turn\n")
                     }
                     if (completion != null) {
                         if (sBuilder.isNotEmpty()) {
                             sBuilder.append(" and ")
                         }
-                        sBuilder.append("set ${resourceType.displayName} to $completion when completed")
+                        sBuilder.append("Sets [b]${resourceType.displayName}[/b] to $completion when completed\n")
                     }
                     if (sBuilder.isNotEmpty()) {
-                        benefitLabel.text = sBuilder.toString()
-                        benefitsListContainer.addChild(benefitLabel)
+                        benefitsList.appendText(sBuilder.toString())
                     }
                 }
             }
             Science.entries.forEach { science ->
                 val benefit = action.getScienceBenefit(science)
                 if (benefit != null && benefit > 0f) {
-                    val benefitLabel = Label()
-                    benefitLabel.setName("ScienceBenefitLabel_${science.name}")
-                    benefitLabel.text = "  $benefit ${science.displayName} per turn"
-                    benefitsListContainer.addChild(benefitLabel)
+                    benefitsList.appendText(
+                        "[img=32]${science.spritePath}[/img][b]$benefit ${science.displayName}[/b] per turn\n"
+                    )
                 }
-            }
-            if (costsPerTurnContainer.getChildCount() == 0) {
-                val costLabel = Label()
-                costLabel.setName("CostLabel_NONE")
-                costLabel.text = "  -- None --" // Would be nice if this were in italics
-                costsPerTurnContainer.addChild(costLabel)
-            }
+            }/* if (costsPerTurnList.getChildCount() == 0) {
+                 val costLabel = Label()
+                 costLabel.setName("CostLabel_NONE")
+                 costLabel.text = "  -- None --" // Would be nice if this were in italics
+                 costsPerTurnList.addChild(costLabel)
+             }*/
             if (action.type == ActionType.BUILD) {
                 if (action.buildingToConstruct == null) {
-                    GD.printErr("A Build action must have a building to construct: ${action.id}->${action.actionName}")
+                    GD.printErr("A build action must have a building to construct: ${action.id}->${action.actionName}")
                 } else {
-
                     // Valid building, so show the building details
                     confirmEnabled = false
-                    val buildingLabel = Label()
                     chooseSectorsContainer.visible = true
-
+                    buildingSummary.visible = true
 
                     action.buildingToConstruct?.let b@{ building ->
                         when (building) {
@@ -155,31 +149,25 @@ class ConfirmAction : Control() {
                             }
 
                             is Building.ScienceLab -> {
-                                buildingLabel.setName("Build_ScienceLab_${building.labName}")
-                                buildingLabel.text = "  New ${building.labName} at ${hex.location.name}"
-                                buildingListContainer.addChild(buildingLabel)
+                                buildingSummary.appendText("  New ${building.labName} at ${hex.location.name}")
                                 building.baseRunningCost.let { (resourceType, amount) ->
-                                    val costLabel = Label()
-                                    costLabel.setName("Build_ScienceLab_Cost_${building.labName}")
-                                    costLabel.text = "  Costing $amount ${resourceType.displayName} per turn"
-                                    buildingListContainer.addChild(costLabel)
+                                    costsPerTurnList.appendText(
+                                        "$minus [img=32]${resourceType.spritePath}[/img] $amount ${resourceType.displayName} per turn\n"
+                                    )
                                 }
                                 building.sciencesProduced.forEach { (science, amount) ->
-                                    val scienceLabel = Label()
-                                    scienceLabel.setName("Build_ScienceLab_Science_${science.name}")
-                                    scienceLabel.text = "  Producing $amount ${science.displayName} per turn"
-                                    buildingListContainer.addChild(scienceLabel)
+                                    buildingsList.appendText(if (amount > 0) plus else minus)
+                                    buildingsList.appendText(
+                                        "[img=32]${science.spritePath}[/img][b]$amount ${science.displayName}[/b] per turn\n"
+                                    )
                                 }
                             }
                         }
-                        val sectorCountLabel = Label()
-                        sectorCountLabel.setName("SectorCountLabel_${building.sectors}")
-                        val contiguous = if (building.sectorsMustBeContiguous) " contiguous" else ""
-                        val s = if(building.sectors == 1) "" else "s"
-                        sectorCountLabel.text = "  Requires ${building.sectors}${contiguous} sector$s"
-                        buildingListContainer.addChild(sectorCountLabel)
 
-                        if (buildingListContainer.hasChildren()) {
+                        val contiguous = if (building.sectorsMustBeContiguous) " contiguous" else ""
+                        val s = if (building.sectors == 1) "" else "s"
+                        sectorCountLabel.appendText("  Requires ${building.sectors}${contiguous} sector$s")
+                        if (buildingsList.text.isNotEmpty()) {
                             buildingHeading.text = "Once construction complete:"
                         } else {
                             buildingHeading.visible = false
@@ -234,10 +222,13 @@ class ConfirmAction : Control() {
     @RegisterFunction
     fun resetUI() {
         titleLabel.text = ""
-        costsListContainer.clearChildren()
-        costsPerTurnContainer.clearChildren()
-        benefitsListContainer.clearChildren()
-        buildingListContainer.clearChildren()
+        costsList.clear()
+        costsPerTurnList.clear()
+        benefitsList.clear()
+        buildingsList.clear()
+        buildingHeading.visible = false
+        sectorCountLabel.clear()
+        sectorCountLabel.visible = false
     }
 
     @RegisterFunction
