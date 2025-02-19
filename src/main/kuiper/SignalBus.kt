@@ -64,6 +64,8 @@ class SignalBus : Node() {
     @RegisterSignal
     val updateScience by signal2<String, Float>("science", "value")
 
+    @RegisterSignal
+    val updateResource by signal2<String, Float>("resourceType", "value")
 
     @RegisterFunction
     override fun _ready() {

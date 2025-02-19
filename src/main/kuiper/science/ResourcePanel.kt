@@ -1,6 +1,7 @@
 package science
 
 import SignalBus
+import actions.ResourceType
 import godot.Control
 import godot.HBoxContainer
 import godot.RichTextLabel
@@ -11,10 +12,9 @@ import godot.core.Vector2
 import godot.core.connect
 import godot.extensions.getNodeAs
 import screens.kuiper.pullDownPanel.PullDownPanel
-import technology.Science
 
 @RegisterClass
-class SciencePanel : Control() {
+class ResourcePanel : Control() {
 
 	// Globals
 	private lateinit var signalBus: SignalBus
@@ -24,44 +24,44 @@ class SciencePanel : Control() {
 	private lateinit var iconRow: HBoxContainer
 	private lateinit var pulldownControl: PullDownPanel
 
-	private var science: Science = Science.PHYSICS
+	private var resourceType: ResourceType = ResourceType.GOLD
 
 	@RegisterFunction
 	override fun _ready() {
 		signalBus = getNodeAs("/root/SignalBus")!!
 
-		iconRow = getNodeAs("%SciencePanel")!!
+		iconRow = getNodeAs("%ResourcePanel")!!
 		panelContents = getNodeAs("%PanelContents")!!
 		pulldownControl = getNodeAs("%PulldownPanel")!!
 
-		signalBus.updateScience.connect { scienceName, value ->
-			science = Science.valueOf(scienceName.uppercase())
-			iconRow.getNodeAs<ResourceDisplay>(science.name)?.apply {
+		signalBus.updateResource.connect { resourceName, value ->
+			resourceType = ResourceType.valueOf(resourceName.uppercase())
+			iconRow.getNodeAs<ResourceDisplay>(resourceType.name)?.apply {
 				updateValue(value)
-				panelContents.getNodeAs<RichTextLabel>("${science}_summary")?.apply {
-					text = "[img=25]${science.spritePath}[/img] [b]${science.displayName}:[/b] %.2f".format(value)
+				panelContents.getNodeAs<RichTextLabel>("${resourceType}_summary")?.apply {
+					text =
+						"[img=25]${resourceType.spritePath}[/img] [b]${resourceType.displayName}:[/b] %.2f".format(value)
 				}
 			}
 		}
 	}
 
 	@RegisterFunction
-	fun addScience(science: Science, rate: Float) {
-		iconRow.getNodeAs<ResourceDisplay>(science.name)?.apply {
-			updateValue(rate)
+	fun addResource(res: ResourceType, rate: Int) {
+		iconRow.getNodeAs<ResourceDisplay>(res.name)?.apply {
+			updateValue(rate.toFloat())
 		}
 		val label = RichTextLabel().apply {
 			bbcodeEnabled = true
 			scrollActive = false
 			scrollToLine(0)
 			customMinimumSize = Vector2(300.0, 30.0)
-			setName("${science.name}_summary")
-			text = "[img=25]${science.spritePath}[/img] [b]${science.displayName}:[/b] %.2f".format(rate)
+			setName("${res.name}_summary")
+			text = "[img=25]${res.spritePath}[/img] [b]${res.displayName}:[/b] $rate"
 		}
 		panelContents.addChild(label)
 		panelContents.resetSize()
 		// I need to get the sliding panel which contains this to recalculate its dimensions
 		signalBus.recalcPulldownPanelSignal.emit(panelContents)
 	}
-
 }

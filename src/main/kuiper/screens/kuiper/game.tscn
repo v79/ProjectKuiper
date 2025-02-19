@@ -1,10 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://dhc5at6r5jl4n"]
+[gd_scene load_steps=11 format=3 uid="uid://dhc5at6r5jl4n"]
 
 [ext_resource type="Theme" uid="uid://dwjw02q78v0i1" path="res://assets/themes/theme.tres" id="1_ewrs8"]
 [ext_resource type="Script" path="res://src/main/kuiper/screens/kuiper/KuiperGame.kt" id="1_nlsq8"]
 [ext_resource type="PackedScene" uid="uid://bh0hxtmuthjhi" path="res://src/main/kuiper/screens/kuiper/escMenu/esc_menu.tscn" id="2_4tnej"]
 [ext_resource type="PackedScene" uid="uid://cusua3qup71ky" path="res://src/main/kuiper/hexgrid/hex_grid.tscn" id="3_7ao4g"]
 [ext_resource type="PackedScene" uid="uid://yrhn5sd7iho2" path="res://src/main/kuiper/screens/kuiper/actions/active_action_list.tscn" id="3_dmo6v"]
+[ext_resource type="PackedScene" uid="uid://cun43pt1qmvtt" path="res://src/main/kuiper/science/resource_panel.tscn" id="4_3wpiq"]
 [ext_resource type="PackedScene" uid="uid://q3iu1ngkr0tt" path="res://src/main/kuiper/science/science_panel.tscn" id="4_g68x7"]
 [ext_resource type="PackedScene" uid="uid://bcnrl5714e1pe" path="res://src/main/kuiper/actions/available_actions_fan.tscn" id="4_o0igw"]
 [ext_resource type="PackedScene" uid="uid://cpwrm52thlo67" path="res://src/main/kuiper/confirm_action/confirm_action.tscn" id="6_ts3vi"]
@@ -53,28 +54,17 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Menu"
 
+[node name="MarginContainer3" type="MarginContainer" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox"]
+layout_mode = 2
+theme_override_constants/margin_right = 50
+
+[node name="ResourcePanel" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox" instance=ExtResource("4_3wpiq")]
+unique_name_in_owner = true
+layout_mode = 2
+
 [node name="MarginContainer" type="MarginContainer" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox"]
 layout_mode = 2
 theme_override_constants/margin_left = 120
-
-[node name="ResourcesPanel" type="PanelContainer" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox"]
-layout_mode = 2
-mouse_filter = 1
-
-[node name="HBoxContainer" type="HBoxContainer" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox/ResourcesPanel"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox/ResourcesPanel/HBoxContainer"]
-layout_mode = 2
-text = "Influence"
-
-[node name="Label2" type="Label" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox/ResourcesPanel/HBoxContainer"]
-layout_mode = 2
-text = "Money"
-
-[node name="Label3" type="Label" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox/ResourcesPanel/HBoxContainer"]
-layout_mode = 2
-text = "ConMats"
 
 [node name="ProjectKuiperHeading" type="Label" parent="AspectRatioContainer/VBoxContainer/TopRow_hbox"]
 unique_name_in_owner = true

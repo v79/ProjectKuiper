@@ -46,7 +46,7 @@ class ResourceDisplay : Control() {
 		val png = GD.load<CompressedTexture2D>(icon.resourcePath)
 		iconTexture.texture = png
 
-		setTooltipText("$resourceName: $value")
+		setTooltipText("${resourceName}: $value")
 
 		if (isScience) {
 			signalBus.updateScience.connect { science, value ->
@@ -55,7 +55,11 @@ class ResourceDisplay : Control() {
 				}
 			}
 		} else {
-			// TODO: Implement resource display for resources
+			signalBus.updateResource.connect { resourceName, value ->
+				if (resourceName.lowercase() == resourceName.lowercase()) {
+					updateValue(value)
+				}
+			}
 		}
 	}
 

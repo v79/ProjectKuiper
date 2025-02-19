@@ -10,6 +10,7 @@ import godot.annotation.RegisterSignal
 import godot.core.*
 import godot.extensions.getNodeAs
 import godot.global.GD
+import science.ResourcePanel
 import science.SciencePanel
 import screens.kuiper.actions.ActiveAction
 import state.GameState
@@ -50,6 +51,7 @@ class KuiperGame : PanelContainer() {
 	private lateinit var zoneTabBar: TabBar
 	private lateinit var companyNameHeader: Label
 	private lateinit var sciencePanel: SciencePanel
+	private lateinit var resourcePanel: ResourcePanel
 	private lateinit var activeActionList: Control
 	private lateinit var confirmAction: ConfirmAction
 	private lateinit var cardDeck: CardDeck
@@ -57,8 +59,6 @@ class KuiperGame : PanelContainer() {
 	// packed scenes
 	private val activeActionScene =
 		ResourceLoader.load("res://src/main/kuiper/screens/kuiper/actions/active_action.tscn") as PackedScene
-	private val sciencePanelItem =
-		ResourceLoader.load("res://src/main/kuiper/screens/kuiper/science_rates.tscn") as PackedScene
 
 	// Called when the node enters the scene tree for the first time.
 	@RegisterFunction
@@ -69,16 +69,18 @@ class KuiperGame : PanelContainer() {
 		// Get UI elements
 		yearLbl = getNodeAs("%Year_lbl")!!
 		zoneTabBar = getNodeAs("%EraTabBar")!!
-		populateZoneTabBar()
 		companyNameHeader = getNodeAs("%ProjectKuiperHeading")!!
 		companyNameHeader.text = "Project Kuiper - ${gameState.company.name}"
 		sciencePanel = getNodeAs("%SciencePanel")!!
+		resourcePanel = getNodeAs("%ResourcePanel")!!
 		activeActionList = getNodeAs("ActiveActionList")!!
 		confirmAction = getNodeAs("%ConfirmActionScene")!!
 		confirmAction.cancelAction()
 		cardDeck = getNodeAs("%CardDeck")!!
 
-		// populate science panel
+		// populate pulldown panels and resource displays
+		populateZoneTabBar()
+		populateResourcePanel()
 		populateSciencePanel()
 
 
@@ -152,7 +154,6 @@ class KuiperGame : PanelContainer() {
 
 	@RegisterFunction
 	fun on_end_turn() {
-		GD.print("End turn!")
 		gameState.nextTurn()
 		updateUIOnTurn()
 	}
@@ -175,11 +176,16 @@ class KuiperGame : PanelContainer() {
 	}
 
 	private fun populateSciencePanel() {
-		GD.print("Dummy: KuiperGame: Populating science panel")
 		gameState.company.sciences.forEach { (science, rate) ->
 			if (science != Science.EUREKA) {
 				sciencePanel.addScience(science, rate)
 			}
+		}
+	}
+
+	private fun populateResourcePanel() {
+		gameState.company.resources.forEach { (type, value) ->
+			resourcePanel.addResource(type, value)
 		}
 	}
 

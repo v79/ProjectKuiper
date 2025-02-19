@@ -74,6 +74,7 @@ offset_left = 50.0
 offset_top = 40.0
 offset_right = 450.0
 offset_bottom = 90.0
+panel_i_d = "sciences"
 contents = NodePath("PanelContents")
 
 [node name="PanelContents" type="VBoxContainer" parent="PulldownPanel"]
