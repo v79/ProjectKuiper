@@ -21,6 +21,7 @@ custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 
 [node name="Handle" type="ColorRect" parent="VBoxContainer"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(50, 25)
 layout_mode = 2
 size_flags_horizontal = 4
