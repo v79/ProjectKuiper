@@ -22,7 +22,11 @@ class SponsorDataGenerator : Control() {
             id = 1,
             name = "Europe",
             colour = Color.blue,
-            startingResources = mapOf(ResourceType.GOLD to 100, ResourceType.INFLUENCE to 10),
+            startingResources = mapOf(
+                ResourceType.GOLD to 100,
+                ResourceType.INFLUENCE to 10,
+                ResourceType.CONSTRUCTION_MATERIALS to 250
+            ),
             baseScienceRate = mapOf(
                 Science.ASTRONOMY to 1.0f,
                 Science.PHYSICS to 1.0f,
@@ -37,7 +41,11 @@ class SponsorDataGenerator : Control() {
             id = 2,
             name = "North America",
             colour = Color.red,
-            startingResources = mapOf(ResourceType.GOLD to 150, ResourceType.INFLUENCE to 15),
+            startingResources = mapOf(
+                ResourceType.GOLD to 150,
+                ResourceType.INFLUENCE to 15,
+                ResourceType.CONSTRUCTION_MATERIALS to 200
+            ),
             baseScienceRate = mapOf(
                 Science.ASTRONOMY to 1.0f,
                 Science.PHYSICS to 1.0f,
@@ -52,7 +60,11 @@ class SponsorDataGenerator : Control() {
             id = 3,
             name = "South America",
             colour = Color.yellow,
-            startingResources = mapOf(ResourceType.GOLD to 120, ResourceType.INFLUENCE to 12),
+            startingResources = mapOf(
+                ResourceType.GOLD to 120,
+                ResourceType.INFLUENCE to 12,
+                ResourceType.CONSTRUCTION_MATERIALS to 150
+            ),
             baseScienceRate = mapOf(
                 Science.ASTRONOMY to 1.0f,
                 Science.PHYSICS to 1.0f,
@@ -67,7 +79,11 @@ class SponsorDataGenerator : Control() {
             id = 4,
             name = "Asia",
             colour = Color.tan,
-            startingResources = mapOf(ResourceType.GOLD to 200, ResourceType.INFLUENCE to 20),
+            startingResources = mapOf(
+                ResourceType.GOLD to 200,
+                ResourceType.INFLUENCE to 12,
+                ResourceType.CONSTRUCTION_MATERIALS to 350
+            ),
             baseScienceRate = mapOf(
                 Science.ASTRONOMY to 1.0f,
                 Science.PHYSICS to 1.0f,
@@ -82,7 +98,11 @@ class SponsorDataGenerator : Control() {
             id = 5,
             name = "Africa",
             colour = Color.green,
-            startingResources = mapOf(ResourceType.GOLD to 80, ResourceType.INFLUENCE to 8),
+            startingResources = mapOf(
+                ResourceType.GOLD to 80,
+                ResourceType.INFLUENCE to 8,
+                ResourceType.CONSTRUCTION_MATERIALS to 250
+            ),
             baseScienceRate = mapOf(
                 Science.ASTRONOMY to 1.0f,
                 Science.PHYSICS to 1.0f,
@@ -97,7 +117,11 @@ class SponsorDataGenerator : Control() {
             id = 6,
             name = "Oceania",
             colour = Color.cyan,
-            startingResources = mapOf(ResourceType.GOLD to 90, ResourceType.INFLUENCE to 9),
+            startingResources = mapOf(
+                ResourceType.GOLD to 90,
+                ResourceType.INFLUENCE to 9,
+                ResourceType.CONSTRUCTION_MATERIALS to 150
+            ),
             baseScienceRate = mapOf(
                 Science.ASTRONOMY to 1.0f,
                 Science.PHYSICS to 1.0f,
@@ -112,7 +136,11 @@ class SponsorDataGenerator : Control() {
             id = 7,
             name = "Antarctica",
             colour = Color.white,
-            startingResources = mapOf(ResourceType.GOLD to 50, ResourceType.INFLUENCE to 5),
+            startingResources = mapOf(
+                ResourceType.GOLD to 50,
+                ResourceType.INFLUENCE to 5,
+                ResourceType.CONSTRUCTION_MATERIALS to 50
+            ),
             baseScienceRate = mapOf(
                 Science.ASTRONOMY to 1.0f,
                 Science.PHYSICS to 1.0f,

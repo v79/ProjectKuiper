@@ -14,7 +14,8 @@
         "introText": "[b]Welcome to Europe![/b]",
         "startingResources": {
             "GOLD": 100,
-            "INFLUENCE": 10
+            "INFLUENCE": 10,
+            "CONSTRUCTION_MATERIALS": 250
         },
         "baseScienceRate": {
             "ASTRONOMY": 1.0,
@@ -39,7 +40,8 @@
         "introText": "[b]Welcome to North America![/b]\nAlthough the space launch centre was destroyed by the asteroid, you have the technology and political will to rebuild the NASA space programme..",
         "startingResources": {
             "GOLD": 150,
-            "INFLUENCE": 15
+            "INFLUENCE": 15,
+            "CONSTRUCTION_MATERIALS": 200
         },
         "baseScienceRate": {
             "ASTRONOMY": 1.0,
@@ -67,7 +69,8 @@
         "introText": "[b]Welcome to South America![/b]",
         "startingResources": {
             "GOLD": 120,
-            "INFLUENCE": 12
+            "INFLUENCE": 12,
+            "CONSTRUCTION_MATERIALS": 150
         },
         "baseScienceRate": {
             "ASTRONOMY": 1.0,
@@ -97,7 +100,8 @@
         "introText": "[b]Welcome to Asia![/b]",
         "startingResources": {
             "GOLD": 200,
-            "INFLUENCE": 20
+            "INFLUENCE": 12,
+            "CONSTRUCTION_MATERIALS": 350
         },
         "baseScienceRate": {
             "ASTRONOMY": 1.0,
@@ -123,7 +127,8 @@
         "introText": "[b]Welcome to Africa![/b]",
         "startingResources": {
             "GOLD": 80,
-            "INFLUENCE": 8
+            "INFLUENCE": 8,
+            "CONSTRUCTION_MATERIALS": 250
         },
         "baseScienceRate": {
             "ASTRONOMY": 1.0,
@@ -151,7 +156,8 @@
         "introText": "[b]Welcome to Oceania![/b]",
         "startingResources": {
             "GOLD": 90,
-            "INFLUENCE": 9
+            "INFLUENCE": 9,
+            "CONSTRUCTION_MATERIALS": 150
         },
         "baseScienceRate": {
             "ASTRONOMY": 1.0,
@@ -179,7 +185,8 @@
         "introText": "[b]Welcome to Antarctica![/b]\nThis will be your hardest challenge.",
         "startingResources": {
             "GOLD": 50,
-            "INFLUENCE": 5
+            "INFLUENCE": 5,
+            "CONSTRUCTION_MATERIALS": 50
         },
         "baseScienceRate": {
             "ASTRONOMY": 1.0,
