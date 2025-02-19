@@ -55,6 +55,10 @@ class SignalBus : Node() {
 	@RegisterSignal
 	val dealCardFromDeck by signal1<ActionWrapper>("action")
 
+	// Signals for updating UI each turn
+	@RegisterSignal
+	val updateScience by signal2<String, Float>("science", "value")
+
 
 	@RegisterFunction
 	override fun _ready() {

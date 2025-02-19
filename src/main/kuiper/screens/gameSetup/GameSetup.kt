@@ -4,7 +4,9 @@ import godot.*
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterSignal
-import godot.core.*
+import godot.core.asCachedStringName
+import godot.core.signal0
+import godot.core.signal1
 import godot.extensions.getNodeAs
 import godot.global.GD
 import loaders.DataLoader
@@ -24,17 +26,7 @@ class GameSetup : Node() {
 	val startGameSignal by signal0()
 
 	private var selectedCountry: Int = -1
-
-	// Move this to a data file later
-	private val sponsorList = listOf(
-		Sponsor(1, "Europe", Color.blue),
-		Sponsor(2, "North America", Color.red),
-		Sponsor(3, "South America", Color.yellow),
-		Sponsor(4, "Asia", Color.tan),
-		Sponsor(5, "Africa", Color.green),
-		Sponsor(6, "Oceania", Color.cyan),
-		Sponsor(7, "Antarctica", Color.white)
-	)
+	private val sponsorList = mutableListOf<Sponsor>()
 
 	// UI elements
 	private lateinit var companyNamePanel: PanelContainer
@@ -42,6 +34,9 @@ class GameSetup : Node() {
 	private lateinit var companyNameEdit: LineEdit
 	private lateinit var locationMap: ColorRect
 	private lateinit var hqSponsorListPanel: ItemList
+	private lateinit var sponsorDescription: RichTextLabel
+	private lateinit var baseResources: RichTextLabel
+	private lateinit var baseSciences: RichTextLabel
 
 	// Called when the node enters the scene tree for the first time.
 	@RegisterFunction
@@ -53,6 +48,11 @@ class GameSetup : Node() {
 		companyNameEdit = getNodeAs("%CompanyNameEdit")!!
 		locationMap = getNodeAs("%LocationMap")!!
 		hqSponsorListPanel = getNodeAs("%HQSponsorList")!!
+		sponsorDescription = getNodeAs("%SponsorDescription")!!
+		baseResources = getNodeAs("%BaseResources")!!
+		baseSciences = getNodeAs("%BaseSciences")!!
+
+		sponsorList.addAll(dataLoader.loadSponsorData())
 
 		hqSponsorListPanel.let { list ->
 			list.clear()
@@ -75,6 +75,21 @@ class GameSetup : Node() {
 		selectedCountry = sponsorList[index].id
 		locationMap.color = sponsorList[index].colour
 		companyNameEdit.text = "${sponsorList[index].name} Space Agency"
+		sponsorDescription.clear()
+		sponsorDescription.appendText("Here we put some narrative text about the selected location. Some background information, lore, and hints about the challenges and benefits of the location.\n")
+		sponsorDescription.appendText("\n")
+		sponsorDescription.appendText(sponsorList[index].introText)
+
+		baseResources.clear()
+		baseResources.appendText("[b]Starting resources:[/b]\n")
+		sponsorList[index].startingResources.forEach { (resource, amount) ->
+			baseResources.appendText("[img=32]${resource.spritePath}[/img] ${resource.displayName}: $amount\n")
+		}
+		baseSciences.clear()
+		baseSciences.appendText("[b]Base science rates:[/b]\n")
+		sponsorList[index].baseScienceRate.forEach { (science, rate) ->
+			baseSciences.appendText("[img=32]${science.spritePath}[/img] ${science.displayName}: $rate\n")
+		}
 	}
 
 	@RegisterFunction
@@ -90,7 +105,7 @@ class GameSetup : Node() {
 		gameState.year = 1965
 		gameState.sponsor = sponsor
 		gameState.company.name = companyNameEdit.text
-		gameState.company.sciences = generateStartingScienceRates().toMutableMap()
+		gameState.company.sciences.putAll(sponsor.baseScienceRate)
 		gameState.zones = setupZones(sponsor)
 
 		GD.print("Starting game for country ${sponsorList[selectedCountry - 1].name}")
@@ -129,7 +144,7 @@ class GameSetup : Node() {
 
 	@RegisterFunction
 	fun _on_company_name_text_changed(newText: String) {
-		if(newText.length > 10) {
+		if (newText.length > 10) {
 			startGameButton.disabled = false
 		} else {
 			startGameButton.disabled = true

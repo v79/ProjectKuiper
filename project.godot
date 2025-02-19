@@ -31,7 +31,7 @@ window/size/viewport_height=900
 [gui]
 
 theme/custom="res://assets/themes/theme.tres"
-theme/custom_font="res://assets/fonts/SpaceGrotesk-Medium.ttf"
+theme/custom_font="res://assets/SpaceGrotesk-Medium.ttf"
 
 [input]
 

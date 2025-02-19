@@ -22,8 +22,8 @@ godot {
     // the script registration which you'll attach to nodes are generated into this directory
     registrationFileBaseDir.set(projectDir.resolve("gdj"))
 
-	// Create .gdj files from all JVM scripts
-	isRegistrationFileGenerationEnabled.set(true)
+    // Create .gdj files from all JVM scripts
+    isRegistrationFileGenerationEnabled.set(true)
 
     // enable coroutine support to allow for godot's async functions to be used with kotlin coroutines
     isGodotCoroutinesEnabled.set(true)
@@ -51,9 +51,9 @@ godot {
     //windowsDeveloperVCVarsPath.set(File("${System.getenv("VC_VARS_PATH")}"))
     //isIOSExportEnabled.set(false)
 
-	// --------Library authors------------
+    // --------Library authors------------
 
-	// library setup. See: https://godot-kotl.in/en/stable/develop-libraries/
+    // library setup. See: https://godot-kotl.in/en/stable/develop-libraries/
     //classPrefix.set("MyCustomClassPrefix")
     //projectName.set("LibraryProjectName")
     //projectName.set("LibraryProjectName")

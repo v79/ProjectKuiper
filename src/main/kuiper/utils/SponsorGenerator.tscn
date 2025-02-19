@@ -1,0 +1,36 @@
+[gd_scene load_steps=2 format=3 uid="uid://bae60eagr82fn"]
+
+[ext_resource type="Script" path="res://src/main/kuiper/utils/SponsorDataGenerator.kt" id="1_jvonj"]
+
+[node name="SponsorGenerator" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_jvonj")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+clip_contents = true
+layout_mode = 1
+offset_right = 804.0
+offset_bottom = 148.0
+metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 56
+text = "Generating sponsors.json file!"
+
+[node name="QuitButton" type="Button" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+disabled = true
+text = "Quit!"
+
+[node name="Details" type="Label" parent="VBoxContainer"]
+unique_name_in_owner = true
+clip_contents = true
+custom_minimum_size = Vector2(400, 400)
+layout_mode = 2
+text_overrun_behavior = 2
+
+[connection signal="pressed" from="VBoxContainer/QuitButton" to="." method="_on__quit_button_pressed"]
