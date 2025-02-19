@@ -19,8 +19,7 @@ signals = [
     end_turn_signal,
 	esc_menu_signal,
 	card_added,
-	screen_resized,
-	recalc_pulldown_panel_signal
+	screen_resized
 ]
 properties = [
     

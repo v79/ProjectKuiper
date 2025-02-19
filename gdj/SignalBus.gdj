@@ -15,13 +15,15 @@ signals = [
     on_screen_resized,
 	dragging_card,
 	dropped_card,
+	recalc_pulldown_panel_signal,
 	card_on_hex,
 	card_off_hex,
 	show_action_confirmation,
 	cancel_action_confirmation,
 	confirm_action,
 	deal_card_from_deck,
-	update_science
+	update_science,
+	update_resource
 ]
 properties = [
     

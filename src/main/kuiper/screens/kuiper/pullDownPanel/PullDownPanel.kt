@@ -1,17 +1,25 @@
 package screens.kuiper.pullDownPanel
 
+import SignalBus
 import godot.*
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
 import godot.core.Vector2
+import godot.core.connect
 import godot.extensions.getNodeAs
-import godot.global.GD
 import kotlin.math.roundToInt
 
 @RegisterClass
 class PullDownPanel : Control() {
+
+	// Globals
+	private lateinit var signalBus: SignalBus
+
+	@Export
+	@RegisterProperty
+	var panelID: String = ""
 
 	/**
 	 * The contents of the panel, which should be any Control node
@@ -43,6 +51,11 @@ class PullDownPanel : Control() {
 
 	@RegisterFunction
 	override fun _ready() {
+		signalBus = getNodeAs("/root/SignalBus")!!
+
+		pulldownPanel = getNodeAs("VBoxContainer/PanelContainer")!!
+		handle = getNodeAs("%Handle")!!
+
 		// the zeroth child is the Panel node on the original scene
 		// the first child is the contents added to the game scene
 
@@ -53,11 +66,13 @@ class PullDownPanel : Control() {
 			_recalculate_pulldown_dimensions(contents!!)
 		}
 
-		pulldownPanel = getNodeAs("VBoxContainer/PanelContainer")!!
 		initialSize = pulldownPanel.size
 		minHeight = pulldownPanel.getRect().size.y
 		basePosition = pulldownPanel.position
-		handle = getNodeAs("VBoxContainer/Handle")!!
+
+		signalBus.recalcPulldownPanelSignal.connect { _ ->
+			_recalculate_pulldown_dimensions(contents!!)
+		}
 	}
 
 	@RegisterFunction
@@ -119,7 +134,7 @@ class PullDownPanel : Control() {
 		}
 		if (event is InputEventMouseButton) {
 			if (event.getButtonIndex() == MouseButton.MOUSE_BUTTON_LEFT) {
-				if(event.doubleClick) {
+				if (event.doubleClick) {
 					// double click to expand or shrink the panel
 					direction = if (isExpanded) -1 else 1
 				}
@@ -133,7 +148,7 @@ class PullDownPanel : Control() {
 		if (pulldownPanel.size == initialSize) {
 			isExpanded = false
 			direction = 0
-			if(!isDragging) {
+			if (!isDragging) {
 				contents?.visible = false
 			}
 		}
