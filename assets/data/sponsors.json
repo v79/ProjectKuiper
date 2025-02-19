@@ -10,6 +10,19 @@
             "h": 0.6666666666666666,
             "s": 1.0,
             "v": 1.0
+        },
+        "introText": "[b]Welcome to Europe![/b]",
+        "startingResources": {
+            "GOLD": 100,
+            "INFLUENCE": 10
+        },
+        "baseScienceRate": {
+            "ASTRONOMY": 1.0,
+            "PHYSICS": 1.0,
+            "BIOCHEMISTRY": 1.0,
+            "ENGINEERING": 1.0,
+            "MATHEMATICS": 1.0,
+            "PSYCHOLOGY": 1.0
         }
     },
     {
@@ -22,6 +35,19 @@
             "a8": 255,
             "s": 1.0,
             "v": 1.0
+        },
+        "introText": "[b]Welcome to North America![/b]\nAlthough the space launch centre was destroyed by the asteroid, you have the technology and political will to rebuild the NASA space programme..",
+        "startingResources": {
+            "GOLD": 150,
+            "INFLUENCE": 15
+        },
+        "baseScienceRate": {
+            "ASTRONOMY": 1.0,
+            "PHYSICS": 1.0,
+            "BIOCHEMISTRY": 1.0,
+            "ENGINEERING": 1.0,
+            "MATHEMATICS": 1.0,
+            "PSYCHOLOGY": 1.0
         }
     },
     {
@@ -37,6 +63,19 @@
             "h": 0.16666666666666666,
             "s": 1.0,
             "v": 1.0
+        },
+        "introText": "[b]Welcome to South America![/b]",
+        "startingResources": {
+            "GOLD": 120,
+            "INFLUENCE": 12
+        },
+        "baseScienceRate": {
+            "ASTRONOMY": 1.0,
+            "PHYSICS": 1.0,
+            "BIOCHEMISTRY": 1.0,
+            "ENGINEERING": 1.0,
+            "MATHEMATICS": 1.0,
+            "PSYCHOLOGY": 1.0
         }
     },
     {
@@ -54,6 +93,19 @@
             "h": 0.0952379217681995,
             "s": 0.3333325238091191,
             "v": 0.823529
+        },
+        "introText": "[b]Welcome to Asia![/b]",
+        "startingResources": {
+            "GOLD": 200,
+            "INFLUENCE": 20
+        },
+        "baseScienceRate": {
+            "ASTRONOMY": 1.0,
+            "PHYSICS": 1.0,
+            "BIOCHEMISTRY": 1.0,
+            "ENGINEERING": 1.0,
+            "MATHEMATICS": 1.0,
+            "PSYCHOLOGY": 1.0
         }
     },
     {
@@ -67,6 +119,19 @@
             "h": 0.3333333333333333,
             "s": 1.0,
             "v": 1.0
+        },
+        "introText": "[b]Welcome to Africa![/b]",
+        "startingResources": {
+            "GOLD": 80,
+            "INFLUENCE": 8
+        },
+        "baseScienceRate": {
+            "ASTRONOMY": 1.0,
+            "PHYSICS": 1.0,
+            "BIOCHEMISTRY": 1.0,
+            "ENGINEERING": 1.0,
+            "MATHEMATICS": 1.0,
+            "PSYCHOLOGY": 1.0
         }
     },
     {
@@ -82,6 +147,19 @@
             "h": 0.5,
             "s": 1.0,
             "v": 1.0
+        },
+        "introText": "[b]Welcome to Oceania![/b]",
+        "startingResources": {
+            "GOLD": 90,
+            "INFLUENCE": 9
+        },
+        "baseScienceRate": {
+            "ASTRONOMY": 1.0,
+            "PHYSICS": 1.0,
+            "BIOCHEMISTRY": 1.0,
+            "ENGINEERING": 1.0,
+            "MATHEMATICS": 1.0,
+            "PSYCHOLOGY": 1.0
         }
     },
     {
@@ -97,6 +175,19 @@
             "b8": 255,
             "a8": 255,
             "v": 1.0
+        },
+        "introText": "[b]Welcome to Antarctica![/b]\nThis will be your hardest challenge.",
+        "startingResources": {
+            "GOLD": 50,
+            "INFLUENCE": 5
+        },
+        "baseScienceRate": {
+            "ASTRONOMY": 1.0,
+            "PHYSICS": 1.0,
+            "BIOCHEMISTRY": 1.0,
+            "ENGINEERING": 1.0,
+            "MATHEMATICS": 1.0,
+            "PSYCHOLOGY": 1.0
         }
     }
 ]

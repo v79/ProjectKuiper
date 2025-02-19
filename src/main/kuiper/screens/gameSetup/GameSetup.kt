@@ -34,6 +34,9 @@ class GameSetup : Node() {
     private lateinit var companyNameEdit: LineEdit
     private lateinit var locationMap: ColorRect
     private lateinit var hqSponsorListPanel: ItemList
+    private lateinit var sponsorDescription: RichTextLabel
+    private lateinit var baseResources: RichTextLabel
+    private lateinit var baseSciences: RichTextLabel
 
     // Called when the node enters the scene tree for the first time.
     @RegisterFunction
@@ -45,6 +48,9 @@ class GameSetup : Node() {
         companyNameEdit = getNodeAs("%CompanyNameEdit")!!
         locationMap = getNodeAs("%LocationMap")!!
         hqSponsorListPanel = getNodeAs("%HQSponsorList")!!
+        sponsorDescription = getNodeAs("%SponsorDescription")!!
+        baseResources = getNodeAs("%BaseResources")!!
+        baseSciences = getNodeAs("%BaseSciences")!!
 
         sponsorList.addAll(dataLoader.loadSponsorData())
 
@@ -69,6 +75,21 @@ class GameSetup : Node() {
         selectedCountry = sponsorList[index].id
         locationMap.color = sponsorList[index].colour
         companyNameEdit.text = "${sponsorList[index].name} Space Agency"
+        sponsorDescription.clear()
+        sponsorDescription.appendText("Here we put some narrative text about the selected location. Some background information, lore, and hints about the challenges and benefits of the location.\n")
+        sponsorDescription.appendText("\n")
+        sponsorDescription.appendText(sponsorList[index].introText)
+
+        baseResources.clear()
+        baseResources.appendText("[b]Starting resources:[/b]\n")
+        sponsorList[index].startingResources.forEach { (resource, amount) ->
+            baseResources.appendText("[img=32]${resource.spritePath}[/img] ${resource.displayName}: $amount\n")
+        }
+        baseSciences.clear()
+        baseSciences.appendText("[b]Base science rates:[/b]\n")
+        sponsorList[index].baseScienceRate.forEach { (science, rate) ->
+            baseSciences.appendText("[img=32]${science.spritePath}[/img] ${science.displayName}: $rate\n")
+        }
     }
 
     @RegisterFunction
