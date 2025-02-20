@@ -235,7 +235,6 @@ class AvailableActionsFan : Node2D() {
 
     @RegisterFunction
     fun removeCard(id: Int) {
-        GD.print("Removing card: $id")
         val card = getCardNodeById(id)
         if (card != null) {
             fanContainer.removeChild(card)
