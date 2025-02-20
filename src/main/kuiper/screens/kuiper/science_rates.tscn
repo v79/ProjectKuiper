@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://cpb7l0j8b2hfs"]
+[gd_scene load_steps=2 format=3 uid="uid://dy3jkykq03k3s"]
 
 [ext_resource type="Script" path="res://src/main/kuiper/screens/kuiper/ScienceRate.kt" id="1_n4ira"]
 
