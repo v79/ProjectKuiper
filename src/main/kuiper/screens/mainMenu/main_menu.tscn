@@ -32,7 +32,7 @@ theme = ExtResource("2_7sj80")
 [node name="GameTitle" type="Label" parent="VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 40
-text = "Project Herschel: Heliopause"
+text = "Project Kuiper: Heliopause"
 horizontal_alignment = 1
 
 [node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
