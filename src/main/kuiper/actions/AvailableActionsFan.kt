@@ -183,7 +183,6 @@ class AvailableActionsFan : Node2D() {
             GD.printErr("Tried to add a null action card")
             return
         }
-        GD.print("Adding card: ${action.id}")
         val card = actionCardScene.instantiate() as ActionCard
         card.setAction(action)
 
@@ -236,13 +235,15 @@ class AvailableActionsFan : Node2D() {
 
     @RegisterFunction
     fun removeCard(id: Int) {
-        GD.print("Removing card: $id")
         val card = getCardNodeById(id)
         if (card != null) {
             fanContainer.removeChild(card)
             actionCards.remove(id)
             updateCardPlacements()
+            enableAllCards()
             card.queueFree()
+        } else {
+            GD.printErr("Tried to remove card $id, but it was not found")
         }
     }
 }
