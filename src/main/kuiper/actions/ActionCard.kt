@@ -96,13 +96,14 @@ class ActionCard : Node2D() {
 			placedOnHex = null
 		}
 
+
 		// when the action is confirmed, return the card to the fan
 		signalBus.cancelActionConfirmation.connect {
 			if (isInsideTree()) {
 				returnCardToFan()
-				status = CardStatus.IN_FAN
 				this.show()
 				draggingStopped.emitSignal(this)
+				GD.print("Card ${this.cardName} returned to fan")
 			}
 		}
 	}
@@ -170,6 +171,7 @@ class ActionCard : Node2D() {
 	private fun returnCardToFan() {
 		getTree()!!.createTween()?.tweenProperty(this, "position".asNodePath(), startPosition, 0.5)
 		getTree()!!.createTween()?.tweenProperty(this, "rotation".asNodePath(), GD.degToRad(startRotation), 0.5)
+		status = CardStatus.IN_FAN
 	}
 
 	fun highlight() {

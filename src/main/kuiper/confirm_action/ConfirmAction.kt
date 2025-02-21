@@ -74,6 +74,7 @@ class ConfirmAction : Control() {
         chooseSectorsContainer.visible = false
 
         signalBus.showActionConfirmation.connect { h, c ->
+            GD.print("ConfirmAction: ready(): showActionConfirmation signal received for card ${c.cardName}")
             hex = h
             card = c
             location = h.location
@@ -243,7 +244,6 @@ class ConfirmAction : Control() {
 
     @RegisterFunction
     fun confirmAction() {
-        GD.print("Confirming action ${card.cardName}")
         hide()
         signalBus.confirmAction.emit(hex, ActionWrapper(card.action!!))
     }
