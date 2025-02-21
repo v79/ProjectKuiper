@@ -1,0 +1,32 @@
+[gd_scene load_steps=2 format=3 uid="uid://drpge8uc3a34x"]
+
+[ext_resource type="Script" path="res://src/main/kuiper/actions/activeActions/ActiveActionsFan.kt" id="1_sllqk"]
+
+[node name="ActiveActionsFan" type="Control"]
+custom_minimum_size = Vector2(100, 400)
+layout_mode = 3
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_sllqk")
+
+[node name="ReferenceRect" type="ReferenceRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+editor_only = false
+
+[node name="OngoingActionsContainer" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 60

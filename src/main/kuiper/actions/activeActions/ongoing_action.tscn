@@ -1,0 +1,32 @@
+[gd_scene load_steps=2 format=3 uid="uid://ctup7kb1s8c34"]
+
+[ext_resource type="Script" path="res://src/main/kuiper/actions/activeActions/OngoingAction.kt" id="1_3l4vc"]
+
+[node name="OngoingAction" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_3l4vc")
+
+[node name="ReferenceRect" type="ReferenceRect" parent="."]
+custom_minimum_size = Vector2(99, 50)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+border_color = Color(0.0917417, 0.44128, 0.778986, 1)
+editor_only = false
+
+[node name="TurnsRemaining" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 24.0
+grow_horizontal = 0
+text = "99"
+horizontal_alignment = 2

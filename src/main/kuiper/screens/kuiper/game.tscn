@@ -4,12 +4,12 @@
 [ext_resource type="Script" path="res://src/main/kuiper/screens/kuiper/KuiperGame.kt" id="1_nlsq8"]
 [ext_resource type="PackedScene" uid="uid://bh0hxtmuthjhi" path="res://src/main/kuiper/screens/kuiper/escMenu/esc_menu.tscn" id="2_4tnej"]
 [ext_resource type="PackedScene" uid="uid://cusua3qup71ky" path="res://src/main/kuiper/hexgrid/hex_grid.tscn" id="3_7ao4g"]
-[ext_resource type="PackedScene" uid="uid://yrhn5sd7iho2" path="res://src/main/kuiper/screens/kuiper/actions/active_action_list.tscn" id="3_dmo6v"]
 [ext_resource type="PackedScene" uid="uid://cun43pt1qmvtt" path="res://src/main/kuiper/science/resource_panel.tscn" id="4_3wpiq"]
 [ext_resource type="PackedScene" uid="uid://q3iu1ngkr0tt" path="res://src/main/kuiper/science/science_panel.tscn" id="4_g68x7"]
 [ext_resource type="PackedScene" uid="uid://bcnrl5714e1pe" path="res://src/main/kuiper/actions/available_actions_fan.tscn" id="4_o0igw"]
 [ext_resource type="PackedScene" uid="uid://cpwrm52thlo67" path="res://src/main/kuiper/confirm_action/confirm_action.tscn" id="6_ts3vi"]
 [ext_resource type="PackedScene" uid="uid://bsyyc75msaxp1" path="res://src/main/kuiper/actions/CardDeck.tscn" id="8_skh3w"]
+[ext_resource type="PackedScene" uid="uid://drpge8uc3a34x" path="res://src/main/kuiper/actions/activeActions/active_actions_fan.tscn" id="9_65jo0"]
 
 [node name="CanvasLayer" type="PanelContainer"]
 anchors_preset = 15
@@ -152,19 +152,18 @@ layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 
-[node name="ActiveActionList" parent="." instance=ExtResource("3_dmo6v")]
-visibility_layer = 5
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 4
-mouse_filter = 1
-
 [node name="AvailableActionsFan" parent="." instance=ExtResource("4_o0igw")]
 layout_mode = 2
 
 [node name="ConfirmActionScene" parent="." instance=ExtResource("6_ts3vi")]
 unique_name_in_owner = true
 layout_mode = 2
+
+[node name="ActiveActionsFan" parent="." instance=ExtResource("9_65jo0")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
 
 [node name="EscMenu" parent="." instance=ExtResource("2_4tnej")]
 visible = false

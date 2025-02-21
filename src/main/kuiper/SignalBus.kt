@@ -67,6 +67,11 @@ class SignalBus : Node() {
     @RegisterSignal
     val updateResource by signal2<String, Float>("resourceType", "value")
 
+    // Signals relating to active, ongoing actions
+
+    @RegisterSignal
+    val actionCompleted by signal1<ActionWrapper>("action")
+
     @RegisterFunction
     override fun _ready() {
         onScreenResized.connect { w, h ->
