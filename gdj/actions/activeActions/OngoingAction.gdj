@@ -4,9 +4,9 @@
 registeredName = OngoingAction
 fqName = actions.activeActions.OngoingAction
 relativeSourcePath = src/main/kuiper/actions/activeActions/OngoingAction.kt
-baseType = Control
+baseType = Node2D
 supertypes = [
-    godot.Control,
+    godot.Node2D,
 	godot.CanvasItem,
 	godot.Node,
 	godot.Object,
@@ -22,5 +22,6 @@ properties = [
 ]
 functions = [
     _ready,
-	_process
+	_on_area_2d_mouse_entered,
+	_on_area_2d_mouse_exited
 ]

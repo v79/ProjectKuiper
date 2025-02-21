@@ -1,32 +1,46 @@
-[gd_scene load_steps=2 format=3 uid="uid://ctup7kb1s8c34"]
+[gd_scene load_steps=4 format=3 uid="uid://ctup7kb1s8c34"]
 
 [ext_resource type="Script" path="res://src/main/kuiper/actions/activeActions/OngoingAction.kt" id="1_3l4vc"]
+[ext_resource type="Theme" uid="uid://cn2v6cwhff2nv" path="res://assets/themes/card_theme.tres" id="2_4p0gu"]
 
-[node name="OngoingAction" type="Control"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cjetw"]
+size = Vector2(191, 46)
+
+[node name="OngoingAction" type="Node2D"]
 script = ExtResource("1_3l4vc")
 
-[node name="ReferenceRect" type="ReferenceRect" parent="."]
-custom_minimum_size = Vector2(99, 50)
-layout_mode = 0
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(99, 25)
+shape = SubResource("RectangleShape2D_cjetw")
+
+[node name="CardBackground" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(199, 50)
 offset_right = 40.0
 offset_bottom = 40.0
-border_color = Color(0.0917417, 0.44128, 0.778986, 1)
-editor_only = false
+mouse_filter = 1
+theme = ExtResource("2_4p0gu")
 
-[node name="TurnsRemaining" type="Label" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="CardBackground"]
+layout_mode = 2
+alignment = 2
+
+[node name="NameLabel" type="RichTextLabel" parent="CardBackground/HBoxContainer"]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -40.0
-offset_bottom = 24.0
-grow_horizontal = 0
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+mouse_filter = 1
+bbcode_enabled = true
+text = "<name>"
+fit_content = true
+
+[node name="TurnsLabel" type="Label" parent="CardBackground/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
 text = "99"
 horizontal_alignment = 2
+
+[connection signal="mouse_entered" from="Area2D" to="." method="_on_area_2d_mouse_entered"]
+[connection signal="mouse_exited" from="Area2D" to="." method="_on_area_2d_mouse_exited"]

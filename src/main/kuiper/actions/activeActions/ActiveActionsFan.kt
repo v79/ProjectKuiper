@@ -8,6 +8,7 @@ import godot.ResourceLoader
 import godot.VBoxContainer
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
+import godot.core.Vector2
 import godot.core.connect
 import godot.extensions.getNodeAs
 import godot.global.GD
@@ -29,6 +30,8 @@ class ActiveActionsFan : Control() {
 
 	// list of going actions as an ordered list
 	private val ongoingActions: MutableList<Action> = mutableListOf()
+
+	private val cardHeight: Double = 50.0
 
 	@RegisterFunction
 	override fun _ready() {
@@ -55,16 +58,38 @@ class ActiveActionsFan : Control() {
 
 	}
 
-
+	/**
+	 * Add an ongoing action to the UI
+	 */
 	private fun addOngoingAction(action: Action) {
-		GD.print("ActiveActionsFan: Adding ongoing action $action")
 		val ongoingAction = ongoingActionScene.instantiate() as OngoingAction
+		GD.print(ongoingAction)
 		ongoingAction.apply {
 			setName("OngoingAction_${action.id}")
 			actionId = action.id
 			turnsRemaining = action.turnsRemaining
+			setAction(action)
 		}
 		ongoingActions.add(action)
+		ongoingActions.sortBy { it.turnsRemaining }
 		ongoingActionsContainer.addChild(ongoingAction)
+		placeActions()
+	}
+
+
+	/**
+	 * Place the ongoing actions in the correct order, sorted by time remaining, shortest first
+	 */
+	private fun placeActions() {
+		var yPos = 0.0
+		ongoingActions.forEachIndexed { index, action ->
+			val ongoingAction = ongoingActionsContainer.getNodeAs<OngoingAction>("OngoingAction_${action.id}")
+			if(ongoingAction!= null) {
+				ongoingAction.setPosition(Vector2(0.0, yPos))
+				yPos += cardHeight
+			} else {
+				GD.printErr("Got null when looking for OngoingAction_${action.id}")
+			}
+		}
 	}
 }

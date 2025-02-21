@@ -35,8 +35,6 @@ class CardDeck : Node() {
 	fun getCard() {
 		if (deck.isEmpty()) {
 			GD.printErr("Resetting deck as it is empty, probably not the desired behaviour")
-			deck.addAll(actions)
-			shuffle()
 		}
 		val action = deck.removeAt(0)
 		signalBus.dealCardFromDeck.emit(ActionWrapper(action))
