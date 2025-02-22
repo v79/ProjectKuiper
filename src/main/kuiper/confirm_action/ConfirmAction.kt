@@ -1,13 +1,16 @@
 package confirm_action
 
+import LogInterface
 import SignalBus
 import actions.ActionCard
 import actions.ActionType
 import actions.ActionWrapper
 import actions.ResourceType
 import godot.*
+import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
+import godot.annotation.RegisterProperty
 import godot.core.Color
 import godot.core.asStringName
 import godot.core.connect
@@ -23,7 +26,11 @@ import technology.Science
 import utils.clearChildren
 
 @RegisterClass
-class ConfirmAction : Control() {
+class ConfirmAction : Control(), LogInterface {
+
+    @RegisterProperty
+    @Export
+    override var logEnabled: Boolean = false
 
     // Globals
     private lateinit var signalBus: SignalBus
@@ -244,6 +251,7 @@ class ConfirmAction : Control() {
 
     @RegisterFunction
     fun confirmAction() {
+        logWarning("ConfirmAction: confirmAction(): Confirming action ${card.cardName}")
         hide()
         signalBus.confirmAction.emit(hex, ActionWrapper(card.action!!))
     }
@@ -258,4 +266,5 @@ class ConfirmAction : Control() {
     fun enableConfirmButton() {
         confirmButton.disabled = false
     }
+
 }
