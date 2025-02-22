@@ -3,14 +3,16 @@ package actions.activeActions
 import SignalBus
 import actions.Action
 import actions.ActionType
-import godot.*
+import godot.Label
+import godot.Node2D
+import godot.PanelContainer
+import godot.RichTextLabel
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
 import godot.core.Vector2
 import godot.core.asStringName
 import godot.extensions.getNodeAs
-import godot.global.GD
 
 @RegisterClass
 class OngoingAction : Node2D() {

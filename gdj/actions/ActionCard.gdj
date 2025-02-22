@@ -28,6 +28,8 @@ properties = [
 functions = [
     _ready,
 	_process,
+	disable_processing,
+	enable_processing,
 	_on_area_2d_mouse_entered,
 	_on_area_2d_mouse_exited
 ]
