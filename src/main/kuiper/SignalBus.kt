@@ -68,6 +68,8 @@ class SignalBus : Node() {
     val updateResource by signal2<String, Float>("resourceType", "value")
 
     // Signals relating to active, ongoing actions
+    @RegisterSignal
+    val updateOngoingAction by signal2<Int, Int>("actionId", "turnsLeft")
 
     @RegisterSignal
     val actionCompleted by signal1<ActionWrapper>("action")

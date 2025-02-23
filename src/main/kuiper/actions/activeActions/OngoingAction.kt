@@ -12,7 +12,9 @@ import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
 import godot.core.Vector2
 import godot.core.asStringName
+import godot.core.connect
 import godot.extensions.getNodeAs
+import godot.global.GD
 
 @RegisterClass
 class OngoingAction : Node2D() {
@@ -43,6 +45,15 @@ class OngoingAction : Node2D() {
 
 		nameLbl.setText("[b]${action.actionName}[/b]")
 		turnsLbl.setText(turnsRemaining.toString())
+
+		signalBus.updateOngoingAction.connect { id, turnsLeft ->
+			if(id == action.id) {
+				turnsRemaining = turnsLeft
+				GD.print("Updating ongoing action $id, turns left is $turnsLeft")
+				updateUI()
+			}
+		}
+
 		updateUI()
 	}
 
@@ -61,7 +72,8 @@ class OngoingAction : Node2D() {
 	}
 
 	private fun updateUI() {
-		cardBackground.setTooltipText(turnsRemaining.toString())
+		turnsLbl.setText(turnsRemaining.toString())
+		cardBackground.setTooltipText(action.description)
 		when (action.type) {
 			ActionType.BUILD -> {
 				cardBackground.setThemeTypeVariation("BuildCard".asStringName())

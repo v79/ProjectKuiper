@@ -1,6 +1,7 @@
 package screens.kuiper
 
 import SignalBus
+import actions.Action
 import actions.CardDeck
 import actions.activeActions.ActiveActionsFan
 import confirm_action.ConfirmAction
@@ -112,6 +113,9 @@ class KuiperGame : PanelContainer() {
     fun updateUIOnTurn() {
         gameState.company.sciences.forEach { (science, rate) ->
             signalBus.updateScience.emit(science.name, rate)
+        }
+        gameState.company.activeActions.forEach { action ->
+            signalBus.updateOngoingAction.emit(action.id, action.turnsRemaining)
         }
         yearLbl.text = "Year: ${gameState.year}"
     }
