@@ -21,6 +21,5 @@ properties = [
 ]
 functions = [
     _ready,
-	update_card,
-	_process
+	update_card
 ]

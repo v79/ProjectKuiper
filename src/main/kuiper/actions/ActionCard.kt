@@ -223,12 +223,12 @@ class ActionCard : Node2D() {
         // set the texture based on the Action type
         when (action.type) {
             ActionType.BUILD -> {
-                cardImage.setThemeTypeVariation("BuildCard".asStringName())
+                setThemeVariation("BuildCard".asStringName())
                 sectorSizeLabel.text = building?.sectors.toString()
             }
 
             ActionType.INVEST -> {
-                cardImage.setThemeTypeVariation("InvestCard".asStringName())
+                setThemeVariation("InvestCard".asStringName())
             }
 
             else -> {
@@ -285,6 +285,16 @@ class ActionCard : Node2D() {
             }
         }
         cardImage.tooltipText = tooltipStringBuilder.toString()
+    }
+
+    private fun setThemeVariation(variation: StringName = "".asStringName()) {
+        cardImage.setThemeTypeVariation(variation)
+        cardNameLabel.setThemeTypeVariation(variation)
+        turnsLabel.setThemeTypeVariation(variation)
+        influenceCostLabel.setThemeTypeVariation(variation)
+        conMatsCostLabel.setThemeTypeVariation(variation)
+        sectorSizeLabel.setThemeTypeVariation(variation)
+        goldCostLabel.setThemeTypeVariation(variation)
     }
 }
 

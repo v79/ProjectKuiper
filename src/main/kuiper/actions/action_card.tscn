@@ -7,6 +7,7 @@
 size = Vector2(137, 189)
 
 [node name="ActionCard" type="Node2D"]
+position = Vector2(1, 0)
 script = ExtResource("1_obn8v")
 
 [node name="Area2D" type="Area2D" parent="."]
@@ -33,19 +34,16 @@ layout_mode = 2
 [node name="InfluenceCost" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0, 0, 0.772549, 1)
 text = "1i"
 
 [node name="GoldCost" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.788235, 0.698039, 0, 1)
 text = "2g"
 
 [node name="ConMatsCost" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.466667, 0.364706, 0.254902, 1)
 text = "3c"
 
 [node name="Turns" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer"]
@@ -56,7 +54,6 @@ text = "5t"
 [node name="SectorSize" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.388235, 0.509804, 0.870588, 1)
 text = "1s"
 
 [node name="ActionName" type="Label" parent="."]
@@ -67,6 +64,7 @@ offset_right = 298.0
 offset_bottom = 26.0
 rotation = 1.5708
 size_flags_horizontal = 3
+theme = ExtResource("3_w8oq3")
 text = "Build Lab"
 
 [connection signal="mouse_entered" from="Area2D" to="." method="_on_area_2d_mouse_entered"]

@@ -39,6 +39,7 @@ fit_content = true
 [node name="TurnsLabel" type="Label" parent="CardBackground/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+theme = ExtResource("2_4p0gu")
 text = "99"
 horizontal_alignment = 2
 

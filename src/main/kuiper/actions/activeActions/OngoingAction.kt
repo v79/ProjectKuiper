@@ -47,7 +47,7 @@ class OngoingAction : Node2D() {
 		turnsLbl.setText(turnsRemaining.toString())
 
 		signalBus.updateOngoingAction.connect { id, turnsLeft ->
-			if(id == action.id) {
+			if (id == action.id) {
 				turnsRemaining = turnsLeft
 				GD.print("Updating ongoing action $id, turns left is $turnsLeft")
 				updateUI()
@@ -77,10 +77,14 @@ class OngoingAction : Node2D() {
 		when (action.type) {
 			ActionType.BUILD -> {
 				cardBackground.setThemeTypeVariation("BuildCard".asStringName())
+				turnsLbl.setThemeTypeVariation("BuildCard".asStringName())
+				nameLbl.setThemeTypeVariation("BuildCard".asStringName())
 			}
 
 			ActionType.INVEST -> {
 				cardBackground.setThemeTypeVariation("InvestCard".asStringName())
+				turnsLbl.setThemeTypeVariation("InvestCard".asStringName())
+				nameLbl.setThemeTypeVariation("InvestCard".asStringName())
 			}
 
 			else -> {
