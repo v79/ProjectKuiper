@@ -23,7 +23,9 @@ signals = [
 	confirm_action,
 	deal_card_from_deck,
 	update_science,
-	update_resource
+	update_resource,
+	update_ongoing_action,
+	action_completed
 ]
 properties = [
     

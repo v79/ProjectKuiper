@@ -46,3 +46,8 @@ size_flags_horizontal = 3
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/margin_left = 200
+
+[node name="DelayActivationTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 2.0
+one_shot = true

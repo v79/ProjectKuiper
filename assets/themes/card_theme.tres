@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://tnu6nn4vk4uh" path="res://assets/textures/cards/card_black.png" id="1_608ky"]
 [ext_resource type="Texture2D" uid="uid://by3ukv7gigedx" path="res://assets/textures/cards/card_blue.png" id="1_v1tiy"]
-[ext_resource type="FontFile" uid="uid://c0ao7wshx3lvp" path="res://assets/SpaceGrotesk-Medium.ttf" id="2_djbbl"]
+[ext_resource type="FontFile" uid="uid://dmqrkmogtfltb" path="res://assets/fonts/SpaceGrotesk-Medium.ttf" id="2_djbbl"]
 [ext_resource type="Texture2D" uid="uid://bdvoqmwumhm3s" path="res://assets/textures/cards/card_peach.png" id="2_krhty"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3y32d"]
@@ -19,6 +19,8 @@ default_font = ExtResource("2_djbbl")
 BuildCard/base_type = &"PanelContainer"
 BuildCard/styles/panel = SubResource("StyleBoxTexture_3y32d")
 InvestCard/base_type = &"PanelContainer"
+InvestCard/colors/default_color = Color(0, 0, 0, 1)
+InvestCard/colors/font_color = Color(0, 0, 0, 1)
 InvestCard/styles/panel = SubResource("StyleBoxTexture_sum7c")
 Label/font_sizes/font_size = 18
 PanelContainer/styles/panel = SubResource("StyleBoxTexture_lmbqy")

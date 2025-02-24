@@ -90,6 +90,14 @@ class Action() {
     }
 
     /**
+     * Get all the costs of the action, per turn, for all resources
+     */
+    fun getCostsPerTurn(): Map<ResourceType, Int> {
+        return mutations.filter { it.type == MutationType.ADD || it.type == MutationType.SUBTRACT }
+            .associate { it.resource to it.amountPerYear }
+    }
+
+    /**
      * Get the benefits of the action, for the given resource
      * A benefit is defined as a positive change in the resource - ADD or RATE_MULTIPLY mutations
      * @param resourceType the type of resource to get the benefit for

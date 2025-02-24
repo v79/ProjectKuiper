@@ -1,13 +1,16 @@
 package confirm_action
 
+import LogInterface
 import SignalBus
 import actions.ActionCard
 import actions.ActionType
 import actions.ActionWrapper
 import actions.ResourceType
 import godot.*
+import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
+import godot.annotation.RegisterProperty
 import godot.core.Color
 import godot.core.asStringName
 import godot.core.connect
@@ -23,7 +26,11 @@ import technology.Science
 import utils.clearChildren
 
 @RegisterClass
-class ConfirmAction : Control() {
+class ConfirmAction : Control(), LogInterface {
+
+    @RegisterProperty
+    @Export
+    override var logEnabled: Boolean = false
 
     // Globals
     private lateinit var signalBus: SignalBus
@@ -74,6 +81,7 @@ class ConfirmAction : Control() {
         chooseSectorsContainer.visible = false
 
         signalBus.showActionConfirmation.connect { h, c ->
+            GD.print("ConfirmAction: ready(): showActionConfirmation signal received for card ${c.cardName}")
             hex = h
             card = c
             location = h.location
@@ -92,14 +100,14 @@ class ConfirmAction : Control() {
             actionCardDetails.updateCard(card)
             action.initialCosts.forEach { (resourceType, amount) ->
                 costsList.appendText(minus)
-                costsList.appendText("[img=32]${resourceType.spritePath}[/img]")
+                costsList.appendText(resourceType.bbCodeIcon(32))
                 costsList.appendText("$amount [b]${resourceType.displayName}[b]\n")
             }
             ResourceType.entries.forEach { resourceType ->
                 val cost = action.getCost(resourceType)
                 if (cost.second != null) {
                     costsPerTurnList.appendText(minus)
-                    costsPerTurnList.appendText("[img=32]${resourceType.spritePath}[/img]")
+                    costsPerTurnList.appendText(resourceType.bbCodeIcon(32))
                     costsPerTurnList.appendText("${cost.second} ${resourceType.displayName}\n")
                 }
                 val benefits = action.getBenefits(resourceType)
@@ -123,7 +131,7 @@ class ConfirmAction : Control() {
                 val benefit = action.getScienceBenefit(science)
                 if (benefit != null && benefit > 0f) {
                     benefitsList.appendText(
-                        "[img=32]${science.spritePath}[/img][b]$benefit ${science.displayName}[/b] per turn\n"
+                        "${science.bbCodeIcon(32)}[b]$benefit ${science.displayName}[/b] per turn\n"
                     )
                 }
             }/* if (costsPerTurnList.getChildCount() == 0) {
@@ -152,13 +160,13 @@ class ConfirmAction : Control() {
                                 buildingSummary.appendText("  New ${building.labName} at ${hex.location.name}")
                                 building.baseRunningCost.let { (resourceType, amount) ->
                                     costsPerTurnList.appendText(
-                                        "$minus [img=32]${resourceType.spritePath}[/img] $amount ${resourceType.displayName} per turn\n"
+                                        "$minus ${resourceType.bbCodeIcon(32)} $amount ${resourceType.displayName} per turn\n"
                                     )
                                 }
                                 building.sciencesProduced.forEach { (science, amount) ->
                                     buildingsList.appendText(if (amount > 0) plus else minus)
                                     buildingsList.appendText(
-                                        "[img=32]${science.spritePath}[/img][b]$amount ${science.displayName}[/b] per turn\n"
+                                        "${science.bbCodeIcon(32)}[b]$amount ${science.displayName}[/b] per turn\n"
                                     )
                                 }
                             }
@@ -243,7 +251,7 @@ class ConfirmAction : Control() {
 
     @RegisterFunction
     fun confirmAction() {
-        GD.print("Confirming action ${card.cardName}")
+        logWarning("ConfirmAction: confirmAction(): Confirming action ${card.cardName}")
         hide()
         signalBus.confirmAction.emit(hex, ActionWrapper(card.action!!))
     }
@@ -258,4 +266,5 @@ class ConfirmAction : Control() {
     fun enableConfirmButton() {
         confirmButton.disabled = false
     }
+
 }

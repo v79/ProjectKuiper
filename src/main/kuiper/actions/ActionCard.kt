@@ -57,7 +57,6 @@ class ActionCard : Node2D() {
     private val turnsLabel: Label by lazy { getNodeAs("%Turns")!! }
     private val cardImage: PanelContainer by lazy { getNodeAs("PanelContainer")!! }
     private val sectorSizeLabel: Label by lazy { getNodeAs("%SectorSize")!! }
-    private lateinit var parentNode: Node
 
     // signals
     @RegisterSignal
@@ -96,11 +95,11 @@ class ActionCard : Node2D() {
             placedOnHex = null
         }
 
+
         // when the action is confirmed, return the card to the fan
         signalBus.cancelActionConfirmation.connect {
             if (isInsideTree()) {
                 returnCardToFan()
-                status = CardStatus.IN_FAN
                 this.show()
                 draggingStopped.emitSignal(this)
             }
@@ -135,10 +134,9 @@ class ActionCard : Node2D() {
             } else if (Input.isActionJustReleased("mouse_left_click".asStringName())) {
                 if (placedOnHex != null) {
                     status = CardStatus.PLACED_ON_HEX
-
                     // now we trigger the confirmation dialog and other cool stuff by emitting a signal
                     this.hide()
-                    signalBus.showActionConfirmation.emitSignal(placedOnHex!!, this)
+                    signalBus.showActionConfirmation.emitSignal(placedOnHex, this)
                 } else {
                     status = CardStatus.IN_FAN
                     draggingStopped.emitSignal(this)
@@ -146,6 +144,28 @@ class ActionCard : Node2D() {
                 }
             }
         }
+    }
+
+    /**
+     *  Disable the card from being dragged
+     */
+    @RegisterFunction
+    fun disableProcessing() {
+        setProcessInput(false)
+        setProcess(false)
+        setProcessShortcutInput(false)
+        status = CardStatus.DISABLED
+    }
+
+    /**
+     *  Enable the card to be dragged
+     */
+    @RegisterFunction
+    fun enableProcessing() {
+        setProcessInput(true)
+        setProcess(true)
+        setProcessShortcutInput(true)
+        status = CardStatus.IN_FAN
     }
 
     @RegisterFunction
@@ -170,6 +190,7 @@ class ActionCard : Node2D() {
     private fun returnCardToFan() {
         getTree()!!.createTween()?.tweenProperty(this, "position".asNodePath(), startPosition, 0.5)
         getTree()!!.createTween()?.tweenProperty(this, "rotation".asNodePath(), GD.degToRad(startRotation), 0.5)
+        status = CardStatus.IN_FAN
     }
 
     fun highlight() {
@@ -201,12 +222,12 @@ class ActionCard : Node2D() {
         // set the texture based on the Action type
         when (action.type) {
             ActionType.BUILD -> {
-                cardImage.setThemeTypeVariation("BuildCard".asStringName())
+                setThemeVariation("BuildCard".asStringName())
                 sectorSizeLabel.text = building?.sectors.toString()
             }
 
             ActionType.INVEST -> {
-                cardImage.setThemeTypeVariation("InvestCard".asStringName())
+                setThemeVariation("InvestCard".asStringName())
             }
 
             else -> {
@@ -263,6 +284,16 @@ class ActionCard : Node2D() {
             }
         }
         cardImage.tooltipText = tooltipStringBuilder.toString()
+    }
+
+    private fun setThemeVariation(variation: StringName = "".asStringName()) {
+        cardImage.setThemeTypeVariation(variation)
+        cardNameLabel.setThemeTypeVariation(variation)
+        turnsLabel.setThemeTypeVariation(variation)
+        influenceCostLabel.setThemeTypeVariation(variation)
+        conMatsCostLabel.setThemeTypeVariation(variation)
+        sectorSizeLabel.setThemeTypeVariation(variation)
+        goldCostLabel.setThemeTypeVariation(variation)
     }
 }
 

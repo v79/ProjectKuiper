@@ -1,6 +1,8 @@
 package state
 
+import SignalBus
 import actions.Action
+import actions.ActionWrapper
 import godot.DirAccess
 import godot.FileAccess
 import godot.Node
@@ -9,6 +11,7 @@ import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
+import godot.extensions.getNodeAs
 import godot.global.GD
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
@@ -22,6 +25,10 @@ import java.util.*
 @Serializable
 class GameState : Node() {
 
+    // Globals
+    @Transient
+    private lateinit var signalBus: SignalBus
+
     @RegisterProperty
     @Export
     var year: Int = 1980
@@ -33,12 +40,21 @@ class GameState : Node() {
     // actions
     var availableActions: MutableList<Action> = mutableListOf()
 
+    @RegisterFunction
+    override fun _ready() {
+        signalBus = getNodeAs("/root/SignalBus")!!
+    }
+
     /**
      * On turn end, we need to update the game state
      */
     fun nextTurn() {
         GD.print("GameState: Next turn")
-        company.nextTurn()
+        val completed = company.nextTurn()
+        // signal completed actions to expire
+        completed.forEach { action ->
+            signalBus.actionCompleted.emitSignal(ActionWrapper(action))
+        }
         // increment the year
         year++
     }
