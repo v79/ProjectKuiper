@@ -56,9 +56,11 @@ class Company(var name: String) {
     /**
      * Perform all active actions, update company resources and sciences,
      * spend science on research, and so on
+     * Return a list of completed actions (turns remaining == 0)
      */
-    fun nextTurn() {
+    fun nextTurn(): List<Action> {
 
+        val completed: MutableList<Action> = mutableListOf()
         // spend science amongst technologies, i.e. perform research
         // for now, just reset to zero!
 //        sciences.replaceAll { _, _ -> 0.0f }
@@ -145,10 +147,13 @@ class Company(var name: String) {
             }
         }
         // clean up any expired actions
+        completed.addAll(activeActions.filter { it.turnsRemaining == 0 })
         activeActions.removeIf { it.turnsRemaining == 0 }
 
         // recalculate science rates
         sciences.replaceAll { _, rate -> rate + 1.0f }
         // update company resources
+
+        return completed
     }
 }

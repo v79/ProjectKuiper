@@ -51,6 +51,14 @@ class ActiveActionsFan : Control() {
 			gameState.company.activateAction(hex, actionWrapper.action!!)
 			addOngoingAction(actionWrapper.action!!)
 		}
+
+		signalBus.actionCompleted.connect { actionWrapper ->
+			if (actionWrapper.action == null) {
+				GD.printErr("ConfirmAction received a null action $actionWrapper")
+				return@connect
+			}
+			ongoingActions.removeIf { it.id == actionWrapper.action?.id }
+		}
 	}
 
 	@RegisterFunction
@@ -84,7 +92,7 @@ class ActiveActionsFan : Control() {
 		var yPos = 0.0
 		ongoingActions.forEachIndexed { index, action ->
 			val ongoingAction = ongoingActionsContainer.getNodeAs<OngoingAction>("OngoingAction_${action.id}")
-			if(ongoingAction!= null) {
+			if (ongoingAction != null) {
 				ongoingAction.setPosition(Vector2(0.0, yPos))
 				yPos += cardHeight
 			} else {

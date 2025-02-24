@@ -57,7 +57,6 @@ class ActionCard : Node2D() {
     private val turnsLabel: Label by lazy { getNodeAs("%Turns")!! }
     private val cardImage: PanelContainer by lazy { getNodeAs("PanelContainer")!! }
     private val sectorSizeLabel: Label by lazy { getNodeAs("%SectorSize")!! }
-    private lateinit var parentNode: Node
 
     // signals
     @RegisterSignal

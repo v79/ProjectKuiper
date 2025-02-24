@@ -39,6 +39,14 @@ enum class Science(val displayName: String, var multiplier: Float, var spritePat
             return listOf(PHYSICS, ASTRONOMY, BIOCHEMISTRY, ENGINEERING, MATHEMATICS, PSYCHOLOGY)
         }
     }
+
+    /**
+     * Get a BBCode icon for this science type
+     * @param size the size of the icon
+     */
+    fun bbCodeIcon(size: Int = 32): String {
+        return "[img=$size]$spritePath[/img]"
+    }
 }
 
 /**

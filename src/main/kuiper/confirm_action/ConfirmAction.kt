@@ -100,14 +100,14 @@ class ConfirmAction : Control(), LogInterface {
             actionCardDetails.updateCard(card)
             action.initialCosts.forEach { (resourceType, amount) ->
                 costsList.appendText(minus)
-                costsList.appendText("[img=32]${resourceType.spritePath}[/img]")
+                costsList.appendText(resourceType.bbCodeIcon(32))
                 costsList.appendText("$amount [b]${resourceType.displayName}[b]\n")
             }
             ResourceType.entries.forEach { resourceType ->
                 val cost = action.getCost(resourceType)
                 if (cost.second != null) {
                     costsPerTurnList.appendText(minus)
-                    costsPerTurnList.appendText("[img=32]${resourceType.spritePath}[/img]")
+                    costsPerTurnList.appendText(resourceType.bbCodeIcon(32))
                     costsPerTurnList.appendText("${cost.second} ${resourceType.displayName}\n")
                 }
                 val benefits = action.getBenefits(resourceType)
@@ -131,7 +131,7 @@ class ConfirmAction : Control(), LogInterface {
                 val benefit = action.getScienceBenefit(science)
                 if (benefit != null && benefit > 0f) {
                     benefitsList.appendText(
-                        "[img=32]${science.spritePath}[/img][b]$benefit ${science.displayName}[/b] per turn\n"
+                        "${science.bbCodeIcon(32)}[b]$benefit ${science.displayName}[/b] per turn\n"
                     )
                 }
             }/* if (costsPerTurnList.getChildCount() == 0) {
@@ -160,13 +160,13 @@ class ConfirmAction : Control(), LogInterface {
                                 buildingSummary.appendText("  New ${building.labName} at ${hex.location.name}")
                                 building.baseRunningCost.let { (resourceType, amount) ->
                                     costsPerTurnList.appendText(
-                                        "$minus [img=32]${resourceType.spritePath}[/img] $amount ${resourceType.displayName} per turn\n"
+                                        "$minus ${resourceType.bbCodeIcon(32)} $amount ${resourceType.displayName} per turn\n"
                                     )
                                 }
                                 building.sciencesProduced.forEach { (science, amount) ->
                                     buildingsList.appendText(if (amount > 0) plus else minus)
                                     buildingsList.appendText(
-                                        "[img=32]${science.spritePath}[/img][b]$amount ${science.displayName}[/b] per turn\n"
+                                        "${science.bbCodeIcon(32)}[b]$amount ${science.displayName}[/b] per turn\n"
                                     )
                                 }
                             }
