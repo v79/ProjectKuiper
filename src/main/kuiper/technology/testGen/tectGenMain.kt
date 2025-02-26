@@ -1,6 +1,7 @@
 package technology.testGen
 
 import kotlinx.serialization.json.Json
+import technology.TechStatus
 import technology.TechTier
 import technology.TechWeb
 import technology.Technology
@@ -12,13 +13,15 @@ fun main() {
         0,
         "Starting Point",
         "The beginning of all things",
-        TechTier.TIER_1
+        TechTier.TIER_1,
+        TechStatus.RESEARCHED
     )
     val integratedCircuits = Technology(
         1,
         "Integrated Circuits",
         "The foundation of modern computing",
-        TechTier.TIER_1
+        TechTier.TIER_1,
+        TechStatus.UNLOCKED
     ).apply {
         requires.add(0)
     }
@@ -26,7 +29,8 @@ fun main() {
         2,
         "Lightweight Alloys",
         "Stronger and lighter materials for construction",
-        TechTier.TIER_1
+        TechTier.TIER_1,
+        TechStatus.UNLOCKED
     ).apply {
         requires.add(0)
     }
@@ -34,7 +38,8 @@ fun main() {
         3,
         "Multi-Stage Rockets",
         "Multiple stages for more efficient space travel",
-        TechTier.TIER_1
+        TechTier.TIER_1,
+        TechStatus.UNLOCKED
     ).apply {
         requires.add(0)
     }
@@ -42,7 +47,8 @@ fun main() {
         4,
         "Guidance Systems",
         "Precision control for rockets and missiles",
-        TechTier.TIER_1
+        TechTier.TIER_1,
+        TechStatus.UNLOCKED
     ).apply {
         requires.add(0)
         requires.add(1)
@@ -51,7 +57,8 @@ fun main() {
         5,
         "Basic Life Support",
         description = "The essentials for keeping astronauts alive",
-        tier = TechTier.TIER_1
+        tier = TechTier.TIER_1,
+        TechStatus.UNLOCKED
     ).apply {
         requires.add(0)
     }
@@ -59,10 +66,21 @@ fun main() {
         6,
         "Solid Rocket Fuels",
         "Simple and reliable rocket propulsion",
-        TechTier.TIER_1
+        TechTier.TIER_1,
+        TechStatus.UNLOCKED
     ).apply {
         requires.add(3)
         requires.add(2)
+    }
+
+    val solidStateComputing = Technology(
+        7,
+        "Solid State Computing",
+        "The next step in computing technology",
+        TechTier.TIER_2,
+        TechStatus.LOCKED
+    ).apply {
+        requires.add(1)
     }
 
     val allTechs = mutableListOf(
@@ -71,7 +89,8 @@ fun main() {
         multiStageRockets,
         guidanceSystems,
         basicLifeSupport,
-        solidRocketFuels
+        solidRocketFuels,
+        solidStateComputing
     )
 
     val Json = Json { prettyPrint = true; encodeDefaults = true }
