@@ -19,7 +19,8 @@ signals = [
     
 ]
 properties = [
-    log_enabled
+    log_enabled,
+	radius
 ]
 functions = [
     _ready,

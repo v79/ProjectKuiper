@@ -2,7 +2,6 @@ package technology.web
 
 import godot.GraphNode
 import godot.Label
-import godot.LineEdit
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.extensions.getNodeAs
@@ -15,12 +14,12 @@ class TechNode : GraphNode() {
 
 	// UI elements
 	private lateinit var idLabel: Label
-	private lateinit var titleLabel: LineEdit
+	private lateinit var tierLabel: Label
 
 	@RegisterFunction
 	override fun _ready() {
 		idLabel = getNodeAs("%idLabel")!!
-		titleLabel = getNodeAs("%titleLabel")!!
+		tierLabel = getNodeAs("%tierLabel")!!
 
 		updateUI()
 	}
@@ -31,7 +30,8 @@ class TechNode : GraphNode() {
 	}
 
 	private fun updateUI() {
+		setTitle(technology.title)
 		idLabel.text = technology.id.toString()
-		titleLabel.text = technology.title
+		tierLabel.text = technology.tier.name
 	}
 }

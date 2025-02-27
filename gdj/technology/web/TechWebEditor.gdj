@@ -22,6 +22,7 @@ properties = [
 ]
 functions = [
     _ready,
+	load_tech_web,
 	_process,
 	_on_add_button_clicked
 ]

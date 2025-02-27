@@ -28,6 +28,10 @@ class WebLayout : GraphEdit(), LogInterface {
 	@Export
 	override var logEnabled: Boolean = true
 
+	@RegisterProperty
+	@Export
+	var radius: Double = 350.0
+
 	private val techNodes: MutableList<TechNode> = mutableListOf()
 
 	// packed scenes
@@ -62,28 +66,35 @@ class WebLayout : GraphEdit(), LogInterface {
 	fun layoutNodes() {
 		val nodesPerTier: Map<TechTier, Int> = techNodes.groupBy { it.technology.tier }.mapValues { it.value.size }
 
-		val radius = TechTier.entries.map { it.ordinal }.size * 100.0
 		val tierRingCoords: Map<TechTier, List<Vector2>> = nodesPerTier.map { (tier, count) ->
-			val ringCoordinates = calculateRingCoordinates(centrePoint.x, centrePoint.y, radius, count)
+			val ringCoordinates =
+				calculateRingCoordinates(centrePoint.x, centrePoint.y, (radius * tier.ordinal), count, tier.ordinal)
 			tier to ringCoordinates
 		}.toMap()
+		tierRingCoords.forEach {
+			log("Tier ${it.key} has ${it.value.size} nodes at positions: ${it.value}")
+		}
 
 		val centreNode = techNodes.find { it.technology.tier == TechTier.TIER_0 }
 		centreNode?.setPositionOffset(Vector2(centrePoint.x, centrePoint.y))
 
-		techNodes.forEachIndexed { index, techNode ->
-			if (techNode.technology.tier == TechTier.TIER_0) return@forEachIndexed
-			log("Looking for a position for node ${techNode.technology.id}")
-			log("There are ${nodesPerTier[techNode.technology.tier]} nodes in tier ${techNode.technology.tier}")
+		// Loop through, one tier at a time, and assign positions to nodes
+		TechTier.entries.forEach { tier ->
+			if (tier == TechTier.TIER_0) return@forEach
+			techNodes.filter { it.technology.tier == tier }.forEachIndexed { index, techNode ->
+				log("Looking for a position for node ${techNode.technology.id}")
 
-			val pos = tierRingCoords[techNode.technology.tier]?.get(index - 1)
-			if (pos == null) {
-				logError("No position found for node ${techNode.technology.id}")
-			} else {
-				log("Setting position offset for node ${techNode.technology.id} to $pos")
-				techNode.setPositionOffset(pos)
+				val pos = tierRingCoords[techNode.technology.tier]?.get(index)
+				if (pos == null) {
+					logError("No position found for node ${techNode.technology.id}")
+				} else {
+					log("Setting position offset for node ${techNode.technology.id} to $pos")
+					techNode.setPositionOffset(pos)
+				}
 			}
 		}
+
+
 	}
 
 	@RegisterFunction
@@ -98,16 +109,18 @@ class WebLayout : GraphEdit(), LogInterface {
 	}
 
 	private fun calculateRingCoordinates(
-		centerX: Double, centerY: Double, radius: Double, itemCount: Int
+		centerX: Double, centerY: Double, radius: Double, itemCount: Int, tier: Int
 	): List<Vector2> {
 		val coordinates = mutableListOf<Vector2>()
 		val angleIncrement = 2 * Math.PI / itemCount
-
+		val offset = 100 * (tier - 1) // -1 because the centre tier 0 is handled separately
 		for (i in 0 until itemCount) {
 			val angle = i * angleIncrement
+			log("\tAngle: $angle; cos(): ${cos(angle)}; sin(): ${sin(angle)}")
 			val x = centerX + radius * cos(angle)
 			val y = centerY + radius * sin(angle)
-			coordinates.add(Vector2(x, y))
+			// the offset needs to change based on the angle. I think.
+			coordinates.add(Vector2(x + (cos(angle) * offset), y + (sin(angle) * offset)))
 		}
 
 		log("Calculated ring coordinates for $itemCount nodes: $coordinates")

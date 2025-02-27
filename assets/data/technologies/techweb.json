@@ -1,0 +1,106 @@
+[
+  {
+    "id": 0,
+    "title": "Starting Point",
+    "description": "The beginning of all things",
+    "tier": "TIER_0",
+    "status": "RESEARCHED",
+    "unlockRequirements": {},
+    "requires": [],
+    "actionsUnlocked": [],
+    "actionsDeprecated": []
+  },
+  {
+    "id": 1,
+    "title": "Integrated Circuits",
+    "description": "The foundation of modern computing",
+    "tier": "TIER_1",
+    "status": "UNLOCKED",
+    "unlockRequirements": {},
+    "requires": [
+      0
+    ],
+    "actionsUnlocked": [],
+    "actionsDeprecated": []
+  },
+  {
+    "id": 2,
+    "title": "Lightweight Alloys",
+    "description": "Stronger and lighter materials for construction",
+    "tier": "TIER_1",
+    "status": "UNLOCKED",
+    "unlockRequirements": {},
+    "requires": [
+      0
+    ],
+    "actionsUnlocked": [],
+    "actionsDeprecated": []
+  },
+  {
+    "id": 3,
+    "title": "Multi-Stage Rockets",
+    "description": "Multiple stages for more efficient space travel",
+    "tier": "TIER_1",
+    "status": "UNLOCKED",
+    "unlockRequirements": {},
+    "requires": [
+      0
+    ],
+    "actionsUnlocked": [],
+    "actionsDeprecated": []
+  },
+  {
+    "id": 4,
+    "title": "Guidance Systems",
+    "description": "Precision control for rockets and missiles",
+    "tier": "TIER_1",
+    "status": "UNLOCKED",
+    "unlockRequirements": {},
+    "requires": [
+      0,
+      1
+    ],
+    "actionsUnlocked": [],
+    "actionsDeprecated": []
+  },
+  {
+    "id": 5,
+    "title": "Basic Life Support",
+    "description": "The essentials for keeping astronauts alive",
+    "tier": "TIER_1",
+    "status": "UNLOCKED",
+    "unlockRequirements": {},
+    "requires": [
+      0
+    ],
+    "actionsUnlocked": [],
+    "actionsDeprecated": []
+  },
+  {
+    "id": 6,
+    "title": "Solid Rocket Fuels",
+    "description": "Simple and reliable rocket propulsion",
+    "tier": "TIER_1",
+    "status": "UNLOCKED",
+    "unlockRequirements": {},
+    "requires": [
+      3,
+      2
+    ],
+    "actionsUnlocked": [],
+    "actionsDeprecated": []
+  },
+  {
+    "id": 7,
+    "title": "Solid State Computing",
+    "description": "The next step in computing technology",
+    "tier": "TIER_2",
+    "status": "LOCKED",
+    "unlockRequirements": {},
+    "requires": [
+      1
+    ],
+    "actionsUnlocked": [],
+    "actionsDeprecated": []
+  }
+]

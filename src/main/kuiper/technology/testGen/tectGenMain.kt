@@ -13,7 +13,7 @@ fun main() {
         0,
         "Starting Point",
         "The beginning of all things",
-        TechTier.TIER_1,
+        TechTier.TIER_0,
         TechStatus.RESEARCHED
     )
     val integratedCircuits = Technology(
@@ -84,6 +84,7 @@ fun main() {
     }
 
     val allTechs = mutableListOf(
+        startingPoint,
         integratedCircuits,
         lightweightAlloys,
         multiStageRockets,
