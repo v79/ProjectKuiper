@@ -32,6 +32,10 @@ text = "Load techweb.json"
 layout_mode = 2
 text = "+ Add New Tech"
 
+[node name="CircleLayout" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Circle Layout"
+
 [node name="GraphEdit" type="GraphEdit" parent="VBoxContainer"]
 clip_contents = false
 layout_mode = 2
@@ -42,3 +46,4 @@ script = ExtResource("2_qpoux")
 [connection signal="node_added" from="." to="VBoxContainer/GraphEdit" method="node_added"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/LoadJson" to="." method="load_tech_web"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/AddNewTech" to="." method="_on_add_button_clicked"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/CircleLayout" to="VBoxContainer/GraphEdit" method="layout_nodes"]
