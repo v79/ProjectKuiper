@@ -20,11 +20,14 @@ signals = [
 ]
 properties = [
     log_enabled,
-	radius
+	radius,
+	show_connections
 ]
 functions = [
     _ready,
 	_process,
 	layout_nodes,
-	node_added
+	node_added,
+	node_selected,
+	node_deselected
 ]

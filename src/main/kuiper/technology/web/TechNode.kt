@@ -40,7 +40,6 @@ class TechNode : GraphNode() {
 
 	@RegisterFunction
 	override fun _process(delta: Double) {
-
 	}
 
 	@RegisterFunction
@@ -62,11 +61,11 @@ class TechNode : GraphNode() {
 			colorRight = Color.green,
 		)
 		requiresCount++
+		//if (id != null) {
+		requirePorts.add(connectionCount)
+		GD.print("Added incoming port slot: $connectionCount")
+		//}
 		connectionCount++
-		if (id != null) {
-			requirePorts.add(connectionCount)
-			GD.print("Added incoming port slot: ${connectionCount - 1}")
-		}
 	}
 
 	@RegisterFunction
@@ -75,10 +74,11 @@ class TechNode : GraphNode() {
 			text = "Unlocks"
 			setName("Unlocks_$connectionCount")
 			setHorizontalAlignment(HorizontalAlignment.HORIZONTAL_ALIGNMENT_RIGHT)
+
 		}
 		addChild(newLabel)
 
-		moveChild(newLabel, if (connectionCount == 0) 0 else connectionCount)
+		moveChild(newLabel, connectionCount)
 		setSlot(
 			slotIndex = connectionCount,
 			enableLeftPort = false,
@@ -89,11 +89,11 @@ class TechNode : GraphNode() {
 			colorRight = Color.green,
 		)
 		unlocksCount++
-		connectionCount++
 		if (id != null) {
 			unlockPorts.add(connectionCount)
-			GD.print("Added outgoing port slot: ${connectionCount - 1}")
+			GD.print("Added outgoing port slot: $connectionCount")
 		}
+		connectionCount++
 	}
 
 	@RegisterFunction
@@ -110,5 +110,21 @@ class TechNode : GraphNode() {
 		setTitle(technology.title)
 		idLabel.text = technology.id.toString()
 		tierLabel.text = technology.tier.name
+	}
+
+	fun toSuperString(): String {
+		val sBuilder = StringBuilder()
+		sBuilder.append("${technology.id} ${technology.title}: ")
+		sBuilder.append("Requires: ")
+		technology.requires.forEachIndexed { index, reqId ->
+			sBuilder.append("id: $reqId @port: ")
+			if (requirePorts.size != 0 && requirePorts.size > index) {
+				sBuilder.append("[${requirePorts[index]}]")
+			} else {
+				sBuilder.append("[x]")
+			}
+			sBuilder.append(", ")
+		}
+		return sBuilder.toString()
 	}
 }

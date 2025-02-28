@@ -1,6 +1,7 @@
 package technology.web
 
 import LogInterface
+import godot.Control
 import godot.GraphEdit
 import godot.PackedScene
 import godot.ResourceLoader
@@ -8,7 +9,9 @@ import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
+import godot.core.Color
 import godot.core.Vector2
+import godot.extensions.getNodeAs
 import godot.extensions.instantiateAs
 import technology.TechTier
 import kotlin.math.cos
@@ -32,6 +35,10 @@ class WebLayout : GraphEdit(), LogInterface {
 	@Export
 	var radius: Double = 350.0
 
+	@RegisterProperty
+	@Export
+	var showConnections: Boolean = true
+
 	private val techNodes: MutableList<TechNode> = mutableListOf()
 
 	// packed scenes
@@ -39,6 +46,7 @@ class WebLayout : GraphEdit(), LogInterface {
 		ResourceLoader.load("res://src/main/kuiper/technology/web/tech_node.tscn") as PackedScene
 
 	// UI elements
+	private lateinit var connectionLayer: Control
 
 	private var centrePoint = Vector2(0, 0)
 	private var nodeHeight = 236
@@ -50,7 +58,7 @@ class WebLayout : GraphEdit(), LogInterface {
 
 	@RegisterFunction
 	override fun _ready() {
-
+		connectionLayer = getNodeAs("_connection_layer")!!
 	}
 
 	@RegisterFunction
@@ -60,8 +68,14 @@ class WebLayout : GraphEdit(), LogInterface {
 			layoutNodes()
 			firstFrameComplete = true
 		}
+		connectionLayer.visible = showConnections
 	}
 
+	/**
+	 * Layout the nodes in the graph, placing them in concentric rings around the centre point
+	 * The centre point will contain the Tier 0 node
+	 * The first ring will contain the Tier 1 nodes, the second ring the Tier 2 nodes, etc.
+	 */
 	@RegisterFunction
 	fun layoutNodes() {
 		val nodesPerTier: Map<TechTier, Int> = techNodes.groupBy { it.technology.tier }.mapValues { it.value.size }
@@ -71,13 +85,13 @@ class WebLayout : GraphEdit(), LogInterface {
 				calculateRingCoordinates(centrePoint.x, centrePoint.y, (radius * tier.ordinal), count, tier.ordinal)
 			tier to ringCoordinates
 		}.toMap()
-		tierRingCoords.forEach {
-//			log("Tier ${it.key} has ${it.value.size} nodes at positions: ${it.value}")
-		}
 
 		val centreNode = techNodes.find { it.technology.tier == TechTier.TIER_0 }
 		centreNode?.setPositionOffset(Vector2(centrePoint.x, centrePoint.y))
-
+		// and make it invisible
+		centreNode?.apply {
+//			visible = false
+		}
 		// Loop through, one tier at a time, and assign positions to nodes
 		TechTier.entries.forEach { tier ->
 			if (tier == TechTier.TIER_0) return@forEach
@@ -93,8 +107,6 @@ class WebLayout : GraphEdit(), LogInterface {
 				}
 			}
 		}
-
-
 	}
 
 	@RegisterFunction
@@ -104,7 +116,7 @@ class WebLayout : GraphEdit(), LogInterface {
 		newNode.technology = techW.technology
 		newNode.setName("Tech_${techW.technology.id}_${techW.technology.title}")
 		// check requirements and unlocks
-		techW.technology.requires.forEachIndexed { index, reqId ->
+		techW.technology.requires.forEach { reqId ->
 			newNode.addRequirement(reqId)
 			val unlockingNode = findNode(reqId)
 			if (unlockingNode == null) {
@@ -113,16 +125,17 @@ class WebLayout : GraphEdit(), LogInterface {
 				logWarning("Adding unlocks from ${unlockingNode.technology.title} (${unlockingNode.technology.id}) to ${techW.technology.title} (${techW.technology.id})")
 				unlockingNode.addUnlocks(techW.technology.id)
 				if (newNode.getInputPortCount() > 0) {
+					//if (unlockingNode.technology.tier != TechTier.TIER_0) {
 					log("Connecting outgoing port ${unlockingNode.unlockPorts.size - 1} to incoming port ${newNode.requirePorts.size - 1}")
-					if (unlockingNode.unlockPorts.size - 1 <= 0 || newNode.requirePorts.size <= 0) {
-						logError("Unlocking node ${unlockingNode.technology.title} has no unlock ports or new node ${techW.technology.title} has no require ports")
-					}
 					connectNode(
 						unlockingNode.name,
 						unlockingNode.unlockPorts.size - 1,
 						newNode.name,
 						newNode.requirePorts.size - 1
 					)
+					//} else {
+					//	log("Not adding Tier 0 connections")
+					//}
 				} else {
 					logError("Could not connect ${unlockingNode.technology.title} to ${techW.technology.title} because no input ports were found")
 				}
@@ -133,10 +146,61 @@ class WebLayout : GraphEdit(), LogInterface {
 		layoutNodes()
 	}
 
-	fun findNode(techId: Int): TechNode? {
+	@RegisterFunction
+	fun nodeSelected(node: TechNode) {
+		// show connection lines to this node
+		val unlockedByThis = unlockedBy(node)
+		log("${node.technology.id} unlocks ${unlockedByThis.size} nodes")
+		logWarning("Selected Node: ${node.toSuperString()}")
+		unlockedByThis.forEach { unl ->
+			logWarning("\tUnlocks ${unl.toSuperString()}")
+			// these port positions are wrong
+			log("\t\tLooking for connection line between ports ${unl.unlockPorts.firstOrNull()} and ${node.requirePorts.firstOrNull()}")
+			val line = getConnectionLine(
+				unl.getOutputPortPosition(unl.unlockPorts.firstOrNull() ?: 0),
+				node.getInputPortPosition(node.requirePorts.firstOrNull() ?: 0)
+			)
+			// line is just a PackedVector2Array, not a Node
+			// and I don't see how to get the specific connecting node
+			connectionLayer.getChildren(includeInternal = true).forEach { cntLine ->
+				val line2D = cntLine as godot.Line2D
+				val start = line2D.points.first()
+				val end = line2D.points.last()
+				if (start == line.first() && end == line.last()) {
+					line2D.modulate = Color.red
+				}
+			}
+		}
+	}
+
+	/**
+	 *Get the technology nodes that are unlocked by the given node
+	 */
+	fun unlockedBy(node: TechNode): List<TechNode> {
+		return techNodes.filter { it.technology.requires.contains(node.technology.id) }
+	}
+
+	@RegisterFunction
+	fun nodeDeselected(node: TechNode) {
+
+	}
+
+	/**
+	 * Find a node by its technology id
+	 */
+	private fun findNode(techId: Int): TechNode? {
 		return techNodes.find { it.technology.id == techId }
 	}
 
+	/**
+	 * Calculate the coordinates for a ring of nodes
+	 * @param centerX the x coordinate of the centre of the ring
+	 * @param centerY the y coordinate of the centre of the ring
+	 * @param radius the radius of the ring; different tiers will have different radii
+	 * @param itemCount the number of nodes in the ring
+	 * @param tier the tier of the nodes in the ring
+	 * @return a list of Vector2 coordinates for the nodes in the ring
+	 */
 	private fun calculateRingCoordinates(
 		centerX: Double, centerY: Double, radius: Double, itemCount: Int, tier: Int
 	): List<Vector2> {
