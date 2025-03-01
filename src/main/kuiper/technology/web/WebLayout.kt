@@ -112,6 +112,9 @@ class WebLayout : GraphEdit(), LogInterface {
         val newNode = techNodeScene.instantiateAs<TechNode>()!!
         newNode.technology = techW.technology
         newNode.setName("Tech_${techW.technology.id}_${techW.technology.title.replace(' ', '_')}")
+        if(newNode.technology.tier == TechTier.TIER_0) {
+            newNode.visible = false // hide the base tech
+        }
         // check requirements and unlocks
         techW.technology.requires.forEach { reqId ->
             log("Adding requirement $reqId to unlock just added node ${techW.technology.title}")
