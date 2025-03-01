@@ -1,130 +1,126 @@
 package technology.web
 
+import LogInterface
 import godot.*
+import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
+import godot.annotation.RegisterProperty
 import godot.core.Color
+import godot.core.Vector2
 import godot.extensions.getNodeAs
-import godot.global.GD
 import technology.Technology
 
 @RegisterClass
-class TechNode : GraphNode() {
+class TechNode : GraphNode(), LogInterface {
 
-	var technology: Technology = Technology.EMPTY
+    @Export
+    @RegisterProperty
+    override var logEnabled: Boolean = true
 
-	// UI elements
-	private lateinit var idLabel: Label
-	private lateinit var tierLabel: Label
-	private lateinit var vBox: VBoxContainer
-	private lateinit var addIncoming: Button
-	private lateinit var addOutgoing: Button
+    var technology: Technology = Technology.EMPTY
 
-	private var requiresCount = 0
-	private var unlocksCount = 0
-	private var connectionCount = 0
+    var slots: MutableMap<Int, TechPortConnection> = mutableMapOf()
+        private set
+    private var slotCounter = 0
+    val unlockPorts: Map<Int, TechPortConnection>
+        get() = slots.filter { it.value.direction == PortDirection.OUT }
+    val requirePorts: Map<Int, TechPortConnection>
+        get() = slots.filter { it.value.direction == PortDirection.IN }
 
-	val unlockPorts: ArrayList<Int> = ArrayList()
-	val requirePorts: ArrayList<Int> = ArrayList()
+    // UI elements
+    private lateinit var tierLabel: Label
+    private lateinit var vBox: VBoxContainer
+    private lateinit var addIncoming: Button
+    private lateinit var addOutgoing: Button
 
-	@RegisterFunction
-	override fun _ready() {
-		idLabel = getNodeAs("%idLabel")!!
-		tierLabel = getNodeAs("%tierLabel")!!
-		vBox = getNodeAs("%VBox")!!
-		addIncoming = getNodeAs("%AddIncomingBtn")!!
-		addOutgoing = getNodeAs("%AddOutgoingBtn")!!
+    @RegisterFunction
+    override fun _ready() {
+        tierLabel = getNodeAs("%tierLabel")!!
+        vBox = getNodeAs("%VBox")!!
+        addIncoming = getNodeAs("%AddIncomingBtn")!!
+        addOutgoing = getNodeAs("%AddOutgoingBtn")!!
 
-		updateUI()
-	}
+        updateUI()
+    }
 
-	@RegisterFunction
-	override fun _process(delta: Double) {
-	}
+    @RegisterFunction
+    fun addRequirement(techId: Int) {
+        val newLabel: Label = Label().apply {
+            text = "Requires"
+            setName("Requires_${slotCounter}")
+        }
+        addChild(newLabel)
+        moveChild(newLabel, 0)
+        setSlot(
+            slotIndex = slotCounter,
+            enableLeftPort = true,
+            typeLeft = 0,
+            colorLeft = Color.white,
+            enableRightPort = false,
+            typeRight = 0,
+            colorRight = Color.green,
+        )
+        slots[slotCounter] =
+            TechPortConnection(techId = techId, port = requirePorts.size,  direction = PortDirection.IN)
+        slotCounter++
+    }
 
-	@RegisterFunction
-	fun addRequirement(id: Int?) {
-		GD.print("Adding requirement slot to tech ${this.technology.id} (from $id)")
-		val newLabel: Label = Label().apply {
-			text = "Requires"
-			setName("Requires_$connectionCount")
-		}
-		addChild(newLabel)
-		moveChild(newLabel, 0)
-		setSlot(
-			slotIndex = connectionCount,
-			enableLeftPort = true,
-			typeLeft = 0,
-			colorLeft = Color.white,
-			enableRightPort = false,
-			typeRight = 0,
-			colorRight = Color.green,
-		)
-		requiresCount++
-		//if (id != null) {
-		requirePorts.add(connectionCount)
-		GD.print("Added incoming port slot: $connectionCount")
-		//}
-		connectionCount++
-	}
+    @RegisterFunction
+    fun addUnlocks(techId: Int) {
+        val newLabel: Label = Label().apply {
+            text = "Unlocks"
+            setName("Unlocks_${slotCounter}")
+            setHorizontalAlignment(HorizontalAlignment.HORIZONTAL_ALIGNMENT_RIGHT)
+        }
+        addChild(newLabel)
+        moveChild(newLabel, slotCounter)
+        setSlot(
+            slotIndex = slotCounter,
+            enableLeftPort = false,
+            typeLeft = 0,
+            colorLeft = Color.white,
+            enableRightPort = true,
+            typeRight = 0,
+            colorRight = Color.green,
+        )
+        // port positions are calculated... later? There's a cache
+        slots[slotCounter] =
+            TechPortConnection(techId = techId, port = unlockPorts.size ,direction = PortDirection.OUT)
+        slotCounter++
+    }
 
-	@RegisterFunction
-	fun addUnlocks(id: Int?) {
-		val newLabel: Label = Label().apply {
-			text = "Unlocks"
-			setName("Unlocks_$connectionCount")
-			setHorizontalAlignment(HorizontalAlignment.HORIZONTAL_ALIGNMENT_RIGHT)
+    /**
+     * Find the port index for the given tech ID. It does not distinguish between port directions.
+     */
+    fun getPortForTech(techId: Int): Int {
+        val matches = slots.filter { it.value.techId == techId }
+        if (matches.size > 1) {
+            logError("More than one slot with tech ID $techId found")
+        }
+        return matches.values.first().port
+    }
 
-		}
-		addChild(newLabel)
+    fun updateUI() {
+        setTitle("${technology.id} ${technology.title}")
+        tierLabel.text = technology.tier.name
+    }
 
-		moveChild(newLabel, connectionCount)
-		setSlot(
-			slotIndex = connectionCount,
-			enableLeftPort = false,
-			typeLeft = 0,
-			colorLeft = Color.white,
-			enableRightPort = true,
-			typeRight = 0,
-			colorRight = Color.green,
-		)
-		unlocksCount++
-		if (id != null) {
-			unlockPorts.add(connectionCount)
-			GD.print("Added outgoing port slot: $connectionCount")
-		}
-		connectionCount++
-	}
+    fun toSuperString(): String {
+        val sBuilder = StringBuilder()
+        sBuilder.append("${technology.id} ${technology.title}: ")
 
-	@RegisterFunction
-	fun _on_AddOutgoingBtn_pressed() {
-		addUnlocks(null)
-	}
+        return sBuilder.toString()
+    }
+}
 
-	@RegisterFunction
-	fun _on_AddIncomingBtn_pressed() {
-		addRequirement(null)
-	}
+data class TechPortConnection(
+    var port: Int,
+    val techId: Int = -1,
+    var position: Vector2 = Vector2.ZERO,
+    var direction: PortDirection = PortDirection.IN
+)
 
-	private fun updateUI() {
-		setTitle(technology.title)
-		idLabel.text = technology.id.toString()
-		tierLabel.text = technology.tier.name
-	}
-
-	fun toSuperString(): String {
-		val sBuilder = StringBuilder()
-		sBuilder.append("${technology.id} ${technology.title}: ")
-		sBuilder.append("Requires: ")
-		technology.requires.forEachIndexed { index, reqId ->
-			sBuilder.append("id: $reqId @port: ")
-			if (requirePorts.size != 0 && requirePorts.size > index) {
-				sBuilder.append("[${requirePorts[index]}]")
-			} else {
-				sBuilder.append("[x]")
-			}
-			sBuilder.append(", ")
-		}
-		return sBuilder.toString()
-	}
+enum class PortDirection {
+    IN, OUT
 }

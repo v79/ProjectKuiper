@@ -33,12 +33,6 @@ layout_mode = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="idLabel" type="Label" parent="VBox/HBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "<id>"
-horizontal_alignment = 1
-
 [node name="tierLabel" type="Label" parent="VBox/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2

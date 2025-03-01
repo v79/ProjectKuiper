@@ -37,7 +37,6 @@ layout_mode = 2
 text = "Circle Layout"
 
 [node name="GraphEdit" type="GraphEdit" parent="VBoxContainer"]
-clip_contents = false
 layout_mode = 2
 size_flags_vertical = 3
 grid_pattern = 1
