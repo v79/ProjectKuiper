@@ -1,10 +1,7 @@
 package technology.web
 
 import LogInterface
-import godot.Control
-import godot.GraphEdit
-import godot.PackedScene
-import godot.ResourceLoader
+import godot.*
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
@@ -31,7 +28,7 @@ class WebLayout : GraphEdit(), LogInterface {
 
     @RegisterProperty
     @Export
-    override var logEnabled: Boolean = true
+    override var logEnabled: Boolean = false
 
     @RegisterProperty
     @Export
@@ -49,6 +46,7 @@ class WebLayout : GraphEdit(), LogInterface {
 
     // UI elements
     private lateinit var connectionLayer: Control
+    private val lineNodes = mutableMapOf<Pair<TechNode, TechNode>, Line2D>()
 
     private var centrePoint = Vector2(0, 0)
     private var nodeHeight = 236
@@ -92,7 +90,7 @@ class WebLayout : GraphEdit(), LogInterface {
         centreNode?.setPositionOffset(Vector2(centrePoint.x, centrePoint.y))
         // and make it invisible
         centreNode?.apply {
-//			visible = false
+			visible = false
         }
         // Loop through, one tier at a time, and assign positions to nodes
         TechTier.entries.forEach { tier ->
@@ -125,7 +123,7 @@ class WebLayout : GraphEdit(), LogInterface {
                 log("Adding unlocks from ${unlockingNode.technology.title} (${unlockingNode.technology.id}) to ${techW.technology.title} (${techW.technology.id})")
                 unlockingNode.addUnlocks(techW.technology.id)
                 if (newNode.getInputPortCount() > 0) {
-//                    if (unlockingNode.technology.tier != TechTier.TIER_0) {
+                    if (unlockingNode.technology.tier != TechTier.TIER_0) {
 
                     log("Unlocking node: ${unlockingNode.technology.id} unlockPorts: ${unlockingNode.unlockPorts}")
                     log("This new node: requirePorts: ${newNode.requirePorts}")
@@ -141,9 +139,15 @@ class WebLayout : GraphEdit(), LogInterface {
                         toNode = newNode.name,
                         toPort = requiringSlot.port,
                     )
-//                    } else {
-//                    	log("Not adding Tier 0 connections")
-//                    }
+
+                    // Get the Line2D node that been created by this connection and store it in a map
+                    val line2DNode = connectionLayer.getChildren().back() as Line2D
+                    line2DNode.visible = false
+                    lineNodes[unlockingNode to newNode] = line2DNode
+
+                    } else {
+                    	log("Not adding Tier 0 connections")
+                    }
                 } else {
                     logError("Could not connect ${unlockingNode.technology.title} to ${techW.technology.title} because no input ports were found")
                 }
@@ -151,74 +155,24 @@ class WebLayout : GraphEdit(), LogInterface {
         }
         addChild(newNode)
         techNodes.add(newNode)
-        layoutNodes()
+        arrangeNodes()
+//        layoutNodes()
     }
 
     private fun getNodesForTechIds(techIds: List<Int>): List<TechNode> {
         return techNodes.filter { techIds.contains(it.technology.id) }
     }
 
-    override fun _getConnectionLine(fromPosition: Vector2, toPosition: Vector2): PackedVector2Array {
-        log("My own special _getConnectionLine function")
-        return super.getConnectionLine(fromPosition, toPosition)
-    }
-
     @RegisterFunction
     fun nodeSelected(node: TechNode) {
-        // show connection lines to this node
-
-        log("Selected ${node.technology.title}")
-        log("-----")
-        log("unlockPorts: ${node.unlockPorts}")
-        log("\t${node.unlockPorts.values.map { it.techId }}:")
-        log("\t\t${getNodesForTechIds(node.unlockPorts.values.map { it.techId })}")
-        log("requirePorts: ${node.requirePorts}")
-        log("-----")
-
-
-        val unlockedByThis =
-            getNodesForTechIds(node.unlockPorts.values.map { it.techId })
-        logWarning("Selected Node: ${node.toSuperString()} unlocks ${unlockedByThis.size} technologies")
-        unlockedByThis.forEach { unl ->
-            logWarning("\tUnlocks ${unl.toSuperString()}")
-            // these port positions are wrong
-            log(
-                "\t\tLooking for connection line between this node port ${node.getPortForTech(unl.technology.id)} and unlocked node port ${
-                    unl.getPortForTech(
-                        node.technology.id
-                    )
-                }"
-            )
-            val line = getConnectionLine(
-                unl.getInputPortPosition(
-                    unl.getPortForTech(
-                        node.technology.id
-                    )
-                ),
-                node.getOutputPortPosition(node.getPortForTech(unl.technology.id))
-            )
-            log("\tLine is: ${line}")
-            line.forEach {
-                log(it.toString())
-            }
-            // line is just a PackedVector2Array, not a Node
-            // and I don't see how to get the specific connecting node
-            // the coordinates in the line2D are global but I only get the local coordinates from getConnectionLine()
-            // and they have different coordinate points
-            connectionLayer.getChildren(includeInternal = true).forEach { cntLine ->
-                val line2D = cntLine as godot.Line2D
-                val start = line2D.points.first()
-                val end = line2D.points.last()
-                if (start == line.first() && end == line.last()) {
-                    line2D.modulate = Color.red
-                }
-            }
-        }
+        // find the connection lines for this node
+        lineNodes.filter { it.key.first == node || it.key.second == node }
+            .forEach { line -> line.value.visible = true }
     }
 
     @RegisterFunction
     fun nodeDeselected(node: TechNode) {
-
+        lineNodes.values.map { it.visible = false }
     }
 
     /**
