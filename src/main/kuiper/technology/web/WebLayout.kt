@@ -6,12 +6,9 @@ import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
-import godot.core.Color
-import godot.core.PackedVector2Array
 import godot.core.Vector2
 import godot.extensions.getNodeAs
 import godot.extensions.instantiateAs
-import godot.global.GD
 import technology.TechTier
 import kotlin.math.cos
 import kotlin.math.sin
@@ -51,6 +48,7 @@ class WebLayout : GraphEdit(), LogInterface {
     private var centrePoint = Vector2(0, 0)
     private var nodeHeight = 236
     private var nodeWidth = 236
+    private var tierZeroVisible = false
 
     // GraphEdit doesn't know its dimensions until the first frame is complete
     // So we need to wait until the first frame is complete before we can calculate the layout
@@ -90,7 +88,7 @@ class WebLayout : GraphEdit(), LogInterface {
         centreNode?.setPositionOffset(Vector2(centrePoint.x, centrePoint.y))
         // and make it invisible
         centreNode?.apply {
-			visible = false
+            visible = tierZeroVisible
         }
         // Loop through, one tier at a time, and assign positions to nodes
         TechTier.entries.forEach { tier ->
@@ -112,7 +110,7 @@ class WebLayout : GraphEdit(), LogInterface {
         val newNode = techNodeScene.instantiateAs<TechNode>()!!
         newNode.technology = techW.technology
         newNode.setName("Tech_${techW.technology.id}_${techW.technology.title.replace(' ', '_')}")
-        if(newNode.technology.tier == TechTier.TIER_0) {
+        if (newNode.technology.tier == TechTier.TIER_0) {
             newNode.visible = false // hide the base tech
         }
         // check requirements and unlocks
@@ -126,7 +124,6 @@ class WebLayout : GraphEdit(), LogInterface {
                 log("Adding unlocks from ${unlockingNode.technology.title} (${unlockingNode.technology.id}) to ${techW.technology.title} (${techW.technology.id})")
                 unlockingNode.addUnlocks(techW.technology.id)
                 if (newNode.getInputPortCount() > 0) {
-                    if (unlockingNode.technology.tier != TechTier.TIER_0) {
 
                     log("Unlocking node: ${unlockingNode.technology.id} unlockPorts: ${unlockingNode.unlockPorts}")
                     log("This new node: requirePorts: ${newNode.requirePorts}")
@@ -147,10 +144,6 @@ class WebLayout : GraphEdit(), LogInterface {
                     val line2DNode = connectionLayer.getChildren().back() as Line2D
                     line2DNode.visible = false
                     lineNodes[unlockingNode to newNode] = line2DNode
-
-                    } else {
-                    	log("Not adding Tier 0 connections")
-                    }
                 } else {
                     logError("Could not connect ${unlockingNode.technology.title} to ${techW.technology.title} because no input ports were found")
                 }
@@ -169,13 +162,26 @@ class WebLayout : GraphEdit(), LogInterface {
     @RegisterFunction
     fun nodeSelected(node: TechNode) {
         // find the connection lines for this node
-        lineNodes.filter { it.key.first == node || it.key.second == node }
-            .forEach { line -> line.value.visible = true }
+        if (tierZeroVisible) {
+            lineNodes.filter { it.key.first == node || it.key.second == node }
+                .forEach { line -> line.value.visible = true }
+        } else {
+            lineNodes.filter { it.key.first == node || it.key.second == node }
+                .filter { it.key.first.technology.tier != TechTier.TIER_0 && it.key.second.technology.tier != TechTier.TIER_0 }
+                .forEach { line -> line.value.visible = true }
+        }
     }
 
     @RegisterFunction
     fun nodeDeselected(node: TechNode) {
         lineNodes.values.map { it.visible = false }
+    }
+
+    @RegisterFunction
+    fun toggleTierZero() {
+        tierZeroVisible = !tierZeroVisible
+        val tierZeroNode = techNodes.find { it.technology.tier == TechTier.TIER_0 }
+        tierZeroNode?.visible = tierZeroVisible
     }
 
     /**

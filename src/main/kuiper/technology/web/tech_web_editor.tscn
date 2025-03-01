@@ -36,6 +36,10 @@ text = "+ Add New Tech"
 layout_mode = 2
 text = "Circle Layout"
 
+[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Toggle Tier 0	"
+
 [node name="GraphEdit" type="GraphEdit" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -46,5 +50,6 @@ script = ExtResource("2_qpoux")
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/LoadJson" to="." method="load_tech_web"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/AddNewTech" to="." method="_on_add_button_clicked"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/CircleLayout" to="VBoxContainer/GraphEdit" method="layout_nodes"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/Button" to="VBoxContainer/GraphEdit" method="toggle_tier_zero"]
 [connection signal="node_deselected" from="VBoxContainer/GraphEdit" to="VBoxContainer/GraphEdit" method="node_deselected"]
 [connection signal="node_selected" from="VBoxContainer/GraphEdit" to="VBoxContainer/GraphEdit" method="node_selected"]

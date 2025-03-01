@@ -29,5 +29,6 @@ functions = [
 	layout_nodes,
 	node_added,
 	node_selected,
-	node_deselected
+	node_deselected,
+	toggle_tier_zero
 ]
