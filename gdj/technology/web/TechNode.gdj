@@ -26,5 +26,7 @@ properties = [
 functions = [
     _ready,
 	add_requirement,
-	add_unlocks
+	add_unlocks,
+	on_add_incoming_pressed,
+	on_add_outgoing_pressed
 ]

@@ -30,5 +30,6 @@ functions = [
 	node_added,
 	node_selected,
 	node_deselected,
-	toggle_tier_zero
+	toggle_tier_zero,
+	on_connection_request
 ]

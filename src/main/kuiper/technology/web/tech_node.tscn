@@ -51,5 +51,5 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Outgoing +"
 
-[connection signal="pressed" from="VBox/HBoxContainer2/AddIncomingBtn" to="." method="_on__add_incoming_btn_pressed"]
-[connection signal="pressed" from="VBox/HBoxContainer2/AddOutgoingBtn" to="." method="_on__add_outgoing_btn_pressed"]
+[connection signal="pressed" from="VBox/HBoxContainer2/AddIncomingBtn" to="." method="on_add_incoming_pressed"]
+[connection signal="pressed" from="VBox/HBoxContainer2/AddOutgoingBtn" to="." method="on_add_outgoing_pressed"]

@@ -46,48 +46,58 @@ class TechNode : GraphNode(), LogInterface {
 
 	@RegisterFunction
 	fun addRequirement(techId: Int) {
-		val newLabel: Label = Label().apply {
-			text = "Requires"
-			setName("Requires_${slotCounter}")
-		}
-		addChild(newLabel)
-		moveChild(newLabel, 0)
-		setSlot(
-			slotIndex = slotCounter,
-			enableLeftPort = true,
-			typeLeft = 0,
-			colorLeft = Color.white,
-			enableRightPort = false,
-			typeRight = 0,
-			colorRight = Color.green,
-		)
+		addSlot(direction = PortDirection.IN)
 		slots[slotCounter] =
-			TechPortConnection(techId = techId, port = requirePorts.size,  direction = PortDirection.IN)
-		slotCounter++
+			TechPortConnection(techId = techId, port = requirePorts.size, direction = PortDirection.IN)
 	}
 
 	@RegisterFunction
 	fun addUnlocks(techId: Int) {
+		addSlot(PortDirection.OUT)
+		slots[slotCounter] =
+			TechPortConnection(techId = techId, port = unlockPorts.size, direction = PortDirection.OUT)
+
+	}
+
+	/**
+	 * Add a new slot and label to the node, with the given direction
+	 */
+	private fun addSlot(direction: PortDirection) {
 		val newLabel: Label = Label().apply {
-			text = "Unlocks"
+			text = if (direction == PortDirection.OUT) {
+				"Unlocks"
+			} else {
+				"Requires"
+			}
 			setName("Unlocks_${slotCounter}")
-			setHorizontalAlignment(HorizontalAlignment.HORIZONTAL_ALIGNMENT_RIGHT)
+			if (direction == PortDirection.OUT) {
+				setHorizontalAlignment(HorizontalAlignment.HORIZONTAL_ALIGNMENT_RIGHT)
+			}
 		}
 		addChild(newLabel)
 		moveChild(newLabel, slotCounter)
 		setSlot(
 			slotIndex = slotCounter,
-			enableLeftPort = false,
+			enableLeftPort = (direction == PortDirection.IN),
 			typeLeft = 0,
 			colorLeft = Color.white,
-			enableRightPort = true,
+			enableRightPort = (direction == PortDirection.OUT),
 			typeRight = 0,
 			colorRight = Color.green,
 		)
-		// port positions are calculated... later? There's a cache
-		slots[slotCounter] =
-			TechPortConnection(techId = techId, port = unlockPorts.size ,direction = PortDirection.OUT)
 		slotCounter++
+	}
+
+	@RegisterFunction
+	fun onAddIncomingPressed() {
+		log("Add incoming pressed")
+		addSlot(direction = PortDirection.IN)
+	}
+
+	@RegisterFunction
+	fun onAddOutgoingPressed() {
+		log("Add outgoing pressed")
+		addSlot(direction = PortDirection.OUT)
 	}
 
 	/**
@@ -101,7 +111,7 @@ class TechNode : GraphNode(), LogInterface {
 		return matches.values.first().port
 	}
 
-	fun updateUI() {
+	private fun updateUI() {
 		setTitle("${technology.id} ${technology.title}")
 		tierLabel.text = technology.tier.name
 	}

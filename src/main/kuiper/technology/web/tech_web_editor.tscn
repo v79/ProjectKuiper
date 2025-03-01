@@ -51,5 +51,6 @@ script = ExtResource("2_qpoux")
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/AddNewTech" to="." method="_on_add_button_clicked"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/CircleLayout" to="VBoxContainer/GraphEdit" method="layout_nodes"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/Button" to="VBoxContainer/GraphEdit" method="toggle_tier_zero"]
+[connection signal="connection_request" from="VBoxContainer/GraphEdit" to="VBoxContainer/GraphEdit" method="on_connection_request"]
 [connection signal="node_deselected" from="VBoxContainer/GraphEdit" to="VBoxContainer/GraphEdit" method="node_deselected"]
 [connection signal="node_selected" from="VBoxContainer/GraphEdit" to="VBoxContainer/GraphEdit" method="node_selected"]
