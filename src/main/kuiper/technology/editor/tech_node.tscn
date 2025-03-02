@@ -1,0 +1,61 @@
+[gd_scene load_steps=3 format=3 uid="uid://dqfp8nh7k2bk2"]
+
+[ext_resource type="Script" path="res://src/main/kuiper/technology/editor/TechNode.kt" id="1_vcrfw"]
+[ext_resource type="PackedScene" uid="uid://buebhw0isnxxj" path="res://src/main/kuiper/technology/editor/tech_editor.tscn" id="2_ni2ko"]
+
+[node name="TechNode" type="GraphNode"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_right = 236.0
+offset_bottom = 236.0
+grow_horizontal = 2
+grow_vertical = 2
+slot/0/left_enabled = false
+slot/0/left_type = 0
+slot/0/left_color = Color(1, 1, 1, 1)
+slot/0/left_icon = null
+slot/0/right_enabled = false
+slot/0/right_type = 0
+slot/0/right_color = Color(1, 1, 1, 1)
+slot/0/right_icon = null
+slot/0/draw_stylebox = true
+script = ExtResource("1_vcrfw")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="AddIncomingBtn" type="Button" parent="VBox/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "+ Incoming"
+
+[node name="AddOutgoingBtn" type="Button" parent="VBox/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Outgoing +"
+
+[node name="Button" type="Button" parent="VBox"]
+layout_mode = 2
+text = "Edit"
+
+[node name="TechEditor" parent="VBox" instance=ExtResource("2_ni2ko")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[connection signal="pressed" from="VBox/HBoxContainer2/AddIncomingBtn" to="." method="on_add_incoming_pressed"]
+[connection signal="pressed" from="VBox/HBoxContainer2/AddOutgoingBtn" to="." method="on_add_outgoing_pressed"]
+[connection signal="pressed" from="VBox/Button" to="." method="on_edit_button_pressed"]

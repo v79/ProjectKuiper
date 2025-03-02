@@ -14,6 +14,23 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.125911, 0.125911, 0.125911, 1)
 
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 24.0
+grow_horizontal = 2
+theme_override_constants/separation = 20
+alignment = 2
+
+[node name="Label" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+text = "Devtools"
+
+[node name="TechEditorButton" type="Button" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Tech Tree Editor"
+
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 anchors_preset = 8
 anchor_left = 0.5
@@ -78,6 +95,7 @@ mode_overrides_title = false
 file_mode = 0
 access = 1
 
+[connection signal="pressed" from="HBoxContainer/TechEditorButton" to="." method="on_tech_tree_editor_pressed"]
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/Continue" to="." method="_on_continue_game"]
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/NewGame" to="." method="_on_new_game"]
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/Load" to="." method="_on_load_button_pressed"]

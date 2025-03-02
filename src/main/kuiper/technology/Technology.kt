@@ -3,6 +3,7 @@ package technology
 import actions.Action
 import kotlinx.serialization.Serializable
 
+@Deprecated("Newer version coming soon")
 class TechWeb {
     val technologies = ArrayList<Technology>(100)
 
@@ -19,7 +20,7 @@ class TechWeb {
  * They are researched not through deliberate player action, but through the accumulation of science points
  */
 @Serializable
-class Technology(val id: Int, val title: String, val description: String, val tier: TechTier) {
+class Technology(val id: Int, var title: String, var description: String, var tier: TechTier, var status: TechStatus) {
 
     val progressPct: Double
         get() = if (researched) 1.0 else ((100.0 / totalCost) * progress)
@@ -51,11 +52,15 @@ class Technology(val id: Int, val title: String, val description: String, val ti
     var actionsDeprecated: MutableList<Action> = mutableListOf()
 
     override fun toString(): String {
-        return "Technology(id=$id, title='$title', tier=$tier. progress=$progress, totalCost=$totalCost, researched=$researched)"
+        return "Technology(id=$id, title='$title', tier=$tier, desc=${description}; progress=$progress, totalCost=$totalCost, researched=$researched)"
     }
 
     fun scienceProgressComplete(science: Science): Boolean {
         return unlockRequirements[science]?.progress == unlockRequirements[science]?.cost
+    }
+
+    companion object {
+        val EMPTY = Technology(-1, "Empty", "Empty", TechTier.TIER_1, TechStatus.UNLOCKED)
     }
 
 }
@@ -64,11 +69,19 @@ class Technology(val id: Int, val title: String, val description: String, val ti
  * Tech tiers will be represented through circles in the UI
  */
 enum class TechTier(val description: String) {
+    TIER_0("Starting technologies"),
     TIER_1("Basic technologies"),
     TIER_2("Intermediate technologies"),
     TIER_3("Advanced technologies"),
     TIER_4("Expert technologies"),
     TIER_5("Future technologies")
+}
+
+enum class TechStatus {
+    LOCKED,
+    UNLOCKED,
+    RESEARCHING,
+    RESEARCHED
 }
 
 @Serializable
