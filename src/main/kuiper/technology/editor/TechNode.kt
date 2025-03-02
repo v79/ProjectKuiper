@@ -1,6 +1,7 @@
-package technology.web
+package technology.editor
 
 import LogInterface
+import SignalBus
 import godot.*
 import godot.annotation.Export
 import godot.annotation.RegisterClass
@@ -8,6 +9,7 @@ import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
 import godot.core.Color
 import godot.core.Vector2
+import godot.core.connect
 import godot.extensions.getNodeAs
 import technology.Technology
 
@@ -16,7 +18,10 @@ class TechNode : GraphNode(), LogInterface {
 
 	@Export
 	@RegisterProperty
-	override var logEnabled: Boolean = true
+	override var logEnabled: Boolean = false
+
+	// Globals
+	private lateinit var signalBus: SignalBus
 
 	var technology: Technology = Technology.EMPTY
 
@@ -29,17 +34,26 @@ class TechNode : GraphNode(), LogInterface {
 		get() = slots.filter { it.value.direction == PortDirection.IN }
 
 	// UI elements
-	private lateinit var tierLabel: Label
 	private lateinit var vBox: VBoxContainer
 	private lateinit var addIncoming: Button
 	private lateinit var addOutgoing: Button
+	private lateinit var editor: TechEditor
 
 	@RegisterFunction
 	override fun _ready() {
-		tierLabel = getNodeAs("%tierLabel")!!
+		signalBus = getNodeAs("/root/SignalBus")!!
+
 		vBox = getNodeAs("%VBox")!!
 		addIncoming = getNodeAs("%AddIncomingBtn")!!
 		addOutgoing = getNodeAs("%AddOutgoingBtn")!!
+		editor = getNodeAs("%TechEditor")!!
+
+		signalBus.editor_techSaved.connect { techW ->
+			if(techW.technology.id == technology.id) {
+				technology = techW.technology
+				updateUI()
+			}
+		}
 
 		updateUI()
 	}
@@ -56,7 +70,6 @@ class TechNode : GraphNode(), LogInterface {
 		addSlot(PortDirection.OUT)
 		slots[slotCounter] =
 			TechPortConnection(techId = techId, port = unlockPorts.size, direction = PortDirection.OUT)
-
 	}
 
 	/**
@@ -90,14 +103,18 @@ class TechNode : GraphNode(), LogInterface {
 
 	@RegisterFunction
 	fun onAddIncomingPressed() {
-		log("Add incoming pressed")
 		addSlot(direction = PortDirection.IN)
 	}
 
 	@RegisterFunction
 	fun onAddOutgoingPressed() {
-		log("Add outgoing pressed")
 		addSlot(direction = PortDirection.OUT)
+	}
+
+	@RegisterFunction
+	fun onEditButtonPressed() {
+		editor.techWrapper.technology =  technology
+		editor.visible = true
 	}
 
 	/**
@@ -112,8 +129,7 @@ class TechNode : GraphNode(), LogInterface {
 	}
 
 	private fun updateUI() {
-		setTitle("${technology.id} ${technology.title}")
-		tierLabel.text = technology.tier.name
+		setTitle("${technology.id} ${technology.title} (T${technology.tier.ordinal})")
 	}
 
 	fun toSuperString(): String {

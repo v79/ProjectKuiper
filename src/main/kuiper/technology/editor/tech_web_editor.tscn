@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://p8uxma4wg6l5"]
 
-[ext_resource type="Script" path="res://src/main/kuiper/technology/web/TechWebEditor.kt" id="1_qduao"]
-[ext_resource type="Script" path="res://src/main/kuiper/technology/web/WebLayout.kt" id="2_qpoux"]
+[ext_resource type="Script" path="res://src/main/kuiper/technology/editor/TechWebEditor.kt" id="1_qduao"]
+[ext_resource type="Script" path="res://src/main/kuiper/technology/editor/WebLayout.kt" id="2_qpoux"]
 
 [node name="TechWebEditor" type="Control"]
 layout_mode = 3
@@ -24,10 +24,6 @@ grow_vertical = 2
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="LoadJson" type="Button" parent="VBoxContainer/HBoxContainer"]
-layout_mode = 2
-text = "Load techweb.json"
-
 [node name="AddNewTech" type="Button" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "+ Add New Tech"
@@ -36,9 +32,17 @@ text = "+ Add New Tech"
 layout_mode = 2
 text = "Circle Layout"
 
-[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="ToggleTierZero" type="Button" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Toggle Tier 0	"
+
+[node name="ToggleAllLines" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Toggle lines"
+
+[node name="SaveJson" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Save techweb.json"
 
 [node name="GraphEdit" type="GraphEdit" parent="VBoxContainer"]
 layout_mode = 2
@@ -47,10 +51,11 @@ grid_pattern = 1
 script = ExtResource("2_qpoux")
 
 [connection signal="node_added" from="." to="VBoxContainer/GraphEdit" method="node_added"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/LoadJson" to="." method="load_tech_web"]
+[connection signal="techs_cleared" from="." to="VBoxContainer/GraphEdit" method="clear_all_tech_nodes"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/AddNewTech" to="." method="_on_add_button_clicked"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/CircleLayout" to="VBoxContainer/GraphEdit" method="layout_nodes"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/Button" to="VBoxContainer/GraphEdit" method="toggle_tier_zero"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/ToggleTierZero" to="VBoxContainer/GraphEdit" method="toggle_tier_zero"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/SaveJson" to="." method="save_tech_web"]
 [connection signal="connection_request" from="VBoxContainer/GraphEdit" to="VBoxContainer/GraphEdit" method="on_connection_request"]
 [connection signal="node_deselected" from="VBoxContainer/GraphEdit" to="VBoxContainer/GraphEdit" method="node_deselected"]
 [connection signal="node_selected" from="VBoxContainer/GraphEdit" to="VBoxContainer/GraphEdit" method="node_selected"]

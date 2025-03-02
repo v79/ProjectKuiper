@@ -2,8 +2,8 @@
 // Note: You can however freely move this file inside your godot project if you want. Keep in mind however, that if you rename the originating source code file, this file will be deleted and regenerated as a new file instead of being updated! Other modifications to the source file however, will result in this file being updated.
 
 registeredName = TechWebEditor
-fqName = technology.web.TechWebEditor
-relativeSourcePath = src/main/kuiper/technology/web/TechWebEditor.kt
+fqName = technology.editor.TechWebEditor
+relativeSourcePath = src/main/kuiper/technology/editor/TechWebEditor.kt
 baseType = Control
 supertypes = [
     godot.Control,
@@ -15,7 +15,9 @@ supertypes = [
 	kotlin.Any
 ]
 signals = [
-    node_added
+    node_added,
+	node_saved,
+	techs_cleared
 ]
 properties = [
     log_enabled
@@ -23,6 +25,6 @@ properties = [
 functions = [
     _ready,
 	load_tech_web,
-	_process,
+	save_tech_web,
 	_on_add_button_clicked
 ]

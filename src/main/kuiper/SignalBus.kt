@@ -10,6 +10,7 @@ import godot.core.signal0
 import godot.core.signal1
 import godot.core.signal2
 import hexgrid.Hex
+import technology.editor.TechWrapper
 
 /**
  * A global signal bus for the game
@@ -19,71 +20,78 @@ import hexgrid.Hex
 @RegisterClass
 class SignalBus : Node() {
 
-	var screenWidth: Int = 1600
-		private set
-	var screenHeight: Int = 900
-		private set
+    var screenWidth: Int = 1600
+        private set
+    var screenHeight: Int = 900
+        private set
 
-	// Screen has been resized
-	@RegisterSignal
-	val onScreenResized by signal2<Int, Int>("width", "height")
+    // Screen has been resized
+    @RegisterSignal
+    val onScreenResized by signal2<Int, Int>("width", "height")
 
-	// Signals relating to card dragging
-	@RegisterSignal
-	val draggingCard by signal1<ActionCard>("card")
+    // Signals relating to card dragging
+    @RegisterSignal
+    val draggingCard by signal1<ActionCard>("card")
 
-	@RegisterSignal
-	val droppedCard by signal1<ActionCard>("card")
+    @RegisterSignal
+    val droppedCard by signal1<ActionCard>("card")
 
-	// signals relating to pulldown panels
-	@RegisterSignal
-	val recalcPulldownPanelSignal by signal1<Control>("panel_name")
+    // signals relating to pulldown panels
+    @RegisterSignal
+    val recalcPulldownPanelSignal by signal1<Control>("panel_name")
 
-	// Signals relating to hexes
-	@RegisterSignal
-	val cardOnHex by signal1<Hex>("hex")
+    // Signals relating to hexes
+    @RegisterSignal
+    val cardOnHex by signal1<Hex>("hex")
 
-	@RegisterSignal
-	val cardOffHex by signal1<Hex>("hex")
+    @RegisterSignal
+    val cardOffHex by signal1<Hex>("hex")
 
-	// Signals relating to playing actions on hexes
-	@RegisterSignal
-	val showActionConfirmation by signal2<Hex, ActionCard>("hex", "card")
+    // Signals relating to playing actions on hexes
+    @RegisterSignal
+    val showActionConfirmation by signal2<Hex, ActionCard>("hex", "card")
 
-	@RegisterSignal
-	val cancelActionConfirmation by signal0()
+    @RegisterSignal
+    val cancelActionConfirmation by signal0()
 
-	@RegisterSignal
-	val confirmAction by signal2<Hex, ActionWrapper>("hex", "action")
+    @RegisterSignal
+    val confirmAction by signal2<Hex, ActionWrapper>("hex", "action")
 
-	// Signals relating to the card deck
-	@RegisterSignal
-	val dealCardFromDeck by signal1<ActionWrapper>("action")
+    // Signals relating to the card deck
+    @RegisterSignal
+    val dealCardFromDeck by signal1<ActionWrapper>("action")
 
-	// Signals for updating UI each turn
-	@RegisterSignal
-	val updateScience by signal2<String, Float>("science", "value")
+    // Signals for updating UI each turn
+    @RegisterSignal
+    val updateScience by signal2<String, Float>("science", "value")
 
-	@RegisterSignal
-	val updateResource by signal2<String, Float>("resourceType", "value")
+    @RegisterSignal
+    val updateResource by signal2<String, Float>("resourceType", "value")
 
-	// Signals relating to active, ongoing actions
-	@RegisterSignal
-	val updateOngoingAction by signal2<Int, Int>("actionId", "turnsLeft")
+    // Signals relating to active, ongoing actions
+    @RegisterSignal
+    val updateOngoingAction by signal2<Int, Int>("actionId", "turnsLeft")
 
-	@RegisterSignal
-	val actionCompleted by signal1<ActionWrapper>("action")
+    @RegisterSignal
+    val actionCompleted by signal1<ActionWrapper>("action")
 
-	@RegisterFunction
-	override fun _ready() {
-		onScreenResized.connect { w, h ->
-			updateScreenSize(w, h)
-		}
-	}
+    // Signals relating to the game editor, eg. technology setup
+    @RegisterSignal
+    val editor_techSaved by signal1<TechWrapper>("tech_saved")
 
-	private fun updateScreenSize(width: Int, height: Int) {
-		screenWidth = width
-		screenHeight = height
-	}
+    @RegisterSignal
+    val editor_deleteTech by signal1<TechWrapper>("delete_tech")
+
+    @RegisterFunction
+    override fun _ready() {
+        onScreenResized.connect { w, h ->
+            updateScreenSize(w, h)
+        }
+    }
+
+    private fun updateScreenSize(width: Int, height: Int) {
+        screenWidth = width
+        screenHeight = height
+    }
 
 }

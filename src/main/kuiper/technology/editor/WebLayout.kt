@@ -1,32 +1,33 @@
-package technology.web
+package technology.editor
 
 import LogInterface
+import SignalBus
 import godot.*
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
+import godot.core.Color
 import godot.core.StringName
 import godot.core.Vector2
+import godot.core.connect
 import godot.extensions.getNodeAs
 import godot.extensions.instantiateAs
+import godot.global.GD
 import technology.TechTier
+import technology.Technology
 import kotlin.math.cos
 import kotlin.math.sin
-
-/**
- * To find the actual position of your mouse in the graph edit, considering zoom and scroll_offset, use this:
- * var real_position: Vector2 = (mouse_position + scroll_offset) / zoom
- * Mouse position can be obtained either from get_global_mouse_position() or from connection_x_empty signals which provide a release_position parameter (they are the same).
- * If you want to set a GraphNode's position to this, use its position_offset property.
- */
 
 @RegisterClass
 class WebLayout : GraphEdit(), LogInterface {
 
+	// Globals
+	private lateinit var signalBus: SignalBus
+
 	@RegisterProperty
 	@Export
-	override var logEnabled: Boolean = true
+	override var logEnabled: Boolean = false
 
 	@RegisterProperty
 	@Export
@@ -40,7 +41,7 @@ class WebLayout : GraphEdit(), LogInterface {
 
 	// packed scenes
 	private val techNodeScene =
-		ResourceLoader.load("res://src/main/kuiper/technology/web/tech_node.tscn") as PackedScene
+		ResourceLoader.load("res://src/main/kuiper/technology/editor/tech_node.tscn") as PackedScene
 
 	// UI elements
 	private lateinit var connectionLayer: Control
@@ -57,7 +58,13 @@ class WebLayout : GraphEdit(), LogInterface {
 
 	@RegisterFunction
 	override fun _ready() {
+		signalBus = getNodeAs("/root/SignalBus")!!
+
 		connectionLayer = getNodeAs("_connection_layer")!!
+
+		signalBus.editor_deleteTech.connect { techW ->
+			deleteTechnology(techW.technology)
+		}
 	}
 
 	@RegisterFunction
@@ -194,11 +201,20 @@ class WebLayout : GraphEdit(), LogInterface {
 		getLine2DNode(fromTechNode, toTechNode).visible = true
 	}
 
+	@RegisterFunction
+	fun clearAllTechNodes() {
+		logWarning("Clearing all technology nodes!")
+		techNodes.forEach {
+		   it.queueFree()
+		}
+	}
+
 	/**
 	 * Get the line2D node that represents the connection between two nodes and add it to the lineNodes map
 	 */
 	private fun getLine2DNode(unlockingNode: TechNode, newNode: TechNode): Line2D {
 		// Get the Line2D node that been created by this connection and store it in a map
+		GD.print("**** getLine2DNode connection layer children: ${connectionLayer.getChildCount(includeInternal = true)}")
 		val line2DNode = connectionLayer.getChildren().back() as Line2D
 		line2DNode.visible = false
 		lineNodes[unlockingNode to newNode] = line2DNode
@@ -214,6 +230,24 @@ class WebLayout : GraphEdit(), LogInterface {
 	 */
 	private fun findNode(techId: Int): TechNode? {
 		return techNodes.find { it.technology.id == techId }
+	}
+
+	/**
+	 * Delete the given technology node, with a bit of visual flare.
+	 * This doesn't actually delete the technology from the memory though - need to do that separately
+	 */
+	private fun deleteTechnology(technology: Technology) {
+		logWarning("Deleting ${technology.title} with id ${technology.id}")
+		val techNode = findNode(technology.id)
+		techNode?.let {
+			it.modulate = Color.red
+		}
+		getTree()?.createTimer(1.0)?.timeout?.connect {
+			logWarning("Bye bye...")
+			technology.requires.clear()
+			techNodes.remove(techNode)
+			techNode?.queueFree()
+		}
 	}
 
 	/**

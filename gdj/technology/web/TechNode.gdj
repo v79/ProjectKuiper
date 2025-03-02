@@ -2,8 +2,8 @@
 // Note: You can however freely move this file inside your godot project if you want. Keep in mind however, that if you rename the originating source code file, this file will be deleted and regenerated as a new file instead of being updated! Other modifications to the source file however, will result in this file being updated.
 
 registeredName = TechNode
-fqName = technology.web.TechNode
-relativeSourcePath = src/main/kuiper/technology/web/TechNode.kt
+fqName = technology.editor.TechNode
+relativeSourcePath = src/main/kuiper/technology/editor/TechNode.kt
 baseType = GraphNode
 supertypes = [
     godot.GraphNode,
@@ -28,5 +28,6 @@ functions = [
 	add_requirement,
 	add_unlocks,
 	on_add_incoming_pressed,
-	on_add_outgoing_pressed
+	on_add_outgoing_pressed,
+	on_edit_button_pressed
 ]

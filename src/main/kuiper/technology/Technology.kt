@@ -52,7 +52,7 @@ class Technology(val id: Int, var title: String, var description: String, var ti
     var actionsDeprecated: MutableList<Action> = mutableListOf()
 
     override fun toString(): String {
-        return "Technology(id=$id, title='$title', tier=$tier. progress=$progress, totalCost=$totalCost, researched=$researched)"
+        return "Technology(id=$id, title='$title', tier=$tier, desc=${description}; progress=$progress, totalCost=$totalCost, researched=$researched)"
     }
 
     fun scienceProgressComplete(science: Science): Boolean {

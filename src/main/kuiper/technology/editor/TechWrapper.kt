@@ -1,4 +1,4 @@
-package technology.web
+package technology.editor
 
 import godot.Node
 import godot.annotation.RegisterClass

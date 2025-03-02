@@ -2,8 +2,8 @@
 // Note: You can however freely move this file inside your godot project if you want. Keep in mind however, that if you rename the originating source code file, this file will be deleted and regenerated as a new file instead of being updated! Other modifications to the source file however, will result in this file being updated.
 
 registeredName = WebLayout
-fqName = technology.web.WebLayout
-relativeSourcePath = src/main/kuiper/technology/web/WebLayout.kt
+fqName = technology.editor.WebLayout
+relativeSourcePath = src/main/kuiper/technology/editor/WebLayout.kt
 baseType = GraphEdit
 supertypes = [
     godot.GraphEdit,
@@ -31,5 +31,6 @@ functions = [
 	node_selected,
 	node_deselected,
 	toggle_tier_zero,
-	on_connection_request
+	on_connection_request,
+	clear_all_tech_nodes
 ]
