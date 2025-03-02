@@ -5,9 +5,7 @@ import actions.CardDeck
 import actions.activeActions.ActiveActionsFan
 import confirm_action.ConfirmAction
 import godot.*
-import godot.annotation.RegisterClass
-import godot.annotation.RegisterFunction
-import godot.annotation.RegisterSignal
+import godot.annotation.*
 import godot.core.*
 import godot.extensions.getNodeAs
 import godot.global.GD
@@ -40,10 +38,14 @@ class KuiperGame : PanelContainer() {
     @RegisterSignal
     val screenResized by signal2<Int, Int>("width", "height")
 
+    @RegisterProperty
+    @Export
+    var groupCardsEnabled: Boolean = true
+
     // UI flags/states
     // Esc menu visibility trigger
     var escMenuVisible by Delegates.observable(false) { _, _, newValue ->
-        getNodeAs<Control>("EscMenu")?.visible = newValue
+        getNodeAs<Control>("%EscMenu")?.visible = newValue
     }
 
     // UI elements
@@ -55,6 +57,7 @@ class KuiperGame : PanelContainer() {
     private lateinit var confirmAction: ConfirmAction
     private lateinit var cardDeck: CardDeck
     private lateinit var activeActionsFan: ActiveActionsFan
+    private lateinit var techTree: Control
 
     // Called when the node enters the scene tree for the first time.
     @RegisterFunction
@@ -73,6 +76,7 @@ class KuiperGame : PanelContainer() {
         confirmAction.cancelAction()
         cardDeck = getNodeAs("%CardDeck")!!
         activeActionsFan = getNodeAs("%ActiveActionsFan")!!
+        techTree = getNodeAs("%TechTree")!!
 
         // populate pulldown panels and resource displays
         populateZoneTabBar()
@@ -128,6 +132,9 @@ class KuiperGame : PanelContainer() {
             if (event.isActionPressed("game_save".asCachedStringName())) {
                 on_esc_save_game()
             }
+            if (event.isActionPressed("show_tech_tree".asCachedStringName())) {
+                toggleTechTree()
+            }
         }
     }
 
@@ -147,6 +154,33 @@ class KuiperGame : PanelContainer() {
         GD.print(gameState.stateToString())
         escMenuVisible = false
         gameState.save()
+    }
+
+    /**
+     * Toggle the processing mode of the given group name, between DISABLED and INHERIT
+     * This has the effect of disabling processing (input, etc) of all nodes and their children in the group.
+     * Or re-enabling processing.
+     */
+    private fun toggleGroupProcessing(groupName: StringName, enabled: Boolean) {
+        getTree()?.getNodesInGroup(groupName)?.forEach { node ->
+            if (enabled) {
+                node.processMode = ProcessMode.PROCESS_MODE_INHERIT
+            } else {
+                node.processMode = ProcessMode.PROCESS_MODE_DISABLED
+            }
+        }
+    }
+
+    /**
+     * Show or hide the tech tree, (dis)abling all nodes in the Cards group if visible
+     */
+    private fun toggleTechTree() {
+        techTree.visible = !techTree.visible
+        if (techTree.visible) {
+            toggleGroupProcessing("Cards".asCachedStringName(), false)
+        } else {
+            toggleGroupProcessing("Cards".asCachedStringName(), true)
+        }
     }
 
     private fun populateZoneTabBar() {

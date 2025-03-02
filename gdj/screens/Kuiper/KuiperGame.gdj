@@ -22,7 +22,7 @@ signals = [
 	screen_resized
 ]
 properties = [
-    
+    group_cards_enabled
 ]
 functions = [
     _ready,
