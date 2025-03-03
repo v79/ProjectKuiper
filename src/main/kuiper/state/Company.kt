@@ -5,6 +5,7 @@ import godot.global.GD
 import hexgrid.Hex
 import kotlinx.serialization.Serializable
 import technology.Science
+import technology.Technology
 
 /**
  * The company that the player is running
@@ -13,14 +14,27 @@ import technology.Science
 @Serializable
 class Company(var name: String) {
 
+    /**
+     * Resources are the primary currency of the game
+     */
     val resources: MutableMap<ResourceType, Int> = mutableMapOf(
         ResourceType.GOLD to 0, ResourceType.INFLUENCE to 0, ResourceType.CONSTRUCTION_MATERIALS to 0
     )
 
+    /**
+     * Sciences are the primary way to unlock new technologies
+     */
     val sciences: MutableMap<Science, Float> = mutableMapOf()
 
-    // Currently active actions which have a limited duration
+    /**
+     * Currently active actions which have a limited duration
+     */
     val activeActions: MutableList<Action> = mutableListOf()
+
+    /**
+     * The list of technologies that the company has or could research
+     */
+    val technologies: MutableList<Technology> = mutableListOf()
 
     /**
      * Activate the given action, adding it to the list of active actions

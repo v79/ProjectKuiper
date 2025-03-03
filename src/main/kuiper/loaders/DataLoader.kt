@@ -7,6 +7,7 @@ import godot.annotation.RegisterClass
 import godot.global.GD
 import kotlinx.serialization.json.Json
 import state.Sponsor
+import technology.Technology
 
 /**
  * Autoload 'singleton' class to load data files
@@ -17,6 +18,7 @@ class DataLoader : Node() {
     // file paths
     private val actionsJsonPath = "res://assets/data/actions/actions.json"
     private val sponsorJsonPath = "res://assets/data/sponsors.json"
+    private val techTreeJsonPath = "res://assets/data/technologies/techweb.json"
 
     /**
      * Load actions data from the actions.json file
@@ -45,6 +47,20 @@ class DataLoader : Node() {
         val sponsorJson = Json.decodeFromString<List<Sponsor>>(sponsorFile.getAsText())
         GD.print("Loaded ${sponsorJson.size} sponsors")
         return sponsorJson
+    }
+
+    /**
+     * Load tech tree data from the techweb.json file
+     */
+    fun loadTechWeb(): List<Technology> {
+        val techTreeFile = FileAccess.open(techTreeJsonPath, FileAccess.ModeFlags.READ)
+        if (techTreeFile == null) {
+            GD.printErr("Failed to load tech tree data from $techTreeJsonPath")
+            return emptyList()
+        }
+        val techTreeJson = Json.decodeFromString<List<Technology>>(techTreeFile.getAsText())
+        GD.print("Loaded ${techTreeJson.size} technologies")
+        return techTreeJson
     }
 
 }

@@ -1,5 +1,6 @@
 package screens.kuiper
 
+import LogInterface
 import SignalBus
 import actions.CardDeck
 import actions.activeActions.ActiveActionsFan
@@ -13,13 +14,18 @@ import science.ResourcePanel
 import science.SciencePanel
 import state.GameState
 import technology.Science
+import technology.tree.TechTree
 import kotlin.properties.Delegates
 
 /**
  * The primary game scene class, the board on which the player plays
  */
 @RegisterClass
-class KuiperGame : PanelContainer() {
+class KuiperGame : PanelContainer(), LogInterface {
+
+    @RegisterProperty
+    @Export
+    override var logEnabled: Boolean = true
 
     // Global state
     private lateinit var gameState: GameState
@@ -57,7 +63,7 @@ class KuiperGame : PanelContainer() {
     private lateinit var confirmAction: ConfirmAction
     private lateinit var cardDeck: CardDeck
     private lateinit var activeActionsFan: ActiveActionsFan
-    private lateinit var techTree: Control
+    private lateinit var techTree: TechTree
 
     // Called when the node enters the scene tree for the first time.
     @RegisterFunction
@@ -82,6 +88,7 @@ class KuiperGame : PanelContainer() {
         populateZoneTabBar()
         populateResourcePanel()
         populateSciencePanel()
+        populateTechTree()
 
         // create cards from actions
         gameState.availableActions.forEach {
@@ -158,7 +165,7 @@ class KuiperGame : PanelContainer() {
 
     /**
      * Toggle the processing mode of the given group name, between DISABLED and INHERIT
-     * This has the effect of disabling processing (input, etc) of all nodes and their children in the group.
+     * This has the effect of disabling processing (input, etc.) of all nodes and their children in the group.
      * Or re-enabling processing.
      */
     private fun toggleGroupProcessing(groupName: StringName, enabled: Boolean) {
@@ -205,6 +212,10 @@ class KuiperGame : PanelContainer() {
         gameState.company.resources.forEach { (type, value) ->
             resourcePanel.addResource(type, value)
         }
+    }
+
+    private fun populateTechTree() {
+        techTree.setTechnologyTree(gameState.company.technologies)
     }
 
     private fun hideEscapeMenu() {
