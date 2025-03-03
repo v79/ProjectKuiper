@@ -25,5 +25,6 @@ properties = [
 ]
 functions = [
     _ready,
-	_process
+	_process,
+	add_unlocks
 ]

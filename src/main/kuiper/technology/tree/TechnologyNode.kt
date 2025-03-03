@@ -13,6 +13,7 @@ import godot.core.Color
 import godot.extensions.getNodeAs
 import technology.Technology
 import technology.editor.PortDirection
+import technology.editor.TechPortConnection
 
 /**
  * This is for the game, not the editor
@@ -31,6 +32,12 @@ class TechnologyNode : GraphNode(), LogInterface {
     // Data
     var technology: Technology = Technology.EMPTY
     private var slotCounter = 0
+    private var slots: MutableMap<Int, TechPortConnection> = mutableMapOf()
+        private set
+    val unlockPorts: Map<Int, TechPortConnection>
+        get() = slots.filter { it.value.direction == PortDirection.OUT }
+    val requirePorts: Map<Int, TechPortConnection>
+        get() = slots.filter { it.value.direction == PortDirection.IN }
 
     @RegisterFunction
     override fun _ready() {
@@ -49,6 +56,15 @@ class TechnologyNode : GraphNode(), LogInterface {
      */
     fun addRequirement(techId: Int) {
         addSlot(direction = PortDirection.IN)
+        slots[slotCounter] =
+            TechPortConnection(techId = techId, port = requirePorts.size, direction = PortDirection.IN)
+    }
+
+    @RegisterFunction
+    fun addUnlocks(techId: Int) {
+        addSlot(direction = PortDirection.OUT)
+        slots[slotCounter] =
+            TechPortConnection(techId = techId, port = unlockPorts.size, direction = PortDirection.OUT)
     }
 
     /**
@@ -85,5 +101,12 @@ class TechnologyNode : GraphNode(), LogInterface {
     private fun updateUI() {
         setTitle("[T${technology.tier.ordinal}] ${technology.title}")
         setTooltipText(technology.description)
+    }
+
+    /**
+     * Return true if there is already a connection for this technology
+     */
+    fun slotConnected(techId: Int): Boolean {
+        return slots.values.any { it.techId == techId }
     }
 }

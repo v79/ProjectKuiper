@@ -29,6 +29,7 @@ class TechTree : GraphEdit(), LogInterface {
     // UI elements
     private lateinit var connectionLayer: Control
     private lateinit var summaryPanel: TechSummaryPanel
+    private val lineNodes = mutableMapOf<Pair<TechnologyNode, TechnologyNode>, Line2D>()
 
     // Data
     private val techNodes: MutableList<TechnologyNode> = mutableListOf()
@@ -56,12 +57,23 @@ class TechTree : GraphEdit(), LogInterface {
     @RegisterFunction
     fun nodeSelected(node: Node) {
         summaryPanel.visible = true
+        showConnections(node)
         updateSummaryPanel((node as TechnologyNode).technology)
+    }
+
+    /**
+     * Show the connections between the selected node and all other nodes
+     */
+    private fun showConnections(node: Node) {
+        lineNodes.filter { it.key.first == node || it.key.second == node }
+            .filter { it.key.first.technology.tier != TechTier.TIER_0 && it.key.second.technology.tier != TechTier.TIER_0 }
+            .forEach { line -> line.value.visible = true }
     }
 
     @RegisterFunction
     fun nodeDeselected(node: Node) {
         summaryPanel.visible = false
+        lineNodes.values.map { it.visible = false }
     }
 
     fun setTechnologyTree(technologies: List<Technology>) {
@@ -69,6 +81,9 @@ class TechTree : GraphEdit(), LogInterface {
         clearConnections()
         for (tech in technologies) {
             addTechnology(tech)
+        }
+        for (tech in technologies) {
+            addConnections()
         }
         arrangeNodes()
     }
@@ -95,6 +110,50 @@ class TechTree : GraphEdit(), LogInterface {
 
         addChild(node)
         techNodes.add(node)
+    }
+
+    /**
+     * Add connections between nodes.
+     * Skips connections to the Tier Zero starting tech.
+     */
+    private fun addConnections() {
+        for (node in techNodes) {
+            for (requirement in node.technology.requires) {
+                // skip the tier zero/id zero starting tech
+                if (requirement == 0) {
+                    continue
+                } else {
+                    val unlockingNode = techNodes.find { it.technology.id == requirement }
+                    if (unlockingNode != null) {
+                        // check if the unlocking node has already been added
+                        if (unlockingNode.slotConnected(node.technology.id)) {
+                            continue
+                        } else {
+                            unlockingNode.addUnlocks(node.technology.id)
+                            val unlockingSlot =
+                                unlockingNode.unlockPorts.filter { it.value.techId == node.technology.id }.values.first()
+                            val requiringSlot =
+                                node.requirePorts.filter { it.value.techId == unlockingNode.technology.id }.values.first()
+
+                            connectNode(unlockingNode.name, unlockingSlot.port, node.name, requiringSlot.port)
+                            getLine2DNode(unlockingNode, node)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Get the line2D node that represents the connection between two nodes and add it to the lineNodes map
+     * It also hides the line2D node by default
+     */
+    private fun getLine2DNode(unlockingNode: TechnologyNode, newNode: TechnologyNode): Line2D {
+        // Get the Line2D node that been created by this connection and store it in a map
+        val line2DNode = connectionLayer.getChildren().back() as Line2D
+        line2DNode.visible = false
+        lineNodes[unlockingNode to newNode] = line2DNode
+        return line2DNode
     }
 
     private fun updateSummaryPanel(technology: Technology) {
