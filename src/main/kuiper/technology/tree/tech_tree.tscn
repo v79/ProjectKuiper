@@ -1,19 +1,14 @@
-[gd_scene format=3 uid="uid://bwnqinqcecnfq"]
+[gd_scene load_steps=3 format=3 uid="uid://bwnqinqcecnfq"]
 
-[node name="Control" type="Control"]
-layout_mode = 3
+[ext_resource type="Theme" uid="uid://dsva635j2ykyg" path="res://assets/themes/tech_tree_theme.tres" id="1_1lu2s"]
+[ext_resource type="Script" path="res://src/main/kuiper/technology/tree/TechTree.kt" id="2_bcl7q"]
+
+[node name="TechTree" type="GraphEdit"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="TechTree" type="GraphEdit" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-grid_pattern = 1
+theme = ExtResource("1_1lu2s")
 show_arrange_button = false
+script = ExtResource("2_bcl7q")
