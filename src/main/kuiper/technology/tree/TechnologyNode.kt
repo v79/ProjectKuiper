@@ -2,18 +2,17 @@ package technology.tree
 
 import LogInterface
 import SignalBus
-import godot.*
+import godot.GraphNode
+import godot.HorizontalAlignment
+import godot.Label
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
 import godot.core.Color
-import godot.core.Vector2
-import godot.core.asCachedStringName
 import godot.extensions.getNodeAs
 import technology.Technology
 import technology.editor.PortDirection
-import utils.clearChildren
 
 /**
  * This is for the game, not the editor
@@ -84,23 +83,7 @@ class TechnologyNode : GraphNode(), LogInterface {
     }
 
     private fun updateUI() {
-        val titleBar = getTitlebarHbox()!!
-        val titleBarVBox = VBoxContainer()
-        val titleFont = ResourceLoader.load("res://assets/fonts/SpaceMono-BoldItalic.ttf") as Font
-        val titleLabel = Label().apply {
-            text = "[T${technology.tier.ordinal}] ${technology.title}"
-            setThemeTypeVariation("TechnologyTitle".asCachedStringName())
-        }
-        val descLabel = Label().apply {
-            text = technology.description
-            setCustomMinimumSize(Vector2(180, 0))
-            setAutowrapMode(TextServer.AutowrapMode.AUTOWRAP_WORD)
-        }
-        titleBarVBox.addChild(titleLabel)
-        titleBarVBox.addChild(descLabel)
-        titleBar.clearChildren()
-        titleBar.addChild(titleBarVBox)
-        setTooltipText("This is my tooltip")
-//        setTitle("[T${technology.tier.ordinal}] ${technology.title}")
+        setTitle("[T${technology.tier.ordinal}] ${technology.title}")
+        setTooltipText(technology.description)
     }
 }

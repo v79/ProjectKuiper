@@ -2,10 +2,7 @@ package technology.tree
 
 import LogInterface
 import SignalBus
-import godot.Control
-import godot.GraphEdit
-import godot.PackedScene
-import godot.ResourceLoader
+import godot.*
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
@@ -13,6 +10,7 @@ import godot.annotation.RegisterProperty
 import godot.extensions.getNodeAs
 import technology.TechTier
 import technology.Technology
+import technology.editor.TechWrapper
 
 @RegisterClass
 class TechTree : GraphEdit(), LogInterface {
@@ -30,6 +28,7 @@ class TechTree : GraphEdit(), LogInterface {
 
     // UI elements
     private lateinit var connectionLayer: Control
+    private lateinit var summaryPanel: TechSummaryPanel
 
     // Data
     private val techNodes: MutableList<TechnologyNode> = mutableListOf()
@@ -39,6 +38,9 @@ class TechTree : GraphEdit(), LogInterface {
         signalBus = getNodeAs("/root/SignalBus")!!
 
         connectionLayer = getNodeAs("_connection_layer")!!
+        summaryPanel = getNodeAs("%TechSummaryPanel")!!
+
+        summaryPanel.visible = false
     }
 
     @RegisterFunction
@@ -49,6 +51,17 @@ class TechTree : GraphEdit(), LogInterface {
     @RegisterFunction
     override fun _process(delta: Double) {
 
+    }
+
+    @RegisterFunction
+    fun nodeSelected(node: Node) {
+        summaryPanel.visible = true
+        updateSummaryPanel((node as TechnologyNode).technology)
+    }
+
+    @RegisterFunction
+    fun nodeDeselected(node: Node) {
+        summaryPanel.visible = false
     }
 
     fun setTechnologyTree(technologies: List<Technology>) {
@@ -82,5 +95,9 @@ class TechTree : GraphEdit(), LogInterface {
 
         addChild(node)
         techNodes.add(node)
+    }
+
+    private fun updateSummaryPanel(technology: Technology) {
+        summaryPanel.updateSummary(TechWrapper().apply { this.technology = technology })
     }
 }

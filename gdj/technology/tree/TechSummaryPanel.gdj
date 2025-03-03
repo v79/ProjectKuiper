@@ -1,13 +1,13 @@
 // THIS FILE IS GENERATED! DO NOT EDIT OR DELETE IT. EDIT OR DELETE THE ASSOCIATED SOURCE CODE FILE INSTEAD
 // Note: You can however freely move this file inside your godot project if you want. Keep in mind however, that if you rename the originating source code file, this file will be deleted and regenerated as a new file instead of being updated! Other modifications to the source file however, will result in this file being updated.
 
-registeredName = TechTree
-fqName = technology.tree.TechTree
-relativeSourcePath = src/main/kuiper/technology/tree/TechTree.kt
-baseType = GraphEdit
+registeredName = TechSummaryPanel
+fqName = technology.tree.TechSummaryPanel
+relativeSourcePath = src/main/kuiper/technology/tree/TechSummaryPanel.kt
+baseType = PanelContainer
 supertypes = [
-    godot.GraphEdit,
-	LogInterface,
+    godot.PanelContainer,
+	godot.Container,
 	godot.Control,
 	godot.CanvasItem,
 	godot.Node,
@@ -19,12 +19,10 @@ signals = [
     
 ]
 properties = [
-    log_enabled
+    
 ]
 functions = [
     _ready,
-	layout_nodes,
 	_process,
-	node_selected,
-	node_deselected
+	update_summary
 ]
