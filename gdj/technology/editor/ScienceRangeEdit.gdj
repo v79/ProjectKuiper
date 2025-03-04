@@ -1,13 +1,12 @@
 // THIS FILE IS GENERATED! DO NOT EDIT OR DELETE IT. EDIT OR DELETE THE ASSOCIATED SOURCE CODE FILE INSTEAD
 // Note: You can however freely move this file inside your godot project if you want. Keep in mind however, that if you rename the originating source code file, this file will be deleted and regenerated as a new file instead of being updated! Other modifications to the source file however, will result in this file being updated.
 
-registeredName = TechEditor
-fqName = technology.editor.TechEditor
-relativeSourcePath = src/main/kuiper/technology/editor/TechEditor.kt
+registeredName = ScienceRangeEdit
+fqName = technology.editor.ScienceRangeEdit
+relativeSourcePath = src/main/kuiper/technology/editor/ScienceRangeEdit.kt
 baseType = Control
 supertypes = [
     godot.Control,
-	LogInterface,
 	godot.CanvasItem,
 	godot.Node,
 	godot.Object,
@@ -18,19 +17,13 @@ signals = [
     
 ]
 properties = [
-    log_enabled,
-	tech_wrapper
+    min,
+	max
 ]
 functions = [
     _ready,
 	_process,
-	on_visibility_changed,
-	on_cancel_button_pressed,
-	on_save_button_pressed,
-	on_title_text_changed,
-	on_description_text_changed,
-	on_delete_button_pressed,
-	on_cancel_delete_button_pressed,
-	on_confirm_delete_button_pressed,
-	on_multiplier_edit_changed
+	on_min_slider_value_changed,
+	on_max_slider_value_changed,
+	set_label
 ]

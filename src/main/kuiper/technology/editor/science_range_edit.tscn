@@ -1,0 +1,74 @@
+[gd_scene load_steps=4 format=3 uid="uid://mi2r8a4hdvio"]
+
+[ext_resource type="Script" path="res://src/main/kuiper/technology/editor/ScienceRangeEdit.kt" id="1_3k76t"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_33ljq"]
+bg_color = Color(0.977334, 0.357249, 0.403634, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_usuw7"]
+bg_color = Color(0.15258, 0.691485, 0.604764, 1)
+
+[node name="ScienceRangeEdit" type="Control"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_3k76t")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 384.0
+offset_bottom = 52.0
+alignment = 1
+
+[node name="ScienceLabel" type="RichTextLabel" parent="HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+bbcode_enabled = true
+text = "<science>"
+fit_content = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="MinimumSlider" type="HSlider" parent="HBoxContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_33ljq")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_33ljq")
+min_value = 1.0
+value = 26.0
+rounded = true
+
+[node name="MinimumCostLabel" type="Label" parent="HBoxContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "25"
+horizontal_alignment = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="MaximumSlider" type="HSlider" parent="HBoxContainer/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_usuw7")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_usuw7")
+min_value = 1.0
+value = 50.0
+rounded = true
+
+[node name="MaximumCostLabel" type="Label" parent="HBoxContainer/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "50"
+horizontal_alignment = 2
+
+[connection signal="value_changed" from="HBoxContainer/VBoxContainer/HBoxContainer/MinimumSlider" to="." method="on_min_slider_value_changed"]
+[connection signal="value_changed" from="HBoxContainer/VBoxContainer/HBoxContainer2/MaximumSlider" to="." method="on_max_slider_value_changed"]

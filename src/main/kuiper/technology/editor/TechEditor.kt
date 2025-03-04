@@ -9,6 +9,7 @@ import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
 import godot.core.connect
 import godot.extensions.getNodeAs
+import technology.Science
 import technology.TechStatus
 import technology.TechTier
 
@@ -39,6 +40,16 @@ class TechEditor : Control(), LogInterface {
 	private lateinit var confirmDeleteButton: Button
 	private lateinit var cancelDeleteButton: Button
 	private lateinit var confirmDeleteLabel: Label
+	private lateinit var physicsRange: ScienceRangeEdit
+	private lateinit var astronomyRange: ScienceRangeEdit
+	private lateinit var biochemistryRange: ScienceRangeEdit
+	private lateinit var mathematicsRange: ScienceRangeEdit
+	private lateinit var psychologyRange: ScienceRangeEdit
+	private lateinit var engineeringRange: ScienceRangeEdit
+	private lateinit var multiplierEdit: LineEdit
+
+	// Data
+	var multiplier: Double = 1.0
 
 	@RegisterFunction
 	override fun _ready() {
@@ -57,12 +68,24 @@ class TechEditor : Control(), LogInterface {
 		cancelDeleteButton = getNodeAs("%CancelDelete")!!
 		confirmDeleteLabel = getNodeAs("%ConfirmDeleteLabel")!!
 
+		physicsRange = getNodeAs("%PhysicsRange")!!
+		astronomyRange = getNodeAs("%AstronomyRange")!!
+		biochemistryRange = getNodeAs("%BiochemistryRange")!!
+		mathematicsRange = getNodeAs("%MathematicsRange")!!
+		psychologyRange = getNodeAs("%PsychologyRange")!!
+		engineeringRange = getNodeAs("%EngineeringRange")!!
+
+		multiplierEdit = getNodeAs("%MultiplierEdit")!!
+
+
 		tierMenu.getPopup()?.idPressed?.connect { id ->
 			setTier(id.toInt())
 		}
 		statusMenu.getPopup()?.idPressed?.connect { id ->
 			setStatus(id.toInt())
 		}
+
+		setupScienceRanges()
 	}
 
 	@RegisterFunction
@@ -117,17 +140,38 @@ class TechEditor : Control(), LogInterface {
 		signalBus.editor_deleteTech.emit(techWrapper)
 	}
 
+	@RegisterFunction
+	fun onMultiplierEditChanged(newText: String) {
+		val asDouble = newText.toDoubleOrNull()
+		if (asDouble != null) {
+			multiplier = asDouble
+		} else {
+			logError("Invalid multiplier value: $newText")
+			multiplierEdit.setText("1.0")
+		}
+	}
+
 	/**
 	 * Menu items are zero index; tiers are 1-indexed as I am not showing Tier 0 as an option
 	 */
 	fun setTier(tierID: Int) {
-		techWrapper.technology.tier = TechTier.entries[tierID+1]
+		techWrapper.technology.tier = TechTier.entries[tierID + 1]
 		tierMenu.text = techWrapper.technology.tier.name
 	}
 
 	fun setStatus(statusID: Int) {
 		techWrapper.technology.status = TechStatus.entries[statusID]
 		statusMenu.text = techWrapper.technology.status.name
+	}
+
+	private fun setupScienceRanges() {
+		multiplierEdit.setText("$multiplier")
+		physicsRange.setLabel("${Science.PHYSICS.bbCodeIcon(16)} Physics")
+		astronomyRange.setLabel("${Science.ASTRONOMY.bbCodeIcon(16)} Astronomy")
+		biochemistryRange.setLabel("${Science.BIOCHEMISTRY.bbCodeIcon(16)} Biochemistry")
+		mathematicsRange.setLabel("${Science.MATHEMATICS.bbCodeIcon(16)} Mathematics")
+		psychologyRange.setLabel("${Science.PSYCHOLOGY.bbCodeIcon(16)} Psychology")
+		engineeringRange.setLabel("${Science.ENGINEERING.bbCodeIcon(16)} Engineering")
 	}
 
 	fun updateUI() {
