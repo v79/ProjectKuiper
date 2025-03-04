@@ -37,7 +37,6 @@ class GameState : Node() {
     var sponsor: Sponsor? = null
     var zones: List<Zone> = listOf()
 
-    // actions
     var availableActions: MutableList<Action> = mutableListOf()
 
     @RegisterFunction

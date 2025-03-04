@@ -1,8 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://bwnqinqcecnfq"]
+[gd_scene load_steps=5 format=3 uid="uid://bwnqinqcecnfq"]
 
 [ext_resource type="Theme" uid="uid://dsva635j2ykyg" path="res://assets/themes/tech_tree_theme.tres" id="1_1lu2s"]
 [ext_resource type="Script" path="res://src/main/kuiper/technology/tree/TechTree.kt" id="2_bcl7q"]
 [ext_resource type="Script" path="res://src/main/kuiper/technology/tree/TechSummaryPanel.kt" id="3_40ni6"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tema1"]
+bg_color = Color(0.2706, 0.0641286, 0.258458, 1)
 
 [node name="TechTree" type="GraphEdit"]
 anchors_preset = 15
@@ -37,22 +40,34 @@ theme_override_constants/separation = 10
 [node name="TitleLabel" type="Label" parent="TechSummaryPanel/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+text = "<title>"
 horizontal_alignment = 1
 
 [node name="TierLabel" type="Label" parent="TechSummaryPanel/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+text = "<tier>"
 horizontal_alignment = 1
 
 [node name="DescriptionLabel" type="RichTextLabel" parent="TechSummaryPanel/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
+text = "<description>"
+fit_content = true
+
+[node name="DebugProgressLabel" type="RichTextLabel" parent="TechSummaryPanel/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_tema1")
+bbcode_enabled = true
+text = "<debug-progress>"
 fit_content = true
 
 [node name="StatusLabel" type="Label" parent="TechSummaryPanel/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+text = "<status>"
 horizontal_alignment = 1
 
 [connection signal="node_deselected" from="." to="." method="node_deselected"]

@@ -28,13 +28,13 @@ class SponsorDataGenerator : Control() {
                 ResourceType.CONSTRUCTION_MATERIALS to 250
             ),
             baseScienceRate = mapOf(
-                Science.ASTRONOMY to 1.0f,
-                Science.PHYSICS to 1.0f,
-                Science.BIOCHEMISTRY to 1.0f,
-                Science.ENGINEERING to 1.0f,
-                Science.MATHEMATICS to 1.0f,
-                Science.PSYCHOLOGY to 1.0f,
-                Science.ENGINEERING to 1.0f
+                Science.ASTRONOMY to 10.0f,
+                Science.PHYSICS to 10.0f,
+                Science.BIOCHEMISTRY to 10.0f,
+                Science.ENGINEERING to 10.0f,
+                Science.MATHEMATICS to 10.0f,
+                Science.PSYCHOLOGY to 10.0f,
+                Science.ENGINEERING to 10.0f
             ),
             introText = "[b]Welcome to Europe![/b]"
         ), Sponsor(
@@ -47,13 +47,13 @@ class SponsorDataGenerator : Control() {
                 ResourceType.CONSTRUCTION_MATERIALS to 200
             ),
             baseScienceRate = mapOf(
-                Science.ASTRONOMY to 1.0f,
-                Science.PHYSICS to 1.0f,
-                Science.BIOCHEMISTRY to 1.0f,
-                Science.ENGINEERING to 1.0f,
-                Science.MATHEMATICS to 1.0f,
-                Science.PSYCHOLOGY to 1.0f,
-                Science.ENGINEERING to 1.0f
+                Science.ASTRONOMY to 10.0f,
+                Science.PHYSICS to 10.0f,
+                Science.BIOCHEMISTRY to 10.0f,
+                Science.ENGINEERING to 10.0f,
+                Science.MATHEMATICS to 10.0f,
+                Science.PSYCHOLOGY to 10.0f,
+                Science.ENGINEERING to 10.0f
             ),
             introText = "[b]Welcome to North America![/b]\nAlthough the space launch centre was destroyed by the asteroid, you have the technology and political will to rebuild the NASA space programme.."
         ), Sponsor(
@@ -66,13 +66,13 @@ class SponsorDataGenerator : Control() {
                 ResourceType.CONSTRUCTION_MATERIALS to 150
             ),
             baseScienceRate = mapOf(
-                Science.ASTRONOMY to 1.0f,
-                Science.PHYSICS to 1.0f,
-                Science.BIOCHEMISTRY to 1.0f,
-                Science.ENGINEERING to 1.0f,
-                Science.MATHEMATICS to 1.0f,
-                Science.PSYCHOLOGY to 1.0f,
-                Science.ENGINEERING to 1.0f
+                Science.ASTRONOMY to 10.0f,
+                Science.PHYSICS to 10.0f,
+                Science.BIOCHEMISTRY to 10.0f,
+                Science.ENGINEERING to 10.0f,
+                Science.MATHEMATICS to 10.0f,
+                Science.PSYCHOLOGY to 10.0f,
+                Science.ENGINEERING to 10.0f
             ),
             introText = "[b]Welcome to South America![/b]"
         ), Sponsor(
@@ -85,13 +85,13 @@ class SponsorDataGenerator : Control() {
                 ResourceType.CONSTRUCTION_MATERIALS to 350
             ),
             baseScienceRate = mapOf(
-                Science.ASTRONOMY to 1.0f,
-                Science.PHYSICS to 1.0f,
-                Science.BIOCHEMISTRY to 1.0f,
-                Science.ENGINEERING to 1.0f,
-                Science.MATHEMATICS to 1.0f,
-                Science.PSYCHOLOGY to 1.0f,
-                Science.ENGINEERING to 1.0f
+                Science.ASTRONOMY to 10.0f,
+                Science.PHYSICS to 10.0f,
+                Science.BIOCHEMISTRY to 10.0f,
+                Science.ENGINEERING to 10.0f,
+                Science.MATHEMATICS to 10.0f,
+                Science.PSYCHOLOGY to 10.0f,
+                Science.ENGINEERING to 10.0f
             ),
             introText = "[b]Welcome to Asia![/b]"
         ), Sponsor(
@@ -104,13 +104,13 @@ class SponsorDataGenerator : Control() {
                 ResourceType.CONSTRUCTION_MATERIALS to 250
             ),
             baseScienceRate = mapOf(
-                Science.ASTRONOMY to 1.0f,
-                Science.PHYSICS to 1.0f,
-                Science.BIOCHEMISTRY to 1.0f,
-                Science.ENGINEERING to 1.0f,
-                Science.MATHEMATICS to 1.0f,
-                Science.PSYCHOLOGY to 1.0f,
-                Science.ENGINEERING to 1.0f
+                Science.ASTRONOMY to 10.0f,
+                Science.PHYSICS to 10.0f,
+                Science.BIOCHEMISTRY to 10.0f,
+                Science.ENGINEERING to 10.0f,
+                Science.MATHEMATICS to 10.0f,
+                Science.PSYCHOLOGY to 10.0f,
+                Science.ENGINEERING to 10.0f
             ),
             introText = "[b]Welcome to Africa![/b]"
         ), Sponsor(
@@ -123,13 +123,13 @@ class SponsorDataGenerator : Control() {
                 ResourceType.CONSTRUCTION_MATERIALS to 150
             ),
             baseScienceRate = mapOf(
-                Science.ASTRONOMY to 1.0f,
-                Science.PHYSICS to 1.0f,
-                Science.BIOCHEMISTRY to 1.0f,
-                Science.ENGINEERING to 1.0f,
-                Science.MATHEMATICS to 1.0f,
-                Science.PSYCHOLOGY to 1.0f,
-                Science.ENGINEERING to 1.0f
+                Science.ASTRONOMY to 10.0f,
+                Science.PHYSICS to 10.0f,
+                Science.BIOCHEMISTRY to 10.0f,
+                Science.ENGINEERING to 10.0f,
+                Science.MATHEMATICS to 10.0f,
+                Science.PSYCHOLOGY to 10.0f,
+                Science.ENGINEERING to 10.0f
             ),
             introText = "[b]Welcome to Oceania![/b]"
         ), Sponsor(
@@ -142,13 +142,13 @@ class SponsorDataGenerator : Control() {
                 ResourceType.CONSTRUCTION_MATERIALS to 50
             ),
             baseScienceRate = mapOf(
-                Science.ASTRONOMY to 1.0f,
-                Science.PHYSICS to 1.0f,
-                Science.BIOCHEMISTRY to 1.0f,
-                Science.ENGINEERING to 1.0f,
-                Science.MATHEMATICS to 1.0f,
-                Science.PSYCHOLOGY to 1.0f,
-                Science.ENGINEERING to 1.0f
+                Science.ASTRONOMY to 10.0f,
+                Science.PHYSICS to 10.0f,
+                Science.BIOCHEMISTRY to 10.0f,
+                Science.ENGINEERING to 10.0f,
+                Science.MATHEMATICS to 10.0f,
+                Science.PSYCHOLOGY to 10.0f,
+                Science.ENGINEERING to 10.0f
             ),
             introText = "[b]Welcome to Antarctica![/b]\nThis will be your hardest challenge."
         )

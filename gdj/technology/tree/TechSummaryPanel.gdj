@@ -19,7 +19,7 @@ signals = [
     
 ]
 properties = [
-    
+    dev_mode
 ]
 functions = [
     _ready,

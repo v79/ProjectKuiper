@@ -98,6 +98,7 @@ class GameSetup : Node() {
 
     @RegisterFunction
     fun _onStartGameButtonPressed() {
+        GD.print("Setting up and starting game")
         if (selectedSponsor == -1) {
             GD.printErr("No sponsor selected!")
             return
@@ -106,6 +107,8 @@ class GameSetup : Node() {
         // globals are added to the tree first, so will be the first child
         val gameState = getTree()?.root?.getChild(0) as GameState
         val sponsor = sponsorList[selectedSponsor - 1]
+        GD.print("Randomising technology costs")
+        technologies.forEach { technology -> technology.randomiseCosts() }
         gameState.let { gS ->
             gS.year = 1965
             gS.sponsor = sponsor
