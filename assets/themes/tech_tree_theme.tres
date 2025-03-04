@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=9 format=3 uid="uid://dsva635j2ykyg"]
+[gd_resource type="Theme" load_steps=8 format=3 uid="uid://dsva635j2ykyg"]
 
 [ext_resource type="FontFile" uid="uid://dlm8mcyi0n4ri" path="res://assets/fonts/SpaceGrotesk-Bold.ttf" id="1_bae6g"]
 
@@ -57,7 +57,7 @@ content_margin_left = 4.0
 content_margin_top = 4.0
 content_margin_right = 4.0
 content_margin_bottom = 4.0
-bg_color = Color(0.37, 0.37, 0.37, 0.6)
+bg_color = Color(0.0977182, 0.0107671, 0.173137, 0.6)
 corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
@@ -77,8 +77,6 @@ corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 corner_detail = 5
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w0w1p"]
-
 [resource]
 GraphEdit/styles/menu_panel = SubResource("StyleBoxFlat_x6i2r")
 GraphEdit/styles/panel = SubResource("StyleBoxFlat_ni124")
@@ -88,8 +86,3 @@ GraphNode/styles/titlebar = SubResource("StyleBoxFlat_41lcs")
 GraphNode/styles/titlebar_selected = SubResource("StyleBoxFlat_5q73r")
 GraphNodeTitleLabel/font_sizes/font_size = 16
 GraphNodeTitleLabel/fonts/font = ExtResource("1_bae6g")
-TechnologySummary/base_type = &"GraphNodeTitleLabel"
-TechnologySummary/styles/titlebar = SubResource("StyleBoxFlat_5q73r")
-TechnologyTitle/base_type = &"GraphNodeTitleLabel"
-TechnologyTitle/fonts/font = ExtResource("1_bae6g")
-TechnologyTitle/styles/titlebar = SubResource("StyleBoxFlat_w0w1p")
