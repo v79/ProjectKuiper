@@ -13,6 +13,10 @@ import godot.core.connect
 import godot.extensions.getNodeAs
 import technology.Technology
 
+/**
+ * This is for the editor, not the game
+ * See [technology.tree.TechnologyNode] for the in-game version
+ */
 @RegisterClass
 class TechNode : GraphNode(), LogInterface {
 
@@ -49,7 +53,7 @@ class TechNode : GraphNode(), LogInterface {
 		editor = getNodeAs("%TechEditor")!!
 
 		signalBus.editor_techSaved.connect { techW ->
-			if(techW.technology.id == technology.id) {
+			if (techW.technology.id == technology.id) {
 				technology = techW.technology
 				updateUI()
 			}
@@ -113,7 +117,7 @@ class TechNode : GraphNode(), LogInterface {
 
 	@RegisterFunction
 	fun onEditButtonPressed() {
-		editor.techWrapper.technology =  technology
+		editor.techWrapper.technology = technology
 		editor.visible = true
 	}
 

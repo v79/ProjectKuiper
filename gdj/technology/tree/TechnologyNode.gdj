@@ -1,13 +1,14 @@
 // THIS FILE IS GENERATED! DO NOT EDIT OR DELETE IT. EDIT OR DELETE THE ASSOCIATED SOURCE CODE FILE INSTEAD
 // Note: You can however freely move this file inside your godot project if you want. Keep in mind however, that if you rename the originating source code file, this file will be deleted and regenerated as a new file instead of being updated! Other modifications to the source file however, will result in this file being updated.
 
-registeredName = KuiperGame
-fqName = screens.kuiper.KuiperGame
-relativeSourcePath = src/main/kuiper/screens/kuiper/KuiperGame.kt
-baseType = PanelContainer
+registeredName = TechnologyNode
+fqName = technology.tree.TechnologyNode
+relativeSourcePath = src/main/kuiper/technology/tree/TechnologyNode.kt
+baseType = GraphNode
 supertypes = [
-    godot.PanelContainer,
+    godot.GraphNode,
 	LogInterface,
+	godot.GraphElement,
 	godot.Container,
 	godot.Control,
 	godot.CanvasItem,
@@ -17,21 +18,12 @@ supertypes = [
 	kotlin.Any
 ]
 signals = [
-    end_turn_signal,
-	esc_menu_signal,
-	card_added,
-	screen_resized
+    
 ]
 properties = [
-    log_enabled,
-	group_cards_enabled
+    log_enabled
 ]
 functions = [
     _ready,
-	_process,
-	update_u_i_on_turn,
-	_input,
-	on_escape_menu,
-	on_end_turn,
-	on_esc_save_game
+	_process
 ]
