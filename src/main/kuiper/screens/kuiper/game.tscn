@@ -113,6 +113,7 @@ unique_name_in_owner = true
 visible = false
 z_index = 20
 layout_mode = 2
+scroll_offset = Vector2(-20, -57)
 
 [node name="BottomRow_hbox" type="VBoxContainer" parent="."]
 custom_minimum_size = Vector2(0, 50)

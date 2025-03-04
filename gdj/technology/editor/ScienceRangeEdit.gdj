@@ -25,5 +25,7 @@ functions = [
 	_process,
 	on_min_slider_value_changed,
 	on_max_slider_value_changed,
+	on_min_label_value_changed,
+	on_max_label_value_changed,
 	set_label
 ]

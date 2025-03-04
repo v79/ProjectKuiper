@@ -1,7 +1,7 @@
 package technology.editor
 
 import godot.Control
-import godot.Label
+import godot.LineEdit
 import godot.RichTextLabel
 import godot.Slider
 import godot.annotation.RegisterClass
@@ -22,8 +22,8 @@ class ScienceRangeEdit : Control() {
 	private lateinit var label: RichTextLabel
 	private lateinit var minSlider: Slider
 	private lateinit var maxSlider: Slider
-	private lateinit var minLabel: Label
-	private lateinit var maxLabel: Label
+	private lateinit var minLabel: LineEdit
+	private lateinit var maxLabel: LineEdit
 
 	@RegisterFunction
 	override fun _ready() {
@@ -60,7 +60,44 @@ class ScienceRangeEdit : Control() {
 	}
 
 	@RegisterFunction
+	fun onMinLabelValueChanged(value: String) {
+		min = value.toIntOrNull() ?: 0
+		if (min > max) {
+			max = min
+		}
+		minSlider.value = min.toDouble()
+	}
+
+	@RegisterFunction
+	fun onMaxLabelValueChanged(value: String) {
+		max = value.toIntOrNull() ?: 0
+		if (max < min) {
+			min = max
+		}
+		minSlider.value = min.toDouble()
+	}
+
+	@RegisterFunction
 	fun setLabel(richText: String) {
 		label.text = richText
+	}
+
+	fun setDefault(min: Int, max: Int) {
+		this.min = min
+		this.max = max
+		minSlider.value = min.toDouble()
+		maxSlider.value = max.toDouble()
+		minLabel.text = min.toString()
+		maxLabel.text = max.toString()
+	}
+
+	fun getRange() = Pair(min, max)
+	fun setRange(range: Pair<Int, Int>) {
+		min = range.first
+		max = range.second
+		minLabel.text = min.toString()
+		maxLabel.text = max.toString()
+		minSlider.value = min.toDouble()
+		maxSlider.value = max.toDouble()
 	}
 }

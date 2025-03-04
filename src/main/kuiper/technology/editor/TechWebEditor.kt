@@ -23,7 +23,7 @@ class TechWebEditor : Control(), LogInterface {
 
     @RegisterProperty
     @Export
-    override var logEnabled: Boolean = false
+    override var logEnabled: Boolean = true
 
     private val technologies: MutableList<Technology> = mutableListOf()
     private val techWebJsonPath = "res://assets/data/technologies/techweb.json"

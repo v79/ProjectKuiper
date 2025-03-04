@@ -32,12 +32,12 @@ class Technology(val id: Int, var title: String, var description: String, var ti
      * The ranges of science points that unlock this technology. The first number is the minimum, the second is the maximum.
      * These values will be used during game setup to determine the actual cost of the technology
      */
-    private val unlockRanges: MutableMap<Science, Pair<Int, Int>> = mutableMapOf()
+    val unlockRanges: MutableMap<Science, Pair<Int, Int>> = mutableMapOf()
 
     /**
      * Higher tier techs will have higher cost multipliers. This allows us to convert a range from, say, Physics(60,75) to a cost of 140 physics points with a multiplier of 2.0
      */
-    private val multiplier: Double = 1.0
+    var multiplier: Double = 1.0
 
     /**
      * The actual cost of the technology, based on the unlock ranges and the game setup
@@ -73,8 +73,8 @@ class Technology(val id: Int, var title: String, var description: String, var ti
         return unlockRequirements[science]?.progress == unlockRequirements[science]?.cost
     }
 
-    fun setUnlockRange(science: Science, min: Int, max: Int) {
-        unlockRanges[science] = Pair(min, max)
+    fun setUnlockRange(science: Science, range: Pair<Int, Int>) {
+        unlockRanges[science] = range
     }
 
     companion object {

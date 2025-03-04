@@ -45,11 +45,12 @@ min_value = 1.0
 value = 26.0
 rounded = true
 
-[node name="MinimumCostLabel" type="Label" parent="HBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="MinimumCostLabel" type="LineEdit" parent="HBoxContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "25"
-horizontal_alignment = 2
+alignment = 2
+max_length = 3
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="HBoxContainer/VBoxContainer"]
 layout_mode = 2
@@ -64,11 +65,14 @@ min_value = 1.0
 value = 50.0
 rounded = true
 
-[node name="MaximumCostLabel" type="Label" parent="HBoxContainer/VBoxContainer/HBoxContainer2"]
+[node name="MaximumCostLabel" type="LineEdit" parent="HBoxContainer/VBoxContainer/HBoxContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "50"
-horizontal_alignment = 2
+alignment = 2
+max_length = 3
 
 [connection signal="value_changed" from="HBoxContainer/VBoxContainer/HBoxContainer/MinimumSlider" to="." method="on_min_slider_value_changed"]
+[connection signal="text_changed" from="HBoxContainer/VBoxContainer/HBoxContainer/MinimumCostLabel" to="." method="on_min_label_value_changed"]
 [connection signal="value_changed" from="HBoxContainer/VBoxContainer/HBoxContainer2/MaximumSlider" to="." method="on_max_slider_value_changed"]
+[connection signal="text_changed" from="HBoxContainer/VBoxContainer/HBoxContainer2/MaximumCostLabel" to="." method="on_max_label_value_changed"]

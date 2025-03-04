@@ -5,6 +5,8 @@
         "description": "The beginning of all things",
         "tier": "TIER_0",
         "status": "RESEARCHED",
+        "unlockRanges": {},
+        "multiplier": 1.0,
         "unlockRequirements": {},
         "requires": [],
         "actionsUnlocked": [],
@@ -16,6 +18,33 @@
         "description": "The foundation of modern computing",
         "tier": "TIER_1",
         "status": "UNLOCKED",
+        "unlockRanges": {
+            "PHYSICS": {
+                "first": 73,
+                "second": 73
+            },
+            "ASTRONOMY": {
+                "first": 3,
+                "second": 16
+            },
+            "PSYCHOLOGY": {
+                "first": 7,
+                "second": 16
+            },
+            "ENGINEERING": {
+                "first": 46,
+                "second": 69
+            },
+            "BIOCHEMISTRY": {
+                "first": 25,
+                "second": 39
+            },
+            "MATHEMATICS": {
+                "first": 38,
+                "second": 61
+            }
+        },
+        "multiplier": 1.0,
         "unlockRequirements": {},
         "requires": [
             0
@@ -29,6 +58,33 @@
         "description": "Stronger and lighter materials for construction",
         "tier": "TIER_1",
         "status": "UNLOCKED",
+        "unlockRanges": {
+            "PHYSICS": {
+                "first": 25,
+                "second": 50
+            },
+            "ASTRONOMY": {
+                "first": 3,
+                "second": 11
+            },
+            "PSYCHOLOGY": {
+                "first": 6,
+                "second": 11
+            },
+            "ENGINEERING": {
+                "first": 55,
+                "second": 66
+            },
+            "BIOCHEMISTRY": {
+                "first": 18,
+                "second": 27
+            },
+            "MATHEMATICS": {
+                "first": 7,
+                "second": 14
+            }
+        },
+        "multiplier": 1.0,
         "unlockRequirements": {},
         "requires": [
             0
@@ -42,6 +98,33 @@
         "description": "Multiple stages for more efficient space travel",
         "tier": "TIER_1",
         "status": "UNLOCKED",
+        "unlockRanges": {
+            "PHYSICS": {
+                "first": 62,
+                "second": 70
+            },
+            "ASTRONOMY": {
+                "first": 43,
+                "second": 58
+            },
+            "PSYCHOLOGY": {
+                "first": 2,
+                "second": 13
+            },
+            "ENGINEERING": {
+                "first": 69,
+                "second": 92
+            },
+            "BIOCHEMISTRY": {
+                "first": 25,
+                "second": 50
+            },
+            "MATHEMATICS": {
+                "first": 22,
+                "second": 50
+            }
+        },
+        "multiplier": 1.0,
         "unlockRequirements": {},
         "requires": [
             0
@@ -55,6 +138,33 @@
         "description": "Precision control for rockets and missiles",
         "tier": "TIER_1",
         "status": "UNLOCKED",
+        "unlockRanges": {
+            "PHYSICS": {
+                "first": 25,
+                "second": 50
+            },
+            "ASTRONOMY": {
+                "first": 47,
+                "second": 62
+            },
+            "PSYCHOLOGY": {
+                "first": 8,
+                "second": 15
+            },
+            "ENGINEERING": {
+                "first": 56,
+                "second": 74
+            },
+            "BIOCHEMISTRY": {
+                "first": 5,
+                "second": 16
+            },
+            "MATHEMATICS": {
+                "first": 46,
+                "second": 66
+            }
+        },
+        "multiplier": 1.0,
         "unlockRequirements": {},
         "requires": [
             0,
@@ -69,6 +179,33 @@
         "description": "The essentials for keeping astronauts alive",
         "tier": "TIER_1",
         "status": "UNLOCKED",
+        "unlockRanges": {
+            "PHYSICS": {
+                "first": 25,
+                "second": 84
+            },
+            "ASTRONOMY": {
+                "first": 13,
+                "second": 17
+            },
+            "PSYCHOLOGY": {
+                "first": 8,
+                "second": 8
+            },
+            "ENGINEERING": {
+                "first": 77,
+                "second": 85
+            },
+            "BIOCHEMISTRY": {
+                "first": 10,
+                "second": 28
+            },
+            "MATHEMATICS": {
+                "first": 25,
+                "second": 50
+            }
+        },
+        "multiplier": 1.0,
         "unlockRequirements": {},
         "requires": [
             0
@@ -82,6 +219,33 @@
         "description": "Simple and reliable rocket propulsion",
         "tier": "TIER_1",
         "status": "UNLOCKED",
+        "unlockRanges": {
+            "PHYSICS": {
+                "first": 51,
+                "second": 61
+            },
+            "ASTRONOMY": {
+                "first": 18,
+                "second": 40
+            },
+            "PSYCHOLOGY": {
+                "first": 3,
+                "second": 7
+            },
+            "ENGINEERING": {
+                "first": 45,
+                "second": 59
+            },
+            "BIOCHEMISTRY": {
+                "first": 39,
+                "second": 50
+            },
+            "MATHEMATICS": {
+                "first": 25,
+                "second": 36
+            }
+        },
+        "multiplier": 1.0,
         "unlockRequirements": {},
         "requires": [
             3,
@@ -96,6 +260,33 @@
         "description": "The next step in computing technology",
         "tier": "TIER_2",
         "status": "LOCKED",
+        "unlockRanges": {
+            "PHYSICS": {
+                "first": 69,
+                "second": 80
+            },
+            "ASTRONOMY": {
+                "first": 25,
+                "second": 50
+            },
+            "PSYCHOLOGY": {
+                "first": 7,
+                "second": 15
+            },
+            "ENGINEERING": {
+                "first": 62,
+                "second": 87
+            },
+            "BIOCHEMISTRY": {
+                "first": 45,
+                "second": 56
+            },
+            "MATHEMATICS": {
+                "first": 8,
+                "second": 22
+            }
+        },
+        "multiplier": 2.0,
         "unlockRequirements": {},
         "requires": [
             1
