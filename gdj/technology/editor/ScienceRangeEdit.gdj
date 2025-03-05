@@ -1,14 +1,12 @@
 // THIS FILE IS GENERATED! DO NOT EDIT OR DELETE IT. EDIT OR DELETE THE ASSOCIATED SOURCE CODE FILE INSTEAD
 // Note: You can however freely move this file inside your godot project if you want. Keep in mind however, that if you rename the originating source code file, this file will be deleted and regenerated as a new file instead of being updated! Other modifications to the source file however, will result in this file being updated.
 
-registeredName = TechSummaryPanel
-fqName = technology.tree.TechSummaryPanel
-relativeSourcePath = src/main/kuiper/technology/tree/TechSummaryPanel.kt
-baseType = PanelContainer
+registeredName = ScienceRangeEdit
+fqName = technology.editor.ScienceRangeEdit
+relativeSourcePath = src/main/kuiper/technology/editor/ScienceRangeEdit.kt
+baseType = Control
 supertypes = [
-    godot.PanelContainer,
-	godot.Container,
-	godot.Control,
+    godot.Control,
 	godot.CanvasItem,
 	godot.Node,
 	godot.Object,
@@ -19,10 +17,15 @@ signals = [
     
 ]
 properties = [
-    dev_mode
+    min,
+	max
 ]
 functions = [
     _ready,
 	_process,
-	update_summary
+	on_min_slider_value_changed,
+	on_max_slider_value_changed,
+	on_min_label_value_changed,
+	on_max_label_value_changed,
+	set_label
 ]

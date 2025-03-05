@@ -1,10 +1,12 @@
 package state
 
+import LogInterface
 import actions.*
-import godot.global.GD
 import hexgrid.Hex
 import kotlinx.serialization.Serializable
 import technology.Science
+import technology.TechStatus
+import technology.TechTier
 import technology.Technology
 
 /**
@@ -12,7 +14,9 @@ import technology.Technology
  * It will likely have many other properties over time
  */
 @Serializable
-class Company(var name: String) {
+class Company(var name: String) : LogInterface {
+
+    override var logEnabled = true
 
     /**
      * Resources are the primary currency of the game
@@ -42,7 +46,7 @@ class Company(var name: String) {
     fun activateAction(hex: Hex, action: Action) {
         action.turnsRemaining = action.turns
         activeActions.add(action)
-        GD.print("Company: Activating action $action")
+        log("Company: Activating action $action")
     }
 
     /**
@@ -73,14 +77,14 @@ class Company(var name: String) {
      * Return a list of completed actions (turns remaining == 0)
      */
     fun nextTurn(): List<Action> {
+        log("Company: Next turn")
 
         val completed: MutableList<Action> = mutableListOf()
-        // spend science amongst technologies, i.e. perform research
-        // for now, just reset to zero!
-//        sciences.replaceAll { _, _ -> 0.0f }
+
 
         // perform actions
         // perform ongoing action (if any)
+        log("Company: Executing ${activeActions.size} active actions")
         activeActions.forEach act@{ action ->
             // construct buildings
 
@@ -92,14 +96,13 @@ class Company(var name: String) {
                 when (mutation) {
                     is ResourceMutation -> {
                         if (mutation.amountPerYear != 0) {
-                            println("Executing mutation: ${action.id} $mutation")
+                            log("Executing mutation: ${action.id} $mutation")
                             when (mutation.type) {
                                 MutationType.ADD -> addResource(mutation.resource, mutation.amountPerYear)
                                 MutationType.SUBTRACT -> addResource(mutation.resource, -mutation.amountPerYear)
                                 MutationType.RESET -> setResource(mutation.resource, mutation.amountPerYear)
                                 MutationType.RATE_MULTIPLY -> multiplyResource(
-                                    mutation.resource,
-                                    mutation.amountPerYear.toFloat()
+                                    mutation.resource, mutation.amountPerYear.toFloat()
                                 )
                             }
                         }
@@ -107,25 +110,19 @@ class Company(var name: String) {
 
                     is ScienceMutation -> {
                         if (mutation.amount != 0.0f) {
-                            println("Executing science mutation: ${action.id} $mutation")
+                            log("Executing science mutation: ${action.id} $mutation")
                             when (mutation.type) {
                                 MutationType.ADD -> sciences.merge(
-                                    mutation.science,
-                                    mutation.amount,
-                                    Float::plus
+                                    mutation.science, mutation.amount, Float::plus
                                 )
 
                                 MutationType.SUBTRACT -> sciences.merge(
-                                    mutation.science,
-                                    mutation.amount,
-                                    Float::minus
+                                    mutation.science, mutation.amount, Float::minus
                                 )
 
                                 MutationType.RESET -> sciences[mutation.science] = mutation.amount
                                 MutationType.RATE_MULTIPLY -> sciences.merge(
-                                    mutation.science,
-                                    mutation.amount,
-                                    Float::times
+                                    mutation.science, mutation.amount, Float::times
                                 )
                             }
                         }
@@ -143,7 +140,7 @@ class Company(var name: String) {
                             if (mutation.completionAmount == null) {
                                 return@mut
                             }
-                            println("Executing completion mutation: ${action.id} $mutation")
+                            log("Executing completion mutation: ${action.id} $mutation")
                             when (mutation.type) {
                                 MutationType.ADD -> addResource(mutation.resource, mutation.completionAmount)
                                 MutationType.SUBTRACT -> addResource(mutation.resource, -mutation.completionAmount)
@@ -154,20 +151,59 @@ class Company(var name: String) {
 
                         is ScienceMutation -> {
                             // it doesn't make sense to have a completion mutation for science
-                            println("Error: completion mutation for science doesn't make sense: $mutation")
+                            logWarning("Error: completion mutation for science doesn't make sense: $mutation")
                         }
                     }
                 }
             }
         }
+
+        // spend the science points on research
+        doResearch()
+
         // clean up any expired actions
         completed.addAll(activeActions.filter { it.turnsRemaining == 0 })
         activeActions.removeIf { it.turnsRemaining == 0 }
 
-        // recalculate science rates
-        sciences.replaceAll { _, rate -> rate + 1.0f }
+        // TODO: recalculate science rates
+        sciences.replaceAll { _, rate -> rate + 10.0f }
         // update company resources
 
         return completed
+    }
+
+    /**
+     * Do the research. For each of the sciences, spend the points on the unlocked technologies.
+     * The list of techs will be shuffled to avoid biasing the research towards the first techs in the list
+     */
+    private fun doResearch() {
+        sciences.forEach { science ->
+            technologies.filter { it.status == TechStatus.UNLOCKED }.shuffled().forEach { technology ->
+                val cost = technology.researchProgress[science.key]?.cost ?: 0
+                val currentProgress = technology.researchProgress[science.key]?.progress ?: 0
+                val remaining = cost - currentProgress
+                val toSpend = sciences[science.key] ?: 0.0f
+                if (toSpend > 0.0f) {
+                    if (toSpend >= remaining) {
+                        technology.addProgress(science.key, remaining)
+                        sciences[science.key] = toSpend - remaining
+                    } else {
+                        technology.addProgress(science.key, toSpend.toInt())
+                        sciences[science.key] = 0.0f
+                    }
+                }
+            }
+        }
+        technologies.forEach { technology ->
+            if (technology.tier != TechTier.TIER_0) {
+                if (technology.progressPct > 50.0f) {
+                    log("Company: Technology ${technology.title} now ${technology.progressPct}% complete")
+                }
+                if (technology.progressPct >= 100.0) {
+                    logWarning("Company: Technology ${technology.title} is complete!")
+                    technology.status = TechStatus.RESEARCHED
+                }
+            }
+        }
     }
 }

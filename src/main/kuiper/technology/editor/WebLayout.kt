@@ -13,7 +13,6 @@ import godot.core.Vector2
 import godot.core.connect
 import godot.extensions.getNodeAs
 import godot.extensions.instantiateAs
-import godot.global.GD
 import technology.TechTier
 import technology.Technology
 import kotlin.math.cos
@@ -205,7 +204,7 @@ class WebLayout : GraphEdit(), LogInterface {
 	fun clearAllTechNodes() {
 		logWarning("Clearing all technology nodes!")
 		techNodes.forEach {
-		   it.queueFree()
+			it.queueFree()
 		}
 	}
 
@@ -214,7 +213,6 @@ class WebLayout : GraphEdit(), LogInterface {
 	 */
 	private fun getLine2DNode(unlockingNode: TechNode, newNode: TechNode): Line2D {
 		// Get the Line2D node that been created by this connection and store it in a map
-		GD.print("**** getLine2DNode connection layer children: ${connectionLayer.getChildCount(includeInternal = true)}")
 		val line2DNode = connectionLayer.getChildren().back() as Line2D
 		line2DNode.visible = false
 		lineNodes[unlockingNode to newNode] = line2DNode

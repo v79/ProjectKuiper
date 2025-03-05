@@ -31,5 +31,6 @@ functions = [
 	on_description_text_changed,
 	on_delete_button_pressed,
 	on_cancel_delete_button_pressed,
-	on_confirm_delete_button_pressed
+	on_confirm_delete_button_pressed,
+	on_multiplier_edit_changed
 ]
