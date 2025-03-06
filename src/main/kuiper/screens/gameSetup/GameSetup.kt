@@ -11,7 +11,6 @@ import godot.extensions.getNodeAs
 import godot.global.GD
 import loaders.DataLoader
 import state.*
-import technology.Science
 import technology.Technology
 
 @RegisterClass
@@ -34,6 +33,7 @@ class GameSetup : Node() {
     // UI elements
     private lateinit var companyNamePanel: PanelContainer
     private lateinit var startGameButton: Button
+    private lateinit var nextButton: Button
     private lateinit var companyNameEdit: LineEdit
     private lateinit var locationMap: ColorRect
     private lateinit var hqSponsorListPanel: ItemList
@@ -54,6 +54,7 @@ class GameSetup : Node() {
         sponsorDescription = getNodeAs("%SponsorDescription")!!
         baseResources = getNodeAs("%BaseResources")!!
         baseSciences = getNodeAs("%BaseSciences")!!
+        nextButton = getNodeAs("%NextButton")!!
 
         sponsorList.addAll(dataLoader.loadSponsorData())
         technologies.addAll(dataLoader.loadTechWeb())
@@ -94,6 +95,7 @@ class GameSetup : Node() {
         sponsorList[index].baseScienceRate.forEach { (science, rate) ->
             baseSciences.appendText("[img=32]${science.spritePath}[/img] ${science.displayName}: $rate\n")
         }
+        nextButton.disabled = false
     }
 
     @RegisterFunction
@@ -164,18 +166,6 @@ class GameSetup : Node() {
     @RegisterFunction
     fun _on_company_panel_back_pressed() {
         companyNamePanel.visible = false
-    }
-
-    /**
-     * Create some random starting science rates
-     * Later these will be based on the country selected and loaded from reference data
-     */
-    private fun generateStartingScienceRates(): Map<Science, Float> {
-        val scienceRates = mutableMapOf<Science, Float>()
-        Science.entries.forEach { science ->
-            scienceRates[science] = GD.randfRange(1.0f, 10.0f)
-        }
-        return scienceRates
     }
 
 }
