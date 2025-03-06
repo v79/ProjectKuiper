@@ -90,8 +90,8 @@ custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 size_flags_horizontal = 3
 bbcode_enabled = true
-text = "List of stats about the location, e.g. number of building location, research bonuses, buffs and debufs.
-[hint=influence is very important]about influence[/hint]"
+text = "List of stats about the location, e.g. number of building location, research bonuses, buffs and debufs. [hint=influence is very important]about influence[/hint]"
+scroll_active = false
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer/GridContainer/VBoxContainer"]
 layout_mode = 2
@@ -118,6 +118,7 @@ alignment = 2
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
+disabled = true
 text = "Next"
 
 [node name="CompanyNamePanel" type="PanelContainer" parent="."]
