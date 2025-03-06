@@ -55,9 +55,9 @@ class GameState : Node(), LogInterface {
      * On turn end, we need to update the game state
      */
     fun nextTurn() {
-        // Remove any notifications that are not persistent
+        // Clear notifications; exiting persistent notifications will remain in the tree until dismissed
+        notifications.clear()
         signalBus.nextTurn.emit()
-        notifications.removeIf { !it.persistent }
         log("GameState: Next turn")
         notifications.addAll(company.doResearch())
         val completed = company.doActions()

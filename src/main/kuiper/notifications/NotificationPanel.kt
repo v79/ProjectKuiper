@@ -61,7 +61,6 @@ class NotificationPanel : VBoxContainer(), LogInterface {
     }
 
     private fun addNotification(notification: Notification) {
-        log("Would add notification: $notification")
         val item = notificationItemScene.instantiate() as NotificationItem
         item.ready.connect {
             item.let {
@@ -75,7 +74,6 @@ class NotificationPanel : VBoxContainer(), LogInterface {
     }
 
     private fun clearTransientNotifications() {
-        log("Would clear transient notifications")
         getChildren().forEach {
             if (it is NotificationItem) {
                 if (!it.notification!!.persistent) {

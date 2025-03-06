@@ -42,6 +42,12 @@ class Company(var name: String) : LogInterface {
     val technologies: MutableList<Technology> = mutableListOf()
 
     /**
+     * Notification history/memory to ensure we don't sent the same notification multiple times.
+     * This can be pruned regularly
+     */
+    val notificationHistory: MutableSet<Int> = mutableSetOf()
+
+    /**
      * Activate the given action, adding it to the list of active actions
      */
     fun activateAction(hex: Hex, action: Action) {
@@ -181,23 +187,31 @@ class Company(var name: String) : LogInterface {
             if (technology.tier != TechTier.TIER_0) {
                 if (technology.progressPct > 50.0f) {
                     // I wanted this to be a one-off event, but of course it will fire every turn that it applies
-                    notifications.add(
-                        Notification.ResearchProgress(
-                            technology,
-                            "Researching ${technology.title} now 50% complete"
-                        )
+                    val notification = Notification.ResearchProgress(
+                        technology, "Researching ${technology.title} now 50% complete"
                     )
+                    if (!notificationHistory.contains(notification.technology.id)) {
+                        notifications.add(
+                            notification
+                        )
+                        notificationHistory.add(notification.technology.id)
+                    }
                     log("Company: Technology ${technology.title} now ${technology.progressPct}% complete")
                 }
                 if (technology.progressPct >= 100.0) {
                     logWarning("Company: Technology ${technology.title} is complete!")
-                    technology.status = TechStatus.RESEARCHED
-                    notifications.add(
-                        Notification.ResearchComplete(
-                            technology,
-                            "Research complete: ${technology.title}"
+                    // prune any progress notifications for this tech
+//                    notificationHistory.removeIf { it == technology.id && technology.status == TechStatus.RESEARCHED }
+                    if (technology.status != TechStatus.RESEARCHED) {
+                        val notification = Notification.ResearchComplete(
+                            technology, "Research complete: ${technology.title}"
                         )
-                    )
+                        notifications.add(
+                            notification
+                        )
+                        notificationHistory.add(notification.technology.id)
+                    }
+                    technology.status = TechStatus.RESEARCHED
                 }
             }
         }
