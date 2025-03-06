@@ -1,5 +1,6 @@
 package state
 
+import LogInterface
 import SignalBus
 import actions.Action
 import actions.ActionWrapper
@@ -12,10 +13,11 @@ import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
 import godot.extensions.getNodeAs
-import godot.global.GD
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlinx.serialization.json.Json
+import notifications.Notification
+import notifications.NotificationWrapper
 import java.util.*
 
 /**
@@ -23,7 +25,11 @@ import java.util.*
  */
 @RegisterClass
 @Serializable
-class GameState : Node() {
+class GameState : Node(), LogInterface {
+
+    @RegisterProperty
+    @Export
+    override var logEnabled: Boolean = true
 
     // Globals
     @Transient
@@ -33,11 +39,12 @@ class GameState : Node() {
     @Export
     var year: Int = 1980
 
+    // Data
     var company: Company = Company("Kuiper")
     var sponsor: Sponsor? = null
     var zones: List<Zone> = listOf()
-
     var availableActions: MutableList<Action> = mutableListOf()
+    val notifications: MutableList<Notification> = mutableListOf()
 
     @RegisterFunction
     override fun _ready() {
@@ -48,11 +55,20 @@ class GameState : Node() {
      * On turn end, we need to update the game state
      */
     fun nextTurn() {
-        GD.print("GameState: Next turn")
-        val completed = company.nextTurn()
+        // Clear notifications; exiting persistent notifications will remain in the tree until dismissed
+        notifications.clear()
+        signalBus.nextTurn.emit()
+        log("GameState: Next turn")
+        notifications.addAll(company.doResearch())
+        val completed = company.doActions()
+        notifications.addAll(completed.map { Notification.ActionComplete(it, "Action completed: ${it.actionName}") })
+        notifications.addAll(company.recalculateResearch())
         // signal completed actions to expire
         completed.forEach { action ->
             signalBus.actionCompleted.emitSignal(ActionWrapper(action))
+        }
+        notifications.forEach { notification ->
+            signalBus.notify.emit(NotificationWrapper(notification))
         }
         // increment the year
         year++
@@ -82,9 +98,9 @@ class GameState : Node() {
 
     @RegisterFunction
     fun save() {
-        GD.print("GameState: Saving game state")
+        log("GameState: Saving game state")
         val jsonString = json.encodeToString(serializer(), this)
-        GD.print(jsonString)
+        logInfo(jsonString)
         if (!DirAccess.dirExistsAbsolute("user://saves")) {
             DirAccess.makeDirRecursiveAbsolute("user://saves")
         }
@@ -92,14 +108,14 @@ class GameState : Node() {
         val fileName = this.company.name.replace(" ", "_").lowercase(Locale.getDefault())
         val saveFile = FileAccess.open("user://saves/savegame-$fileName-kuiper.json", FileAccess.ModeFlags.WRITE)
         // In windows, this will be saved to C:\Users\<username>\AppData\Roaming\Godot\app_userdata\<project_name>\saves\savegame-<filename>-kuiper.json
-        GD.print("Saving file ${ProjectSettings.globalizePath(saveFile?.getPath() ?: "null")}")
+        log("Saving file ${ProjectSettings.globalizePath(saveFile?.getPath() ?: "null")}")
         saveFile?.let {
             it.storeString(jsonString)
             it.close()
             // Update project configuration
             val configFile = FileAccess.open("user://config.json", FileAccess.ModeFlags.READ_WRITE)
             if (configFile != null) {
-                GD.print("GameState: Updating last save file in config")
+                log("GameState: Updating last save file in config")
                 val configJson = configFile.getAsText()
                 val config = if (configFile.getLength() > 0) {
                     // TODO: make this more robust especially as the game state will change a lot during development
@@ -109,15 +125,14 @@ class GameState : Node() {
                 }
                 config.updateConfigFile(saveFile.getPath(), configFile)
             } else {
-                GD.print("GameState: Could not open config file; creating new")
+                logWarning("GameState: Could not open config file; creating new")
                 val newConfigFile = FileAccess.open("user://config.json", FileAccess.ModeFlags.WRITE)
                 if (newConfigFile != null) {
                     GameConfig(lastSaveFile = saveFile.getPath()).updateConfigFile(
-                        saveFile.getPath(),
-                        newConfigFile
+                        saveFile.getPath(), newConfigFile
                     )
                 } else {
-                    GD.printErr("GameState: Could not create config file")
+                    logError("GameState: Could not create config file")
                 }
             }
         }

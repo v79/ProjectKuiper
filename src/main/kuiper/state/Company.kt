@@ -4,6 +4,7 @@ import LogInterface
 import actions.*
 import hexgrid.Hex
 import kotlinx.serialization.Serializable
+import notifications.Notification
 import technology.Science
 import technology.TechStatus
 import technology.TechTier
@@ -41,6 +42,12 @@ class Company(var name: String) : LogInterface {
     val technologies: MutableList<Technology> = mutableListOf()
 
     /**
+     * Notification history/memory to ensure we don't sent the same notification multiple times.
+     * This can be pruned regularly
+     */
+    val notificationHistory: MutableSet<Int> = mutableSetOf()
+
+    /**
      * Activate the given action, adding it to the list of active actions
      */
     fun activateAction(hex: Hex, action: Action) {
@@ -71,19 +78,9 @@ class Company(var name: String) : LogInterface {
         resources[type] = (resources[type]!! * multiplier).toInt()
     }
 
-    /**
-     * Perform all active actions, update company resources and sciences,
-     * spend science on research, and so on
-     * Return a list of completed actions (turns remaining == 0)
-     */
-    fun nextTurn(): List<Action> {
-        log("Company: Next turn")
 
+    fun doActions(): List<Action> {
         val completed: MutableList<Action> = mutableListOf()
-
-
-        // perform actions
-        // perform ongoing action (if any)
         log("Company: Executing ${activeActions.size} active actions")
         activeActions.forEach act@{ action ->
             // construct buildings
@@ -157,18 +154,9 @@ class Company(var name: String) : LogInterface {
                 }
             }
         }
-
-        // spend the science points on research
-        doResearch()
-
         // clean up any expired actions
         completed.addAll(activeActions.filter { it.turnsRemaining == 0 })
         activeActions.removeIf { it.turnsRemaining == 0 }
-
-        // TODO: recalculate science rates
-        sciences.replaceAll { _, rate -> rate + 10.0f }
-        // update company resources
-
         return completed
     }
 
@@ -176,7 +164,8 @@ class Company(var name: String) : LogInterface {
      * Do the research. For each of the sciences, spend the points on the unlocked technologies.
      * The list of techs will be shuffled to avoid biasing the research towards the first techs in the list
      */
-    private fun doResearch() {
+    fun doResearch(): List<Notification> {
+        val notifications: MutableList<Notification> = mutableListOf()
         sciences.forEach { science ->
             technologies.filter { it.status == TechStatus.UNLOCKED }.shuffled().forEach { technology ->
                 val cost = technology.researchProgress[science.key]?.cost ?: 0
@@ -197,13 +186,40 @@ class Company(var name: String) : LogInterface {
         technologies.forEach { technology ->
             if (technology.tier != TechTier.TIER_0) {
                 if (technology.progressPct > 50.0f) {
+                    // I wanted this to be a one-off event, but of course it will fire every turn that it applies
+                    val notification = Notification.ResearchProgress(
+                        technology, "Researching ${technology.title} now 50% complete"
+                    )
+                    if (!notificationHistory.contains(notification.technology.id)) {
+                        notifications.add(
+                            notification
+                        )
+                        notificationHistory.add(notification.technology.id)
+                    }
                     log("Company: Technology ${technology.title} now ${technology.progressPct}% complete")
                 }
                 if (technology.progressPct >= 100.0) {
                     logWarning("Company: Technology ${technology.title} is complete!")
+                    // prune any progress notifications for this tech
+//                    notificationHistory.removeIf { it == technology.id && technology.status == TechStatus.RESEARCHED }
+                    if (technology.status != TechStatus.RESEARCHED) {
+                        val notification = Notification.ResearchComplete(
+                            technology, "Research complete: ${technology.title}"
+                        )
+                        notifications.add(
+                            notification
+                        )
+                        notificationHistory.add(notification.technology.id)
+                    }
                     technology.status = TechStatus.RESEARCHED
                 }
             }
         }
+        return notifications
+    }
+
+    fun recalculateResearch(): List<Notification> {
+        sciences.replaceAll { _, rate -> rate + 10.0f }
+        return emptyList()
     }
 }

@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://dhc5at6r5jl4n"]
+[gd_scene load_steps=13 format=3 uid="uid://dhc5at6r5jl4n"]
 
 [ext_resource type="Theme" uid="uid://dwjw02q78v0i1" path="res://assets/themes/theme.tres" id="1_ewrs8"]
 [ext_resource type="Script" path="res://src/main/kuiper/screens/kuiper/KuiperGame.kt" id="1_nlsq8"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://q3iu1ngkr0tt" path="res://src/main/kuiper/science/science_panel.tscn" id="4_g68x7"]
 [ext_resource type="PackedScene" uid="uid://bcnrl5714e1pe" path="res://src/main/kuiper/actions/available_actions_fan.tscn" id="4_o0igw"]
 [ext_resource type="PackedScene" uid="uid://cpwrm52thlo67" path="res://src/main/kuiper/confirm_action/confirm_action.tscn" id="6_ts3vi"]
+[ext_resource type="PackedScene" uid="uid://beaqw4yn0khim" path="res://src/main/kuiper/notifications/notification_panel.tscn" id="8_dtcw7"]
 [ext_resource type="PackedScene" uid="uid://bsyyc75msaxp1" path="res://src/main/kuiper/actions/CardDeck.tscn" id="8_skh3w"]
 [ext_resource type="PackedScene" uid="uid://drpge8uc3a34x" path="res://src/main/kuiper/actions/activeActions/active_actions_fan.tscn" id="9_65jo0"]
 [ext_resource type="PackedScene" uid="uid://bwnqinqcecnfq" path="res://src/main/kuiper/technology/tree/tech_tree.tscn" id="11_eqjyv"]
@@ -108,12 +109,43 @@ layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 
+[node name="HBoxContainer" type="HBoxContainer" parent="AspectRatioContainer/VBoxContainer/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="ActiveActionsFan" parent="AspectRatioContainer/VBoxContainer/MarginContainer/HBoxContainer" groups=["Cards"] instance=ExtResource("9_65jo0")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="AspectRatioContainer/VBoxContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="AspectRatioContainer/VBoxContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="MarginContainer2" type="MarginContainer" parent="AspectRatioContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 40
+
+[node name="NotificationPanel" parent="AspectRatioContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("8_dtcw7")]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="AspectRatioContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 180
+
 [node name="TechTree" parent="AspectRatioContainer/VBoxContainer/MarginContainer" instance=ExtResource("11_eqjyv")]
 unique_name_in_owner = true
 visible = false
 z_index = 20
 layout_mode = 2
-scroll_offset = Vector2(-20, -57)
+size_flags_horizontal = 3
+scroll_offset = Vector2(-208, -400)
 
 [node name="BottomRow_hbox" type="VBoxContainer" parent="."]
 custom_minimum_size = Vector2(0, 50)
@@ -121,6 +153,11 @@ layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 8
 theme_override_constants/separation = 20
+alignment = 2
+
+[node name="FakeNotification" type="Button" parent="BottomRow_hbox"]
+layout_mode = 2
+text = "Notify me"
 alignment = 2
 
 [node name="AddCardButton" type="Button" parent="BottomRow_hbox"]
@@ -167,12 +204,6 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="ActiveActionsFan" parent="." groups=["Cards"] instance=ExtResource("9_65jo0")]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 4
-
 [node name="EscMenu" parent="." instance=ExtResource("2_4tnej")]
 unique_name_in_owner = true
 visible = false
@@ -185,6 +216,7 @@ mouse_filter = 1
 [connection signal="end_turn_signal" from="." to="." method="on_end_turn"]
 [connection signal="esc_menu_signal" from="." to="." method="on_escape_menu"]
 [connection signal="pressed" from="AspectRatioContainer/VBoxContainer/TopRow_hbox/MainMenuButton" to="." method="on_escape_menu"]
+[connection signal="pressed" from="BottomRow_hbox/FakeNotification" to="AspectRatioContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/NotificationPanel" method="_on_button_pressed"]
 [connection signal="pressed" from="BottomRow_hbox/AddCardButton" to="CardDeck" method="get_card"]
 [connection signal="pressed" from="BottomRow_hbox/RemoveCardButton" to="AvailableActionsFan" method="remove_random_card"]
 [connection signal="pressed" from="BottomRow_hbox/EndTurn_btn" to="." method="on_end_turn"]

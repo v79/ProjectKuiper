@@ -10,6 +10,7 @@ import godot.core.signal0
 import godot.core.signal1
 import godot.core.signal2
 import hexgrid.Hex
+import notifications.NotificationWrapper
 import technology.editor.TechWrapper
 
 /**
@@ -62,6 +63,12 @@ class SignalBus : Node() {
     val dealCardFromDeck by signal1<ActionWrapper>("action")
 
     // Signals for updating UI each turn
+    @RegisterSignal
+    val nextTurn by signal0()
+
+    @RegisterSignal
+    val notify by signal1<NotificationWrapper>("notification")
+
     @RegisterSignal
     val updateScience by signal2<String, Float>("science", "value")
 

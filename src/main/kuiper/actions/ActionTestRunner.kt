@@ -29,7 +29,7 @@ fun main() {
     var turn = 1
     while (company.activeActions.isNotEmpty()) {
         println("*** Calling nextTurn($turn), actions active: ${company.activeActions.size}")
-        company.nextTurn()
+        company.doActions()
         println("Company resources after $turn turns")
         ResourceType.entries.forEach {
             println("\t${it}: ${company.resources[it]}")
@@ -45,14 +45,17 @@ fun main() {
 private fun scienceActionTests(company: Company) {
     println("Setting up some science actions")
 
-    val physicsTimes1Point2 = Action(100, "Physics x 1.2", "Increase physics science by 20%", turns = 1, ActionType.BOOST)
+    val physicsTimes1Point2 =
+        Action(100, "Physics x 1.2", "Increase physics science by 20%", turns = 1, ActionType.BOOST)
     physicsTimes1Point2.addScienceMutation(Science.PHYSICS, MutationType.RATE_MULTIPLY, 1.2f)
 
-    val geologyTimes1Point5CostsGold = Action(101, "Geology x 1.5", "Increase engineering science by 50%", turns = 1, ActionType.BOOST)
+    val geologyTimes1Point5CostsGold =
+        Action(101, "Geology x 1.5", "Increase engineering science by 50%", turns = 1, ActionType.BOOST)
     geologyTimes1Point5CostsGold.addScienceMutation(Science.ENGINEERING, MutationType.RATE_MULTIPLY, 1.5f)
     geologyTimes1Point5CostsGold.addInitialCost(ResourceType.GOLD, 5)
 
-    val cutMathsFundingForTwoTurns = Action(102, "Cut maths funding", "Reduce maths science by 50%", turns = 2, ActionType.BOOST)
+    val cutMathsFundingForTwoTurns =
+        Action(102, "Cut maths funding", "Reduce maths science by 50%", turns = 2, ActionType.BOOST)
     cutMathsFundingForTwoTurns.addScienceMutation(Science.MATHEMATICS, MutationType.ADD, -0.25f)
     cutMathsFundingForTwoTurns.addInitialCost(ResourceType.GOLD, -5)
 
