@@ -21,4 +21,10 @@ interface LogInterface {
             GD.printRich("[color=yellow]$message[/color]")
         }
     }
+
+    fun logInfo(message: String) {
+        if (logEnabled) {
+            GD.printRich("[color=silver]$message[/color]")
+        }
+    }
 }
