@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://d0w0wqm220vq8"]
+[gd_scene load_steps=4 format=3 uid="uid://d0w0wqm220vq8"]
 
 [ext_resource type="Script" path="res://src/main/kuiper/screens/gameSetup/GameSetup.kt" id="1_n7xff"]
 [ext_resource type="Theme" uid="uid://dwjw02q78v0i1" path="res://assets/themes/theme.tres" id="2_pk6mu"]
+[ext_resource type="PackedScene" uid="uid://do5x8wbuiwvb" path="res://src/main/kuiper/notifications/toast.tscn" id="3_yli5s"]
 
 [node name="GameSetup" type="CanvasLayer"]
 script = ExtResource("1_n7xff")
@@ -187,6 +188,10 @@ size_flags_vertical = 8
 theme_override_font_sizes/font_size = 28
 text = "Start"
 alignment = 2
+
+[node name="Toast" parent="." instance=ExtResource("3_yli5s")]
+unique_name_in_owner = true
+visible = false
 
 [connection signal="item_selected" from="MarginContainer/VBoxContainer/MarginContainer/GridContainer/HQSponsorList" to="." method="_on_location_list_item_selected"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer2/NextButton" to="." method="_on_next_button_pressed"]

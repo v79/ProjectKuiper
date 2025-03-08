@@ -1,23 +1,28 @@
 package screens.gameSetup
 
+import LogInterface
+import SignalBus
 import godot.*
-import godot.annotation.RegisterClass
-import godot.annotation.RegisterFunction
-import godot.annotation.RegisterSignal
+import godot.annotation.*
 import godot.core.asCachedStringName
 import godot.core.signal0
 import godot.core.signal1
 import godot.extensions.getNodeAs
-import godot.global.GD
 import loaders.DataLoader
+import notifications.Toast
 import state.*
 import technology.Technology
 
 @RegisterClass
-class GameSetup : Node() {
+class GameSetup : Node(), LogInterface {
+
+    @RegisterProperty
+    @Export
+    override var logEnabled = true
 
     // Globals
     private lateinit var dataLoader: DataLoader
+    private lateinit var signalBus: SignalBus
 
     @RegisterSignal
     val countrySelectSignal by signal1<Int>("countryId")
@@ -40,11 +45,13 @@ class GameSetup : Node() {
     private lateinit var sponsorDescription: RichTextLabel
     private lateinit var baseResources: RichTextLabel
     private lateinit var baseSciences: RichTextLabel
+    private lateinit var toast: Toast
 
     // Called when the node enters the scene tree for the first time.
     @RegisterFunction
     override fun _ready() {
         dataLoader = getNodeAs("/root/DataLoader")!!
+        signalBus = getNodeAs("/root/SignalBus")!!
 
         companyNamePanel = getNodeAs("CompanyNamePanel")!!
         startGameButton = getNodeAs("%StartGame_Button")!!
@@ -55,6 +62,8 @@ class GameSetup : Node() {
         baseResources = getNodeAs("%BaseResources")!!
         baseSciences = getNodeAs("%BaseSciences")!!
         nextButton = getNodeAs("%NextButton")!!
+        toast = getNodeAs("%Toast")!!
+        toast.visible = false
 
         sponsorList.addAll(dataLoader.loadSponsorData())
         technologies.addAll(dataLoader.loadTechWeb())
@@ -100,16 +109,14 @@ class GameSetup : Node() {
 
     @RegisterFunction
     fun _onStartGameButtonPressed() {
-        GD.print("Setting up and starting game")
         if (selectedSponsor == -1) {
-            GD.printErr("No sponsor selected!")
+            logError("No sponsor selected!")
             return
         }
 
         // globals are added to the tree first, so will be the first child
         val gameState = getTree()?.root?.getChild(0) as GameState
         val sponsor = sponsorList[selectedSponsor - 1]
-        GD.print("Randomising technology costs")
         technologies.forEach { technology -> technology.randomiseCosts() }
         gameState.let { gS ->
             gS.year = 1965
@@ -122,12 +129,10 @@ class GameSetup : Node() {
                 company.technologies.addAll(technologies)
             }
         }
-
-        GD.print("Starting game for country ${sponsorList[selectedSponsor - 1].name}")
-        GD.print("Company name: ${gameState.company.name}")
-        GD.print("Science rates: ${gameState.company.sciences}")
-        GD.print("Technologies: ${gameState.company.technologies.size}")
-
+        log("Starting game for sponsor ${sponsorList[selectedSponsor - 1].name}")
+        log("Company name: ${gameState.company.name}")
+        log("Science rates: ${gameState.company.sciences}")
+        log("Technologies: ${gameState.company.technologies.size}")
         getTree()?.changeSceneToFile("res://src/main/kuiper/screens/kuiper/game.tscn")
     }
 

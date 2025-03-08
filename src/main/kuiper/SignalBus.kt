@@ -11,6 +11,7 @@ import godot.core.signal1
 import godot.core.signal2
 import hexgrid.Hex
 import notifications.NotificationWrapper
+import notifications.ToastDetails
 import technology.editor.TechWrapper
 
 /**
@@ -68,6 +69,15 @@ class SignalBus : Node() {
 
     @RegisterSignal
     val notify by signal1<NotificationWrapper>("notification")
+
+    @RegisterSignal
+    val toast by signal1<ToastDetails>("toast")
+
+    @RegisterSignal
+    val updateToast by signal1<ToastDetails>("toast")
+
+    @RegisterSignal
+    val toastExpired by signal0()
 
     @RegisterSignal
     val updateScience by signal2<String, Float>("science", "value")

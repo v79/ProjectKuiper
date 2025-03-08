@@ -18,6 +18,7 @@ import kotlinx.serialization.Transient
 import kotlinx.serialization.json.Json
 import notifications.Notification
 import notifications.NotificationWrapper
+import notifications.ToastDetails
 import java.util.*
 
 /**
@@ -59,9 +60,17 @@ class GameState : Node(), LogInterface {
         notifications.clear()
         signalBus.nextTurn.emit()
         log("GameState: Next turn")
+        val progress = ToastDetails("Researching...", true, 33.0)
+        signalBus.toast.emit(progress)
         notifications.addAll(company.doResearch())
+        progress.message = "Executing actions..."
+        progress.progress = 66.0
+        signalBus.updateToast.emit(progress)
         val completed = company.doActions()
         notifications.addAll(completed.map { Notification.ActionComplete(it, "Action completed: ${it.actionName}") })
+        progress.message = "Assessing research budget for next year..."
+        progress.progress = 80.0
+        signalBus.updateToast.emit(progress)
         notifications.addAll(company.recalculateResearch())
         // signal completed actions to expire
         completed.forEach { action ->

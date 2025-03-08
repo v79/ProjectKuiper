@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://dhc5at6r5jl4n"]
+[gd_scene load_steps=14 format=3 uid="uid://dhc5at6r5jl4n"]
 
 [ext_resource type="Theme" uid="uid://dwjw02q78v0i1" path="res://assets/themes/theme.tres" id="1_ewrs8"]
 [ext_resource type="Script" path="res://src/main/kuiper/screens/kuiper/KuiperGame.kt" id="1_nlsq8"]
@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://bsyyc75msaxp1" path="res://src/main/kuiper/actions/CardDeck.tscn" id="8_skh3w"]
 [ext_resource type="PackedScene" uid="uid://drpge8uc3a34x" path="res://src/main/kuiper/actions/activeActions/active_actions_fan.tscn" id="9_65jo0"]
 [ext_resource type="PackedScene" uid="uid://bwnqinqcecnfq" path="res://src/main/kuiper/technology/tree/tech_tree.tscn" id="11_eqjyv"]
+[ext_resource type="PackedScene" uid="uid://do5x8wbuiwvb" path="res://src/main/kuiper/notifications/toast.tscn" id="13_kllnu"]
 
 [node name="CanvasLayer" type="PanelContainer"]
 anchors_preset = 15
@@ -194,8 +195,13 @@ size_flags_vertical = 3
 [node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer"]
 custom_minimum_size = Vector2(0, 300)
 layout_mode = 2
-size_flags_vertical = 3
 mouse_filter = 2
+
+[node name="Toast" parent="VBoxContainer" instance=ExtResource("13_kllnu")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
 
 [node name="AvailableActionsFan" parent="." groups=["Cards"] instance=ExtResource("4_o0igw")]
 layout_mode = 2
