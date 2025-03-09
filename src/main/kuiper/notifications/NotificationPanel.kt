@@ -74,6 +74,7 @@ class NotificationPanel : VBoxContainer(), LogInterface {
     }
 
     private fun clearTransientNotifications() {
+        log("Clearing transient notifications")
         getChildren().forEach {
             if (it is NotificationItem) {
                 if (!it.notification!!.persistent) {

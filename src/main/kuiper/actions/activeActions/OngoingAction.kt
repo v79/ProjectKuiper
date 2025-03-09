@@ -1,5 +1,6 @@
 package actions.activeActions
 
+import LogInterface
 import SignalBus
 import actions.Action
 import actions.ActionType
@@ -13,7 +14,9 @@ import godot.core.connect
 import godot.extensions.getNodeAs
 
 @RegisterClass
-class OngoingAction : Node2D() {
+class OngoingAction : Node2D(), LogInterface {
+
+	override var logEnabled: Boolean = true
 
 	// Globals
 	private lateinit var signalBus: SignalBus

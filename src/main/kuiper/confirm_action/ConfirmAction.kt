@@ -81,7 +81,6 @@ class ConfirmAction : Control(), LogInterface {
         chooseSectorsContainer.visible = false
 
         signalBus.showActionConfirmation.connect { h, c ->
-            GD.print("ConfirmAction: ready(): showActionConfirmation signal received for card ${c.cardName}")
             hex = h
             card = c
             location = h.location
@@ -142,7 +141,7 @@ class ConfirmAction : Control(), LogInterface {
              }*/
             if (action.type == ActionType.BUILD) {
                 if (action.buildingToConstruct == null) {
-                    GD.printErr("A build action must have a building to construct: ${action.id}->${action.actionName}")
+                    logError("A build action must have a building to construct: ${action.id}->${action.actionName}")
                 } else {
                     // Valid building, so show the building details
                     confirmEnabled = false
@@ -152,7 +151,7 @@ class ConfirmAction : Control(), LogInterface {
                     action.buildingToConstruct?.let b@{ building ->
                         when (building) {
                             is Building.HQ -> {
-                                GD.printErr("Cannot build an HQ, should already exist! ${action.id}->${action.actionName}")
+                                logError("Cannot build an HQ, should already exist! ${action.id}->${action.actionName}")
                                 return@b
                             }
 

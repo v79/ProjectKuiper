@@ -38,11 +38,11 @@ class Toast : Panel() {
 		progressBar = getNodeAs("%ProgressBar")!!
 		timer = getNodeAs("%Timer")!!
 
-		signalBus.toast.connect { toast ->
+	/*	signalBus.toast.connect { toast ->
 			visible = false
-			label.text = ""
+			label.setText("")
 			showToast(toast)
-		}
+		}*/
 
 		timer.timeout.connect {
 			visible = false
@@ -62,7 +62,7 @@ class Toast : Panel() {
 	@RegisterFunction
 	fun showToast(details: ToastDetails) {
 		visible = true
-		label.text = details.message
+		label.setText(details.message)
 		progressBar.visible = details.showProgress
 		progressBar.value = details.progress
 		timer.start(delay)
@@ -71,7 +71,7 @@ class Toast : Panel() {
 	@RegisterFunction
 	fun updateToast(details: ToastDetails) {
 		getTree()?.createTimer(0.5)?.timeout?.connect {
-			label.text = details.message
+			label.setText(details.message)
 			progressBar.visible = details.showProgress
 			progressBar.value = details.progress
 		}

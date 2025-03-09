@@ -152,6 +152,7 @@ class KuiperGame : PanelContainer(), LogInterface {
 
     @RegisterFunction
     fun on_end_turn() {
+        log("Next turn pressed")
         gameState.nextTurn()
         updateUIOnTurn()
     }

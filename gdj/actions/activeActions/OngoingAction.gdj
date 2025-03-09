@@ -7,6 +7,7 @@ relativeSourcePath = src/main/kuiper/actions/activeActions/OngoingAction.kt
 baseType = Node2D
 supertypes = [
     godot.Node2D,
+	LogInterface,
 	godot.CanvasItem,
 	godot.Node,
 	godot.Object,
