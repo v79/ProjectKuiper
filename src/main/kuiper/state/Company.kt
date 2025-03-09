@@ -45,7 +45,7 @@ class Company(var name: String) : LogInterface {
      * Notification history/memory to ensure we don't sent the same notification multiple times.
      * This can be pruned regularly
      */
-    val notificationHistory: MutableSet<Int> = mutableSetOf()
+    private val notificationHistory: MutableSet<Int> = mutableSetOf()
 
     /**
      * Activate the given action, adding it to the list of active actions
@@ -79,6 +79,9 @@ class Company(var name: String) : LogInterface {
     }
 
 
+    /**
+     * Execute all the active actions, decrementing the turns remaining and applying the mutations
+     */
     fun doActions(): List<Action> {
         val completed: MutableList<Action> = mutableListOf()
         log("Company: Executing ${activeActions.size} active actions")
@@ -287,14 +290,42 @@ class Company(var name: String) : LogInterface {
             log("${it.key.name} = ${it.value}")
         }
 
-
         return notifications
+    }
+
+    /**
+     * For the given resource type, return a summary string in the format
+     * '<amount> from <action>
+     */
+    fun getCostsPerTurnSummary(resourceType: ResourceType): String {
+        val sBuilder = StringBuilder()
+        activeActions.forEach { action ->
+            action.getCostsPerTurn().filter { it.key == resourceType }.forEach { cost ->
+                sBuilder.append("[color=red]-")
+                sBuilder.append(cost.value)
+                sBuilder.append("[/color] from ")
+                sBuilder.append(action.actionName)
+                sBuilder.appendLine()
+            }
+        }
+        return sBuilder.toString()
+        // I need a summary like Map<String, Par<ResourceType, Int>> where string is the message from the action
+        // but weird to have the string as the key
+        // +10 gold from HQ
+        // +20 gold from mine
+        // -5 gold from running costs
+        // -25 gold from build starship
+
+        // so many not a map. Just a list of strings?
+        // but I also want a summary of the costs and income
+
+
     }
 
     /**
      * Sum up all the resource costs per turn for all the active actions
      */
-    fun getCostsPerTurn(): Map<ResourceType, Int> {
+    fun getCostsPerTurnSummary(): Map<ResourceType, Int> {
         val costsPerTurn = mutableMapOf<ResourceType, Int>()
 
         activeActions.forEach { action ->
