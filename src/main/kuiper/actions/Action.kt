@@ -93,7 +93,15 @@ class Action() {
      * Get all the costs of the action, per turn, for all resources
      */
     fun getCostsPerTurn(): Map<ResourceType, Int> {
-        return mutations.filter { it.type == MutationType.ADD || it.type == MutationType.SUBTRACT }
+        return mutations.filter { it.type == MutationType.SUBTRACT }
+            .associate { it.resource to it.amountPerYear }
+    }
+
+    /**
+     * Get all the incomes of the action, per turn, for all resources
+     */
+    fun getIncomePerTurn(): Map<ResourceType, Int> {
+        return mutations.filter { it.type == MutationType.ADD }
             .associate { it.resource to it.amountPerYear }
     }
 

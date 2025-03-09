@@ -290,4 +290,18 @@ class Company(var name: String) : LogInterface {
 
         return notifications
     }
+
+    /**
+     * Sum up all the resource costs per turn for all the active actions
+     */
+    fun getCostsPerTurn(): Map<ResourceType, Int> {
+        val costsPerTurn = mutableMapOf<ResourceType, Int>()
+
+        activeActions.forEach { action ->
+            action.getCostsPerTurn().forEach { (resourceType, cost) ->
+                costsPerTurn.merge(resourceType, cost, Int::plus)
+            }
+        }
+        return costsPerTurn
+    }
 }
