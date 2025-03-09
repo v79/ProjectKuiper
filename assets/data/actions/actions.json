@@ -1,1 +1,108 @@
-[{"id":1,"actionName":"Build Research Lab","description":"Construct a research lab to increase your science production","turns":3,"type":"BUILD","initialCosts":{"GOLD":100,"INFLUENCE":2},"buildingToConstruct":{"type":"state.Building.ScienceLab","labName":"Research Lab","labDescription":"A basic research lab","sectors":1,"sciencesProduced":{"PHYSICS":5.0,"ASTRONOMY":5.0,"BIOCHEMISTRY":5.0,"ENGINEERING":5.0,"MATHEMATICS":5.0,"PSYCHOLOGY":5.0}}},{"id":2,"actionName":"Build Basic Telescope","description":"Construct a telescope to increase your astronomy science production","turns":4,"type":"BUILD","initialCosts":{"GOLD":200,"INFLUENCE":1,"CONSTRUCTION_MATERIALS":25},"buildingToConstruct":{"type":"state.Building.ScienceLab","labName":"Basic Telescope","labDescription":"A basic telescope","sectors":1,"baseRunningCost":{"first":"GOLD","second":5},"sciencesProduced":{"ASTRONOMY":10.0,"PHYSICS":5.0}}},{"id":3,"actionName":"Invest Cash","description":"Invest in the stock market for a potential return","turns":5,"type":"INVEST","initialCosts":{"GOLD":100,"INFLUENCE":1},"mutations":[{"resource":"GOLD","type":"ADD","amountPerYear":0,"completionAmount":150}]},{"id":4,"actionName":"Build Spaceship","description":"Construct a spaceship to explore the galaxy","turns":10,"type":"EXPLORE","initialCosts":{"GOLD":1000,"INFLUENCE":5,"CONSTRUCTION_MATERIALS":100},"mutations":[{"resource":"GOLD","type":"SUBTRACT","amountPerYear":100},{"resource":"CONSTRUCTION_MATERIALS","type":"SUBTRACT","amountPerYear":25}],"scienceMutations":[{"science":"ASTRONOMY","type":"ADD","amount":5.0},{"science":"ENGINEERING","type":"ADD","amount":5.0}]}]
+[
+  {
+    "id": 1,
+    "actionName": "Build Research Lab",
+    "description": "Construct a research lab to increase your science production",
+    "turns": 3,
+    "type": "BUILD",
+    "initialCosts": {
+      "GOLD": 100,
+      "INFLUENCE": 2
+    },
+    "buildingToConstruct": {
+      "type": "state.Building.ScienceLab",
+      "name": "Research Lab",
+      "labDescription": "A basic research lab",
+      "runningCosts": {
+        "GOLD": 10
+      },
+      "sciencesProduced": {
+        "PHYSICS": 5.0,
+        "ASTRONOMY": 5.0,
+        "BIOCHEMISTRY": 5.0,
+        "ENGINEERING": 5.0,
+        "MATHEMATICS": 5.0,
+        "PSYCHOLOGY": 5.0
+      }
+    }
+  },
+  {
+    "id": 2,
+    "actionName": "Build Basic Telescope",
+    "description": "Construct a telescope to increase your astronomy science production",
+    "turns": 4,
+    "type": "BUILD",
+    "initialCosts": {
+      "GOLD": 200,
+      "INFLUENCE": 1,
+      "CONSTRUCTION_MATERIALS": 25
+    },
+    "buildingToConstruct": {
+      "type": "state.Building.ScienceLab",
+      "name": "Basic Telescope",
+      "labDescription": "A basic telescope",
+      "runningCosts": {
+        "GOLD": 5
+      },
+      "sciencesProduced": {
+        "ASTRONOMY": 10.0,
+        "PHYSICS": 5.0
+      }
+    }
+  },
+  {
+    "id": 3,
+    "actionName": "Invest Cash",
+    "description": "Invest in the stock market for a potential return",
+    "turns": 5,
+    "type": "INVEST",
+    "initialCosts": {
+      "GOLD": 100,
+      "INFLUENCE": 1
+    },
+    "mutations": [
+      {
+        "resource": "GOLD",
+        "type": "ADD",
+        "amountPerYear": 0,
+        "completionAmount": 150
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "actionName": "Build Spaceship",
+    "description": "Construct a spaceship to explore the galaxy",
+    "turns": 10,
+    "type": "EXPLORE",
+    "initialCosts": {
+      "GOLD": 1000,
+      "INFLUENCE": 5,
+      "CONSTRUCTION_MATERIALS": 100
+    },
+    "mutations": [
+      {
+        "resource": "GOLD",
+        "type": "SUBTRACT",
+        "amountPerYear": 100
+      },
+      {
+        "resource": "CONSTRUCTION_MATERIALS",
+        "type": "SUBTRACT",
+        "amountPerYear": 25
+      }
+    ],
+    "scienceMutations": [
+      {
+        "science": "ASTRONOMY",
+        "type": "ADD",
+        "amount": 5.0
+      },
+      {
+        "science": "ENGINEERING",
+        "type": "ADD",
+        "amount": 5.0
+      }
+    ]
+  }
+]

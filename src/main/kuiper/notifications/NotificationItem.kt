@@ -74,6 +74,10 @@ class NotificationItem : Control() {
             is Notification.ResearchStalled -> {
                 label.text = "S"
             }
+
+            is Notification.NoScienceWarning -> {
+                label.text = "0"
+            }
         }
     }
 }
