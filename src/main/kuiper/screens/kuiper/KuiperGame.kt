@@ -127,6 +127,9 @@ class KuiperGame : PanelContainer(), LogInterface {
         gameState.company.activeActions.forEach { action ->
             signalBus.updateOngoingAction.emit(action.id, action.turnsRemaining)
         }
+        gameState.company.resources.forEach { resource ->
+            signalBus.updateResource.emit(resource.key.name, resource.value.toFloat())
+        }
         yearLbl.text = "Year: ${gameState.year}"
     }
 

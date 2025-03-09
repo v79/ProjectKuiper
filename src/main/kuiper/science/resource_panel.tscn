@@ -25,7 +25,7 @@ custom_minimum_size = Vector2(400, 0)
 layout_mode = 0
 offset_right = 400.0
 offset_bottom = 50.0
-theme_override_constants/separation = 85
+theme_override_constants/separation = 90
 
 [node name="GOLD" parent="ResourcePanel" instance=ExtResource("2_uaj2p")]
 layout_mode = 2

@@ -1,6 +1,7 @@
 package state
 
 import actions.ResourceType
+import jdk.jfr.Description
 import kotlinx.serialization.Serializable
 import technology.Science
 
@@ -14,7 +15,10 @@ import technology.Science
 sealed interface Building {
     // Not sure what will be common to all buildings yet
     var sectors: Int
+    var name: String
     var sectorsMustBeContiguous: Boolean
+    var runningCosts: MutableMap<ResourceType, Int>
+    var resourceGeneration: MutableMap<ResourceType, Int>
     // spritePath?
 
     /**
@@ -22,11 +26,14 @@ sealed interface Building {
      */
     @Serializable
     class HQ : Building {
-        var name = "HQ"
+        override var name = "HQ"
         override var sectors = 3
         override var sectorsMustBeContiguous = false
+        override var runningCosts: MutableMap<ResourceType, Int> = mutableMapOf()
+        override var resourceGeneration: MutableMap<ResourceType, Int> = mutableMapOf()
         var baseCostToBuild = 0
-        var baseRunningCost = 0
+        val sciencesProduced: MutableMap<Science, Float> = mutableMapOf()
+        var baseInfluenceGenerated = 1
     }
 
     /**
@@ -36,12 +43,21 @@ sealed interface Building {
      */
     @Serializable
     class ScienceLab(
-        val labName: String,
-        val labDescription: String,
-        override var sectors: Int,
-        override var sectorsMustBeContiguous: Boolean = true
     ) : Building {
-        var baseRunningCost = ResourceType.GOLD to 10
+
+        constructor(name: String, description: String, sectors: Int, contiguous: Boolean) : this() {
+            this.name = name
+            this.labDescription = description
+            this.sectors = sectors
+            this.sectorsMustBeContiguous = contiguous
+        }
+
+        override var name: String = "Lab"
+        override var sectors: Int = 1
+        override var sectorsMustBeContiguous: Boolean = true
+        var labDescription: String = ""
+        override var resourceGeneration: MutableMap<ResourceType, Int> = mutableMapOf()
+        override var runningCosts: MutableMap<ResourceType, Int> = mutableMapOf()
         var sciencesProduced: Map<Science, Float> = mapOf()
     }
 

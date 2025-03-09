@@ -167,6 +167,15 @@ class Company(var name: String) : LogInterface {
     fun doResearch(): List<Notification> {
         val notifications: MutableList<Notification> = mutableListOf()
         sciences.forEach { science ->
+            if (science.value == 0.0f) {
+                logWarning("Science doesn't have value: $science")
+                notifications.add(
+                    Notification.NoScienceWarning(
+                        science.key,
+                        "There are no ${science.key.displayName} points available to spend this turn"
+                    )
+                )
+            }
             technologies.filter { it.status == TechStatus.UNLOCKED }.shuffled().forEach { technology ->
                 val cost = technology.researchProgress[science.key]?.cost ?: 0
                 val currentProgress = technology.researchProgress[science.key]?.progress ?: 0
@@ -218,8 +227,81 @@ class Company(var name: String) : LogInterface {
         return notifications
     }
 
-    fun recalculateResearch(): List<Notification> {
-        sciences.replaceAll { _, rate -> rate + 10.0f }
+    /**
+     * Clear all research points
+     */
+    fun clearResearch(): List<Notification> {
+        sciences.replaceAll { _, _ -> 0f }
         return emptyList()
+    }
+
+    /**
+     * For every building in every sector in every zone, calculate production, costs and sciences
+     */
+    fun processBuildings(zones: List<Zone>): List<Notification> {
+        val notifications: MutableList<Notification> = mutableListOf()
+        log("Processing buildings:")
+        resources.forEach {
+            log("${it.key.name} = ${it.value}")
+        }
+        zones.forEach { zone ->
+            zone.locations.forEach { loc ->
+                loc.buildings.forEach { building ->
+                    log("Calculating income and costs for building ${building.key.name}")
+                    when (building.key) {
+                        is Building.HQ -> {
+                            val hq = building.key as Building.HQ
+                            log("\t${hq.name} produces")
+                            log("\tsciences: ${hq.sciencesProduced}")
+                            log("\tcosts: ${hq.runningCosts}")
+                            log("\tgenerates: ${hq.resourceGeneration}")
+                            hq.sciencesProduced.forEach { science ->
+                                sciences[science.key] = sciences[science.key]!! + science.value
+                            }
+                            hq.resourceGeneration.forEach { generation ->
+                                resources[generation.key] = resources[generation.key]!! + generation.value
+                            }
+                            hq.runningCosts.forEach { runningCost ->
+                                resources[runningCost.key] = resources[runningCost.key]!! - runningCost.value
+                            }
+                        }
+
+                        is Building.ScienceLab -> {
+                            val lab = building.key as Building.ScienceLab
+                            lab.sciencesProduced.forEach { science ->
+                                sciences[science.key] = sciences[science.key]!! + science.value
+                            }
+                            lab.resourceGeneration.forEach { generation ->
+                                resources[generation.key] = resources[generation.key]!! + generation.value
+                            }
+                            lab.runningCosts.forEach { runningCost ->
+                                resources[runningCost.key] = resources[runningCost.key]!! - runningCost.value
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        log("Processing complete")
+        resources.forEach {
+            log("${it.key.name} = ${it.value}")
+        }
+
+
+        return notifications
+    }
+
+    /**
+     * Sum up all the resource costs per turn for all the active actions
+     */
+    fun getCostsPerTurn(): Map<ResourceType, Int> {
+        val costsPerTurn = mutableMapOf<ResourceType, Int>()
+
+        activeActions.forEach { action ->
+            action.getCostsPerTurn().forEach { (resourceType, cost) ->
+                costsPerTurn.merge(resourceType, cost, Int::plus)
+            }
+        }
+        return costsPerTurn
     }
 }

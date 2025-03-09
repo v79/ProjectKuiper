@@ -28,6 +28,7 @@ class ResourceDisplay : Control() {
 	@Export
 	var isScience: Boolean = true
 
+	// Data
 	@RegisterProperty
 	@Export
 	var value: Float = 0.0f
@@ -47,27 +48,13 @@ class ResourceDisplay : Control() {
 		iconTexture.texture = png
 
 		setTooltipText("${resourceName}: $value")
-
-		if (isScience) {
-			signalBus.updateScience.connect { science, value ->
-				if (science.lowercase() == resourceName.lowercase()) {
-					updateValue(value)
-				}
-			}
-		} else {
-			signalBus.updateResource.connect { resourceName, value ->
-				if (resourceName.lowercase() == resourceName.lowercase()) {
-					updateValue(value)
-				}
-			}
-		}
 	}
 
 	@RegisterFunction
-	fun updateValue(value: Float) {
-		this.value = value
-		label.text = "%.1f".format(value)
-		setTooltipText("$resourceName: %.2f".format(value))
+	fun updateValue(newValue: Float) {
+		this.value = newValue
+		label.setText("%.1f".format(this.value))
+		setTooltipText("$resourceName: %.2f".format(this.value))
 	}
 
 }

@@ -59,10 +59,12 @@ class GameState : Node(), LogInterface {
         notifications.clear()
         signalBus.nextTurn.emit()
         log("GameState: Next turn")
+        // Do research, spending all research points
         notifications.addAll(company.doResearch())
+        notifications.addAll(company.clearResearch())
         val completed = company.doActions()
+        notifications.addAll(company.processBuildings(zones))
         notifications.addAll(completed.map { Notification.ActionComplete(it, "Action completed: ${it.actionName}") })
-        notifications.addAll(company.recalculateResearch())
         // signal completed actions to expire
         completed.forEach { action ->
             signalBus.actionCompleted.emitSignal(ActionWrapper(action))

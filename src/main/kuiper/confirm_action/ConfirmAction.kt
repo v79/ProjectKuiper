@@ -157,8 +157,9 @@ class ConfirmAction : Control(), LogInterface {
                             }
 
                             is Building.ScienceLab -> {
-                                buildingSummary.appendText("  New ${building.labName} at ${hex.location.name}")
-                                building.baseRunningCost.let { (resourceType, amount) ->
+                                buildingSummary.appendText("  New ${building.name} at ${hex.location.name}")
+
+                                building.runningCosts.forEach { (resourceType, amount) ->
                                     costsPerTurnList.appendText(
                                         "$minus ${resourceType.bbCodeIcon(32)} $amount ${resourceType.displayName} per turn\n"
                                     )

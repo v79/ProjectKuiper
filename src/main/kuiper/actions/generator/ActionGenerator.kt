@@ -27,7 +27,7 @@ fun main() {
     // add building
     val lab = Building.ScienceLab("Research Lab", "A basic research lab", 1, true)
     lab.sciencesProduced = Science.all().associateWith { 5f }
-    lab.baseRunningCost = ResourceType.GOLD to 10
+    lab.runningCosts[ResourceType.GOLD] = 10
     buildResearchLab.constructBuilding(lab)
 
     val basicTelescope = createAction(
@@ -39,7 +39,7 @@ fun main() {
     // add the building
     val telescope = Building.ScienceLab("Basic Telescope", "A basic telescope", 1, true)
     telescope.sciencesProduced = mapOf(Science.ASTRONOMY to 10f, Science.PHYSICS to 5f)
-    telescope.baseRunningCost = ResourceType.GOLD to 5
+    telescope.runningCosts[ResourceType.GOLD] = 5
     basicTelescope.constructBuilding(telescope)
 
     val investCash = createAction(

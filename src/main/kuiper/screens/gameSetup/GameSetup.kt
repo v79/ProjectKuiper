@@ -1,5 +1,6 @@
 package screens.gameSetup
 
+import actions.ResourceType
 import godot.*
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
@@ -144,7 +145,11 @@ class GameSetup : Node() {
             description = "Your home zone, where your headquarters is located. HQ can be moved in the future."
             locations.add(Location("${sponsor.name} HQ", true))
             locations[0].apply {
-                addBuilding(Building.HQ(), intArrayOf(1, 2, 4), true)
+                val hq = Building.HQ()
+                hq.sciencesProduced.putAll(sponsor.baseScienceRate)
+                hq.resourceGeneration[ResourceType.INFLUENCE] = 1
+                hq.resourceGeneration[ResourceType.GOLD] = 25
+                addBuilding(hq, intArrayOf(1, 2, 4), true)
             }
             for (i in 1..9) {
                 locations.add(Location("Location $i"))
