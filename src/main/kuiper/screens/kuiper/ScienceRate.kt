@@ -12,6 +12,7 @@ import godot.core.Color
 import godot.extensions.getNodeAs
 
 // TODO: rename this class, as it's a control node and I need ScienceRate to be a property of the Company
+// TODO: move this class, as it's not just for science
 @RegisterClass
 class ScienceRate : Control() {
 
@@ -39,6 +40,7 @@ class ScienceRate : Control() {
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
+    // TODO: This shouldn't be called every frame :)
     @RegisterFunction
     override fun _process(delta: Double) {
         label.text = rateLabel

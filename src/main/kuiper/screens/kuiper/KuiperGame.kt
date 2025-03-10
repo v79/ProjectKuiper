@@ -128,7 +128,10 @@ class KuiperGame : PanelContainer(), LogInterface {
             signalBus.updateOngoingAction.emit(action.id, action.turnsRemaining)
         }
         gameState.company.resources.forEach { resource ->
-            signalBus.updateResource.emit(resource.key.name, resource.value.toFloat())
+            signalBus.updateResource.emit(
+                resource.key.name,
+                resource.value.toFloat()
+            )
         }
         yearLbl.text = "Year: ${gameState.year}"
     }
@@ -194,7 +197,7 @@ class KuiperGame : PanelContainer(), LogInterface {
     }
 
     private fun populateZoneTabBar() {
-        gameState.zones.forEachIndexed { index, zone ->
+        gameState.company.zones.forEachIndexed { index, zone ->
             zoneTabBar.addTab(zone.name)
             zoneTabBar.setTabDisabled(index, !zone.active)
             if (!zone.active) {

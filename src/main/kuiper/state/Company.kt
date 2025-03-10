@@ -42,18 +42,25 @@ class Company(var name: String) : LogInterface {
     val technologies: MutableList<Technology> = mutableListOf()
 
     /**
+     * Zones are areas of the solar system. Each zone has a list of locations
+     */
+    val zones: MutableList<Zone> = mutableListOf()
+
+    /**
      * Notification history/memory to ensure we don't sent the same notification multiple times.
      * This can be pruned regularly
      */
-    val notificationHistory: MutableSet<Int> = mutableSetOf()
+    private val notificationHistory: MutableSet<Int> = mutableSetOf()
 
     /**
-     * Activate the given action, adding it to the list of active actions
+     * Activate the given action, adding it to the list of active actions, and spend any initial costs
      */
     fun activateAction(hex: Hex, action: Action) {
         action.turnsRemaining = action.turns
         activeActions.add(action)
-        log("Company: Activating action $action")
+        action.initialCosts.forEach { cost ->
+            resources.merge(cost.key, cost.value, Int::minus)
+        }
     }
 
     /**
@@ -79,6 +86,9 @@ class Company(var name: String) : LogInterface {
     }
 
 
+    /**
+     * Execute all the active actions, decrementing the turns remaining and applying the mutations
+     */
     fun doActions(): List<Action> {
         val completed: MutableList<Action> = mutableListOf()
         log("Company: Executing ${activeActions.size} active actions")
@@ -147,8 +157,8 @@ class Company(var name: String) : LogInterface {
                         }
 
                         is ScienceMutation -> {
-                            // it doesn't make sense to have a completion mutation for science
-                            logWarning("Error: completion mutation for science doesn't make sense: $mutation")
+                            // it doesn't make sense to have a completion mutation for science, but no need to warn
+//                            logWarning("Error: completion mutation for science doesn't make sense: $mutation")
                         }
                     }
                 }
@@ -238,7 +248,7 @@ class Company(var name: String) : LogInterface {
     /**
      * For every building in every sector in every zone, calculate production, costs and sciences
      */
-    fun processBuildings(zones: List<Zone>): List<Notification> {
+    fun processBuildings(): List<Notification> {
         val notifications: MutableList<Notification> = mutableListOf()
         log("Processing buildings:")
         resources.forEach {
@@ -251,10 +261,6 @@ class Company(var name: String) : LogInterface {
                     when (building.key) {
                         is Building.HQ -> {
                             val hq = building.key as Building.HQ
-                            log("\t${hq.name} produces")
-                            log("\tsciences: ${hq.sciencesProduced}")
-                            log("\tcosts: ${hq.runningCosts}")
-                            log("\tgenerates: ${hq.resourceGeneration}")
                             hq.sciencesProduced.forEach { science ->
                                 sciences[science.key] = sciences[science.key]!! + science.value
                             }
@@ -283,18 +289,65 @@ class Company(var name: String) : LogInterface {
             }
         }
         log("Processing complete")
-        resources.forEach {
-            log("${it.key.name} = ${it.value}")
-        }
-
 
         return notifications
     }
 
     /**
+     * For the given resource type, return a summary string in the format
+     * <amount> from <action> OR
+     * <amount> from <building>
+     */
+    fun getCostsPerTurnSummary(resourceType: ResourceType): String {
+        val sBuilder = StringBuilder()
+        activeActions.forEach { action ->
+            action.getCostsPerTurn().filter { it.key == resourceType }.forEach { cost ->
+                sBuilder.append("[color=red]-")
+                sBuilder.append(cost.value)
+                sBuilder.append("[/color] from ")
+                sBuilder.append(action.actionName)
+                sBuilder.appendLine()
+            }
+        }
+        zones.forEach { zone ->
+            zone.locations.forEach { loc ->
+                loc.buildings.forEach { building ->
+                    building.key.runningCosts.filter { it.key == resourceType }.forEach { cost ->
+                        sBuilder.append("[color=red]-")
+                        sBuilder.append(cost.value)
+                        sBuilder.append("[/color] from ")
+                        sBuilder.append(building.key.name)
+                        sBuilder.appendLine()
+                    }
+                    building.key.resourceGeneration.filter { it.key == resourceType }.forEach { cost ->
+                        sBuilder.append("[color=green]+")
+                        sBuilder.append(cost.value)
+                        sBuilder.append("[/color] from ")
+                        sBuilder.append(building.key.name)
+                        sBuilder.appendLine()
+                    }
+                }
+            }
+        }
+
+        return sBuilder.toString()
+        // I need a summary like Map<String, Par<ResourceType, Int>> where string is the message from the action
+        // but weird to have the string as the key
+        // +10 gold from HQ
+        // +20 gold from mine
+        // -5 gold from running costs
+        // -25 gold from build starship
+
+        // so many not a map. Just a list of strings?
+        // but I also want a summary of the costs and income
+
+
+    }
+
+    /**
      * Sum up all the resource costs per turn for all the active actions
      */
-    fun getCostsPerTurn(): Map<ResourceType, Int> {
+    fun getCostsPerTurnSummary(): Map<ResourceType, Int> {
         val costsPerTurn = mutableMapOf<ResourceType, Int>()
 
         activeActions.forEach { action ->

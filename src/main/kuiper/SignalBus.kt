@@ -73,7 +73,7 @@ class SignalBus : Node() {
     val updateScience by signal2<String, Float>("science", "value")
 
     @RegisterSignal
-    val updateResource by signal2<String, Float>("resourceType", "value")
+    val updateResource by signal2<String, Float>("resourceType", "newValue")
 
     // Signals relating to active, ongoing actions
     @RegisterSignal
