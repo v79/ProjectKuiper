@@ -314,6 +314,26 @@ class Company(var name: String) : LogInterface {
                 sBuilder.appendLine()
             }
         }
+        zones.forEach { zone ->
+            zone.locations.forEach { loc ->
+                loc.buildings.forEach { building ->
+                    building.key.runningCosts.filter { it.key == resourceType }.forEach { cost ->
+                        sBuilder.append("[color=red]-")
+                        sBuilder.append(cost.value)
+                        sBuilder.append("[/color] from ")
+                        sBuilder.append(building.key.name)
+                        sBuilder.appendLine()
+                    }
+                    building.key.resourceGeneration.filter { it.key == resourceType }.forEach { cost ->
+                        sBuilder.append("[color=green]+")
+                        sBuilder.append(cost.value)
+                        sBuilder.append("[/color] from ")
+                        sBuilder.append(building.key.name)
+                        sBuilder.appendLine()
+                    }
+                }
+            }
+        }
 
         return sBuilder.toString()
         // I need a summary like Map<String, Par<ResourceType, Int>> where string is the message from the action

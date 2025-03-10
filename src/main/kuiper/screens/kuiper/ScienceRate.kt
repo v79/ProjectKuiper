@@ -40,6 +40,7 @@ class ScienceRate : Control() {
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
+    // TODO: This shouldn't be called every frame :)
     @RegisterFunction
     override fun _process(delta: Double) {
         label.text = rateLabel
