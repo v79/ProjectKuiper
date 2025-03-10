@@ -53,12 +53,14 @@ class Company(var name: String) : LogInterface {
     private val notificationHistory: MutableSet<Int> = mutableSetOf()
 
     /**
-     * Activate the given action, adding it to the list of active actions
+     * Activate the given action, adding it to the list of active actions, and spend any initial costs
      */
     fun activateAction(hex: Hex, action: Action) {
         action.turnsRemaining = action.turns
         activeActions.add(action)
-        log("Company: Activating action $action")
+        action.initialCosts.forEach { cost ->
+            resources.merge(cost.key, cost.value, Int::minus)
+        }
     }
 
     /**

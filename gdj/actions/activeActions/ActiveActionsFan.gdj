@@ -7,6 +7,7 @@ relativeSourcePath = src/main/kuiper/actions/activeActions/ActiveActionsFan.kt
 baseType = Control
 supertypes = [
     godot.Control,
+	LogInterface,
 	godot.CanvasItem,
 	godot.Node,
 	godot.Object,
