@@ -12,6 +12,7 @@ import godot.core.Color
 import godot.extensions.getNodeAs
 
 // TODO: rename this class, as it's a control node and I need ScienceRate to be a property of the Company
+// TODO: move this class, as it's not just for science
 @RegisterClass
 class ScienceRate : Control() {
 

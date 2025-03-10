@@ -42,6 +42,11 @@ class Company(var name: String) : LogInterface {
     val technologies: MutableList<Technology> = mutableListOf()
 
     /**
+     * Zones are areas of the solar system. Each zone has a list of locations
+     */
+    val zones: MutableList<Zone> = mutableListOf()
+
+    /**
      * Notification history/memory to ensure we don't sent the same notification multiple times.
      * This can be pruned regularly
      */
@@ -241,7 +246,7 @@ class Company(var name: String) : LogInterface {
     /**
      * For every building in every sector in every zone, calculate production, costs and sciences
      */
-    fun processBuildings(zones: List<Zone>): List<Notification> {
+    fun processBuildings(): List<Notification> {
         val notifications: MutableList<Notification> = mutableListOf()
         log("Processing buildings:")
         resources.forEach {
@@ -295,7 +300,8 @@ class Company(var name: String) : LogInterface {
 
     /**
      * For the given resource type, return a summary string in the format
-     * '<amount> from <action>
+     * <amount> from <action> OR
+     * <amount> from <building>
      */
     fun getCostsPerTurnSummary(resourceType: ResourceType): String {
         val sBuilder = StringBuilder()
@@ -308,6 +314,7 @@ class Company(var name: String) : LogInterface {
                 sBuilder.appendLine()
             }
         }
+
         return sBuilder.toString()
         // I need a summary like Map<String, Par<ResourceType, Int>> where string is the message from the action
         // but weird to have the string as the key

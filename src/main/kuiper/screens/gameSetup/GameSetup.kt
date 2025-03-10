@@ -115,7 +115,7 @@ class GameSetup : Node() {
         gameState.let { gS ->
             gS.year = 1965
             gS.sponsor = sponsor
-            gS.zones = setupZones(sponsor)
+            gS.company.zones.addAll(setupZones(sponsor))
             gS.company.let { company ->
                 company.name = companyNameEdit.text
                 company.sciences.putAll(sponsor.baseScienceRate)

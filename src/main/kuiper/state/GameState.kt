@@ -42,7 +42,6 @@ class GameState : Node(), LogInterface {
     // Data
     var company: Company = Company("Kuiper")
     var sponsor: Sponsor? = null
-    var zones: List<Zone> = listOf()
     var availableActions: MutableList<Action> = mutableListOf()
     val notifications: MutableList<Notification> = mutableListOf()
 
@@ -63,7 +62,7 @@ class GameState : Node(), LogInterface {
         notifications.addAll(company.doResearch())
         notifications.addAll(company.clearResearch())
         val completed = company.doActions()
-        notifications.addAll(company.processBuildings(zones))
+        notifications.addAll(company.processBuildings())
         notifications.addAll(completed.map { Notification.ActionComplete(it, "Action completed: ${it.actionName}") })
         // signal completed actions to expire
         completed.forEach { action ->
@@ -95,7 +94,6 @@ class GameState : Node(), LogInterface {
         this.year = sourceState.year
         this.sponsor = sourceState.sponsor
         this.company = sourceState.company
-        this.zones = sourceState.zones
     }
 
     @RegisterFunction

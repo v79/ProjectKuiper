@@ -198,7 +198,7 @@ class KuiperGame : PanelContainer(), LogInterface {
     }
 
     private fun populateZoneTabBar() {
-        gameState.zones.forEachIndexed { index, zone ->
+        gameState.company.zones.forEachIndexed { index, zone ->
             zoneTabBar.addTab(zone.name)
             zoneTabBar.setTabDisabled(index, !zone.active)
             if (!zone.active) {
