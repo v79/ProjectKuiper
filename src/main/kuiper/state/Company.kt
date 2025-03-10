@@ -157,8 +157,8 @@ class Company(var name: String) : LogInterface {
                         }
 
                         is ScienceMutation -> {
-                            // it doesn't make sense to have a completion mutation for science
-                            logWarning("Error: completion mutation for science doesn't make sense: $mutation")
+                            // it doesn't make sense to have a completion mutation for science, but no need to warn
+//                            logWarning("Error: completion mutation for science doesn't make sense: $mutation")
                         }
                     }
                 }
@@ -261,10 +261,6 @@ class Company(var name: String) : LogInterface {
                     when (building.key) {
                         is Building.HQ -> {
                             val hq = building.key as Building.HQ
-                            log("\t${hq.name} produces")
-                            log("\tsciences: ${hq.sciencesProduced}")
-                            log("\tcosts: ${hq.runningCosts}")
-                            log("\tgenerates: ${hq.resourceGeneration}")
                             hq.sciencesProduced.forEach { science ->
                                 sciences[science.key] = sciences[science.key]!! + science.value
                             }
@@ -293,9 +289,6 @@ class Company(var name: String) : LogInterface {
             }
         }
         log("Processing complete")
-        resources.forEach {
-            log("${it.key.name} = ${it.value}")
-        }
 
         return notifications
     }

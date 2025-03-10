@@ -55,7 +55,7 @@ class ActiveActionsFan : Control(), LogInterface {
                 addOngoingAction(it)
                 // update the resource panel. Company cannot do this as it doesn't have access to the signal bus
                 gameState.company.resources.forEach { resource ->
-                    signalBus.updateResource.emit(resource.key.name, resource.value.toFloat(), "")
+                    signalBus.updateResource.emit(resource.key.name, resource.value.toFloat())
                 }
             }
         }

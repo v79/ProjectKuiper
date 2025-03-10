@@ -12,12 +12,14 @@ import godot.core.Vector2
 import godot.core.connect
 import godot.extensions.getNodeAs
 import screens.kuiper.pullDownPanel.PullDownPanel
+import state.GameState
 
 @RegisterClass
 class ResourcePanel : Control() {
 
     // Globals
     private lateinit var signalBus: SignalBus
+    private lateinit var gameState: GameState
 
     // UI elements
     private lateinit var panelContents: VBoxContainer
@@ -29,15 +31,17 @@ class ResourcePanel : Control() {
     @RegisterFunction
     override fun _ready() {
         signalBus = getNodeAs("/root/SignalBus")!!
+        gameState = getNodeAs("/root/GameState")!!
 
         iconRow = getNodeAs("%ResourcePanel")!!
         panelContents = getNodeAs("%PanelContents")!!
         pulldownControl = getNodeAs("%PulldownPanel")!!
 
-        signalBus.updateResource.connect { resourceName, value, summary ->
+        signalBus.updateResource.connect { resourceName, value ->
             resourceType = ResourceType.valueOf(resourceName.uppercase())
             iconRow.getNodeAs<ResourceDisplay>(resourceType.name)?.apply {
                 updateValue(value)
+                val summary = gameState.company.getCostsPerTurnSummary(resourceType)
                 panelContents.getNodeAs<RichTextLabel>("${resourceType}_summary")?.apply {
                     val headline =
                         "[img=25]${resourceType.spritePath}[/img] [b]${resourceType.displayName}:[/b] %.2f".format(value)

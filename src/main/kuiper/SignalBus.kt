@@ -5,7 +5,10 @@ import godot.Node
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterSignal
-import godot.core.*
+import godot.core.connect
+import godot.core.signal0
+import godot.core.signal1
+import godot.core.signal2
 import hexgrid.Hex
 import notifications.NotificationWrapper
 import technology.editor.TechWrapper
@@ -70,7 +73,7 @@ class SignalBus : Node() {
     val updateScience by signal2<String, Float>("science", "value")
 
     @RegisterSignal
-    val updateResource by signal3<String, Float, String>("resourceType", "value", "costsPerTurn")
+    val updateResource by signal2<String, Float>("resourceType", "newValue")
 
     // Signals relating to active, ongoing actions
     @RegisterSignal
