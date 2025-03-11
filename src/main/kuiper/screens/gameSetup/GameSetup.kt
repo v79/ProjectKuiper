@@ -1,5 +1,7 @@
 package screens.gameSetup
 
+import LogInterface
+import SignalBus
 import actions.ResourceType
 import godot.*
 import godot.annotation.RegisterClass
@@ -9,16 +11,18 @@ import godot.core.asCachedStringName
 import godot.core.signal0
 import godot.core.signal1
 import godot.extensions.getNodeAs
-import godot.global.GD
 import loaders.DataLoader
 import state.*
 import technology.Technology
 
 @RegisterClass
-class GameSetup : Node() {
+class GameSetup : Node(), LogInterface {
+
+    override var logEnabled: Boolean = true
 
     // Globals
     private lateinit var dataLoader: DataLoader
+    private lateinit var signalBus: SignalBus
 
     @RegisterSignal
     val countrySelectSignal by signal1<Int>("countryId")
@@ -46,6 +50,7 @@ class GameSetup : Node() {
     @RegisterFunction
     override fun _ready() {
         dataLoader = getNodeAs("/root/DataLoader")!!
+        signalBus = getNodeAs("/root/SignalBus")!!
 
         companyNamePanel = getNodeAs("CompanyNamePanel")!!
         startGameButton = getNodeAs("%StartGame_Button")!!
@@ -68,11 +73,17 @@ class GameSetup : Node() {
         }
     }
 
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
     @RegisterFunction
     override fun _process(delta: Double) {
-        if (Input.isActionPressed("ui_cancel".asCachedStringName())) {
-            getTree()?.changeSceneToFile("res://src/main/kuiper/screens/mainMenu/main_menu.tscn")
+
+    }
+
+    @RegisterFunction
+    override fun _input(event: InputEvent?) {
+        if (event != null) {
+            if (event.isActionPressed("ui_cancel".asCachedStringName())) {
+                getTree()?.changeSceneToFile("res://src/main/kuiper/screens/mainMenu/main_menu.tscn")
+            }
         }
     }
 
@@ -101,16 +112,16 @@ class GameSetup : Node() {
 
     @RegisterFunction
     fun _onStartGameButtonPressed() {
-        GD.print("Setting up and starting game")
+        log("Setting up and starting game")
         if (selectedSponsor == -1) {
-            GD.printErr("No sponsor selected!")
+            logError("No sponsor selected!")
             return
         }
 
         // globals are added to the tree first, so will be the first child
         val gameState = getTree()?.root?.getChild(0) as GameState
         val sponsor = sponsorList[selectedSponsor - 1]
-        GD.print("Randomising technology costs")
+        log("Randomising technology costs")
         technologies.forEach { technology -> technology.randomiseCosts() }
         gameState.let { gS ->
             gS.year = 1965
@@ -123,12 +134,6 @@ class GameSetup : Node() {
                 company.technologies.addAll(technologies)
             }
         }
-
-        GD.print("Starting game for country ${sponsorList[selectedSponsor - 1].name}")
-        GD.print("Company name: ${gameState.company.name}")
-        GD.print("Science rates: ${gameState.company.sciences}")
-        GD.print("Technologies: ${gameState.company.technologies.size}")
-
         getTree()?.changeSceneToFile("res://src/main/kuiper/screens/kuiper/game.tscn")
     }
 
