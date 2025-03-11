@@ -5,10 +5,7 @@ import godot.Node
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterSignal
-import godot.core.connect
-import godot.core.signal0
-import godot.core.signal1
-import godot.core.signal2
+import godot.core.*
 import hexgrid.Hex
 import notifications.NotificationWrapper
 import technology.editor.TechWrapper
@@ -91,11 +88,17 @@ class SignalBus : Node() {
 
     @RegisterFunction
     override fun _ready() {
-        onScreenResized.connect { w, h ->
-            updateScreenSize(w, h)
+        // Connect to the screen resized signal and propagate it
+        getTree()?.root?.sizeChanged?.connect {
+            val size = getTree()?.root?.size ?: Vector2i(1600, 900)
+            updateScreenSize(size.width, size.height)
+            onScreenResized.emit(size.width, size.height)
         }
     }
 
+    /**
+     * Update the global properties for screen size
+     */
     private fun updateScreenSize(width: Int, height: Int) {
         screenWidth = width
         screenHeight = height

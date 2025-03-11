@@ -95,14 +95,6 @@ class KuiperGame : PanelContainer(), LogInterface {
             cardAdded.emit(it.id)
         }
 
-        // Connect signals
-        getTree()?.root?.sizeChanged?.connect {
-            val size = getTree()?.root?.size
-            size?.let {
-                signalBus.onScreenResized.emit(size.width, size.height)
-            }
-        }
-
         signalBus.showActionConfirmation.connect { hex, card ->
             confirmAction.hex = hex
             confirmAction.card = card

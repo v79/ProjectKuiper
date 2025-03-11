@@ -7,6 +7,7 @@ relativeSourcePath = src/main/kuiper/screens/gameSetup/GameSetup.kt
 baseType = Node
 supertypes = [
 	godot.Node,
+	LogInterface,
 	godot.Object,
 	godot.core.KtObject,
 	kotlin.Any
@@ -21,6 +22,7 @@ properties = [
 functions = [
 	_ready,
 	_process,
+	_input,
 	_on_location_list_item_selected,
 	_on_start_game_button_pressed,
 	_on_next_button_pressed,
