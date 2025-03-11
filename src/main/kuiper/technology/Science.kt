@@ -11,7 +11,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 enum class Science(val displayName: String, var multiplier: Float, var spritePath: String = "") {
     PHYSICS("Physics", 1.0f, "res://assets/textures/icons/icon-physics-128x128.png") {
-        override fun color() = Color(0.0, 0.0, 0.5) //000080ff
+        override fun color() = Color(0.149, 0.357, 0.929) //265bedff
     },
     ASTRONOMY("Astronomy", 1.0f, "res://assets/textures/icons/icon-astronomy-128x128.png") {
         override fun color() = Color(0.68, 0.71, 0.5)  // afb600ff
