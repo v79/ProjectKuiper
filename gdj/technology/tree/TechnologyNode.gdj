@@ -26,5 +26,6 @@ properties = [
 functions = [
     _ready,
 	_process,
-	add_unlocks
+	add_unlocks,
+	_on_visibility_changed
 ]

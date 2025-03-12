@@ -181,31 +181,33 @@ class Company(var name: String) : LogInterface {
                 logWarning("Science doesn't have value: $science")
                 notifications.add(
                     Notification.NoScienceWarning(
-                        science.key,
-                        "There are no ${science.key.displayName} points available to spend this turn"
+                        science.key, "There are no ${science.key.displayName} points available to spend this turn"
                     )
                 )
             }
             technologies.filter { it.status == TechStatus.UNLOCKED }.shuffled().forEach { technology ->
-                val cost = technology.researchProgress[science.key]?.cost ?: 0
-                val currentProgress = technology.researchProgress[science.key]?.progress ?: 0
-                val remaining = cost - currentProgress
-                val toSpend = sciences[science.key] ?: 0.0f
-                if (toSpend > 0.0f) {
-                    if (toSpend >= remaining) {
-                        technology.addProgress(science.key, remaining)
-                        sciences[science.key] = toSpend - remaining
-                    } else {
-                        technology.addProgress(science.key, toSpend.toInt())
-                        sciences[science.key] = 0.0f
+                // only research techs that have all their requirements met
+                if (getRequiredTechsFor(technology).all { it.status == TechStatus.RESEARCHED }) {
+                    val cost = technology.researchProgress[science.key]?.cost ?: 0
+                    val currentProgress = technology.researchProgress[science.key]?.progress ?: 0
+                    val remaining = cost - currentProgress
+                    val toSpend = sciences[science.key] ?: 0.0f
+                    if (toSpend > 0.0f) {
+                        if (toSpend >= remaining) {
+                            technology.addProgress(science.key, remaining)
+                            sciences[science.key] = toSpend - remaining
+                        } else {
+                            technology.addProgress(science.key, toSpend.toInt())
+                            sciences[science.key] = 0.0f
+                        }
                     }
                 }
             }
         }
         technologies.forEach { technology ->
             if (technology.tier != TechTier.TIER_0) {
+                // send a notification if the tech research is 50% complete
                 if (technology.progressPct > 50.0f) {
-                    // I wanted this to be a one-off event, but of course it will fire every turn that it applies
                     val notification = Notification.ResearchProgress(
                         technology, "Researching ${technology.title} now 50% complete"
                     )
@@ -217,6 +219,22 @@ class Company(var name: String) : LogInterface {
                     }
                     log("Company: Technology ${technology.title} now ${technology.progressPct}% complete")
                 }
+
+                // unlock any techs that require this one if all of its requirements are at least 50% researched
+                technologies.filter { tech -> tech.requires.contains(technology.id) }.forEach {
+                    if (getRequiredTechsFor(it).all { reqTech -> reqTech.progressPct > 50.0 }) {
+                        it.status = TechStatus.UNLOCKED
+                        val notification = Notification.TechUnlocked(
+                            it, "Technology ${it.title} is now unlocked for research"
+                        )
+                        if (!notificationHistory.contains(notification.technology.id)) {
+                            notifications.add(notification)
+                        }
+                        notificationHistory.add(notification.technology.id)
+                        log("Unlocking technology ${it.title}")
+                    }
+                }
+
                 if (technology.progressPct >= 100.0) {
                     logWarning("Company: Technology ${technology.title} is complete!")
                     // prune any progress notifications for this tech
@@ -229,6 +247,12 @@ class Company(var name: String) : LogInterface {
                             notification
                         )
                         notificationHistory.add(notification.technology.id)
+                        // Show a debug error if a tech is researched before all its requirements are
+                        getRequiredTechsFor(technology).forEach {
+                            if (it.status != TechStatus.RESEARCHED) {
+                                logError("Technology ${technology.title} is researched before all requirements are met")
+                            }
+                        }
                     }
                     technology.status = TechStatus.RESEARCHED
                 }
@@ -236,6 +260,11 @@ class Company(var name: String) : LogInterface {
         }
         return notifications
     }
+
+    /**
+     * Get the list of technologies that are required for the given technology
+     */
+    private fun getRequiredTechsFor(technology: Technology) = technologies.filter { it.id in technology.requires }
 
     /**
      * Clear all research points
@@ -251,13 +280,9 @@ class Company(var name: String) : LogInterface {
     fun processBuildings(): List<Notification> {
         val notifications: MutableList<Notification> = mutableListOf()
         log("Processing buildings:")
-        resources.forEach {
-            log("${it.key.name} = ${it.value}")
-        }
         zones.forEach { zone ->
             zone.locations.forEach { loc ->
                 loc.buildings.forEach { building ->
-                    log("Calculating income and costs for building ${building.key.name}")
                     when (building.key) {
                         is Building.HQ -> {
                             val hq = building.key as Building.HQ
@@ -288,7 +313,6 @@ class Company(var name: String) : LogInterface {
                 }
             }
         }
-        log("Processing complete")
 
         return notifications
     }

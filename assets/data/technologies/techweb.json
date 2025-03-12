@@ -218,7 +218,7 @@
         "title": "Solid Rocket Fuels",
         "description": "Simple and reliable rocket propulsion",
         "tier": "TIER_1",
-        "status": "UNLOCKED",
+        "status": "LOCKED",
         "unlockRanges": {
             "PHYSICS": {
                 "first": 51,
