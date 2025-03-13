@@ -173,6 +173,7 @@ alignment = 2
 [node name="EndTurn_btn" type="Button" parent="BottomRow_hbox"]
 layout_mode = 2
 size_flags_horizontal = 8
+tooltip_text = "Ctrl-Enter"
 theme_override_font_sizes/font_size = 20
 text = "End Turn"
 alignment = 2

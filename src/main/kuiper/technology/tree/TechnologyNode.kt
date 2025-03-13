@@ -127,6 +127,7 @@ class TechnologyNode : GraphNode(), LogInterface {
         } else {
             val titleLabel = titleBar.getChild(0) as Label
             titleLabel.setText(technology.title)
+            titleLabel.setThemeTypeVariation("GraphNodeTitleLabel".asCachedStringName())
             when (technology.status) {
                 TechStatus.RESEARCHED -> {
                     selectable = true

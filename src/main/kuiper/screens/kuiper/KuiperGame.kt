@@ -140,6 +140,9 @@ class KuiperGame : PanelContainer(), LogInterface {
             if (event.isActionPressed("show_tech_tree".asCachedStringName())) {
                 toggleTechTree()
             }
+            if (event.isActionPressed("end_turn".asCachedStringName())) {
+                on_end_turn()
+            }
         }
     }
 
