@@ -78,6 +78,10 @@ class NotificationItem : Control() {
             is Notification.NoScienceWarning -> {
                 label.text = "0"
             }
+
+            is Notification.TechUnlocked -> {
+                label.text = "U"
+            }
         }
     }
 }

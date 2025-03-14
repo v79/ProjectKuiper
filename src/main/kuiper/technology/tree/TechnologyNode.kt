@@ -2,15 +2,16 @@ package technology.tree
 
 import LogInterface
 import SignalBus
-import godot.GraphNode
-import godot.HorizontalAlignment
-import godot.Label
+import godot.*
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
 import godot.core.Color
+import godot.core.asCachedStringName
+import godot.core.connect
 import godot.extensions.getNodeAs
+import technology.TechStatus
 import technology.Technology
 import technology.editor.PortDirection
 import technology.editor.TechPortConnection
@@ -29,8 +30,14 @@ class TechnologyNode : GraphNode(), LogInterface {
     // Globals
     private lateinit var signalBus: SignalBus
 
+    // UI elements
+    private lateinit var progressBar: ProgressBar
+    private lateinit var titleBar: HBoxContainer
+    private val slotLabels: MutableList<Label> = mutableListOf()
+
     // Data
     var technology: Technology = Technology.EMPTY
+
     private var slotCounter = 0
     private var slots: MutableMap<Int, TechPortConnection> = mutableMapOf()
         private set
@@ -43,7 +50,14 @@ class TechnologyNode : GraphNode(), LogInterface {
     override fun _ready() {
         signalBus = getNodeAs("/root/SignalBus")!!
 
+        progressBar = getNodeAs("%ProgressBar")!!
+        titleBar = getTitlebarHbox()!!
+
         updateUI()
+
+        signalBus.nextTurn.connect {
+            updateUI()
+        }
     }
 
     @RegisterFunction
@@ -56,15 +70,20 @@ class TechnologyNode : GraphNode(), LogInterface {
      */
     fun addRequirement(techId: Int) {
         addSlot(direction = PortDirection.IN)
-        slots[slotCounter] =
-            TechPortConnection(techId = techId, port = requirePorts.size, direction = PortDirection.IN)
+        slots[slotCounter] = TechPortConnection(techId = techId, port = requirePorts.size, direction = PortDirection.IN)
     }
 
     @RegisterFunction
     fun addUnlocks(techId: Int) {
         addSlot(direction = PortDirection.OUT)
-        slots[slotCounter] =
-            TechPortConnection(techId = techId, port = unlockPorts.size, direction = PortDirection.OUT)
+        slots[slotCounter] = TechPortConnection(techId = techId, port = unlockPorts.size, direction = PortDirection.OUT)
+    }
+
+    @RegisterFunction
+    fun _onVisibilityChanged() {
+        if (isVisibleInTree()) {
+            updateUI()
+        }
     }
 
     /**
@@ -75,9 +94,9 @@ class TechnologyNode : GraphNode(), LogInterface {
     private fun addSlot(direction: PortDirection) {
         val newLabel: Label = Label().apply {
             text = if (direction == PortDirection.OUT) {
-                "Unlocks"
+                " "
             } else {
-                "Requires"
+                " "
             }
             setName("Unlocks_${slotCounter}")
             if (direction == PortDirection.OUT) {
@@ -86,6 +105,7 @@ class TechnologyNode : GraphNode(), LogInterface {
         }
         addChild(newLabel)
         moveChild(newLabel, slotCounter)
+        slotLabels.add(newLabel)
         setSlot(
             slotIndex = slotCounter,
             enableLeftPort = (direction == PortDirection.IN),
@@ -101,6 +121,34 @@ class TechnologyNode : GraphNode(), LogInterface {
     private fun updateUI() {
         setTitle("[T${technology.tier.ordinal}] ${technology.title}")
         setTooltipText(technology.description)
+        progressBar.value = technology.progressPct
+        if (titleBar.getChildCount() == 0) {
+            logError("Title bar has no children")
+        } else {
+            val titleLabel = titleBar.getChild(0) as Label
+            titleLabel.setText(technology.title)
+            titleLabel.setThemeTypeVariation("GraphNodeTitleLabel".asCachedStringName())
+            when (technology.status) {
+                TechStatus.RESEARCHED -> {
+                    selectable = true
+                    progressBar.modulate = Color.green
+                }
+
+                TechStatus.RESEARCHING -> {
+                    selectable = true
+                }
+
+                TechStatus.UNLOCKED -> {
+                    selectable = true
+                }
+
+                TechStatus.LOCKED -> {
+                    selectable = false
+                    titleLabel.setText("Unknown Technology")
+                    titleLabel.setThemeTypeVariation("TechTitleLocked".asCachedStringName())
+                }
+            }
+        }
     }
 
     /**

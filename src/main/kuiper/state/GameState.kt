@@ -43,6 +43,9 @@ class GameState : Node(), LogInterface {
     var company: Company = Company("Kuiper")
     var sponsor: Sponsor? = null
     var availableActions: MutableList<Action> = mutableListOf()
+
+    // TODO: Could this be better as a Set? Or a Map of <Notification, Boolean> to track if they have been dismissed?
+    // That might allow me to delete the notificationHistory on the Company
     val notifications: MutableList<Notification> = mutableListOf()
 
     @RegisterFunction

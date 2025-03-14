@@ -67,6 +67,7 @@ class TechTree : GraphEdit(), LogInterface {
     private fun showConnections(node: Node) {
         lineNodes.filter { it.key.first == node || it.key.second == node }
             .filter { it.key.first.technology.tier != TechTier.TIER_0 && it.key.second.technology.tier != TechTier.TIER_0 }
+            .filter { it.key.first.technology.progressPct > 33 }
             .forEach { line -> line.value.visible = true }
     }
 
