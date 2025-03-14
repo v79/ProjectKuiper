@@ -243,9 +243,10 @@ class Company(var name: String) : LogInterface {
                         val notification = Notification.ResearchComplete(
                             technology, "Research complete: ${technology.title}"
                         )
-                        notifications.add(
-                            notification
-                        )
+                        // TODO: this doesn't work either, there will have been a previous notification for this ID!
+                        if (!notificationHistory.contains(notification.technology.id)) {
+                            notifications.add(notification)
+                        }
                         notificationHistory.add(notification.technology.id)
                         // Show a debug error if a tech is researched before all its requirements are
                         getRequiredTechsFor(technology).forEach {
@@ -355,17 +356,6 @@ class Company(var name: String) : LogInterface {
         }
 
         return sBuilder.toString()
-        // I need a summary like Map<String, Par<ResourceType, Int>> where string is the message from the action
-        // but weird to have the string as the key
-        // +10 gold from HQ
-        // +20 gold from mine
-        // -5 gold from running costs
-        // -25 gold from build starship
-
-        // so many not a map. Just a list of strings?
-        // but I also want a summary of the costs and income
-
-
     }
 
     /**

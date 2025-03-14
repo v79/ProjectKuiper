@@ -94,9 +94,9 @@ class TechnologyNode : GraphNode(), LogInterface {
     private fun addSlot(direction: PortDirection) {
         val newLabel: Label = Label().apply {
             text = if (direction == PortDirection.OUT) {
-                "Unlocks"
+                " "
             } else {
-                "Requires"
+                " "
             }
             setName("Unlocks_${slotCounter}")
             if (direction == PortDirection.OUT) {
@@ -131,6 +131,7 @@ class TechnologyNode : GraphNode(), LogInterface {
             when (technology.status) {
                 TechStatus.RESEARCHED -> {
                     selectable = true
+                    progressBar.modulate = Color.green
                 }
 
                 TechStatus.RESEARCHING -> {
@@ -145,9 +146,6 @@ class TechnologyNode : GraphNode(), LogInterface {
                     selectable = false
                     titleLabel.setText("Unknown Technology")
                     titleLabel.setThemeTypeVariation("TechTitleLocked".asCachedStringName())
-//                    slotLabels.forEach {
-//                        it.setThemeTypeVariation("TechTitleLocked".asCachedStringName())
-//                    }
                 }
             }
         }
