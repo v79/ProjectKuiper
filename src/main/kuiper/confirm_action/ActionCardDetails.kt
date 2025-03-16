@@ -4,17 +4,17 @@ import SignalBus
 import actions.ActionCard
 import actions.ActionType
 import actions.ResourceType
-import godot.Control
-import godot.Label
-import godot.PanelContainer
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
+import godot.api.Control
+import godot.api.Label
+import godot.api.PanelContainer
 import godot.core.StringName
 import godot.core.asStringName
 import godot.core.connect
-import godot.extensions.getNodeAs
+import godot.extension.getNodeAs
 import state.Building
 
 @RegisterClass

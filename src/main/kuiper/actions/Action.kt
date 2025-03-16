@@ -6,7 +6,7 @@ import state.Building
 import technology.Science
 
 @RegisterClass
-class ActionWrapper() : godot.Object() {
+class ActionWrapper() : godot.api.Object() {
     constructor(action: Action) : this() {
         this.action = action
     }

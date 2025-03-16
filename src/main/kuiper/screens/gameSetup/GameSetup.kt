@@ -3,14 +3,14 @@ package screens.gameSetup
 import LogInterface
 import SignalBus
 import actions.ResourceType
-import godot.*
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterSignal
+import godot.api.*
 import godot.core.asCachedStringName
 import godot.core.signal0
 import godot.core.signal1
-import godot.extensions.getNodeAs
+import godot.extension.getNodeAs
 import loaders.DataLoader
 import state.*
 import technology.Technology
@@ -24,8 +24,8 @@ class GameSetup : Node(), LogInterface {
     private lateinit var dataLoader: DataLoader
     private lateinit var signalBus: SignalBus
 
-    @RegisterSignal
-    val countrySelectSignal by signal1<Int>("countryId")
+    @RegisterSignal("countryId")
+    val countrySelectSignal by signal1<Int>()
 
     @RegisterSignal
     val startGameSignal by signal0()

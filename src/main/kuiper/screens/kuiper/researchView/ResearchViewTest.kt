@@ -1,9 +1,9 @@
 package screens.kuiper.researchView
 
-import godot.*
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
-import godot.extensions.getNodeAs
+import godot.api.*
+import godot.extension.getNodeAs
 import godot.global.GD
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json

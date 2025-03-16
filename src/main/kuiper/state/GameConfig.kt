@@ -1,6 +1,6 @@
 package state
 
-import godot.FileAccess
+import godot.api.FileAccess
 import godot.global.GD
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient

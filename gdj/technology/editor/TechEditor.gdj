@@ -6,20 +6,21 @@ fqName = technology.editor.TechEditor
 relativeSourcePath = src/main/kuiper/technology/editor/TechEditor.kt
 baseType = Control
 supertypes = [
-    godot.Control,
+    godot.api.Control,
 	LogInterface,
-	godot.CanvasItem,
-	godot.Node,
-	godot.Object,
+	godot.api.CanvasItem,
+	godot.api.Node,
+	godot.api.Object,
 	godot.core.KtObject,
+	godot.common.interop.NativeWrapper,
+	godot.common.interop.NativePointer,
 	kotlin.Any
 ]
 signals = [
     
 ]
 properties = [
-    log_enabled,
-	tech_wrapper
+    log_enabled
 ]
 functions = [
     _ready,

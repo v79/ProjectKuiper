@@ -5,10 +5,10 @@ import SignalBus
 import actions.CardDeck
 import actions.activeActions.ActiveActionsFan
 import confirm_action.ConfirmAction
-import godot.*
 import godot.annotation.*
+import godot.api.*
 import godot.core.*
-import godot.extensions.getNodeAs
+import godot.extension.getNodeAs
 import godot.global.GD
 import science.ResourcePanel
 import science.SciencePanel
@@ -38,11 +38,11 @@ class KuiperGame : PanelContainer(), LogInterface {
     @RegisterSignal
     val escMenuSignal: Signal0 by signal0()
 
-    @RegisterSignal
-    val cardAdded by signal1<Int>("card_id")
+    @RegisterSignal("card_id")
+    val cardAdded by signal1<Int>()
 
-    @RegisterSignal
-    val screenResized by signal2<Int, Int>("width", "height")
+    @RegisterSignal("width", "height")
+    val screenResized by signal2<Int, Int>()
 
     @RegisterProperty
     @Export

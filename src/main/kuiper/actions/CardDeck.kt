@@ -1,10 +1,10 @@
 package actions
 
 import SignalBus
-import godot.Node
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
-import godot.extensions.getNodeAs
+import godot.api.Node
+import godot.extension.getNodeAs
 import godot.global.GD
 import loaders.DataLoader
 

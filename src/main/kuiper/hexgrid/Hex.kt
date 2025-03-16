@@ -1,12 +1,12 @@
 package hexgrid
 
-import godot.Label
-import godot.Node2D
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
-import godot.extensions.getNodeAs
+import godot.api.Label
+import godot.api.Node2D
+import godot.extension.getNodeAs
 import state.Location
 
 /**
@@ -18,32 +18,32 @@ import state.Location
 @RegisterClass
 class Hex : Node2D() {
 
-	@Export
-	@RegisterProperty
-	var id: Int = 0
+    @Export
+    @RegisterProperty
+    var id: Int = 0
 
-	@Export
-	@RegisterProperty
-	var hexUnlocked: Boolean = false
+    @Export
+    @RegisterProperty
+    var hexUnlocked: Boolean = false
 
-	var triangles = Array(6) { it }
+    var triangles = Array(6) { it }
 
-	// UI elements
-	private lateinit var locationLabel: Label
+    // UI elements
+    private lateinit var locationLabel: Label
 
-	lateinit var marker: HexDropTarget
-	lateinit var location: Location
+    lateinit var marker: HexDropTarget
+    lateinit var location: Location
 
-	@RegisterFunction
-	override fun _ready() {
-		locationLabel = getNodeAs("%LocationLabel")!!
-	}
+    @RegisterFunction
+    override fun _ready() {
+        locationLabel = getNodeAs("%LocationLabel")!!
+    }
 
-	@RegisterFunction
-	override fun _process(delta: Double) {
-	}
+    @RegisterFunction
+    override fun _process(delta: Double) {
+    }
 
-	// possible functions:
-	// - buildFacility(size: Int, site: Int)
-	// - removeFacility(size: Int, site: Int)
+    // possible functions:
+    // - buildFacility(size: Int, site: Int)
+    // - removeFacility(size: Int, site: Int)
 }

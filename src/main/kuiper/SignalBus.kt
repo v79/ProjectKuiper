@@ -1,10 +1,10 @@
 import actions.ActionCard
 import actions.ActionWrapper
-import godot.Control
-import godot.Node
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterSignal
+import godot.api.Control
+import godot.api.Node
 import godot.core.*
 import hexgrid.Hex
 import notifications.NotificationWrapper
@@ -24,67 +24,67 @@ class SignalBus : Node() {
         private set
 
     // Screen has been resized
-    @RegisterSignal
-    val onScreenResized by signal2<Int, Int>("width", "height")
+    @RegisterSignal("width", "height")
+    val onScreenResized by signal2<Int, Int>()
 
     // Signals relating to card dragging
-    @RegisterSignal
-    val draggingCard by signal1<ActionCard>("card")
+    @RegisterSignal("card")
+    val draggingCard by signal1<ActionCard>()
 
-    @RegisterSignal
-    val droppedCard by signal1<ActionCard>("card")
+    @RegisterSignal("card")
+    val droppedCard by signal1<ActionCard>()
 
     // signals relating to pulldown panels
-    @RegisterSignal
-    val recalcPulldownPanelSignal by signal1<Control>("panel_name")
+    @RegisterSignal("panel_name")
+    val recalcPulldownPanelSignal by signal1<Control>()
 
     // Signals relating to hexes
-    @RegisterSignal
-    val cardOnHex by signal1<Hex>("hex")
+    @RegisterSignal("hex")
+    val cardOnHex by signal1<Hex>()
 
-    @RegisterSignal
-    val cardOffHex by signal1<Hex>("hex")
+    @RegisterSignal("hex")
+    val cardOffHex by signal1<Hex>()
 
     // Signals relating to playing actions on hexes
-    @RegisterSignal
-    val showActionConfirmation by signal2<Hex, ActionCard>("hex", "card")
+    @RegisterSignal("hex", "card")
+    val showActionConfirmation by signal2<Hex, ActionCard>()
 
     @RegisterSignal
     val cancelActionConfirmation by signal0()
 
-    @RegisterSignal
-    val confirmAction by signal2<Hex, ActionWrapper>("hex", "action")
+    @RegisterSignal("hex", "action")
+    val confirmAction by signal2<Hex, ActionWrapper>()
 
     // Signals relating to the card deck
-    @RegisterSignal
-    val dealCardFromDeck by signal1<ActionWrapper>("action")
+    @RegisterSignal("action")
+    val dealCardFromDeck by signal1<ActionWrapper>()
 
     // Signals for updating UI each turn
     @RegisterSignal
     val nextTurn by signal0()
 
-    @RegisterSignal
-    val notify by signal1<NotificationWrapper>("notification")
+    @RegisterSignal("notification")
+    val notify by signal1<NotificationWrapper>()
 
-    @RegisterSignal
-    val updateScience by signal2<String, Float>("science", "value")
+    @RegisterSignal("science", "value")
+    val updateScience by signal2<String, Float>()
 
-    @RegisterSignal
-    val updateResource by signal2<String, Float>("resourceType", "newValue")
+    @RegisterSignal("resourceType", "newValue")
+    val updateResource by signal2<String, Float>()
 
     // Signals relating to active, ongoing actions
-    @RegisterSignal
-    val updateOngoingAction by signal2<Int, Int>("actionId", "turnsLeft")
+    @RegisterSignal("actionId", "turnsLeft")
+    val updateOngoingAction by signal2<Int, Int>()
 
-    @RegisterSignal
-    val actionCompleted by signal1<ActionWrapper>("action")
+    @RegisterSignal("action")
+    val actionCompleted by signal1<ActionWrapper>()
 
     // Signals relating to the game editor, eg. technology setup
-    @RegisterSignal
-    val editor_techSaved by signal1<TechWrapper>("tech_saved")
+    @RegisterSignal("tech_saved")
+    val editor_techSaved by signal1<TechWrapper>()
 
-    @RegisterSignal
-    val editor_deleteTech by signal1<TechWrapper>("delete_tech")
+    @RegisterSignal("delete_tech")
+    val editor_deleteTech by signal1<TechWrapper>()
 
     @RegisterFunction
     override fun _ready() {

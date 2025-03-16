@@ -2,15 +2,15 @@ package science
 
 import SignalBus
 import actions.ResourceType
-import godot.Control
-import godot.HBoxContainer
-import godot.RichTextLabel
-import godot.VBoxContainer
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
+import godot.api.Control
+import godot.api.HBoxContainer
+import godot.api.RichTextLabel
+import godot.api.VBoxContainer
 import godot.core.Vector2
 import godot.core.connect
-import godot.extensions.getNodeAs
+import godot.extension.getNodeAs
 import screens.kuiper.pullDownPanel.PullDownPanel
 import state.GameState
 

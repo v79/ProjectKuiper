@@ -1,13 +1,13 @@
 package technology.tree
 
-import godot.Label
-import godot.PanelContainer
-import godot.RichTextLabel
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
-import godot.extensions.getNodeAs
+import godot.api.Label
+import godot.api.PanelContainer
+import godot.api.RichTextLabel
+import godot.extension.getNodeAs
 import technology.Science
 import technology.Technology
 import technology.editor.TechWrapper

@@ -2,15 +2,19 @@ package technology.editor
 
 import LogInterface
 import SignalBus
-import godot.*
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
+import godot.api.Button
+import godot.api.GraphNode
+import godot.api.Label
+import godot.api.VBoxContainer
 import godot.core.Color
+import godot.core.HorizontalAlignment
 import godot.core.Vector2
 import godot.core.connect
-import godot.extensions.getNodeAs
+import godot.extension.getNodeAs
 import technology.Technology
 
 /**

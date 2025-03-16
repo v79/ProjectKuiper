@@ -1,14 +1,16 @@
 package screens.kuiper.pullDownPanel
 
 import SignalBus
-import godot.*
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
+import godot.api.*
+import godot.core.Key
+import godot.core.MouseButton
 import godot.core.Vector2
 import godot.core.connect
-import godot.extensions.getNodeAs
+import godot.extension.getNodeAs
 import kotlin.math.roundToInt
 
 @RegisterClass
