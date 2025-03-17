@@ -28,6 +28,13 @@ DataLoader="*res://src/main/kuiper/loaders/DataLoader.kt"
 window/size/viewport_width=1600
 window/size/viewport_height=900
 
+[file_customization]
+
+folder_colors={
+"res://gdj/": "gray",
+"res://jvm/": "gray"
+}
+
 [global_group]
 
 Cards=""
