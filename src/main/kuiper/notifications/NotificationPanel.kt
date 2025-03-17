@@ -2,16 +2,16 @@ package notifications
 
 import LogInterface
 import SignalBus
-import godot.PackedScene
-import godot.ResourceLoader
-import godot.VBoxContainer
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
+import godot.api.PackedScene
+import godot.api.ResourceLoader
+import godot.api.VBoxContainer
 import godot.core.Vector2
 import godot.core.connect
-import godot.extensions.getNodeAs
+import godot.extension.getNodeAs
 import technology.TechStatus
 import technology.TechTier
 import technology.Technology

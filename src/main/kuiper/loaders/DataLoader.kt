@@ -1,9 +1,9 @@
 package loaders
 
 import actions.Action
-import godot.FileAccess
-import godot.Node
 import godot.annotation.RegisterClass
+import godot.api.FileAccess
+import godot.api.Node
 import godot.global.GD
 import kotlinx.serialization.json.Json
 import state.Sponsor

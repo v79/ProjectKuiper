@@ -3,13 +3,13 @@ package actions.activeActions
 import SignalBus
 import actions.Action
 import actions.ActionType
-import godot.*
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
+import godot.api.*
 import godot.core.asStringName
 import godot.core.connect
-import godot.extensions.getNodeAs
+import godot.extension.getNodeAs
 
 @RegisterClass
 class OngoingAction : Node2D() {

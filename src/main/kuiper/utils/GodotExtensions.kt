@@ -1,6 +1,6 @@
 package utils
 
-import godot.Node
+import godot.api.Node
 
 /**
  * Check if a node has children

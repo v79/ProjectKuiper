@@ -2,13 +2,13 @@ package technology.editor
 
 import LogInterface
 import SignalBus
-import godot.Control
-import godot.FileAccess
 import godot.annotation.*
+import godot.api.Control
+import godot.api.FileAccess
 import godot.core.connect
 import godot.core.signal0
 import godot.core.signal1
-import godot.extensions.getNodeAs
+import godot.extension.getNodeAs
 import godot.global.GD
 import kotlinx.serialization.json.Json
 import technology.TechStatus
@@ -29,11 +29,11 @@ class TechWebEditor : Control(), LogInterface {
     private val techWebJsonPath = "res://assets/data/technologies/techweb.json"
 
     // Signals
-    @RegisterSignal
-    val nodeAdded by signal1<TechWrapper>("technology_added")
+    @RegisterSignal("technology_added")
+    val nodeAdded by signal1<TechWrapper>()
 
-    @RegisterSignal
-    val nodeSaved by signal1<TechWrapper>("technology_saved")
+    @RegisterSignal("technology_saved")
+    val nodeSaved by signal1<TechWrapper>()
 
     @RegisterSignal
     val techsCleared by signal0()

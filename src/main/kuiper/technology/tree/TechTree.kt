@@ -2,12 +2,12 @@ package technology.tree
 
 import LogInterface
 import SignalBus
-import godot.*
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
-import godot.extensions.getNodeAs
+import godot.api.*
+import godot.extension.getNodeAs
 import technology.TechTier
 import technology.Technology
 import technology.editor.TechWrapper

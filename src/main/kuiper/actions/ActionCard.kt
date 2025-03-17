@@ -1,12 +1,15 @@
 package actions
 
 import SignalBus
-import godot.*
 import godot.annotation.*
+import godot.api.Input
+import godot.api.Label
+import godot.api.Node2D
+import godot.api.PanelContainer
+import godot.common.util.toRealT
 import godot.core.*
-import godot.extensions.getNodeAs
+import godot.extension.getNodeAs
 import godot.global.GD
-import godot.util.toRealT
 import hexgrid.Hex
 import state.Building
 
@@ -59,17 +62,17 @@ class ActionCard : Node2D() {
     private val sectorSizeLabel: Label by lazy { getNodeAs("%SectorSize")!! }
 
     // signals
-    @RegisterSignal
-    val mouseEntered by signal1<Int>("card_id")
+    @RegisterSignal("card_id")
+    val mouseEntered by signal1<Int>()
 
-    @RegisterSignal
-    val mouseExited by signal1<Int>("card_id")
+    @RegisterSignal("card_id")
+    val mouseExited by signal1<Int>()
 
-    @RegisterSignal
-    val isDraggingCard by signal1<ActionCard>("card")
+    @RegisterSignal("card")
+    val isDraggingCard by signal1<ActionCard>()
 
-    @RegisterSignal
-    val draggingStopped by signal1<ActionCard>("card")
+    @RegisterSignal("card")
+    val draggingStopped by signal1<ActionCard>()
 
     private var topLeftLimit = Vector2(100f, 100f)
     private var widthLimit = 1200f

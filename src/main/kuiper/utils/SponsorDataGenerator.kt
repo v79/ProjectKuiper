@@ -1,14 +1,14 @@
 package utils
 
 import actions.ResourceType
-import godot.Button
-import godot.Control
-import godot.FileAccess
-import godot.Label
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
+import godot.api.Button
+import godot.api.Control
+import godot.api.FileAccess
+import godot.api.Label
 import godot.core.Color
-import godot.extensions.getNodeAs
+import godot.extension.getNodeAs
 import godot.global.GD
 import kotlinx.serialization.json.Json
 import state.Sponsor

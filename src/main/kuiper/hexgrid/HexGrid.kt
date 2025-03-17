@@ -3,14 +3,14 @@ package hexgrid
 import SignalBus
 import actions.ActionCard
 import actions.CardStatus
-import godot.*
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
+import godot.api.*
 import godot.core.Vector2
 import godot.core.asCachedStringName
 import godot.core.connect
-import godot.extensions.getNodeAs
-import godot.extensions.instantiateAs
+import godot.extension.getNodeAs
+import godot.extension.instantiateAs
 import state.GameState
 import state.Location
 import state.SectorStatus

@@ -2,15 +2,19 @@ package technology.tree
 
 import LogInterface
 import SignalBus
-import godot.*
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
+import godot.api.GraphNode
+import godot.api.HBoxContainer
+import godot.api.Label
+import godot.api.ProgressBar
 import godot.core.Color
+import godot.core.HorizontalAlignment
 import godot.core.asCachedStringName
 import godot.core.connect
-import godot.extensions.getNodeAs
+import godot.extension.getNodeAs
 import technology.TechStatus
 import technology.Technology
 import technology.editor.PortDirection

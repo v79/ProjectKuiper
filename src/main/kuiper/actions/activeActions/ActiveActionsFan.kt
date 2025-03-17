@@ -3,15 +3,15 @@ package actions.activeActions
 import LogInterface
 import SignalBus
 import actions.Action
-import godot.Control
-import godot.PackedScene
-import godot.ResourceLoader
-import godot.VBoxContainer
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
+import godot.api.Control
+import godot.api.PackedScene
+import godot.api.ResourceLoader
+import godot.api.VBoxContainer
 import godot.core.Vector2
 import godot.core.connect
-import godot.extensions.getNodeAs
+import godot.extension.getNodeAs
 import state.GameState
 
 @RegisterClass

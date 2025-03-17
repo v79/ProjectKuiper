@@ -2,16 +2,16 @@ package screens.mainMenu
 
 import LogInterface
 import SignalBus
-import godot.Button
-import godot.FileAccess
-import godot.FileDialog
-import godot.Node
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterSignal
+import godot.api.Button
+import godot.api.FileAccess
+import godot.api.FileDialog
+import godot.api.Node
 import godot.core.Signal0
 import godot.core.signal0
-import godot.extensions.getNodeAs
+import godot.extension.getNodeAs
 import kotlinx.serialization.json.Json
 import state.GameConfig
 import state.GameState

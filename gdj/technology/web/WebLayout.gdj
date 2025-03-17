@@ -6,13 +6,15 @@ fqName = technology.editor.WebLayout
 relativeSourcePath = src/main/kuiper/technology/editor/WebLayout.kt
 baseType = GraphEdit
 supertypes = [
-    godot.GraphEdit,
+    godot.api.GraphEdit,
 	LogInterface,
-	godot.Control,
-	godot.CanvasItem,
-	godot.Node,
-	godot.Object,
+	godot.api.Control,
+	godot.api.CanvasItem,
+	godot.api.Node,
+	godot.api.Object,
 	godot.core.KtObject,
+	godot.common.interop.NativeWrapper,
+	godot.common.interop.NativePointer,
 	kotlin.Any
 ]
 signals = [

@@ -6,14 +6,16 @@ fqName = screens.kuiper.KuiperGame
 relativeSourcePath = src/main/kuiper/screens/kuiper/KuiperGame.kt
 baseType = PanelContainer
 supertypes = [
-    godot.PanelContainer,
+    godot.api.PanelContainer,
 	LogInterface,
-	godot.Container,
-	godot.Control,
-	godot.CanvasItem,
-	godot.Node,
-	godot.Object,
+	godot.api.Container,
+	godot.api.Control,
+	godot.api.CanvasItem,
+	godot.api.Node,
+	godot.api.Object,
 	godot.core.KtObject,
+	godot.common.interop.NativeWrapper,
+	godot.common.interop.NativePointer,
 	kotlin.Any
 ]
 signals = [

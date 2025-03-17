@@ -1,13 +1,13 @@
 package notifications
 
 import SignalBus
-import godot.*
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
+import godot.api.*
 import godot.core.asCachedStringName
 import godot.core.asStringName
 import godot.core.connect
-import godot.extensions.getNodeAs
+import godot.extension.getNodeAs
 
 @RegisterClass
 class NotificationItem : Control() {

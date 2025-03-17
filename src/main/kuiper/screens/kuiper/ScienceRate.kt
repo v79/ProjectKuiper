@@ -1,15 +1,15 @@
 package screens.kuiper
 
-import godot.ColorRect
-import godot.Control
-import godot.Label
-import godot.LabelSettings
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
+import godot.api.ColorRect
+import godot.api.Control
+import godot.api.Label
+import godot.api.LabelSettings
 import godot.core.Color
-import godot.extensions.getNodeAs
+import godot.extension.getNodeAs
 
 // TODO: rename this class, as it's a control node and I need ScienceRate to be a property of the Company
 // TODO: move this class, as it's not just for science
