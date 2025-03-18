@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://lay16idmjti3"]
+
+[ext_resource type="Script" uid="uid://c6d14av3qvbgf" path="res://src/main/kuiper/hexgrid/Triangle.kt" id="1_qgspu"]
+
+[node name="Triangle" type="Polygon2D"]
+script = ExtResource("1_qgspu")

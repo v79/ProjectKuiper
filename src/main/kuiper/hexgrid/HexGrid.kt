@@ -98,6 +98,12 @@ class HexGrid : Control() {
         val boxContainer = BoxContainer()
         boxContainer.setName("Hex${i}_BoxContainer")
         boxContainer.addChild(hex)
+
+        if (i != 0) {
+            boxContainer.visible = false
+        }
+
+
         label.text = location.name
         hexGridContainer.addChild(boxContainer)
         hexes.add(hex)

@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://cpwrm52thlo67"]
 
-[ext_resource type="Script" path="res://src/main/kuiper/confirm_action/ConfirmAction.kt" id="1_po0r3"]
+[ext_resource type="Script" uid="uid://bh3doddhkw8kl" path="res://src/main/kuiper/confirm_action/ConfirmAction.kt" id="1_po0r3"]
 [ext_resource type="Theme" uid="uid://dwjw02q78v0i1" path="res://assets/themes/theme.tres" id="1_qg714"]
 [ext_resource type="PackedScene" uid="uid://bbsmiefjegk8c" path="res://src/main/kuiper/confirm_action/action_card_details.tscn" id="2_v23dy"]
 
@@ -109,8 +109,8 @@ tracks/3/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_jlpiy"]
 _data = {
-"RESET": SubResource("Animation_8g1pu"),
-"show_panel": SubResource("Animation_bh0ip")
+&"RESET": SubResource("Animation_8g1pu"),
+&"show_panel": SubResource("Animation_bh0ip")
 }
 
 [node name="ConfirmAction" type="Control"]
@@ -351,7 +351,7 @@ theme_override_constants/margin_right = 100
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_jlpiy")
+&"": SubResource("AnimationLibrary_jlpiy")
 }
 
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/BottomRow/Buttons/CancelButton" to="." method="cancel_action"]
