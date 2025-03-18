@@ -1,14 +1,9 @@
 package hexgrid
 
 import godot.annotation.*
-import godot.api.FontVariation
 import godot.api.Marker2D
 import godot.core.Color
-import godot.core.PackedVector2Array
 import godot.core.VariantArray
-import godot.core.Vector2
-import kotlin.math.cos
-import kotlin.math.sin
 
 /**
  * A HexDropTarget is the drop-target for a hexagon.
@@ -48,64 +43,66 @@ class HexDropTarget : Marker2D() {
      */
     @RegisterFunction
     override fun _draw() {
-        val a = 2 * Math.PI / 6
-        val r = 100.0
-        var p1 = Vector2(100.0, 0.0)
-        val font = FontVariation()
-        for (i in 1..6) {
-            val p2 = Vector2(r * cos(a * i), r * sin(a * i))
-            drawLine(
-                p1,
-                p2,
-                colour,
-                2.0f
-            )
-            if (fillTriangles[translateHexIdToSectorId(i - 1)]) {
-                val fillPolys = PackedVector2Array()
-                fillPolys.insert(0, Vector2(0.0, 0.0))
-                fillPolys.insert(1, p1)
-                fillPolys.insert(2, p2)
-                drawColoredPolygon(
-                    fillPolys,
-                    colour
-                )
-            }
-            if (nameSectors) {
-                drawChar(
-                    font,
-                    Vector2((0.0 + p1.x + p2.x) / 3, (0.0 + p1.y + p2.y) / 3),
-                    translateHexIdToSectorId(i).toString(),
-                    22,
-                    Color.green
-                )
-            }
-            if (numbered) {
-                drawChar(
-                    font,
-                    Vector2((0.0 + p1.x + p2.x) / 3, (0.0 + p1.y + p2.y) / 3),
-                    i.toString(),
-                    22,
-                    Color.green
-                )
-                // this draws 0 to 5, but we want 1 to 6
-                drawChar(
-                    font,
-                    Vector2((24.0 + p1.x + p2.x) / 3, (0.0 + p1.y + p2.y) / 3),
-                    translateHexIdToSectorId(i).toString(),
-                    22,
-                    Color.red
-                )
-            }
-            p1 = p2
-            if (drawInternals) {
+        /*    val a = 2 * Math.PI / 6
+            val r = 100.0
+            var p1 = Vector2(100.0, 0.0)
+            val font = FontVariation()
+            for (i in 1..6) {
+                val p2 = Vector2(r * cos(a * i), r * sin(a * i))
                 drawLine(
-                    Vector2(0.0, 0.0),
+                    p1,
                     p2,
                     colour,
-                    1.0f
+                    2.0f
                 )
+                if (fillTriangles[translateHexIdToSectorId(i - 1)]) {
+                    val fillPolys = PackedVector2Array()
+                    fillPolys.insert(0, Vector2(0.0, 0.0))
+                    fillPolys.insert(1, p1)
+                    fillPolys.insert(2, p2)
+                    drawColoredPolygon(
+                        fillPolys,
+                        colour
+                    )
+                }
+                if (nameSectors) {
+                    drawChar(
+                        font,
+                        Vector2((0.0 + p1.x + p2.x) / 3, (0.0 + p1.y + p2.y) / 3),
+                        translateHexIdToSectorId(i).toString(),
+                        22,
+                        Color.green
+                    )
+                }
+                if (numbered) {
+                    drawChar(
+                        font,
+                        Vector2((0.0 + p1.x + p2.x) / 3, (0.0 + p1.y + p2.y) / 3),
+                        i.toString(),
+                        22,
+                        Color.green
+                    )
+                    // this draws 0 to 5, but we want 1 to 6
+                    drawChar(
+                        font,
+                        Vector2((24.0 + p1.x + p2.x) / 3, (0.0 + p1.y + p2.y) / 3),
+                        translateHexIdToSectorId(i).toString(),
+                        22,
+                        Color.red
+                    )
+                }
+                p1 = p2
+                if (drawInternals) {
+                    drawLine(
+                        Vector2(0.0, 0.0),
+                        p2,
+                        colour,
+                        1.0f
+                    )
+                }
             }
-        }
+
+         */
     }
 
     /**

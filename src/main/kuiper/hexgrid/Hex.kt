@@ -5,9 +5,7 @@ import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
 import godot.api.*
-import godot.core.Color
-import godot.core.VariantArray
-import godot.core.Vector2
+import godot.core.*
 import godot.extension.getNodeAs
 import godot.global.GD
 import state.Location
@@ -49,30 +47,68 @@ class Hex : Node2D() {
     private val newTriangles = Array<Triangle?>(6) { null }
 
     private lateinit var textEdit: TextEdit
+    private lateinit var pointSet: Map<Int, Triple<Vector2, Vector2, Vector2>>
 
     @RegisterFunction
     override fun _ready() {
         locationLabel = getNodeAs("%LocationLabel")!!
         textEdit = getNodeAs("TextEdit")!!
 
-        // Arrange these six triangles in a hexagon
-// r = (s * sqrt(3)) / 3
-// r = 125 * sqrt(3) / 3
-// r = 125 * 1.732 / 3
-// r = 72.168
-//        val radius = 150 * 0.577
+        pointSet = calculateVerticesForHex(radius = 125.0f)
 
+        pointSet.forEach { (index, triangle) ->
+            val polygon = Polygon2D()
+            polygon.setName("Triangle$index")
+            polygon.color = Color(GD.randf(), GD.randf(), GD.randf())
+            polygon.polygon = PackedVector2Array(triangle.toList().toVariantArray())
+
+            addChild(polygon)
+        }
+    }
+
+    @RegisterFunction
+    override fun _process(delta: Double) {
+        /*newTriangles.forEachIndexed { index, triangle ->
+            val angleDeg = 60 * index - 30
+            val angleRad = Math.PI / 180 * angleDeg
+            val newX = newRadius * cos(angleRad)
+            val newY = newRadius * sin(angleRad)
+            triangle?.positionMutate {
+                x = newX
+                y = newY
+            }
+        }*/
+    }
+
+    @RegisterFunction
+    fun _on_TextEdit_text_changed() {
+        val newText = textEdit.text
+        newRadius = newText.toDoubleOrNull() ?: 75.0
+    }
+
+    /**
+     * Calculate the vertices for a hexagon, as a map of triangle index to the three vertices of the triangle
+     */
+    private fun calculateVerticesForHex(radius: Float): Map<Int, Triple<Vector2, Vector2, Vector2>> {
+        val a = 2 * Math.PI / 6
+        val pointSet: MutableMap<Int, Triple<Vector2, Vector2, Vector2>> = mutableMapOf()
+        var p1 = Vector2(radius, 0)
+        val p3 = Vector2(0.0, 0.0)
+        for (i in 1..6) {
+            val p2 = Vector2(radius * cos(a * i), radius * sin(a * i))
+            pointSet[i] = Triple(p1, p2, p3)
+            GD.print("Triangle $i: $p1, $p2, $p3")
+            p1 = p2
+        }
+        return pointSet.toMap()
+    }
+
+    @Deprecated("Use calculateVerticesForHex instead")
+    private fun hexThroughTriangles() {
         val triangleSideLength = 75.0 // Replace with your triangle's side length
         val radius = (triangleSideLength * kotlin.math.sqrt(3.0)) / 3.0
-//        val radius = 72.168
 
         for (i in 0 until 6) {
-            /*
-                        val segment = sectorScene.instantiate() as SectorSegment
-                        segment.setName("SectorSegment$i")
-                        val triangle = segment.getNodeAs<Triangle>("%Triangle")!!
-                        triangle.setName("Triangle$i")
-            */
             val triangle = triangleScene.instantiate() as Triangle
             triangle.setName("Triangle$i")
 
@@ -82,14 +118,6 @@ class Hex : Node2D() {
             val x = radius * cos(angleRad)
             val y = radius * sin(angleRad)
 
-            GD.print("placing triangle $i at $x, $y")
-            // placing triangle 0 at 37.5, -21.650635094610962
-            // placing triangle 1 at 37.5, 21.650635094610962
-            // placing triangle 2 at 2.651438096812267E-15, 43.30127018922193
-            // placing triangle 3 at -37.5, 21.650635094610962
-            // placing triangle 4 at -37.5, -21.65063509461097
-            // placing triangle 5 at -7.954314290436801E-15, -43.30127018922193
-
             triangle.position = Vector2(x, y)
             triangle.rotationDegrees = (60.0 * i).toFloat()
             triangle.scale = Vector2(1.0, 1.0)
@@ -98,42 +126,7 @@ class Hex : Node2D() {
             newTriangles[i] = triangle
             addChild(triangle)
         }
-
-        /* points.resize(6)
-         val hexSize = 100.0
-         for (i in 0 until 6) {
-             val angleDeg = 60 * i - 30
-             val angleRad = Math.PI / 180 * angleDeg
-             val x = position.x + hexSize * Math.cos(angleRad)
-             val y = position.y + hexSize * Math.sin(angleRad)
-             points[i] = Vector2(x, y)
-
-             polygon = PackedVector2Array(points)
-             color = Color.indianRed
-         }*/
-
     }
-
-    @RegisterFunction
-    override fun _process(delta: Double) {
-        newTriangles.forEachIndexed { index, triangle ->
-            val angleDeg = 60 * index - 30
-            val angleRad = Math.PI / 180 * angleDeg
-            val newX = newRadius * cos(angleRad)
-            val newY = newRadius * sin(angleRad)
-            triangle?.positionMutate {
-                x = newX
-                y = newY
-            }
-        }
-    }
-
-    @RegisterFunction
-    fun _on_TextEdit_text_changed() {
-        val newText = textEdit.text
-        newRadius = newText.toDoubleOrNull() ?: 75.0
-    }
-
     // possible functions:
     // - buildFacility(size: Int, site: Int)
     // - removeFacility(size: Int, site: Int)
