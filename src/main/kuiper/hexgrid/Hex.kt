@@ -9,14 +9,13 @@ import godot.api.Label
 import godot.api.Node2D
 import godot.api.PackedScene
 import godot.api.ResourceLoader
+import godot.core.Color
 import godot.core.PackedVector2Array
-import godot.core.VariantArray
 import godot.core.Vector2
 import godot.core.toVariantArray
 import godot.extension.getNodeAs
 import state.Location
 import state.Sector
-import state.SectorStatus
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -52,10 +51,7 @@ class Hex : Node2D(), LogInterface {
     private val sectorScene = ResourceLoader.load("res://src/main/kuiper/hexgrid/sector_segment.tscn") as PackedScene
 
     // Data
-    var triangles = Array(6) { it }
-    var points = VariantArray<Vector2>()
     var sectors: MutableList<Sector> = mutableListOf()
-    private val newTriangles = Array<Triangle?>(6) { null }
     private lateinit var pointSet: Map<Int, Triple<Vector2, Vector2, Vector2>>
 
     @RegisterFunction
@@ -69,7 +65,7 @@ class Hex : Node2D(), LogInterface {
             segment.create(
                 index,
                 PackedVector2Array(triangle.toList().toVariantArray()),
-                filled = sectors[index - 1].status == SectorStatus.BUILT
+                sectors[index - 1].status
             )
             addChild(segment)
         }
@@ -77,6 +73,38 @@ class Hex : Node2D(), LogInterface {
 
     @RegisterFunction
     override fun _process(delta: Double) {
+    }
+
+    /**
+     * Draw the hexagon outline
+     */
+    @RegisterFunction
+    override fun _draw() {
+        val drawInternals = true
+        val colour = Color.bisque
+        val a = 2 * Math.PI / 6
+
+        var p1 = Vector2(newRadius, 0.0)
+        for (i in 1..6) {
+            val p2 = Vector2(newRadius * cos(a * i), newRadius * sin(a * i))
+            drawLine(
+                p1,
+                p2,
+                colour,
+                2.0f
+            )
+            p1 = p2
+            if (drawInternals) {
+                drawLine(
+                    Vector2(0.0, 0.0),
+                    p2,
+                    colour,
+                    1.0f
+                )
+            }
+        }
+
+
     }
 
     /**

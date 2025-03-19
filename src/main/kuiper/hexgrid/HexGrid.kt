@@ -82,26 +82,13 @@ class HexGrid : Control() {
         dropTarget.addToGroup("hexDropTargets".asCachedStringName())
         dropTarget.setName("HexDropTarget$i")
         dropTarget.hex = hex
-        dropTarget.fillTriangles.resize(6)
         dropTargets.add(dropTarget)
         hex.marker = dropTarget
-        /* location.sectors.forEachIndexed { index, sector ->
-             if (sector.status == SectorStatus.BUILT) {
-                 hex.triangles = Array(6) { 0 }
-                 hex.triangles[index] = 1
-                 hex.marker.fillTriangles[index] = true
-             }
-         }*/
         hex.setName("Hex$i")
         val label = hex.getNodeAs<Label>("%LocationLabel")!!
         val boxContainer = BoxContainer()
         boxContainer.setName("Hex${i}_BoxContainer")
         boxContainer.addChild(hex)
-
-        if (i != 0) {
-            boxContainer.visible = false
-        }
-
 
         label.text = location.name
         hexGridContainer.addChild(boxContainer)

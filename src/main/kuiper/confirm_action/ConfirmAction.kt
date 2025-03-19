@@ -11,16 +11,13 @@ import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
 import godot.api.*
-import godot.core.Color
 import godot.core.asStringName
 import godot.core.connect
 import godot.extension.getNodeAs
 import godot.extension.instantiateAs
 import hexgrid.Hex
-import hexgrid.HexDropTarget
 import state.Building
 import state.Location
-import state.SectorStatus
 import technology.Science
 import utils.clearChildren
 
@@ -189,27 +186,15 @@ class ConfirmAction : Control(), LogInterface {
         }
     }
 
+    /**
+     * Render a larger version of the given hexagon
+     */
     private fun renderHex(hex: Hex, location: Location) {
         hexBoxContainer.clearChildren()
         val hexToRender = hexScene.instantiateAs<Hex>()!!
         hexToRender.id = hex.id
         hexToRender.hexUnlocked = true
-        hexToRender.triangles = hex.triangles
-        val dropTarget = hexToRender.getNodeAs<HexDropTarget>("%HexDropTarget")!!
-        dropTarget.setName("ConfirmHexDropTarget")
-        dropTarget.hex = hexToRender
-        dropTarget.fillTriangles.resize(6)
-        dropTarget.drawInternals = true
-        dropTarget.nameSectors = true
-        dropTarget.colour = Color.white
-        hex.marker = dropTarget
-        location.sectors.forEachIndexed { index, sector ->
-            if (sector.status == SectorStatus.BUILT) {
-                hex.triangles = Array(6) { 0 }
-                hex.triangles[index] = 1
-                hex.marker.fillTriangles[index] = true
-            }
-        }
+        hexToRender.sectors = location.sectors.toMutableList()
         hexToRender.setName("ConfirmHex${hex.id}")
         // hide the location label because I've got better one down below
         hexToRender.getNodeAs<Label>("LocationLabel")!!.visible = false
