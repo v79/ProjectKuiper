@@ -13,7 +13,6 @@ import godot.extension.getNodeAs
 import godot.extension.instantiateAs
 import state.GameState
 import state.Location
-import state.SectorStatus
 
 @RegisterClass
 class HexGrid : Control() {
@@ -78,7 +77,7 @@ class HexGrid : Control() {
         hex.id = i
         hex.location = location
         hex.hexUnlocked = location.unlocked
-
+        hex.sectors = location.sectors.toMutableList()
         val dropTarget = hex.getNodeAs<HexDropTarget>("%HexDropTarget")!!
         dropTarget.addToGroup("hexDropTargets".asCachedStringName())
         dropTarget.setName("HexDropTarget$i")
@@ -86,13 +85,13 @@ class HexGrid : Control() {
         dropTarget.fillTriangles.resize(6)
         dropTargets.add(dropTarget)
         hex.marker = dropTarget
-        location.sectors.forEachIndexed { index, sector ->
-            if (sector.status == SectorStatus.BUILT) {
-                hex.triangles = Array(6) { 0 }
-                hex.triangles[index] = 1
-                hex.marker.fillTriangles[index] = true
-            }
-        }
+        /* location.sectors.forEachIndexed { index, sector ->
+             if (sector.status == SectorStatus.BUILT) {
+                 hex.triangles = Array(6) { 0 }
+                 hex.triangles[index] = 1
+                 hex.marker.fillTriangles[index] = true
+             }
+         }*/
         hex.setName("Hex$i")
         val label = hex.getNodeAs<Label>("%LocationLabel")!!
         val boxContainer = BoxContainer()

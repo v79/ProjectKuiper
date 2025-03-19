@@ -61,7 +61,6 @@ class AvailableActionsFan : Node2D() {
         fanContainer = getNodeAs("HBoxContainer/FanContainer")!!
         delayTimer = getNodeAs("%DelayActivationTimer")!!
 
-        GD.print("AvailableActionsFan ready - connecting signals")
         // connect signals
         signalBus.dealCardFromDeck.connect { actionWrapper ->
             addActionCard(actionWrapper.action)

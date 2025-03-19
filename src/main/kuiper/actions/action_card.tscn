@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://cro672t6ssycg"]
 
-[ext_resource type="Script" path="res://src/main/kuiper/actions/ActionCard.kt" id="1_obn8v"]
+[ext_resource type="Script" uid="uid://c1dkqgw40c0a8" path="res://src/main/kuiper/actions/ActionCard.kt" id="1_obn8v"]
 [ext_resource type="Theme" uid="uid://cn2v6cwhff2nv" path="res://assets/themes/card_theme.tres" id="3_w8oq3"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gjgnd"]
