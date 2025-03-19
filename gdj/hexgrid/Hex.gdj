@@ -27,5 +27,7 @@ properties = [
 functions = [
     _ready,
 	_process,
-	_draw
+	_draw,
+	highlight,
+	unhighlight
 ]

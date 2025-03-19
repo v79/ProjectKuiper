@@ -111,11 +111,11 @@ class HexGrid : Control() {
                     if (dropTarget.hex != null) {
                         if (dropTarget.hex!!.hexUnlocked) {
                             if (card.globalPosition.distanceTo(dropTarget.globalPosition) < card.clickRadius / 2) {
-                                dropTarget.highlight()
+                                dropTarget.hex?.highlight()
                                 signalBus.cardOnHex.emit(dropTarget.hex!!)
                             } else {
                                 signalBus.cardOffHex.emit(dropTarget.hex!!)
-                                dropTarget.unhighlight()
+                                dropTarget.hex?.unhighlight()
                             }
                         }
                     }

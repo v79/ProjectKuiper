@@ -1,11 +1,14 @@
 package hexgrid
 
-import godot.annotation.*
+import godot.annotation.RegisterClass
+import godot.annotation.RegisterFunction
+import godot.annotation.RegisterProperty
+import godot.annotation.Tool
 import godot.api.Marker2D
-import godot.core.Color
 
 /**
  * A HexDropTarget is the drop-target for a hexagon.
+ * Soon to be @Deprecated?
  */
 @Tool
 @RegisterClass
@@ -15,20 +18,6 @@ class HexDropTarget : Marker2D() {
 
     @RegisterProperty
     var isSelected = false
-
-    @Export
-    @RegisterProperty
-    var nameSectors = false
-
-    // for debug
-    @Export
-    @RegisterProperty
-    var numbered = false
-
-    private var unlockedColor = Color(1.0, 1.0, 1.0, 1.0)
-    private var lockedColor = Color(0.2, 0.2, 0.2, 1.0)
-    private var highlightColor = Color(1.0, 0.8, 0.8, 1.0)
-    var colour: Color = lockedColor // default to dark grey
 
     /**
      * Translate the hexagon ID to a sector ID
@@ -50,15 +39,11 @@ class HexDropTarget : Marker2D() {
 
     @RegisterFunction
     fun highlight() {
-        colour = highlightColor
         isSelected = true
-        queueRedraw()
     }
 
     @RegisterFunction
     fun unhighlight() {
-        colour = if (hex?.hexUnlocked == true) unlockedColor else lockedColor
         isSelected = false
-        queueRedraw()
     }
 }

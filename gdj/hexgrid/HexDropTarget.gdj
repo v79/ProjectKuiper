@@ -20,9 +20,7 @@ signals = [
     
 ]
 properties = [
-    is_selected,
-	name_sectors,
-	numbered
+    is_selected
 ]
 functions = [
     _ready,

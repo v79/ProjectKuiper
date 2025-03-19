@@ -53,19 +53,24 @@ class Hex : Node2D(), LogInterface {
     // Data
     var sectors: MutableList<Sector> = mutableListOf()
     private lateinit var pointSet: Map<Int, Triple<Vector2, Vector2, Vector2>>
+    private var unlockedColor = Color(1.0, 1.0, 1.0, 1.0)
+    private var lockedColor = Color(0.2, 0.2, 0.2, 1.0)
+    private var highlightColor = Color(1.0, 0.8, 0.8, 1.0)
+    private var colour: Color = unlockedColor
 
     @RegisterFunction
     override fun _ready() {
         locationLabel = getNodeAs("%LocationLabel")!!
-
+        if (!hexUnlocked) {
+            colour = lockedColor
+        }
         pointSet = calculateVerticesForHex(radius = newRadius.toFloat())
         pointSet.forEach { (index, triangle) ->
             val segment = sectorScene.instantiate() as SectorSegment
             segment.setName("Sector$index")
+            segment.locationName = location.name
             segment.create(
-                index,
-                PackedVector2Array(triangle.toList().toVariantArray()),
-                sectors[index - 1].status
+                index, PackedVector2Array(triangle.toList().toVariantArray()), sectors[index - 1].status
             )
             addChild(segment)
         }
@@ -81,30 +86,33 @@ class Hex : Node2D(), LogInterface {
     @RegisterFunction
     override fun _draw() {
         val drawInternals = true
-        val colour = Color.bisque
         val a = 2 * Math.PI / 6
 
         var p1 = Vector2(newRadius, 0.0)
         for (i in 1..6) {
             val p2 = Vector2(newRadius * cos(a * i), newRadius * sin(a * i))
             drawLine(
-                p1,
-                p2,
-                colour,
-                2.0f
+                p1, p2, colour, 2.0f
             )
             p1 = p2
             if (drawInternals) {
                 drawLine(
-                    Vector2(0.0, 0.0),
-                    p2,
-                    colour,
-                    1.0f
+                    Vector2(0.0, 0.0), p2, colour, 1.0f
                 )
             }
         }
+    }
 
+    @RegisterFunction
+    fun highlight() {
+        colour = highlightColor
+        queueRedraw()
+    }
 
+    @RegisterFunction
+    fun unhighlight() {
+        colour = if (hexUnlocked) unlockedColor else lockedColor
+        queueRedraw()
     }
 
     /**
