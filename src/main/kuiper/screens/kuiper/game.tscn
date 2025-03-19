@@ -1,7 +1,7 @@
 [gd_scene load_steps=13 format=3 uid="uid://dhc5at6r5jl4n"]
 
 [ext_resource type="Theme" uid="uid://dwjw02q78v0i1" path="res://assets/themes/theme.tres" id="1_ewrs8"]
-[ext_resource type="Script" path="res://src/main/kuiper/screens/kuiper/KuiperGame.kt" id="1_nlsq8"]
+[ext_resource type="Script" uid="uid://bmfvjhkx2cccm" path="res://src/main/kuiper/screens/kuiper/KuiperGame.kt" id="1_nlsq8"]
 [ext_resource type="PackedScene" uid="uid://bh0hxtmuthjhi" path="res://src/main/kuiper/screens/kuiper/escMenu/esc_menu.tscn" id="2_4tnej"]
 [ext_resource type="PackedScene" uid="uid://cusua3qup71ky" path="res://src/main/kuiper/hexgrid/hex_grid.tscn" id="3_7ao4g"]
 [ext_resource type="PackedScene" uid="uid://cun43pt1qmvtt" path="res://src/main/kuiper/science/resource_panel.tscn" id="4_3wpiq"]
@@ -145,7 +145,6 @@ visible = false
 z_index = 20
 layout_mode = 2
 size_flags_horizontal = 3
-scroll_offset = Vector2(-208, -400)
 
 [node name="BottomRow_hbox" type="VBoxContainer" parent="."]
 custom_minimum_size = Vector2(0, 50)
@@ -187,7 +186,7 @@ custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 mouse_filter = 2
 
-[node name="HexGrid" parent="VBoxContainer" instance=ExtResource("3_7ao4g")]
+[node name="HexGrid" parent="VBoxContainer" groups=["HexGrid"] instance=ExtResource("3_7ao4g")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3

@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bbsmiefjegk8c"]
 
-[ext_resource type="Script" path="res://src/main/kuiper/confirm_action/ActionCardDetails.kt" id="1_esw4y"]
+[ext_resource type="Script" uid="uid://05bub70bnicj" path="res://src/main/kuiper/confirm_action/ActionCardDetails.kt" id="1_esw4y"]
 [ext_resource type="Theme" uid="uid://cn2v6cwhff2nv" path="res://assets/themes/card_theme.tres" id="1_xshs1"]
 
 [node name="ActionCardDetails" type="Control"]

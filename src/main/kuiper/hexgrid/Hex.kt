@@ -68,9 +68,10 @@ class Hex : Node2D(), LogInterface {
         pointSet.forEach { (index, triangle) ->
             val segment = sectorScene.instantiate() as SectorSegment
             segment.setName("Sector$index")
-            segment.locationName = location.name
+            segment.location = location
+            segment.status = sectors[index - 1].status
             segment.create(
-                index, PackedVector2Array(triangle.toList().toVariantArray()), sectors[index - 1].status
+                index, PackedVector2Array(triangle.toList().toVariantArray())
             )
             addChild(segment)
         }

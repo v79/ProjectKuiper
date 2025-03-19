@@ -16,7 +16,7 @@ class Location(val name: String, var unlocked: Boolean = false) {
     val buildings: Map<Building, IntArray>
         get() = _buildings
     private val _buildings: MutableMap<Building, IntArray> = mutableMapOf()
-    
+
     val sectors = Array(6) { Sector(it) }
 
     @Transient
@@ -31,6 +31,13 @@ class Location(val name: String, var unlocked: Boolean = false) {
     fun addBuilding(building: Building, sectorIds: IntArray, alreadyBuilt: Boolean = false) {
         _buildings[building] = sectorIds
         sectorIds.forEach { sectors[it].status = if (alreadyBuilt) SectorStatus.BUILT else SectorStatus.CONSTRUCTING }
+    }
+
+    /**
+     * Get the building that occupies the given sector
+     */
+    fun getBuilding(sectorId: Int): Building? {
+        return _buildings.entries.find { it.value.contains(sectorId) }?.key
     }
 }
 

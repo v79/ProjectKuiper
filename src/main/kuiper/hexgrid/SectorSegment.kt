@@ -9,6 +9,7 @@ import godot.api.Polygon2D
 import godot.core.Color
 import godot.core.PackedVector2Array
 import godot.extension.getNodeAs
+import state.Location
 import state.SectorStatus
 
 /**
@@ -17,52 +18,59 @@ import state.SectorStatus
 @RegisterClass
 class SectorSegment : Polygon2D(), LogInterface {
 
-    override var logEnabled = true
+	override var logEnabled = true
 
-    // UI elements
-    private lateinit var collisionPolygon: CollisionPolygon2D
-    lateinit var area2D: Area2D
+	// UI elements
+	private lateinit var collisionPolygon: CollisionPolygon2D
+	lateinit var area2D: Area2D
 
-    // Data
-    private var sectorId: Int = -1
-    var locationName: String = ""
+	// Data
+	private var sectorId: Int = -1
+	var location: Location? = null
+	var status: SectorStatus = SectorStatus.EMPTY
 
-    @RegisterFunction
-    override fun _ready() {
-        area2D = getNodeAs("Area2D")!!
-    }
+	@RegisterFunction
+	override fun _ready() {
+		area2D = getNodeAs("Area2D")!!
+	}
 
-    @RegisterFunction
-    fun create(id: Int, polygonPoints: PackedVector2Array, status: SectorStatus) {
-        collisionPolygon = getNodeAs("%CollisionPolygon2D")!!
-        sectorId = id
-        collisionPolygon.polygon = polygonPoints
-        polygon = polygonPoints
-        color = when (status) {
-            SectorStatus.BUILT -> {
-                Color(1.0, 1.0, 1.0, 1.0)
-            }
+	@RegisterFunction
+	fun create(id: Int, polygonPoints: PackedVector2Array) {
+		collisionPolygon = getNodeAs("%CollisionPolygon2D")!!
+		sectorId = id
+		collisionPolygon.polygon = polygonPoints
+		polygon = polygonPoints
+		color = when (status) {
+			SectorStatus.BUILT -> {
+				Color(1.0, 1.0, 1.0, 1.0)
+			}
 
-            SectorStatus.EMPTY -> {
-                Color(0.2, 0.2, 0.2, 0.2)
-            }
+			SectorStatus.EMPTY -> {
+				Color(0.2, 0.2, 0.2, 0.2)
+			}
 
-            SectorStatus.DESTROYED -> {
-                Color(1.0, 0.2, 0.2, 1.0)
-            }
+			SectorStatus.DESTROYED -> {
+				Color(1.0, 0.2, 0.2, 1.0)
+			}
 
-            SectorStatus.CONSTRUCTING -> {
-                Color(8.0, 0.6, 0.2, 1.0)
-            }
-        }
-    }
+			SectorStatus.CONSTRUCTING -> {
+				Color(8.0, 0.6, 0.2, 1.0)
+			}
+		}
+	}
 
-    @RegisterFunction
-    fun mouseEntered() {
-        log("Mouse entered location '$locationName' sector $sectorId")
-    }
+	@RegisterFunction
+	fun mouseEntered() {
+		if (location == null) {
+			return
+		} else if (
+			location!!.unlocked) {
+			log("Mouse entered location '${location!!.name}' sector $sectorId")
+		}
 
-    @RegisterFunction
-    fun mouseExited() {
-    }
+	}
+
+	@RegisterFunction
+	fun mouseExited() {
+	}
 }
