@@ -193,14 +193,13 @@ class ConfirmAction : Control(), LogInterface {
         hexBoxContainer.clearChildren()
         val hexToRender = hexScene.instantiateAs<Hex>()!!
         // Would be better if I had a deep copy function?
-        hexToRender.location = location
         hexToRender.id = hex.id
+        hexToRender.location = location
         hexToRender.hexUnlocked = true
         hexToRender.sectors = location.sectors.toMutableList()
         hexToRender.setName("ConfirmHex${hex.id}")
         // hide the location label because I've got better one down below
         hexToRender.getNodeAs<Label>("LocationLabel")!!.visible = false
-
         // make it big
         hexToRender.scaleMutate {
             x = 2.0

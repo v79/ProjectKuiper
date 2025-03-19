@@ -3,6 +3,7 @@ package hexgrid
 import LogInterface
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
+import godot.api.Area2D
 import godot.api.CollisionPolygon2D
 import godot.api.Polygon2D
 import godot.core.Color
@@ -20,6 +21,7 @@ class SectorSegment : Polygon2D(), LogInterface {
 
     // UI elements
     private lateinit var collisionPolygon: CollisionPolygon2D
+    lateinit var area2D: Area2D
 
     // Data
     private var sectorId: Int = -1
@@ -27,11 +29,7 @@ class SectorSegment : Polygon2D(), LogInterface {
 
     @RegisterFunction
     override fun _ready() {
-    }
-
-    @RegisterFunction
-    override fun _process(delta: Double) {
-
+        area2D = getNodeAs("Area2D")!!
     }
 
     @RegisterFunction
@@ -62,5 +60,9 @@ class SectorSegment : Polygon2D(), LogInterface {
     @RegisterFunction
     fun mouseEntered() {
         log("Mouse entered location '$locationName' sector $sectorId")
+    }
+
+    @RegisterFunction
+    fun mouseExited() {
     }
 }

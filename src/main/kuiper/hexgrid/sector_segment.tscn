@@ -11,3 +11,4 @@ script = ExtResource("1_qrv66")
 unique_name_in_owner = true
 
 [connection signal="mouse_entered" from="Area2D" to="." method="mouse_entered"]
+[connection signal="mouse_exited" from="Area2D" to="." method="mouse_exited"]
