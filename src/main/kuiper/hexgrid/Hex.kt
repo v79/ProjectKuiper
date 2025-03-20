@@ -5,10 +5,7 @@ import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
-import godot.api.Label
-import godot.api.Node2D
-import godot.api.PackedScene
-import godot.api.ResourceLoader
+import godot.api.*
 import godot.core.Color
 import godot.core.PackedVector2Array
 import godot.core.Vector2
@@ -65,15 +62,18 @@ class Hex : Node2D(), LogInterface {
             colour = lockedColor
         }
         pointSet = calculateVerticesForHex(radius = newRadius.toFloat())
+        // for math reasons, the vertices are 1-indexed, but the sectors are 0-indexed
         pointSet.forEach { (index, triangle) ->
             val segment = sectorScene.instantiate() as SectorSegment
-            segment.setName("Sector$index")
+            segment.setName("Sector${index - 1}")
+            segment.setTextureRepeat(CanvasItem.TextureRepeat.TEXTURE_REPEAT_DISABLED)
             segment.location = location
             segment.status = sectors[index - 1].status
-            segment.create(
-                index, PackedVector2Array(triangle.toList().toVariantArray())
-            )
             addChild(segment)
+            segment.updateUI(
+                index - 1, PackedVector2Array(triangle.toList().toVariantArray()),
+                location.getBuilding(index - 1)
+            )
         }
     }
 

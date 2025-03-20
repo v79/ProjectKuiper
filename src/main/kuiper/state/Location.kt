@@ -17,7 +17,7 @@ class Location(val name: String, var unlocked: Boolean = false) {
         get() = _buildings
     private val _buildings: MutableMap<Building, IntArray> = mutableMapOf()
 
-    val sectors = Array(6) { Sector(it) }
+    val sectors = List(6) { Sector(it) }
 
     @Transient
     val hex: Hex? = null
