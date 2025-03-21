@@ -195,6 +195,7 @@ class ConfirmAction : Control(), LogInterface {
         // Would be better if I had a deep copy function?
         hexToRender.id = hex.id
         hexToRender.location = location
+        hexToRender.isConfirmationDialog = true
         hexToRender.hexUnlocked = true
         hexToRender.sectors = location.sectors.toMutableList()
         hexToRender.setName("ConfirmHex${hex.id}")
@@ -207,6 +208,7 @@ class ConfirmAction : Control(), LogInterface {
         }
         val boxContainer = BoxContainer()
         boxContainer.setName("ConfirmHex_BoxContainer")
+        boxContainer.setMouseFilter(Control.MouseFilter.MOUSE_FILTER_PASS)
         boxContainer.addChild(hexToRender)
         hexBoxContainer.addChild(boxContainer)
         hexLocationLabel.text = location.name

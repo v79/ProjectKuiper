@@ -54,6 +54,7 @@ class Hex : Node2D(), LogInterface {
     private var lockedColor = Color(0.2, 0.2, 0.2, 1.0)
     private var highlightColor = Color(1.0, 0.8, 0.8, 1.0)
     private var colour: Color = unlockedColor
+    var isConfirmationDialog: Boolean = false
 
     @RegisterFunction
     override fun _ready() {
@@ -68,6 +69,7 @@ class Hex : Node2D(), LogInterface {
             segment.setName("Sector${index - 1}")
             segment.setTextureRepeat(CanvasItem.TextureRepeat.TEXTURE_REPEAT_DISABLED)
             segment.location = location
+            segment.isConfirmationDialog = isConfirmationDialog
             segment.status = sectors[index - 1].status
             addChild(segment)
             segment.updateUI(
