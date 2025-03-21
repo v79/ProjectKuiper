@@ -32,7 +32,7 @@ sealed interface Building {
         override var sectorsMustBeContiguous = false
         override var runningCosts: MutableMap<ResourceType, Int> = mutableMapOf()
         override var resourceGeneration: MutableMap<ResourceType, Int> = mutableMapOf()
-        override var spritePath: String? = "res://assets/textures/buildings/buildingTiles_116.png"
+        override var spritePath: String? = "res://assets/textures/buildings/hq.png"
         var baseCostToBuild = 0
         val sciencesProduced: MutableMap<Science, Float> = mutableMapOf()
         var baseInfluenceGenerated = 1
@@ -59,7 +59,9 @@ sealed interface Building {
         override var sectorsMustBeContiguous: Boolean = true
         override var resourceGeneration: MutableMap<ResourceType, Int> = mutableMapOf()
         override var runningCosts: MutableMap<ResourceType, Int> = mutableMapOf()
-        override var spritePath: String? = null
+
+        // TODO: This should be part of the constructor, so that different labs can have different icons
+        override var spritePath: String? = "res://assets/textures/buildings/basic_lab.png"
         var labDescription: String = ""
         var sciencesProduced: Map<Science, Float> = mapOf()
     }

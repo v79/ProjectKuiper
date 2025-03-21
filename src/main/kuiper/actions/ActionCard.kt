@@ -2,10 +2,7 @@ package actions
 
 import SignalBus
 import godot.annotation.*
-import godot.api.Input
-import godot.api.Label
-import godot.api.Node2D
-import godot.api.PanelContainer
+import godot.api.*
 import godot.common.util.toRealT
 import godot.core.*
 import godot.extension.getNodeAs
@@ -60,6 +57,7 @@ class ActionCard : Node2D() {
     private val turnsLabel: Label by lazy { getNodeAs("%Turns")!! }
     private val cardImage: PanelContainer by lazy { getNodeAs("PanelContainer")!! }
     private val sectorSizeLabel: Label by lazy { getNodeAs("%SectorSize")!! }
+    private val iconTexture: TextureRect by lazy { getNodeAs("%IconTexture")!! }
 
     // signals
     @RegisterSignal("card_id")
@@ -221,12 +219,19 @@ class ActionCard : Node2D() {
         this.cardName = action.actionName
         this.turnsLabel.text = action.turns.toString()
         val building: Building? = action.buildingToConstruct
+        iconTexture.setTexture(null)
 
         // set the texture based on the Action type
         when (action.type) {
             ActionType.BUILD -> {
                 setThemeVariation("BuildCard".asStringName())
                 sectorSizeLabel.text = building?.sectors.toString()
+                if (building != null) {
+                    building.spritePath?.let { sPath ->
+                        val texture = ResourceLoader.load(sPath, "Texture2D") as Texture2D
+                        iconTexture.setTexture(texture)
+                    }
+                }
             }
 
             ActionType.INVEST -> {
