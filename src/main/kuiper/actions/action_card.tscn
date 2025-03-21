@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://cro672t6ssycg"]
+[gd_scene load_steps=5 format=3 uid="uid://cro672t6ssycg"]
 
-[ext_resource type="Script" path="res://src/main/kuiper/actions/ActionCard.kt" id="1_obn8v"]
+[ext_resource type="Script" uid="uid://c1dkqgw40c0a8" path="res://src/main/kuiper/actions/ActionCard.kt" id="1_obn8v"]
+[ext_resource type="Texture2D" uid="uid://d84a6j1iddvt" path="res://assets/textures/buildings/basic_lab.png" id="3_scq62"]
 [ext_resource type="Theme" uid="uid://cn2v6cwhff2nv" path="res://assets/themes/card_theme.tres" id="3_w8oq3"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gjgnd"]
@@ -55,6 +56,19 @@ text = "5t"
 unique_name_in_owner = true
 layout_mode = 2
 text = "1s"
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 40
+
+[node name="IconTexture" type="TextureRect" parent="PanelContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("3_scq62")
+expand_mode = 1
 
 [node name="ActionName" type="Label" parent="."]
 unique_name_in_owner = true

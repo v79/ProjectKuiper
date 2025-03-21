@@ -20,14 +20,10 @@ signals = [
     
 ]
 properties = [
-    is_selected,
-	draw_internals,
-	name_sectors,
-	numbered
+    is_selected
 ]
 functions = [
-    _draw,
-	_ready,
+    _ready,
 	_process,
 	highlight,
 	unhighlight

@@ -8,9 +8,7 @@ import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
-import godot.api.Control
-import godot.api.Label
-import godot.api.PanelContainer
+import godot.api.*
 import godot.core.StringName
 import godot.core.asStringName
 import godot.core.connect
@@ -36,6 +34,7 @@ class ActionCardDetails : Control() {
     private val conMatsLabel: Label by lazy { getNodeAs("%ConMatsCost")!! }
     private val descLabel: Label by lazy { getNodeAs("%CardDescription")!! }
     private val sectorSizeLabel: Label by lazy { getNodeAs("%SectorSize")!! }
+    private val iconTexture: TextureRect by lazy { getNodeAs("%IconTexture")!! }
 
 
     @RegisterFunction
@@ -50,6 +49,7 @@ class ActionCardDetails : Control() {
     @RegisterFunction
     fun updateCard(card: ActionCard) {
         titleLabel.text = card.cardName
+        iconTexture.setTexture(null)
         card.action?.let { action ->
             val building: Building? = action.buildingToConstruct
             // set the theme variation to display the correct texture for the card
@@ -57,6 +57,10 @@ class ActionCardDetails : Control() {
                 ActionType.BUILD -> {
                     setThemeVariation("BuildCard".asStringName())
                     sectorSizeLabel.text = building?.sectors.toString()
+                    building?.spritePath?.let { sPath ->
+                        val texture = ResourceLoader.load(sPath, "Texture2D") as Texture2D
+                        iconTexture.setTexture(texture)
+                    }
                 }
 
                 ActionType.INVEST -> {

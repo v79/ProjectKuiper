@@ -99,6 +99,14 @@ class KuiperGame : PanelContainer(), LogInterface {
             confirmAction.hex = hex
             confirmAction.card = card
             confirmAction.fadeIn()
+            getTree()?.getNodesInGroup("HexGrid".asStringName())
+                ?.forEach { node -> node.setProcessMode(ProcessMode.PROCESS_MODE_DISABLED) }
+        }
+
+        signalBus.cancelActionConfirmation.connect {
+            getTree()?.getNodesInGroup("HexGrid".asStringName())
+                ?.forEach { node -> node.setProcessMode(ProcessMode.PROCESS_MODE_INHERIT) }
+
         }
 
         // finally, update the UI
@@ -121,8 +129,7 @@ class KuiperGame : PanelContainer(), LogInterface {
         }
         gameState.company.resources.forEach { resource ->
             signalBus.updateResource.emit(
-                resource.key.name,
-                resource.value.toFloat()
+                resource.key.name, resource.value.toFloat()
             )
         }
         yearLbl.text = "Year: ${gameState.year}"

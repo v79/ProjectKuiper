@@ -1,7 +1,6 @@
 package state
 
 import actions.ResourceType
-import jdk.jfr.Description
 import kotlinx.serialization.Serializable
 import technology.Science
 
@@ -19,7 +18,9 @@ sealed interface Building {
     var sectorsMustBeContiguous: Boolean
     var runningCosts: MutableMap<ResourceType, Int>
     var resourceGeneration: MutableMap<ResourceType, Int>
+
     // spritePath?
+    var spritePath: String?
 
     /**
      * Special building representing the player's headquarters
@@ -31,6 +32,7 @@ sealed interface Building {
         override var sectorsMustBeContiguous = false
         override var runningCosts: MutableMap<ResourceType, Int> = mutableMapOf()
         override var resourceGeneration: MutableMap<ResourceType, Int> = mutableMapOf()
+        override var spritePath: String? = "res://assets/textures/buildings/hq.png"
         var baseCostToBuild = 0
         val sciencesProduced: MutableMap<Science, Float> = mutableMapOf()
         var baseInfluenceGenerated = 1
@@ -55,9 +57,12 @@ sealed interface Building {
         override var name: String = "Lab"
         override var sectors: Int = 1
         override var sectorsMustBeContiguous: Boolean = true
-        var labDescription: String = ""
         override var resourceGeneration: MutableMap<ResourceType, Int> = mutableMapOf()
         override var runningCosts: MutableMap<ResourceType, Int> = mutableMapOf()
+
+        // TODO: This should be part of the constructor, so that different labs can have different icons
+        override var spritePath: String? = "res://assets/textures/buildings/basic_lab.png"
+        var labDescription: String = ""
         var sciencesProduced: Map<Science, Float> = mapOf()
     }
 

@@ -1,0 +1,19 @@
+[gd_scene load_steps=2 format=3 uid="uid://8w3y03bjfejx"]
+
+[ext_resource type="Script" uid="uid://c7g46qmuioas" path="res://src/main/kuiper/hexgrid/SectorSegment.kt" id="1_qrv66"]
+
+[node name="SectorSegment" type="Polygon2D"]
+texture_repeat = 1
+script = ExtResource("1_qrv66")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Area2D"]
+unique_name_in_owner = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+unique_name_in_owner = true
+
+[connection signal="input_event" from="Area2D" to="." method="_on_area_2d_input_event"]
+[connection signal="mouse_entered" from="Area2D" to="." method="mouse_entered"]
+[connection signal="mouse_exited" from="Area2D" to="." method="mouse_exited"]

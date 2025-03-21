@@ -154,7 +154,7 @@ class GameSetup : Node(), LogInterface {
                 hq.sciencesProduced.putAll(sponsor.baseScienceRate)
                 hq.resourceGeneration[ResourceType.INFLUENCE] = 1
                 hq.resourceGeneration[ResourceType.GOLD] = 25
-                addBuilding(hq, intArrayOf(1, 2, 4), true)
+                addBuilding(hq, intArrayOf(0), true)
             }
             for (i in 1..9) {
                 locations.add(Location("Location $i"))

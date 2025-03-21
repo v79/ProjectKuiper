@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cusua3qup71ky"]
 
-[ext_resource type="Script" path="res://src/main/kuiper/hexgrid/HexGrid.kt" id="1_krcx7"]
+[ext_resource type="Script" uid="uid://d0f6mgajpn6b3" path="res://src/main/kuiper/hexgrid/HexGrid.kt" id="1_krcx7"]
 
 [node name="HexGrid" type="Control"]
 layout_mode = 3

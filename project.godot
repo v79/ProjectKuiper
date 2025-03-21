@@ -39,6 +39,7 @@ folder_colors={
 
 Cards=""
 PulldownPanels=""
+HexGrid=""
 
 [gui]
 
