@@ -12,7 +12,7 @@ import godot.core.Vector2
 import godot.core.toVariantArray
 import godot.extension.getNodeAs
 import state.Location
-import state.Sector
+import state.SectorStatus
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -40,25 +40,23 @@ class Hex : Node2D(), LogInterface {
     var newRadius: Double = 75.0
 
     // UI elements
-    private lateinit var locationLabel: Label
+    private val locationLabel: Label by lazy { getNodeAs("%LocationLabel")!! }
     lateinit var marker: HexDropTarget
-    lateinit var location: Location
+    var location: Location? = null
 
     // Packed scenes
     private val sectorScene = ResourceLoader.load("res://src/main/kuiper/hexgrid/sector_segment.tscn") as PackedScene
 
     // Data
-    var sectors: MutableList<Sector> = mutableListOf()
     private lateinit var pointSet: Map<Int, Triple<Vector2, Vector2, Vector2>>
     private var unlockedColor = Color(1.0, 1.0, 1.0, 1.0)
     private var lockedColor = Color(0.2, 0.2, 0.2, 1.0)
     private var highlightColor = Color(1.0, 0.8, 0.8, 1.0)
-    private var colour: Color = unlockedColor
+    var colour: Color = unlockedColor
     var isConfirmationDialog: Boolean = false
 
     @RegisterFunction
     override fun _ready() {
-        locationLabel = getNodeAs("%LocationLabel")!!
         if (!hexUnlocked) {
             colour = lockedColor
         }
@@ -70,11 +68,11 @@ class Hex : Node2D(), LogInterface {
             segment.setTextureRepeat(CanvasItem.TextureRepeat.TEXTURE_REPEAT_DISABLED)
             segment.location = location
             segment.isConfirmationDialog = isConfirmationDialog
-            segment.status = sectors[index - 1].status
+            segment.status = location?.sectors?.get(index - 1)?.status ?: SectorStatus.EMPTY
             addChild(segment)
             segment.updateUI(
                 index - 1, PackedVector2Array(triangle.toList().toVariantArray()),
-                location.getBuilding(index - 1)
+                location?.getBuilding(index - 1)
             )
         }
     }

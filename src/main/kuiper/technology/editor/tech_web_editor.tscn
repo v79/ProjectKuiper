@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://p8uxma4wg6l5"]
 
-[ext_resource type="Script" path="res://src/main/kuiper/technology/editor/TechWebEditor.kt" id="1_qduao"]
-[ext_resource type="Script" path="res://src/main/kuiper/technology/editor/WebLayout.kt" id="2_qpoux"]
+[ext_resource type="Script" uid="uid://dacndy3nby176" path="res://src/main/kuiper/technology/editor/TechWebEditor.kt" id="1_qduao"]
+[ext_resource type="Script" uid="uid://dd1il2o6pakdm" path="res://src/main/kuiper/technology/editor/WebLayout.kt" id="2_qpoux"]
 
 [node name="TechWebEditor" type="Control"]
 layout_mode = 3

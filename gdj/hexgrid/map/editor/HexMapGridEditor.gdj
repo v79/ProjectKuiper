@@ -1,13 +1,16 @@
 // THIS FILE IS GENERATED! DO NOT EDIT OR DELETE IT. EDIT OR DELETE THE ASSOCIATED SOURCE CODE FILE INSTEAD
 // Note: You can however freely move this file inside your godot project if you want. Keep in mind however, that if you rename the originating source code file, this file will be deleted and regenerated as a new file instead of being updated! Other modifications to the source file however, will result in this file being updated.
 
-registeredName = MainMenu
-fqName = screens.mainMenu.MainMenu
-relativeSourcePath = src/main/kuiper/screens/mainMenu/MainMenu.kt
-baseType = Node
+registeredName = HexMapGridEditor
+fqName = hexgrid.map.editor.HexMapGridEditor
+relativeSourcePath = src/main/kuiper/hexgrid/map/editor/HexMapGridEditor.kt
+baseType = GridContainer
 supertypes = [
-    godot.api.Node,
-	LogInterface,
+    godot.api.GridContainer,
+	godot.api.Container,
+	godot.api.Control,
+	godot.api.CanvasItem,
+	godot.api.Node,
 	godot.api.Object,
 	godot.core.KtObject,
 	godot.common.interop.NativeWrapper,
@@ -15,21 +18,12 @@ supertypes = [
 	kotlin.Any
 ]
 signals = [
-    quit_game_signal,
-	new_game_signal
+    
 ]
 properties = [
     
 ]
 functions = [
     _ready,
-	_process,
-	_on_new_game,
-	_on_quit_game,
-	_on_continue_game,
-	_on_load_button_pressed,
-	_on_load_file_selected,
-	on_tech_tree_editor_pressed,
-	on_sponsor_editor_pressed,
-	load_game
+	_process
 ]
