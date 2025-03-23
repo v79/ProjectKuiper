@@ -21,7 +21,7 @@ signals = [
     
 ]
 properties = [
-    
+    dimension
 ]
 functions = [
     _ready,

@@ -86,8 +86,21 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "+ Add Hex"
 
-[node name="HexGridContainer" type="GridContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 120
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+theme_override_constants/margin_right = 200
+
+[node name="HexGridContainer" type="GridContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("2_rdfxg")

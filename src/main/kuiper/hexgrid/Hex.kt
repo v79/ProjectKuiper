@@ -48,6 +48,11 @@ class Hex : Node2D(), LogInterface {
     private val sectorScene = ResourceLoader.load("res://src/main/kuiper/hexgrid/sector_segment.tscn") as PackedScene
 
     // Data
+    var q: Int = 0
+    var r: Int = 0
+    var row: Int = 0
+    var col: Int = 0
+
     private lateinit var pointSet: Map<Int, Triple<Vector2, Vector2, Vector2>>
     private var unlockedColor = Color(1.0, 1.0, 1.0, 1.0)
     private var lockedColor = Color(0.2, 0.2, 0.2, 1.0)
