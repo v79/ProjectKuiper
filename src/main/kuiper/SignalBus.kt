@@ -86,6 +86,12 @@ class SignalBus : Node() {
     @RegisterSignal("delete_tech")
     val editor_deleteTech by signal1<TechWrapper>()
 
+    @RegisterSignal("place_row", "place_col")
+    val editor_placeHex by signal2<Int, Int>()
+
+    @RegisterSignal("clear_row", "clear_col")
+    val editor_clearHex by signal2<Int, Int>()
+
     @RegisterFunction
     override fun _ready() {
         // Connect to the screen resized signal and propagate it

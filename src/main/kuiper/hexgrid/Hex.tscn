@@ -32,5 +32,6 @@ grow_vertical = 0
 size_flags_horizontal = 6
 text = "<location>"
 
+[connection signal="input_event" from="Area2D" to="." method="on_input_event"]
 [connection signal="mouse_entered" from="Area2D" to="." method="on_mouse_entered"]
 [connection signal="mouse_exited" from="Area2D" to="." method="on_mouse_exited"]

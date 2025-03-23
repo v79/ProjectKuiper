@@ -1,42 +1,60 @@
 package hexgrid.map.editor
 
+import LogInterface
+import SignalBus
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
-import godot.api.GridContainer
-import godot.api.Label
-import godot.api.PackedScene
-import godot.api.ResourceLoader
+import godot.api.*
 import godot.core.Vector2
+import godot.core.asStringName
+import godot.core.connect
 import godot.extension.getNodeAs
 import hexgrid.Hex
+import hexgrid.HexMode
 import state.Location
 import kotlin.math.sqrt
 
 @RegisterClass
-class HexMapGridEditor : GridContainer() {
+class HexMapGridEditor : GridContainer(), LogInterface {
+
+    override var logEnabled: Boolean = true
 
     @RegisterProperty
     @Export
     var dimension: Int = 6
 
+    // Globals
+    private lateinit var signalBus: SignalBus
+
     // Packed scenes
     private val hexScene = ResourceLoader.load("res://src/main/kuiper/hexgrid/Hex.tscn") as PackedScene
 
     // UI elements
+    private val sponsorNameEdit: LineEdit by lazy { getNodeAs("%SponsorNameEdit")!! }
+    private val sponsorDescEdit: TextEdit by lazy { getNodeAs("%SponsorDescEdit")!! }
+    private val placeHexPopup: PopupPanel by lazy { getNodeAs("%PlaceHexPopupPanel")!! }
+    private val phNameEdit: LineEdit by lazy { getNodeAs("%PlaceHexNameEdit")!! }
+    private val phCoordLbl: Label by lazy { getNodeAs("%PHCoordLbl")!! }
 
     // Data
     private var grid = Array(dimension) { Array(dimension) { Vector2.ZERO } }
+    var selectedRow = -1
+    var selectedCol = -1
 
     @RegisterFunction
     override fun _ready() {
+        signalBus = getNodeAs("/root/SignalBus")!!
 
         // set up the grid
         grid = calculateGridCoordinates(dimension, dimension)
         grid.forEachIndexed { i, row ->
             row.forEachIndexed { j, vector2 ->
                 val hex = hexScene.instantiate() as Hex
+                hex.hexMode = HexMode.EDITOR
+                hex.row = i
+                hex.col = j
                 hex.location = Location("location $i $j")
                 hex.setName("Hex_${i}_$j")
                 hex.colour = godot.core.Color.mediumPurple
@@ -45,11 +63,25 @@ class HexMapGridEditor : GridContainer() {
                 addChild(hex)
             }
         }
+
+        signalBus.editor_placeHex.connect { row, col ->
+            selectedRow = row
+            selectedCol = col
+            phCoordLbl.text = "@$row,$col"
+            placeHexPopup.visible = true
+        }
     }
 
     @RegisterFunction
-    override fun _process(delta: Double) {
+    fun onConfirmLocation() {
+        saveHexLocation(selectedRow, selectedCol, phNameEdit.text)
+    }
 
+    @RegisterFunction
+    fun onCancelLocation() {
+        selectedRow = -1
+        selectedCol = -1
+        placeHexPopup.visible = false
     }
 
     private fun calculateGridCoordinates(xCount: Int, yCount: Int): Array<Array<Vector2>> {
@@ -70,6 +102,23 @@ class HexMapGridEditor : GridContainer() {
             }
         }
         return hexCoords
+    }
+
+    private fun saveHexLocation(row: Int, col: Int, name: String) {
+        val hex = grid[row][col]
+        val hexNode = getNodeAs("Hex_${row}_$col".asStringName()) as Hex?
+        if (hexNode == null) {
+            logError("Hex not found at $row $col")
+            return
+        }
+        hexNode.location = Location(name)
+        val locLabel = hexNode.getNodeAs<Label>("%LocationLabel")!!
+        locLabel.text = name
+        locLabel.visible = true
+        placeHexPopup.visible = false
+        selectedCol = -1
+        selectedRow = -1
+        phNameEdit.text = ""
     }
 
     /*  fun axial_to_oddq(hex: Hex) {
