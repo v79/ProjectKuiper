@@ -65,6 +65,7 @@ text = "Starting bonuses, stats, sciences, description goes here"
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
+mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_rdfxg")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer2"]
@@ -75,16 +76,11 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "Hex editor goes here"
+text = "Click on a highlighted hex to enable it for the map"
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-
-[node name="AddHexButton" type="Button" parent="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "+ Add Hex"
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer"]
 layout_mode = 2
@@ -93,6 +89,7 @@ theme_override_constants/margin_bottom = 120
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+mouse_filter = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2"]
 layout_mode = 2

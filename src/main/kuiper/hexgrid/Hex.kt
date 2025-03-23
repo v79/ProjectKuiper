@@ -41,6 +41,8 @@ class Hex : Node2D(), LogInterface {
 
     // UI elements
     private val locationLabel: Label by lazy { getNodeAs("%LocationLabel")!! }
+    private val area2D: Area2D by lazy { getNodeAs<Area2D>("%Area2D")!! }
+    private val collisionShape2D: CollisionPolygon2D by lazy { getNodeAs("%CollisionShape2D")!! }
     lateinit var marker: HexDropTarget
     var location: Location? = null
 
@@ -66,6 +68,10 @@ class Hex : Node2D(), LogInterface {
             colour = lockedColor
         }
         pointSet = calculateVerticesForHex(radius = newRadius.toFloat())
+        val packedArray = PackedVector2Array(
+            pointSet.values.flatMap { listOf(it.first, it.second) }.distinct().toVariantArray()
+        )
+        collisionShape2D.polygon = packedArray
         // for math reasons, the vertices are 1-indexed, but the sectors are 0-indexed
         pointSet.forEach { (index, triangle) ->
             val segment = sectorScene.instantiate() as SectorSegment
@@ -76,8 +82,7 @@ class Hex : Node2D(), LogInterface {
             segment.status = location?.sectors?.get(index - 1)?.status ?: SectorStatus.EMPTY
             addChild(segment)
             segment.updateUI(
-                index - 1, PackedVector2Array(triangle.toList().toVariantArray()),
-                location?.getBuilding(index - 1)
+                index - 1, PackedVector2Array(triangle.toList().toVariantArray()), location?.getBuilding(index - 1)
             )
         }
     }
@@ -112,12 +117,14 @@ class Hex : Node2D(), LogInterface {
     @RegisterFunction
     fun highlight() {
         colour = highlightColor
+        zIndex += 1
         queueRedraw()
     }
 
     @RegisterFunction
     fun unhighlight() {
         colour = if (hexUnlocked) unlockedColor else lockedColor
+        zIndex -= 1
         queueRedraw()
     }
 
@@ -135,6 +142,16 @@ class Hex : Node2D(), LogInterface {
             p1 = p2
         }
         return pointSet.toMap()
+    }
+
+    @RegisterFunction
+    fun onMouseEntered() {
+        highlight()
+    }
+
+    @RegisterFunction
+    fun onMouseExited() {
+        unhighlight()
     }
 
     // possible functions:

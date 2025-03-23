@@ -29,5 +29,7 @@ functions = [
 	_process,
 	_draw,
 	highlight,
-	unhighlight
+	unhighlight,
+	on_mouse_entered,
+	on_mouse_exited
 ]

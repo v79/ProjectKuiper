@@ -6,6 +6,12 @@
 [node name="Hex" type="Node2D"]
 script = ExtResource("1_8qct6")
 
+[node name="Area2D" type="Area2D" parent="."]
+unique_name_in_owner = true
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="Area2D"]
+unique_name_in_owner = true
+
 [node name="HexDropTarget" type="Marker2D" parent="."]
 unique_name_in_owner = true
 script = ExtResource("2_wqt7c")
@@ -25,3 +31,6 @@ grow_horizontal = 2
 grow_vertical = 0
 size_flags_horizontal = 6
 text = "<location>"
+
+[connection signal="mouse_entered" from="Area2D" to="." method="on_mouse_entered"]
+[connection signal="mouse_exited" from="Area2D" to="." method="on_mouse_exited"]

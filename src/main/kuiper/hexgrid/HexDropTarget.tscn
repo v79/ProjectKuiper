@@ -5,6 +5,7 @@
 [node name="HexDropControl" type="Control"]
 layout_mode = 3
 anchors_preset = 0
+mouse_filter = 1
 script = ExtResource("1_f1lbp")
 
 [node name="HexDropTarget" type="Marker2D" parent="."]
