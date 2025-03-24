@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://b3lj8ojhudueu"]
+[gd_scene load_steps=5 format=3 uid="uid://b3lj8ojhudueu"]
 
 [ext_resource type="Script" uid="uid://cnjo42sklflyr" path="res://src/main/kuiper/hexgrid/map/editor/SponsorEditor.kt" id="1_dwvxf"]
+[ext_resource type="FontFile" uid="uid://dlm8mcyi0n4ri" path="res://assets/fonts/SpaceGrotesk-Bold.ttf" id="2_aat5g"]
 [ext_resource type="Script" uid="uid://bqj8mswck507g" path="res://src/main/kuiper/hexgrid/map/editor/HexMapGridEditor.kt" id="2_rdfxg"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rdfxg"]
@@ -64,6 +65,7 @@ theme_override_constants/margin_bottom = 20
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer"]
 layout_mode = 2
+theme_override_constants/separation = 10
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -78,6 +80,19 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "name"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="SponsorColourLbl" type="Label" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "Colour"
+
+[node name="ColorPickerButton" type="ColorPickerButton" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer3"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -95,6 +110,172 @@ size_flags_horizontal = 3
 placeholder_text = "description"
 wrap_mode = 1
 
+[node name="StartingResLbl" type="Label" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_aat5g")
+text = "Starting resources"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="SponsorStartGoldLbl" type="Label" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+text = "Gold"
+
+[node name="SponsorStartGoldEdit" type="SpinBox" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer4"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 500.0
+value = 100.0
+rounded = true
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="SponsorStartInfLbl" type="Label" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer5"]
+layout_mode = 2
+text = "Influence"
+
+[node name="SponsorStartInfEdit" type="SpinBox" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer5"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 500.0
+value = 100.0
+rounded = true
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="SponsorStartConMatsLbl" type="Label" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer6"]
+layout_mode = 2
+text = "Con Mats"
+
+[node name="SponsorStartConMatsEdit" type="SpinBox" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer6"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 500.0
+value = 100.0
+rounded = true
+
+[node name="StartingSciLbl" type="Label" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_aat5g")
+text = "Starting science rates"
+
+[node name="HBoxContainer4" type="VBoxContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="VBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="SSPhysicsLbl" type="Label" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer"]
+layout_mode = 2
+text = "Physics"
+
+[node name="SponsorStartPhysics" type="SpinBox" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+value = 10.0
+rounded = true
+
+[node name="VBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="SSAstronomyLbl" type="Label" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer2"]
+layout_mode = 2
+text = "Astronomy"
+
+[node name="SponsorStartAstronomy" type="SpinBox" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+value = 10.0
+rounded = true
+
+[node name="VBoxContainer3" type="HBoxContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="SSBiochemLbl" type="Label" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer3"]
+layout_mode = 2
+text = "Biochemistry"
+
+[node name="SponsorStartBiochem" type="SpinBox" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+value = 10.0
+rounded = true
+
+[node name="VBoxContainer4" type="HBoxContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="SSEngineeringLbl" type="Label" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer4"]
+layout_mode = 2
+text = "Engineering"
+
+[node name="SponsorStartEngineering" type="SpinBox" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer4"]
+layout_mode = 2
+size_flags_horizontal = 3
+value = 10.0
+rounded = true
+
+[node name="VBoxContainer5" type="HBoxContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="SSMathsLbl" type="Label" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer5"]
+layout_mode = 2
+text = "Mathematics"
+
+[node name="SponsorStartMaths" type="SpinBox" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer5"]
+layout_mode = 2
+size_flags_horizontal = 3
+value = 10.0
+rounded = true
+
+[node name="VBoxContainer6" type="HBoxContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="SSPsychLbl" type="Label" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer6"]
+layout_mode = 2
+text = "Psychology"
+
+[node name="SponsorStartPsych" type="SpinBox" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer6"]
+layout_mode = 2
+size_flags_horizontal = 3
+value = 10.0
+rounded = true
+
+[node name="VBoxContainer7" type="HBoxContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="SSEurekaLbl" type="Label" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer7"]
+layout_mode = 2
+text = "Eureka"
+
+[node name="SponsorStartEureka" type="SpinBox" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer7"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 10.0
+value = 1.0
+rounded = true
+
 [node name="PanelContainer2" type="PanelContainer" parent="VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -109,8 +290,11 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(900, 0)
 layout_mode = 2
-text = "Click on a highlighted hex to enable it for the map"
+text = "Click on a highlighted hex to enable it for the map and assign it a name. Toggle whether the hex should be unlocked at game startup.
+Add starting buildings. There must be at least one HQ building sector."
+autowrap_mode = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -119,6 +303,12 @@ size_flags_horizontal = 3
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_bottom = 120
+
+[node name="HexCoordsLbl" type="Label" parent="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "(i,j)"
+horizontal_alignment = 1
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer"]
 layout_mode = 2
@@ -187,6 +377,7 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Confirm"
 
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/SaveSponsorBtn" to="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2/HexGridContainer" method="on_save_sponsor_button_pressed"]
 [connection signal="toggled" from="VBoxContainer/HBoxContainer2/PanelContainer2/PlaceHexPopupPanel/VBoxContainer/HBoxContainer2/PHHexUnlocked" to="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2/HexGridContainer" method="on_p_h_unlocked_at_start_toggled"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/PanelContainer2/PlaceHexPopupPanel/VBoxContainer/HBoxContainer/PHCancel" to="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2/HexGridContainer" method="on_cancel_location"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/PanelContainer2/PlaceHexPopupPanel/VBoxContainer/HBoxContainer/PHConfirm" to="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2/HexGridContainer" method="on_confirm_location"]

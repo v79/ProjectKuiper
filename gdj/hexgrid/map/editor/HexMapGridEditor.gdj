@@ -28,5 +28,6 @@ functions = [
     _ready,
 	on_confirm_location,
 	on_cancel_location,
-	on_p_h_unlocked_at_start_toggled
+	on_p_h_unlocked_at_start_toggled,
+	on_save_sponsor_button_pressed
 ]

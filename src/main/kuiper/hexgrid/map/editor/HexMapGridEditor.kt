@@ -38,11 +38,12 @@ class HexMapGridEditor : GridContainer(), LogInterface {
     private val phNameEdit: LineEdit by lazy { getNodeAs("%PlaceHexNameEdit")!! }
     private val phCoordLbl: Label by lazy { getNodeAs("%PHCoordLbl")!! }
     private val phUnlockedAtStart: CheckBox by lazy { getNodeAs("%PHHexUnlocked")!! }
+    private val hexCoordsLbl: Label by lazy { getNodeAs("%HexCoordsLbl")!! }
 
     // Data
-    private var grid = Array(dimension) { Array(dimension) { Vector2.ZERO } }
-    var selectedRow = -1
-    var selectedCol = -1
+    private var grid = Array(dimension) { Array(dimension) { EditorData(Vector2.ZERO) } }
+    private var selectedRow = -1
+    private var selectedCol = -1
 
     @RegisterFunction
     override fun _ready() {
@@ -51,7 +52,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
         // set up the grid
         grid = calculateGridCoordinates(dimension, dimension)
         grid.forEachIndexed { i, row ->
-            row.forEachIndexed { j, vector2 ->
+            row.forEachIndexed { j, data ->
                 val hex = hexScene.instantiate() as Hex
                 hex.hexMode = HexMode.EDITOR
                 hex.row = i
@@ -63,12 +64,13 @@ class HexMapGridEditor : GridContainer(), LogInterface {
                 locLabel.visible = false
 //                locLabel.setText("${vector2.x},${vector2.y}")
 //                locLabel.setPosition(Vector2(-20.0,-20.0))
-                hex.setPosition(vector2)
+                hex.setPosition(data.vector)
                 addChild(hex)
             }
         }
 
         signalBus.editor_placeHex.connect { row, col ->
+            hexCoordsLbl.text = "($row,$col)"
             selectedRow = row
             selectedCol = col
             phCoordLbl.text = "@$row,$col"
@@ -98,9 +100,30 @@ class HexMapGridEditor : GridContainer(), LogInterface {
         logInfo("Unlocked at start toggled to $toggledOn")
     }
 
-    private fun calculateGridCoordinates(xCount: Int, yCount: Int): Array<Array<Vector2>> {
+    @RegisterFunction
+    fun onSaveSponsorButtonPressed() {
+        val sponsorName = sponsorNameEdit.text
+        val sponsorDesc = sponsorDescEdit.text
+        logInfo("Saving sponsor $sponsorName with description $sponsorDesc")
+
+        grid.forEachIndexed { i, row ->
+            row.forEachIndexed { j, data ->
+                val hex = getNodeAtHex(i, j)
+                if (hex == null) {
+                    logError("No hex found at $i $j")
+                    return
+                } else {
+                    if (hex.hexUnlocked) {
+                        logInfo("Hex ($i,$j) ${hex.location?.name} (Starts unlocked: ${data.unlockedAtStart})")
+                    }
+                }
+            }
+        }
+    }
+
+    private fun calculateGridCoordinates(xCount: Int, yCount: Int): Array<Array<EditorData>> {
         // flat topped, evenq orientation
-        val hexCoords = Array(xCount) { Array(yCount) { Vector2.ZERO } }
+        val hexCoords = Array(xCount) { Array(yCount) { EditorData(Vector2.ZERO) } }
         val radius = 75.0
         val diameter = radius * 2
         val width = diameter
@@ -112,7 +135,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
             for (j in 0 until yCount) {
                 val x = i * horizDistance
                 val y = j * height + (i % 2) * (height / 2)
-                hexCoords[i][j] = Vector2(x, y)
+                hexCoords[i][j] = EditorData(Vector2(x, y))
             }
         }
         return hexCoords
@@ -156,3 +179,5 @@ class HexMapGridEditor : GridContainer(), LogInterface {
         return node
     }
 }
+
+data class EditorData(val vector: Vector2, var unlockedAtStart: Boolean = false)
