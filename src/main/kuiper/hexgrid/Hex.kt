@@ -189,3 +189,4 @@ enum class HexMode {
     NORMAL,
     EDITOR
 }
+

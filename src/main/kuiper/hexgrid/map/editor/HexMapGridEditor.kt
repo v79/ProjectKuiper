@@ -37,6 +37,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
     private val placeHexPopup: PopupPanel by lazy { getNodeAs("%PlaceHexPopupPanel")!! }
     private val phNameEdit: LineEdit by lazy { getNodeAs("%PlaceHexNameEdit")!! }
     private val phCoordLbl: Label by lazy { getNodeAs("%PHCoordLbl")!! }
+    private val phUnlockedAtStart: CheckBox by lazy { getNodeAs("%PHHexUnlocked")!! }
 
     // Data
     private var grid = Array(dimension) { Array(dimension) { Vector2.ZERO } }
@@ -55,11 +56,14 @@ class HexMapGridEditor : GridContainer(), LogInterface {
                 hex.hexMode = HexMode.EDITOR
                 hex.row = i
                 hex.col = j
-                hex.location = Location("location $i $j")
+                hex.location = Location("location $i,$j")
                 hex.setName("Hex_${i}_$j")
                 hex.colour = godot.core.Color.mediumPurple
+                val locLabel = hex.getNodeAs<Label>("%LocationLabel")!!
+                locLabel.visible = false
+//                locLabel.setText("${vector2.x},${vector2.y}")
+//                locLabel.setPosition(Vector2(-20.0,-20.0))
                 hex.setPosition(vector2)
-                hex.getNodeAs<Label>("%LocationLabel")!!.visible = false
                 addChild(hex)
             }
         }
@@ -68,6 +72,11 @@ class HexMapGridEditor : GridContainer(), LogInterface {
             selectedRow = row
             selectedCol = col
             phCoordLbl.text = "@$row,$col"
+            val hex = getNodeAtHex(row, col)
+            if (hex != null && hex.hexUnlocked) {
+                phNameEdit.text = hex.location?.name ?: ""
+                phUnlockedAtStart.buttonPressed = true
+            }
             placeHexPopup.visible = true
         }
     }
@@ -84,9 +93,14 @@ class HexMapGridEditor : GridContainer(), LogInterface {
         placeHexPopup.visible = false
     }
 
+    @RegisterFunction
+    fun onPHUnlockedAtStartToggled(toggledOn: Boolean) {
+        logInfo("Unlocked at start toggled to $toggledOn")
+    }
+
     private fun calculateGridCoordinates(xCount: Int, yCount: Int): Array<Array<Vector2>> {
         // flat topped, evenq orientation
-        val hexCoords = Array(xCount) { Array<Vector2>(yCount) { Vector2.ZERO } }
+        val hexCoords = Array(xCount) { Array(yCount) { Vector2.ZERO } }
         val radius = 75.0
         val diameter = radius * 2
         val width = diameter
@@ -106,19 +120,20 @@ class HexMapGridEditor : GridContainer(), LogInterface {
 
     private fun saveHexLocation(row: Int, col: Int, name: String) {
         val hex = grid[row][col]
-        val hexNode = getNodeAs("Hex_${row}_$col".asStringName()) as Hex?
-        if (hexNode == null) {
-            logError("Hex not found at $row $col")
-            return
-        }
+        val hexNode = getNodeAtHex(row, col) ?: return
         hexNode.location = Location(name)
         val locLabel = hexNode.getNodeAs<Label>("%LocationLabel")!!
         locLabel.text = name
         locLabel.visible = true
+        locLabel.setPosition(Vector2(-20.0, -20.0))
         placeHexPopup.visible = false
         selectedCol = -1
         selectedRow = -1
         phNameEdit.text = ""
+        phUnlockedAtStart.buttonPressed = false
+        hexNode.hexUnlocked =
+            true  // for now, we'll just unlock it, but should take into account hexUnlockedAtStart checkbox
+        hexNode.zIndex += 1
     }
 
     /*  fun axial_to_oddq(hex: Hex) {
@@ -132,4 +147,12 @@ class HexMapGridEditor : GridContainer(), LogInterface {
           val r = hex.row - (hex.col - (hex.col&1)) / 2
           return Hex(q, r)
       }*/
+
+    private fun getNodeAtHex(row: Int, col: Int): Hex? {
+        val node = getNodeAs("Hex_${row}_$col".asStringName()) as Hex?
+        if (node == null) {
+            logError("Hex not found at $row $col")
+        }
+        return node
+    }
 }
