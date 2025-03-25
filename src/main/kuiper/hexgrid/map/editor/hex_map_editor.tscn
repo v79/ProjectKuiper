@@ -90,6 +90,7 @@ layout_mode = 2
 text = "Colour"
 
 [node name="ColorPickerButton" type="ColorPickerButton" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer3"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -184,7 +185,7 @@ theme_override_constants/separation = 20
 layout_mode = 2
 text = "Physics"
 
-[node name="SponsorStartPhysics" type="SpinBox" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer"]
+[node name="PhysicsEdit" type="SpinBox" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -199,7 +200,8 @@ theme_override_constants/separation = 20
 layout_mode = 2
 text = "Astronomy"
 
-[node name="SponsorStartAstronomy" type="SpinBox" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer2"]
+[node name="AstronomyEdit" type="SpinBox" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer2"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 value = 10.0
@@ -213,7 +215,8 @@ theme_override_constants/separation = 20
 layout_mode = 2
 text = "Biochemistry"
 
-[node name="SponsorStartBiochem" type="SpinBox" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer3"]
+[node name="BiochemistryEdit" type="SpinBox" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer3"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 value = 10.0
@@ -227,7 +230,8 @@ theme_override_constants/separation = 20
 layout_mode = 2
 text = "Engineering"
 
-[node name="SponsorStartEngineering" type="SpinBox" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer4"]
+[node name="EngineeringEdit" type="SpinBox" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer4"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 value = 10.0
@@ -241,7 +245,8 @@ theme_override_constants/separation = 20
 layout_mode = 2
 text = "Mathematics"
 
-[node name="SponsorStartMaths" type="SpinBox" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer5"]
+[node name="MathsEdit" type="SpinBox" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer5"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 value = 10.0
@@ -255,7 +260,8 @@ theme_override_constants/separation = 20
 layout_mode = 2
 text = "Psychology"
 
-[node name="SponsorStartPsych" type="SpinBox" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer6"]
+[node name="PsychologyEdit" type="SpinBox" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer6"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 value = 10.0
@@ -269,7 +275,8 @@ theme_override_constants/separation = 20
 layout_mode = 2
 text = "Eureka"
 
-[node name="SponsorStartEureka" type="SpinBox" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer7"]
+[node name="EurekaEdit" type="SpinBox" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4/VBoxContainer7"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 10.0
@@ -328,7 +335,6 @@ script = ExtResource("2_rdfxg")
 
 [node name="PlaceHexPopupPanel" type="PopupPanel" parent="VBoxContainer/HBoxContainer2/PanelContainer2"]
 unique_name_in_owner = true
-initial_position = 2
 size = Vector2i(210, 200)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer2/PlaceHexPopupPanel"]
