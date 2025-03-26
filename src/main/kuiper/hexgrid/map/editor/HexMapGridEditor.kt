@@ -16,6 +16,7 @@ import godot.extension.getNodeAs
 import hexgrid.Hex
 import hexgrid.HexMode
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 import serializers.GDVectorSerializer
 import state.Location
@@ -59,6 +60,8 @@ class HexMapGridEditor : GridContainer(), LogInterface {
     private val phUnlockedAtStart: CheckBox by lazy { getNodeAs("%PHHexUnlocked")!! }
     private val hexCoordsLbl: Label by lazy { getNodeAs("%HexCoordsLbl")!! }
 
+    private val chooseSponsorButton: MenuButton by lazy { getNodeAs("%LoadSponsorBtn")!! }
+
     // Data
     private var grid =
         Array(dimension) { Array(dimension) { EditorData(dimension, dimension, Location(""), Vector2.ZERO) } }
@@ -66,10 +69,23 @@ class HexMapGridEditor : GridContainer(), LogInterface {
     private var selectedCol = -1
     private var sponsor: Sponsor? = null
     private var sponsorCount: Int = 0
+    private var sponsorJsonPath: String = "res://assets/data/sponsors.json"
+    private var sponsors: MutableList<Sponsor> = mutableListOf()
 
     @RegisterFunction
     override fun _ready() {
         signalBus = getNodeAs("/root/SignalBus")!!
+
+        // load the sponsors
+        sponsors = loadSponsors()
+        if (sponsors.size > 0) {
+            sponsors.forEach { sponsor ->
+                chooseSponsorButton.getPopup()!!.addItem(sponsor.name, sponsor.id)
+            }
+        }
+        chooseSponsorButton.getPopup()!!.idPressed.connect { id ->
+            onSponsorChosen(id.toInt())
+        }
 
         // set up the grid
         grid = calculateGridCoordinates(dimension, dimension)
@@ -124,11 +140,51 @@ class HexMapGridEditor : GridContainer(), LogInterface {
         // logInfo("Unlocked at start toggled to $toggledOn")
     }
 
+
     @RegisterFunction
     fun onSaveSponsorButtonPressed() {
+        sponsor = storeSponsorDetails()
+        sponsor?.let { saveSponsor(it) }
+    }
+
+    @RegisterFunction
+    fun onSponsorChosen(id: Int) {
+        log("Switching to sponsor $id")
+        sponsor = sponsors.find { it.id == id }
+        if (sponsor == null) {
+            logError("Failed to switch to sponsor $id; null returned")
+            return
+        }
+        sponsor?.let {
+            sponsorNameEdit.setText(it.name)
+            sponsorDescEdit.setText(it.introText)
+            sponsorColorPicker.color = it.colour
+            sponsorStartGold.setValue(it.startingResources[ResourceType.GOLD]?.toDouble() ?: 0.0)
+            sponsorStartInf.setValue(it.startingResources[ResourceType.INFLUENCE]?.toDouble() ?: 0.0)
+            sponsorStartConMats.setValue(it.startingResources[ResourceType.CONSTRUCTION_MATERIALS]?.toDouble() ?: 0.0)
+            physics.setValue(it.baseScienceRate[Science.PHYSICS]?.toDouble() ?: 0.0)
+            engineering.setValue(it.baseScienceRate[Science.ENGINEERING]?.toDouble() ?: 0.0)
+            biochemistry.setValue(it.baseScienceRate[Science.BIOCHEMISTRY]?.toDouble() ?: 0.0)
+            maths.setValue(it.baseScienceRate[Science.MATHEMATICS]?.toDouble() ?: 0.0)
+            astronomy.setValue(it.baseScienceRate[Science.ASTRONOMY]?.toDouble() ?: 0.0)
+            psychology.setValue(it.baseScienceRate[Science.PSYCHOLOGY]?.toDouble() ?: 0.0)
+            eureka.setValue(it.baseScienceRate[Science.EUREKA]?.toDouble() ?: 0.0)
+            grid = it.hexGrid
+        }
+
+    }
+
+    /**
+     * Extract the sponsor information from the UI and store it in a Sponsor object
+     */
+    private fun storeSponsorDetails(): Sponsor? {
         val sponsorName = sponsorNameEdit.text
         val sponsorDesc = sponsorDescEdit.text
         logInfo("Saving sponsor '$sponsorName' with description '$sponsorDesc'.")
+        if (sponsorName.isBlank() || sponsorDesc.isBlank()) {
+            logError("Sponsor name and description must be provided")
+            return null
+        }
 
         // extract the sponsor data
         val startGold = sponsorStartGold.getLineEdit()!!.text
@@ -136,7 +192,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
         val startConMats = sponsorStartConMats.getLineEdit()!!.text
 
         val sponsor = Sponsor(
-            id = sponsorCount + 1,
+            id = sponsors.size,
             name = sponsorName,
             colour = sponsorColorPicker.color,
             introText = sponsorDesc,
@@ -164,7 +220,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
                 val hex = getNodeAtHex(i, j)
                 if (hex == null) {
                     logError("No hex found at $i $j")
-                    return
+                    return null
                 } else {
                     if (hex.hexUnlocked) {
                         logInfo("Hex ($i,$j) ${hex.location?.name} (Starts unlocked: ${data.unlockedAtStart})")
@@ -174,17 +230,61 @@ class HexMapGridEditor : GridContainer(), LogInterface {
                 }
             }
         }
-        saveSponsor(sponsor)
+        return sponsor
     }
 
+    /**
+     * Save the given sponsor to the sponsors.json file
+     */
     private fun saveSponsor(sponsor: Sponsor) {
         val json = Json {
             prettyPrint = true
             encodeDefaults = true
             allowStructuredMapKeys = true
         }
-        val sponsorJson = json.encodeToString(Sponsor.serializer(), sponsor)
-        log(sponsorJson)
+        sponsors.find { it.id == sponsor.id }?.let {
+            it == sponsor
+        } ?: sponsors.add(sponsor)
+        val sponsorJson = json.encodeToString(ListSerializer(Sponsor.serializer()), sponsors)
+        if (!DirAccess.dirExistsAbsolute("res://assets/data")) {
+            DirAccess.makeDirRecursiveAbsolute("res://assets/data")
+        }
+        val sponsorFile = FileAccess.open(
+            "res://assets/data/sponsors.json",
+            FileAccess.ModeFlags.WRITE
+        )
+        log("Saving sponsor file ${ProjectSettings.globalizePath(sponsorFile?.getPath() ?: "null")}")
+        sponsorFile?.let {
+            it.storeString(sponsorJson)
+            it.close()
+        }
+    }
+
+    /**
+     * Load the sponsors from the sponsors.json file
+     */
+    private fun loadSponsors(): MutableList<Sponsor> {
+        val sponsors = mutableListOf<Sponsor>()
+        if (!DirAccess.dirExistsAbsolute("res://assets/data")) {
+            logError("No data directory found")
+            return sponsors
+        }
+        if (!FileAccess.fileExists(sponsorJsonPath)) {
+            logError("No sponsors.json file found")
+            return sponsors
+        } else {
+            val sponsorFile = FileAccess.open(sponsorJsonPath, FileAccess.ModeFlags.READ)!!
+            val sponsorJson = sponsorFile.getAsText()
+            val json = Json {
+                prettyPrint = true
+                encodeDefaults = true
+                allowStructuredMapKeys = true
+            }
+            val sponsorList = json.decodeFromString(ListSerializer(Sponsor.serializer()), sponsorJson)
+            sponsors.addAll(sponsorList)
+            log("Loaded ${sponsors.size} sponsors")
+        }
+        return sponsors
     }
 
     /**

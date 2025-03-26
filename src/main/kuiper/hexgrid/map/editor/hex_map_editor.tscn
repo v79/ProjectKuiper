@@ -28,16 +28,18 @@ grow_vertical = 2
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
+theme_override_constants/separation = 10
 
 [node name="LoadSponsorBtn" type="MenuButton" parent="VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Load Sponsor..."
+text = "Choose Sponsor..."
+flat = false
 
 [node name="SaveSponsorBtn" type="Button" parent="VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Save"
+text = "Save all"
 
 [node name="NewSponsorBtn" type="Button" parent="VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
@@ -47,6 +49,11 @@ text = "New Sponsor"
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="DeleteSponsorBtn" type="Button" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Delete"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
