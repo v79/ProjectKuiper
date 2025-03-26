@@ -68,7 +68,6 @@ class HexMapGridEditor : GridContainer(), LogInterface {
     private var selectedRow = -1
     private var selectedCol = -1
     private var sponsor: Sponsor? = null
-    private var sponsorCount: Int = 0
     private var sponsorJsonPath: String = "res://assets/data/sponsors.json"
     private var sponsors: MutableList<Sponsor> = mutableListOf()
 
@@ -80,7 +79,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
         sponsors = loadSponsors()
         if (sponsors.size > 0) {
             sponsors.forEach { sponsor ->
-                chooseSponsorButton.getPopup()!!.addItem(sponsor.name, sponsor.id)
+                chooseSponsorButton.getPopup()!!.addItem("${sponsor.id} - ${sponsor.name}", sponsor.id)
             }
         }
         chooseSponsorButton.getPopup()!!.idPressed.connect { id ->
@@ -172,6 +171,14 @@ class HexMapGridEditor : GridContainer(), LogInterface {
             grid = it.hexGrid
         }
 
+        // update the grid
+        grid.forEach { editorData ->
+            editorData.forEach { value ->
+                if (value.location.name.isNotEmpty()) {
+                    storeHexLocation(value.row, value.column, value.location.name)
+                }
+            }
+        }
     }
 
     /**
@@ -250,13 +257,22 @@ class HexMapGridEditor : GridContainer(), LogInterface {
             DirAccess.makeDirRecursiveAbsolute("res://assets/data")
         }
         val sponsorFile = FileAccess.open(
-            "res://assets/data/sponsors.json",
-            FileAccess.ModeFlags.WRITE
+            "res://assets/data/sponsors.json", FileAccess.ModeFlags.WRITE
         )
         log("Saving sponsor file ${ProjectSettings.globalizePath(sponsorFile?.getPath() ?: "null")}")
         sponsorFile?.let {
             it.storeString(sponsorJson)
             it.close()
+        }
+    }
+
+    @RegisterFunction
+    fun deleteSponsor() {
+        val currentSponsor = sponsor?.id
+        val sponsor = sponsors.find { it.id == currentSponsor }
+        if (sponsor != null) {
+            sponsors.remove(sponsor)
+            chooseSponsorButton.getPopup()!!.removeItem(sponsor.id)
         }
     }
 
