@@ -44,7 +44,10 @@ class DataLoader : Node() {
             GD.printErr("Failed to load sponsor data from $sponsorJsonPath")
             return emptyList()
         }
-        val sponsorJson = Json.decodeFromString<List<Sponsor>>(sponsorFile.getAsText())
+        val json = Json {
+            allowStructuredMapKeys = true
+        }
+        val sponsorJson = json.decodeFromString<List<Sponsor>>(sponsorFile.getAsText())
         GD.print("Loaded ${sponsorJson.size} sponsors")
         return sponsorJson
     }

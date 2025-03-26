@@ -35,11 +35,13 @@ class SciencePanel : Control() {
         pulldownControl = getNodeAs("%PulldownPanel")!!
 
         signalBus.updateScience.connect { scienceName, value ->
-            science = Science.valueOf(scienceName.uppercase())
-            iconRow.getNodeAs<ResourceDisplay>(science.name)?.apply {
-                updateValue(value)
-                panelContents.getNodeAs<RichTextLabel>("${science}_summary")?.apply {
-                    text = "[img=25]${science.spritePath}[/img] [b]${science.displayName}:[/b] %.2f".format(value)
+            if (scienceName != "EUREKA") {
+                science = Science.valueOf(scienceName.uppercase())
+                iconRow.getNodeAs<ResourceDisplay>(science.name)?.apply {
+                    updateValue(value)
+                    panelContents.getNodeAs<RichTextLabel>("${science}_summary")?.apply {
+                        text = "[img=25]${science.spritePath}[/img] [b]${science.displayName}:[/b] %.2f".format(value)
+                    }
                 }
             }
         }
