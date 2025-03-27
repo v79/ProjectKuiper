@@ -177,28 +177,30 @@ class Company(var name: String) : LogInterface {
     fun doResearch(): List<Notification> {
         val notifications: MutableList<Notification> = mutableListOf()
         sciences.forEach { science ->
-            if (science.value == 0.0f) {
-                logWarning("Science doesn't have value: $science")
-                notifications.add(
-                    Notification.NoScienceWarning(
-                        science.key, "There are no ${science.key.displayName} points available to spend this turn"
+            if (science.key != Science.EUREKA) {
+                if (science.value == 0.0f) {
+                    logWarning("Science doesn't have value: $science")
+                    notifications.add(
+                        Notification.NoScienceWarning(
+                            science.key, "There are no ${science.key.displayName} points available to spend this turn"
+                        )
                     )
-                )
-            }
-            technologies.filter { it.status == TechStatus.UNLOCKED }.shuffled().forEach { technology ->
-                // only research techs that have all their requirements met
-                if (getRequiredTechsFor(technology).all { it.status == TechStatus.RESEARCHED }) {
-                    val cost = technology.researchProgress[science.key]?.cost ?: 0
-                    val currentProgress = technology.researchProgress[science.key]?.progress ?: 0
-                    val remaining = cost - currentProgress
-                    val toSpend = sciences[science.key] ?: 0.0f
-                    if (toSpend > 0.0f) {
-                        if (toSpend >= remaining) {
-                            technology.addProgress(science.key, remaining)
-                            sciences[science.key] = toSpend - remaining
-                        } else {
-                            technology.addProgress(science.key, toSpend.toInt())
-                            sciences[science.key] = 0.0f
+                }
+                technologies.filter { it.status == TechStatus.UNLOCKED }.shuffled().forEach { technology ->
+                    // only research techs that have all their requirements met
+                    if (getRequiredTechsFor(technology).all { it.status == TechStatus.RESEARCHED }) {
+                        val cost = technology.researchProgress[science.key]?.cost ?: 0
+                        val currentProgress = technology.researchProgress[science.key]?.progress ?: 0
+                        val remaining = cost - currentProgress
+                        val toSpend = sciences[science.key] ?: 0.0f
+                        if (toSpend > 0.0f) {
+                            if (toSpend >= remaining) {
+                                technology.addProgress(science.key, remaining)
+                                sciences[science.key] = toSpend - remaining
+                            } else {
+                                technology.addProgress(science.key, toSpend.toInt())
+                                sciences[science.key] = 0.0f
+                            }
                         }
                     }
                 }
@@ -282,8 +284,8 @@ class Company(var name: String) : LogInterface {
         val notifications: MutableList<Notification> = mutableListOf()
         log("Processing buildings:")
         zones.forEach { zone ->
-            zone.locations.forEach { loc ->
-                loc.buildings.forEach { building ->
+            zone.hexes.forEach { hexData ->
+                hexData.location.buildings.forEach { building ->
                     when (building.key) {
                         is Building.HQ -> {
                             val hq = building.key as Building.HQ
@@ -335,8 +337,8 @@ class Company(var name: String) : LogInterface {
             }
         }
         zones.forEach { zone ->
-            zone.locations.forEach { loc ->
-                loc.buildings.forEach { building ->
+            zone.hexes.forEach { hexData ->
+                hexData.location.buildings.forEach { building ->
                     building.key.runningCosts.filter { it.key == resourceType }.forEach { cost ->
                         sBuilder.append("[color=red]-")
                         sBuilder.append(cost.value)

@@ -15,10 +15,8 @@ import godot.core.connect
 import godot.extension.getNodeAs
 import hexgrid.Hex
 import hexgrid.HexMode
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
-import serializers.GDVectorSerializer
 import state.Location
 import state.Sponsor
 import technology.Science
@@ -64,7 +62,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
 
     // Data
     private var grid =
-        Array(dimension) { Array(dimension) { EditorData(dimension, dimension, Location(""), Vector2.ZERO) } }
+        Array(dimension) { Array(dimension) { HexData(dimension, dimension, Location(""), Vector2.ZERO) } }
     private var selectedRow = -1
     private var selectedCol = -1
     private var sponsor: Sponsor? = null
@@ -306,9 +304,9 @@ class HexMapGridEditor : GridContainer(), LogInterface {
     /**
      * Calculate the grid pixel coordinates for the given number of rows and columns
      */
-    private fun calculateGridCoordinates(xCount: Int, yCount: Int): Array<Array<EditorData>> {
+    private fun calculateGridCoordinates(xCount: Int, yCount: Int): Array<Array<HexData>> {
         // flat topped, evenq orientation
-        val hexCoords = Array(xCount) { Array(yCount) { EditorData(xCount, yCount, Location(""), Vector2.ZERO) } }
+        val hexCoords = Array(xCount) { Array(yCount) { HexData(xCount, yCount, Location(""), Vector2.ZERO) } }
         val radius = 75.0
         val diameter = radius * 2
         val width = diameter
@@ -320,7 +318,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
             for (j in 0 until yCount) {
                 val x = i * horizDistance
                 val y = j * height + (i % 2) * (height / 2)
-                hexCoords[i][j] = EditorData(i, j, Location(""), Vector2(x, y))
+                hexCoords[i][j] = HexData(i, j, Location(""), Vector2(x, y))
             }
         }
         return hexCoords
@@ -372,12 +370,3 @@ class HexMapGridEditor : GridContainer(), LogInterface {
         return node
     }
 }
-
-@Serializable
-data class EditorData(
-    var row: Int,
-    var column: Int,
-    var location: Location,
-    @Serializable(with = GDVectorSerializer::class) val position: Vector2,
-    var unlockedAtStart: Boolean = false
-)

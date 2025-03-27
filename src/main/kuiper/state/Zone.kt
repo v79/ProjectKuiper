@@ -1,5 +1,6 @@
 package state
 
+import hexgrid.map.editor.HexData
 import kotlinx.serialization.Serializable
 
 /**
@@ -14,5 +15,5 @@ class Zone(val id: Int, val name: String, var active: Boolean = false) {
     // I am not sure that I want this to be a flat list, but it will do for now
     // Locations ideally would appear placed on an actual world map, with relationships between them
     // But for now, we will just have a list of locations
-    val locations = mutableListOf<Location>()
+    val hexes: MutableList<HexData> = mutableListOf()
 }

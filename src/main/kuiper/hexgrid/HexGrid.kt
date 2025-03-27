@@ -11,8 +11,8 @@ import godot.core.asCachedStringName
 import godot.core.connect
 import godot.extension.getNodeAs
 import godot.extension.instantiateAs
+import hexgrid.map.editor.HexData
 import state.GameState
-import state.Location
 
 @RegisterClass
 class HexGrid : Control() {
@@ -23,7 +23,7 @@ class HexGrid : Control() {
 
     // UI elements
     private var dropTargets: MutableList<HexDropTarget> = mutableListOf()
-    private lateinit var hexGridContainer: GridContainer
+    private lateinit var hexGridContainer: Container
     private lateinit var gridPlacementContainer: HBoxContainer
 
     // Packed scenes
@@ -48,11 +48,12 @@ class HexGrid : Control() {
         val gridPlacement = getGridPlacement()
         gridPlacementContainer.setPosition(gridPlacement)
 
-        gameState.company.zones[0].locations.forEachIndexed { index, location ->
-            createHex(index, location)
+        gameState.company.zones[0].hexes.forEachIndexed { index, hexData ->
+            if (hexData.location.name.isNotEmpty()) {
+                createHex(index, hexData)
+            }
         }
 
-        // set up the HQ hex, which is unlocked and has a label
 
         // connect to card dragging signals
         signalBus.draggingCard.connect { card ->
@@ -72,11 +73,11 @@ class HexGrid : Control() {
      * Create a hexagon and add it to the grid
      * Assign the hexagon's drop target to the group "hexDropTargets"
      */
-    private fun createHex(i: Int, location: Location) {
+    private fun createHex(i: Int, hexData: HexData) {
         val hex = hexScene.instantiateAs<Hex>()!!
         hex.id = i
-        hex.location = location
-        hex.hexUnlocked = location.unlocked
+        hex.location = hexData.location
+        hex.hexUnlocked = hexData.location.unlocked
         val dropTarget = hex.getNodeAs<HexDropTarget>("%HexDropTarget")!!
         dropTarget.addToGroup("hexDropTargets".asCachedStringName())
         dropTarget.setName("HexDropTarget$i")
@@ -88,8 +89,9 @@ class HexGrid : Control() {
         val boxContainer = BoxContainer()
         boxContainer.setName("Hex${i}_BoxContainer")
         boxContainer.addChild(hex)
-
-        label.text = location.name
+        boxContainer.setPosition(hexData.position)
+        label.setPosition(Vector2(-20.0, -18.0)) // TODO: center on hex
+        label.text = hexData.location.name
         hexGridContainer.addChild(boxContainer)
         hexes.add(hex)
     }

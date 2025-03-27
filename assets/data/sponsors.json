@@ -284,7 +284,7 @@
                     "column": 0,
                     "location": {
                         "name": "UK",
-                        "unlocked": false,
+                        "unlocked": true,
                         "_buildings": [],
                         "sectors": [
                             {
@@ -317,7 +317,7 @@
                         "x": 112.5,
                         "y": 64.9519052838329
                     },
-                    "unlockedAtStart": false
+                    "unlockedAtStart": true
                 },
                 {
                     "row": 1,
@@ -847,7 +847,7 @@
                     "row": 3,
                     "column": 2,
                     "location": {
-                        "name": "",
+                        "name": "Italy",
                         "unlocked": false,
                         "_buildings": [],
                         "sectors": [
@@ -1009,7 +1009,7 @@
                     "row": 4,
                     "column": 0,
                     "location": {
-                        "name": "",
+                        "name": "Scandanavia",
                         "unlocked": false,
                         "_buildings": [],
                         "sectors": [

@@ -2,7 +2,6 @@ package screens.gameSetup
 
 import LogInterface
 import SignalBus
-import actions.ResourceType
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterSignal
@@ -12,7 +11,9 @@ import godot.core.signal0
 import godot.core.signal1
 import godot.extension.getNodeAs
 import loaders.DataLoader
-import state.*
+import state.GameState
+import state.Sponsor
+import state.Zone
 import technology.Technology
 
 @RegisterClass
@@ -148,7 +149,12 @@ class GameSetup : Node(), LogInterface {
         )
         zoneList[0].apply {
             description = "Your home zone, where your headquarters is located. HQ can be moved in the future."
-            locations.add(Location("${sponsor.name} HQ", true))
+            sponsor.hexGrid.forEach { row ->
+                row.forEach { data ->
+                    hexes.add(data)
+                }
+            }
+            /*locations.add(Location("${sponsor.name} HQ", true))
             locations[0].apply {
                 val hq = Building.HQ()
                 hq.sciencesProduced.putAll(sponsor.baseScienceRate)
@@ -158,7 +164,7 @@ class GameSetup : Node(), LogInterface {
             }
             for (i in 1..9) {
                 locations.add(Location("Location $i"))
-            }
+            }*/
         }
         return zoneList
     }
