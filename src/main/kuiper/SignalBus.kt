@@ -34,10 +34,6 @@ class SignalBus : Node() {
     @RegisterSignal("card")
     val droppedCard by signal1<ActionCard>()
 
-    // signals relating to pulldown panels
-    @RegisterSignal("panel_name")
-    val recalcPulldownPanelSignal by signal1<Control>()
-
     // Signals relating to hexes
     @RegisterSignal("hex")
     val cardOnHex by signal1<Hex>()
