@@ -11,8 +11,12 @@ import godot.core.asCachedStringName
 import godot.core.signal0
 import godot.core.signal1
 import godot.extension.getNodeAs
+import godot.global.GD
 import loaders.DataLoader
-import state.*
+import state.Building
+import state.GameState
+import state.Sponsor
+import state.Zone
 import technology.Technology
 
 @RegisterClass
@@ -148,16 +152,20 @@ class GameSetup : Node(), LogInterface {
         )
         zoneList[0].apply {
             description = "Your home zone, where your headquarters is located. HQ can be moved in the future."
-            locations.add(Location("${sponsor.name} HQ", true))
-            locations[0].apply {
+            sponsor.hexGrid.forEach { row ->
+                row.forEach { data ->
+                    hexes.add(data)
+                }
+            }
+            // in the sponsor.hexGrid array, find the first element where the location.isUnlockedAtStart is true
+            val hqLocation = sponsor.hexGrid.flatten().firstOrNull { it.unlockedAtStart }
+            if (hqLocation != null) {
                 val hq = Building.HQ()
                 hq.sciencesProduced.putAll(sponsor.baseScienceRate)
                 hq.resourceGeneration[ResourceType.INFLUENCE] = 1
                 hq.resourceGeneration[ResourceType.GOLD] = 25
-                addBuilding(hq, intArrayOf(0), true)
-            }
-            for (i in 1..9) {
-                locations.add(Location("Location $i"))
+                val sector = GD.randiRange(0, 5)
+                hqLocation.location.addBuilding(hq, intArrayOf(sector), true)
             }
         }
         return zoneList

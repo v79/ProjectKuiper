@@ -34,10 +34,6 @@ class SignalBus : Node() {
     @RegisterSignal("card")
     val droppedCard by signal1<ActionCard>()
 
-    // signals relating to pulldown panels
-    @RegisterSignal("panel_name")
-    val recalcPulldownPanelSignal by signal1<Control>()
-
     // Signals relating to hexes
     @RegisterSignal("hex")
     val cardOnHex by signal1<Hex>()
@@ -85,6 +81,12 @@ class SignalBus : Node() {
 
     @RegisterSignal("delete_tech")
     val editor_deleteTech by signal1<TechWrapper>()
+
+    @RegisterSignal("place_row", "place_col")
+    val editor_placeHex by signal2<Int, Int>()
+
+    @RegisterSignal("clear_row", "clear_col")
+    val editor_clearHex by signal2<Int, Int>()
 
     @RegisterFunction
     override fun _ready() {

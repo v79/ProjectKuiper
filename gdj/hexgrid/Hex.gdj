@@ -22,12 +22,16 @@ signals = [
 properties = [
     id,
 	hex_unlocked,
-	new_radius
+	new_radius,
+	hex_mode
 ]
 functions = [
     _ready,
 	_process,
 	_draw,
 	highlight,
-	unhighlight
+	unhighlight,
+	on_mouse_entered,
+	on_mouse_exited,
+	on_input_event
 ]

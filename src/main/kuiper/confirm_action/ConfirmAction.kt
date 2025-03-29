@@ -79,7 +79,7 @@ class ConfirmAction : Control(), LogInterface {
         signalBus.showActionConfirmation.connect { h, c ->
             hex = h
             card = c
-            location = h.location
+            location = h.location ?: Location("**Unknown**")
             updateUI()
         }
     }
@@ -152,7 +152,7 @@ class ConfirmAction : Control(), LogInterface {
                             }
 
                             is Building.ScienceLab -> {
-                                buildingSummary.appendText("  New ${building.name} at ${hex.location.name}")
+                                buildingSummary.appendText("  New ${building.name} at ${hex.location?.name}")
 
                                 building.runningCosts.forEach { (resourceType, amount) ->
                                     costsPerTurnList.appendText(
@@ -197,7 +197,6 @@ class ConfirmAction : Control(), LogInterface {
         hexToRender.location = location
         hexToRender.isConfirmationDialog = true
         hexToRender.hexUnlocked = true
-        hexToRender.sectors = location.sectors.toMutableList()
         hexToRender.setName("ConfirmHex${hex.id}")
         // hide the location label because I've got better one down below
         hexToRender.getNodeAs<Label>("LocationLabel")!!.visible = false

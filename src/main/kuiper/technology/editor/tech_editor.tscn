@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://buebhw0isnxxj"]
 
-[ext_resource type="Script" path="res://src/main/kuiper/technology/editor/TechEditor.kt" id="1_174in"]
+[ext_resource type="Script" uid="uid://boiku4eb5is6t" path="res://src/main/kuiper/technology/editor/TechEditor.kt" id="1_174in"]
 [ext_resource type="PackedScene" uid="uid://mi2r8a4hdvio" path="res://src/main/kuiper/technology/editor/science_range_edit.tscn" id="2_5xk71"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1hbku"]
@@ -70,6 +70,7 @@ alignment = 0
 item_count = 5
 popup/item_0/text = "Tier 1"
 popup/item_0/checked = true
+popup/item_0/id = 0
 popup/item_1/text = "Tier 2"
 popup/item_1/id = 1
 popup/item_2/text = "Tier 3"
@@ -113,6 +114,7 @@ layout_mode = 2
 text = "LOCKED"
 item_count = 4
 popup/item_0/text = "LOCKED"
+popup/item_0/id = 0
 popup/item_1/text = "UNLOCKED"
 popup/item_1/id = 1
 popup/item_2/text = "RESEARCHING"

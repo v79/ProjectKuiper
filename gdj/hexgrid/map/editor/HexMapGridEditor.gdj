@@ -1,12 +1,17 @@
 // THIS FILE IS GENERATED! DO NOT EDIT OR DELETE IT. EDIT OR DELETE THE ASSOCIATED SOURCE CODE FILE INSTEAD
 // Note: You can however freely move this file inside your godot project if you want. Keep in mind however, that if you rename the originating source code file, this file will be deleted and regenerated as a new file instead of being updated! Other modifications to the source file however, will result in this file being updated.
 
-registeredName = SignalBus
-fqName = SignalBus
-relativeSourcePath = src/main/kuiper/SignalBus.kt
-baseType = Node
+registeredName = HexMapGridEditor
+fqName = hexgrid.map.editor.HexMapGridEditor
+relativeSourcePath = src/main/kuiper/hexgrid/map/editor/HexMapGridEditor.kt
+baseType = GridContainer
 supertypes = [
-    godot.api.Node,
+    godot.api.GridContainer,
+	LogInterface,
+	godot.api.Container,
+	godot.api.Control,
+	godot.api.CanvasItem,
+	godot.api.Node,
 	godot.api.Object,
 	godot.core.KtObject,
 	godot.common.interop.NativeWrapper,
@@ -14,29 +19,17 @@ supertypes = [
 	kotlin.Any
 ]
 signals = [
-    on_screen_resized,
-	dragging_card,
-	dropped_card,
-	card_on_hex,
-	card_off_hex,
-	show_action_confirmation,
-	cancel_action_confirmation,
-	confirm_action,
-	deal_card_from_deck,
-	next_turn,
-	notify,
-	update_science,
-	update_resource,
-	update_ongoing_action,
-	action_completed,
-	editor_tech_saved,
-	editor_delete_tech,
-	editor_place_hex,
-	editor_clear_hex
-]
-properties = [
     
 ]
+properties = [
+    dimension
+]
 functions = [
-    _ready
+    _ready,
+	on_confirm_location,
+	on_cancel_location,
+	on_p_h_unlocked_at_start_toggled,
+	on_save_sponsor_button_pressed,
+	on_sponsor_chosen,
+	delete_sponsor
 ]

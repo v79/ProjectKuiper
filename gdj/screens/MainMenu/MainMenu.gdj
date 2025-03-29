@@ -30,5 +30,6 @@ functions = [
 	_on_load_button_pressed,
 	_on_load_file_selected,
 	on_tech_tree_editor_pressed,
+	on_sponsor_editor_pressed,
 	load_game
 ]

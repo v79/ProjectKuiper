@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://bwnqinqcecnfq"]
 
 [ext_resource type="Theme" uid="uid://dsva635j2ykyg" path="res://assets/themes/tech_tree_theme.tres" id="1_1lu2s"]
-[ext_resource type="Script" path="res://src/main/kuiper/technology/tree/TechTree.kt" id="2_bcl7q"]
-[ext_resource type="Script" path="res://src/main/kuiper/technology/tree/TechSummaryPanel.kt" id="3_40ni6"]
+[ext_resource type="Script" uid="uid://ce1viyuwvuuv8" path="res://src/main/kuiper/technology/tree/TechTree.kt" id="2_bcl7q"]
+[ext_resource type="Script" uid="uid://dxtv1ih2i8t4l" path="res://src/main/kuiper/technology/tree/TechSummaryPanel.kt" id="3_40ni6"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tema1"]
 bg_color = Color(0.2706, 0.0641286, 0.258458, 1)

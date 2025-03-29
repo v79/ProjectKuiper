@@ -27,6 +27,6 @@ properties = [
 functions = [
     _on_resume,
 	_on_quit,
-	_on_return_to_main_menu,
+	on_return_to_main_menu,
 	_on_save
 ]

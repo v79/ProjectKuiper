@@ -1,18 +1,16 @@
 package hexgrid
 
 import LogInterface
+import SignalBus
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
 import godot.api.*
-import godot.core.Color
-import godot.core.PackedVector2Array
-import godot.core.Vector2
-import godot.core.toVariantArray
+import godot.core.*
 import godot.extension.getNodeAs
 import state.Location
-import state.Sector
+import state.SectorStatus
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -39,42 +37,55 @@ class Hex : Node2D(), LogInterface {
     @RegisterProperty
     var newRadius: Double = 75.0
 
+    @RegisterProperty
+    var hexMode: HexMode = HexMode.NORMAL
+
+    // Globals
+    private lateinit var signalBus: SignalBus
+
     // UI elements
-    private lateinit var locationLabel: Label
+    private val locationLabel: Label by lazy { getNodeAs("%LocationLabel")!! }
+    private val area2D: Area2D by lazy { getNodeAs<Area2D>("%Area2D")!! }
+    private val collisionShape2D: CollisionPolygon2D by lazy { getNodeAs("%CollisionShape2D")!! }
     lateinit var marker: HexDropTarget
-    lateinit var location: Location
+    var location: Location? = null
 
     // Packed scenes
     private val sectorScene = ResourceLoader.load("res://src/main/kuiper/hexgrid/sector_segment.tscn") as PackedScene
 
     // Data
-    var sectors: MutableList<Sector> = mutableListOf()
+    var row: Int = 0
+    var col: Int = 0
+
     private lateinit var pointSet: Map<Int, Triple<Vector2, Vector2, Vector2>>
     private var unlockedColor = Color(1.0, 1.0, 1.0, 1.0)
     private var lockedColor = Color(0.2, 0.2, 0.2, 1.0)
     private var highlightColor = Color(1.0, 0.8, 0.8, 1.0)
-    private var colour: Color = unlockedColor
+    var colour: Color = unlockedColor
     var isConfirmationDialog: Boolean = false
 
     @RegisterFunction
     override fun _ready() {
-        locationLabel = getNodeAs("%LocationLabel")!!
+        signalBus = getNodeAs("/root/SignalBus")!!
+
         if (!hexUnlocked) {
             colour = lockedColor
         }
         pointSet = calculateVerticesForHex(radius = newRadius.toFloat())
-        // for math reasons, the vertices are 1-indexed, but the sectors are 0-indexed
+        val packedArray = PackedVector2Array(
+            pointSet.values.flatMap { listOf(it.first, it.second) }.distinct().toVariantArray()
+        )
+        collisionShape2D.polygon = packedArray
         pointSet.forEach { (index, triangle) ->
             val segment = sectorScene.instantiate() as SectorSegment
             segment.setName("Sector${index - 1}")
             segment.setTextureRepeat(CanvasItem.TextureRepeat.TEXTURE_REPEAT_DISABLED)
             segment.location = location
             segment.isConfirmationDialog = isConfirmationDialog
-            segment.status = sectors[index - 1].status
+            segment.status = location?.sectors?.get(index - 1)?.status ?: SectorStatus.EMPTY
             addChild(segment)
             segment.updateUI(
-                index - 1, PackedVector2Array(triangle.toList().toVariantArray()),
-                location.getBuilding(index - 1)
+                index - 1, PackedVector2Array(triangle.toList().toVariantArray()), location?.getBuilding(index - 1)
             )
         }
     }
@@ -109,12 +120,18 @@ class Hex : Node2D(), LogInterface {
     @RegisterFunction
     fun highlight() {
         colour = highlightColor
+        if (hexMode == HexMode.EDITOR) {
+            zIndex += 1
+        }
         queueRedraw()
     }
 
     @RegisterFunction
     fun unhighlight() {
         colour = if (hexUnlocked) unlockedColor else lockedColor
+        if (hexMode == HexMode.EDITOR) {
+            zIndex -= 1
+        }
         queueRedraw()
     }
 
@@ -134,7 +151,42 @@ class Hex : Node2D(), LogInterface {
         return pointSet.toMap()
     }
 
-    // possible functions:
-    // - buildFacility(size: Int, site: Int)
-    // - removeFacility(size: Int, site: Int)
+    @RegisterFunction
+    fun onMouseEntered() {
+        if (hexMode == HexMode.EDITOR) {
+            highlight()
+        }
+    }
+
+    @RegisterFunction
+    fun onMouseExited() {
+        if (hexMode == HexMode.EDITOR) {
+            unhighlight()
+        }
+    }
+
+    @RegisterFunction
+    fun onInputEvent(viewport: Node, event: InputEvent?, shapeIdx: Int) {
+        // check for clicks
+        if (hexMode == HexMode.EDITOR) {
+            event?.let { e ->
+                if (e.isActionPressed("mouse_left_click".asCachedStringName())) {
+                    signalBus.editor_placeHex.emit(row, col)
+                }
+                if (e.isActionPressed("mouse_right_click".asCachedStringName())) {
+                    signalBus.editor_clearHex.emit(row, col)
+                }
+            }
+        }
+    }
 }
+
+/**
+ * The Hex class is used quite differently in the game map and the editor.
+ * So this enum is used to differentiate between the two modes.
+ */
+enum class HexMode {
+    NORMAL,
+    EDITOR
+}
+
