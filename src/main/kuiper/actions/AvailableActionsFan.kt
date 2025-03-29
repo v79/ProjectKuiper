@@ -70,31 +70,18 @@ class AvailableActionsFan : Node2D() {
         }
         signalBus.confirmAction.connect { _, actionWrapper ->
             actionWrapper.action?.let { action ->
-                removeCard(action.id)
+                removeCardAndPause(action)
             }
-            // when an action is confirmed, the mouse click immediately activates the card under the mouse
-            // I don't want this to happen, so I'm adding a delay to re-enable the cards after a short time
-            delayTimer.start()
-            delayTimer.timeout.connect {
-                actionCards.forEach { (_, card) -> card.enableProcessing() }
-            }
-
         }
         signalBus.cancelActionConfirmation.connect {
-            delayTimer.start()
-            delayTimer.timeout.connect {
-                actionCards.forEach { (_, card) -> card.enableProcessing() }
-            }
+            cancelActionAndPause()
         }
         signalBus.showActionConfirmation.connect { _, c ->
-            // disable all the other cards to stop double-emit when confirming/cancelling action
-            actionCards.forEach { (_, card) ->
-                if (card != c) {
-                    card.disableProcessing()
-                }
-            }
+
+            disableCards(c)
         }
     }
+
 
     @RegisterFunction
     override fun _process(delta: Double) {
@@ -264,6 +251,31 @@ class AvailableActionsFan : Node2D() {
             card.queueFree()
         } else {
             GD.printErr("Tried to remove card $id, but it was not found")
+        }
+    }
+
+    private fun removeCardAndPause(action: Action) {
+        removeCard(action.id)
+        // when an action is confirmed, the mouse click immediately activates the card under the mouse
+        // I don't want this to happen, so I'm adding a delay to re-enable the cards after a short time
+        cancelActionAndPause()
+    }
+
+    private fun cancelActionAndPause() {
+        delayTimer.start()
+        delayTimer.timeout.connect {
+            actionCards.forEach { (_, card) -> card.enableProcessing() }
+        }
+    }
+
+    /**
+     * Disable all the other cards to stop double-emit when confirming/cancelling action
+     */
+    private fun disableCards(c: ActionCard) {
+        actionCards.forEach { (_, card) ->
+            if (card != c) {
+                card.disableProcessing()
+            }
         }
     }
 }

@@ -82,6 +82,15 @@ class GameState : Node(), LogInterface {
         return "GameState(sponsor=${sponsor?.name}, ${company.name}, ${company.sciences.size} sciences, year=$year)"
     }
 
+    fun reset() {
+        log("GameState: Resetting game state")
+        year = 1980
+        company = Company("Kuiper")
+        sponsor = null
+        availableActions.clear()
+        notifications.clear()
+    }
+
     @Transient
     private val json = Json {
         prettyPrint = true
