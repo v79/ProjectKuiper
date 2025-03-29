@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cun66228bprqh"]
 
-[ext_resource type="Script" path="res://src/main/kuiper/screens/kuiper/pullDownPanel/PullDownPanel.kt" id="1_211j7"]
+[ext_resource type="Script" uid="uid://cuyemqxcjpb1h" path="res://src/main/kuiper/screens/kuiper/pullDownPanel/PullDownPanel.kt" id="1_211j7"]
 
 [node name="PulldownPanel" type="Control"]
 custom_minimum_size = Vector2(200, 50)
@@ -17,6 +17,7 @@ offset_right = 40.0
 offset_bottom = 40.0
 
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 

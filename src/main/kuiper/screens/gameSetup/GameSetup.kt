@@ -2,6 +2,7 @@ package screens.gameSetup
 
 import LogInterface
 import SignalBus
+import actions.ResourceType
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterSignal
@@ -10,7 +11,9 @@ import godot.core.asCachedStringName
 import godot.core.signal0
 import godot.core.signal1
 import godot.extension.getNodeAs
+import godot.global.GD
 import loaders.DataLoader
+import state.Building
 import state.GameState
 import state.Sponsor
 import state.Zone
@@ -154,17 +157,16 @@ class GameSetup : Node(), LogInterface {
                     hexes.add(data)
                 }
             }
-            /*locations.add(Location("${sponsor.name} HQ", true))
-            locations[0].apply {
+            // in the sponsor.hexGrid array, find the first element where the location.isUnlockedAtStart is true
+            val hqLocation = sponsor.hexGrid.flatten().firstOrNull { it.unlockedAtStart }
+            if (hqLocation != null) {
                 val hq = Building.HQ()
                 hq.sciencesProduced.putAll(sponsor.baseScienceRate)
                 hq.resourceGeneration[ResourceType.INFLUENCE] = 1
                 hq.resourceGeneration[ResourceType.GOLD] = 25
-                addBuilding(hq, intArrayOf(0), true)
+                val sector = GD.randiRange(0, 5)
+                hqLocation.location.addBuilding(hq, intArrayOf(sector), true)
             }
-            for (i in 1..9) {
-                locations.add(Location("Location $i"))
-            }*/
         }
         return zoneList
     }

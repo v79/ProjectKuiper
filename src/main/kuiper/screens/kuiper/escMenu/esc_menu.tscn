@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bh0hxtmuthjhi"]
 
-[ext_resource type="Script" path="res://src/main/kuiper/screens/kuiper/escMenu/EscMenu.kt" id="1_eefbu"]
+[ext_resource type="Script" uid="uid://ch24nxa1da21n" path="res://src/main/kuiper/screens/kuiper/escMenu/EscMenu.kt" id="1_eefbu"]
 
 [node name="EscMenu" type="Control"]
 layout_mode = 3
@@ -53,5 +53,5 @@ text = "Quit"
 
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/Resume" to="." method="_on_resume"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/Save" to="." method="_on_save"]
-[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/ExitToMainMenu" to="." method="_on_return_to_main_menu"]
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/ExitToMainMenu" to="." method="on_return_to_main_menu"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/Quit" to="." method="_on_quit"]

@@ -11,6 +11,7 @@ import godot.core.MouseButton
 import godot.core.Vector2
 import godot.core.connect
 import godot.extension.getNodeAs
+import godot.global.GD
 import kotlin.math.roundToInt
 
 @RegisterClass
@@ -26,16 +27,14 @@ class PullDownPanel : Control() {
     /**
      * The contents of the panel, which should be any Control node
      */
-    @Export
-    @RegisterProperty
-    var contents: Control? = null
+    private var contents: Control? = null
 
     /**
      * The key that will expand or shrink the panel
      */
     @Export
     @RegisterProperty
-    var key: Key = Key.KEY_H
+    var key: Key = Key.KEY_NONE
 
     private var isExpanded = false
     private var direction: Int = 0 // -1 for shrinking, 0 for idle, 1 for expanding
@@ -56,7 +55,7 @@ class PullDownPanel : Control() {
     override fun _ready() {
         signalBus = getNodeAs("/root/SignalBus")!!
 
-        pulldownPanel = getNodeAs("VBoxContainer/PanelContainer")!!
+        pulldownPanel = getNodeAs("%PanelContainer")!!
         handle = getNodeAs("%Handle")!!
 
         // the zeroth child is the Panel node on the original scene
@@ -66,30 +65,36 @@ class PullDownPanel : Control() {
         // but if they are, we can calculate the dimensions of the panel
         if (getChildCount() > 1) {
             contents = getChild(1) as Control?
-            _recalculate_pulldown_dimensions(contents!!)
+            recalculatePulldownDimensions()
         }
 
         initialSize = pulldownPanel.size
         minHeight = pulldownPanel.getRect().size.y
         basePosition = pulldownPanel.position
 
-        signalBus.recalcPulldownPanelSignal.connect { _ ->
-            _recalculate_pulldown_dimensions(contents!!)
+        signalBus.recalcPulldownPanelSignal.connect { c ->
+            if (GD.isInstanceValid(c)) {
+                contents = c
+                recalculatePulldownDimensions()
+            }
         }
     }
 
     @RegisterFunction
-    fun _recalculate_pulldown_dimensions(control: Control) {
-        contents = control
-        contents?.let {
-            maxHeight = it.getChildren().sumOf { (it as RichTextLabel).getRect().size.y } + 50
-            maxWidth = if (it.getChildCount() == 0) {
+    fun recalculatePulldownDimensions() {
+        contents?.let { c ->
+            maxHeight = if (c.getChildCount() == 0) {
                 50.0
             } else {
-                it.getChildren().maxOf { (it as RichTextLabel).getRect().size.x } + 50
+                c.getChildren().sumOf { (it as RichTextLabel).getRect().size.y } + 50
             }
-            it.setPosition(Vector2(this.position.x, -maxHeight))
-            avgChildHeight = (it.getRect().size.y / it.getChildCount())
+            maxWidth = if (c.getChildCount() == 0) {
+                50.0
+            } else {
+                c.getChildren().maxOf { (it as RichTextLabel).getRect().size.x } + 50
+            }
+            c.setPosition(Vector2(this.position.x, -maxHeight))
+            avgChildHeight = (c.getRect().size.y / c.getChildCount())
         }
     }
 
@@ -100,6 +105,7 @@ class PullDownPanel : Control() {
     override fun _input(event: InputEvent?) {
         if (event is InputEventKey) {
             if (event.getKeycode() == key && event.pressed) {
+                GD.print("$key pressed; panel $panelID")
                 if (!isExpanded) {
                     direction = 1
                     contents?.visible = true

@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://cun43pt1qmvtt"]
 
-[ext_resource type="Script" path="res://src/main/kuiper/science/ResourcePanel.kt" id="1_0lmnj"]
+[ext_resource type="Script" uid="uid://blx0i4062kqti" path="res://src/main/kuiper/science/ResourcePanel.kt" id="1_0lmnj"]
 [ext_resource type="PackedScene" uid="uid://dxi8kllwh6e0g" path="res://src/main/kuiper/science/resource_icon_display.tscn" id="2_uaj2p"]
 [ext_resource type="Texture2D" uid="uid://dmw5pkdm32rr3" path="res://assets/textures/icons/icon-influence-128x128.png" id="3_pfj0i"]
 [ext_resource type="Texture2D" uid="uid://38j6d388tase" path="res://assets/textures/icons/icon-coins-128x128.png" id="4_3avvt"]
@@ -46,7 +46,7 @@ resource_name = "CONSTRUCTION_MATERIALS"
 icon = ExtResource("4_cebon")
 is_science = false
 
-[node name="PulldownPanel" parent="." node_paths=PackedStringArray("contents") instance=ExtResource("9_tt8ur")]
+[node name="PulldownPanel" parent="." instance=ExtResource("9_tt8ur")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(400, 50)
 layout_mode = 2
@@ -55,7 +55,6 @@ offset_top = 40.0
 offset_right = 450.0
 offset_bottom = 90.0
 panel_i_d = "resources"
-contents = NodePath("PanelContents")
 key = 161
 
 [node name="PanelContents" type="VBoxContainer" parent="PulldownPanel"]

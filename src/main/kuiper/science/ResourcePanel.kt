@@ -38,22 +38,7 @@ class ResourcePanel : Control() {
         pulldownControl = getNodeAs("%PulldownPanel")!!
 
         signalBus.updateResource.connect { resourceName, value ->
-            resourceType = ResourceType.valueOf(resourceName.uppercase())
-            iconRow.getNodeAs<ResourceDisplay>(resourceType.name)?.apply {
-                updateValue(value)
-                val summary = gameState.company.getCostsPerTurnSummary(resourceType)
-                panelContents.getNodeAs<RichTextLabel>("${resourceType}_summary")?.apply {
-                    val headline =
-                        "[img=25]${resourceType.spritePath}[/img] [b]${resourceType.displayName}:[/b] %.2f".format(value)
-                    text = if (summary.isNotEmpty()) {
-                        "$headline\n\t$summary"
-                    } else {
-                        headline
-                    }
-                    setFitContent(true)
-                }
-            }
-            signalBus.recalcPulldownPanelSignal.emit(panelContents)
+            updateResource(resourceName, value)
         }
     }
 
@@ -72,5 +57,24 @@ class ResourcePanel : Control() {
         }
         panelContents.addChild(label)
         panelContents.resetSize()
+    }
+
+    private fun updateResource(resourceName: String, value: Float) {
+        resourceType = ResourceType.valueOf(resourceName.uppercase())
+        iconRow.getNodeAs<ResourceDisplay>(resourceType.name)?.apply {
+            updateValue(value)
+            val summary = gameState.company.getCostsPerTurnSummary(resourceType)
+            panelContents.getNodeAs<RichTextLabel>("${resourceType}_summary")?.apply {
+                val headline =
+                    "[img=25]${resourceType.spritePath}[/img] [b]${resourceType.displayName}:[/b] %.2f".format(value)
+                text = if (summary.isNotEmpty()) {
+                    "$headline\n\t$summary"
+                } else {
+                    headline
+                }
+                setFitContent(true)
+            }
+        }
+        signalBus.recalcPulldownPanelSignal.emit(panelContents)
     }
 }

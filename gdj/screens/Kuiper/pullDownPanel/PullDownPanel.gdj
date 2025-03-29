@@ -20,12 +20,11 @@ signals = [
 ]
 properties = [
     panel_i_d,
-	contents,
 	key
 ]
 functions = [
     _ready,
-	_recalculate_pulldown_dimensions,
+	recalculate_pulldown_dimensions,
 	_input,
 	_on_handle_gui_input,
 	_process

@@ -1,6 +1,6 @@
 [gd_scene load_steps=10 format=3 uid="uid://q3iu1ngkr0tt"]
 
-[ext_resource type="Script" path="res://src/main/kuiper/science/SciencePanel.kt" id="1_p2emv"]
+[ext_resource type="Script" uid="uid://doatfj26cj70g" path="res://src/main/kuiper/science/SciencePanel.kt" id="1_p2emv"]
 [ext_resource type="PackedScene" uid="uid://dxi8kllwh6e0g" path="res://src/main/kuiper/science/resource_icon_display.tscn" id="1_u8rou"]
 [ext_resource type="Texture2D" uid="uid://dsrevsf2xlgb2" path="res://assets/textures/icons/icon-physics-128x128.png" id="2_h50u5"]
 [ext_resource type="Texture2D" uid="uid://5rdv2depis0x" path="res://assets/textures/icons/icon-astronomy-128x128.png" id="3_r4ej6"]
@@ -66,7 +66,7 @@ resource_name = "ENGINEERING"
 icon = ExtResource("7_l1ej6")
 value = 1.0
 
-[node name="PulldownPanel" parent="." node_paths=PackedStringArray("contents") instance=ExtResource("8_gn57i")]
+[node name="PulldownPanel" parent="." instance=ExtResource("8_gn57i")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(400, 50)
 layout_mode = 2
@@ -75,7 +75,7 @@ offset_top = 40.0
 offset_right = 450.0
 offset_bottom = 90.0
 panel_i_d = "sciences"
-contents = NodePath("PanelContents")
+key = 162
 
 [node name="PanelContents" type="VBoxContainer" parent="PulldownPanel"]
 unique_name_in_owner = true

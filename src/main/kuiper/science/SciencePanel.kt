@@ -10,6 +10,7 @@ import godot.api.VBoxContainer
 import godot.core.Vector2
 import godot.core.connect
 import godot.extension.getNodeAs
+import godot.global.GD
 import screens.kuiper.pullDownPanel.PullDownPanel
 import technology.Science
 
@@ -35,14 +36,8 @@ class SciencePanel : Control() {
         pulldownControl = getNodeAs("%PulldownPanel")!!
 
         signalBus.updateScience.connect { scienceName, value ->
-            if (scienceName != "EUREKA") {
-                science = Science.valueOf(scienceName.uppercase())
-                iconRow.getNodeAs<ResourceDisplay>(science.name)?.apply {
-                    updateValue(value)
-                    panelContents.getNodeAs<RichTextLabel>("${science}_summary")?.apply {
-                        text = "[img=25]${science.spritePath}[/img] [b]${science.displayName}:[/b] %.2f".format(value)
-                    }
-                }
+            if (GD.isInstanceValid(this)) {
+                updateScience(scienceName, value)
             }
         }
     }
@@ -62,8 +57,27 @@ class SciencePanel : Control() {
         }
         panelContents.addChild(label)
         panelContents.resetSize()
-        // I need to get the sliding panel which contains this to recalculate its dimensions
-        signalBus.recalcPulldownPanelSignal.emit(panelContents)
     }
 
+    private fun updateScience(scienceName: String, value: Float) {
+        GD.print("Update science: $scienceName, value: $value")
+        if (scienceName != "EUREKA") {
+            science = Science.valueOf(scienceName.uppercase())
+            GD.isInstanceValid(iconRow)
+            GD.print("Icon row is valid: ${GD.isInstanceValid(iconRow)}")
+            GD.print("Looking science node ${science.name} in iconRow")
+            GD.print("Icon row has ${iconRow.getChildCount()} children")
+            iconRow.getChildren().forEach {
+                GD.print("\t${it.name}}")
+            }
+            iconRow.getNodeAs<ResourceDisplay>(science.name)?.apply {
+                updateValue(value)
+                panelContents.getNodeAs<RichTextLabel>("${science}_summary")?.apply {
+                    text = "[img=25]${science.spritePath}[/img] [b]${science.displayName}:[/b] %.2f".format(value)
+                    setFitContent(true)
+                }
+            }
+            signalBus.recalcPulldownPanelSignal.emit(panelContents)
+        }
+    }
 }
