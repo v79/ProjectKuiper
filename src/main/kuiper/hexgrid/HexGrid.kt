@@ -18,7 +18,7 @@ import state.GameState
 class HexGrid : Control() {
 
     // Globals
-    private lateinit var signalBus: SignalBus
+    private val signalBus: SignalBus by lazy { getNodeAs("/root/Kuiper/SignalBus")!! }
     private lateinit var gameState: GameState
 
     // UI elements
@@ -38,7 +38,6 @@ class HexGrid : Control() {
 
     @RegisterFunction
     override fun _ready() {
-        signalBus = getNodeAs("/root/SignalBus")!!
         gameState = getNodeAs("/root/GameState")!!
 
         hexGridContainer = getNodeAs("%HexGridContainer")!!
@@ -53,7 +52,6 @@ class HexGrid : Control() {
                 createHex(index, hexData)
             }
         }
-
 
         // connect to card dragging signals
         signalBus.draggingCard.connect { card ->

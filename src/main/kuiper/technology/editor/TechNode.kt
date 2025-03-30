@@ -1,7 +1,6 @@
 package technology.editor
 
 import LogInterface
-import SignalBus
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
@@ -13,7 +12,6 @@ import godot.api.VBoxContainer
 import godot.core.Color
 import godot.core.HorizontalAlignment
 import godot.core.Vector2
-import godot.core.connect
 import godot.extension.getNodeAs
 import technology.Technology
 
@@ -29,7 +27,7 @@ class TechNode : GraphNode(), LogInterface {
     override var logEnabled: Boolean = false
 
     // Globals
-    private lateinit var signalBus: SignalBus
+//    private lateinit var signalBus: SignalBus
 
     var technology: Technology = Technology.EMPTY
 
@@ -49,19 +47,19 @@ class TechNode : GraphNode(), LogInterface {
 
     @RegisterFunction
     override fun _ready() {
-        signalBus = getNodeAs("/root/SignalBus")!!
+//        signalBus = getNodeAs("%SignalBus")!!
 
         vBox = getNodeAs("%VBox")!!
         addIncoming = getNodeAs("%AddIncomingBtn")!!
         addOutgoing = getNodeAs("%AddOutgoingBtn")!!
         editor = getNodeAs("%TechEditor")!!
 
-        signalBus.editor_techSaved.connect { techW ->
-            if (techW.technology.id == technology.id) {
-                technology = techW.technology
-                updateUI()
-            }
-        }
+        /* signalBus.editor_techSaved.connect { techW ->
+             if (techW.technology.id == technology.id) {
+                 technology = techW.technology
+                 updateUI()
+             }
+         }*/
 
         updateUI()
     }

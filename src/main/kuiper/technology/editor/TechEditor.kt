@@ -1,7 +1,6 @@
 package technology.editor
 
 import LogInterface
-import SignalBus
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
@@ -23,7 +22,7 @@ class TechEditor : Control(), LogInterface {
     var techWrapper: TechWrapper = TechWrapper()
 
     // Globals
-    private lateinit var signalBus: SignalBus
+//    private lateinit var signalBus: SignalBus
 
 
     // UI Elements
@@ -51,7 +50,7 @@ class TechEditor : Control(), LogInterface {
 
     @RegisterFunction
     override fun _ready() {
-        signalBus = getNodeAs("/root/SignalBus")!!
+//        signalBus = getNodeAs("%SignalBus")!!
 
         titleEdit = getNodeAs("%TitleEdit")!!
         tierMenu = getNodeAs("%TierMenu")!!
@@ -113,7 +112,7 @@ class TechEditor : Control(), LogInterface {
         techWrapper.technology.setUnlockRange(Science.MATHEMATICS, mathematicsRange.getRange())
         techWrapper.technology.multiplier = multiplierEdit.text.toDoubleOrNull() ?: 1.0
         log(techWrapper.technology.toString())
-        signalBus.editor_techSaved.emit(techWrapper)
+//        signalBus.editor_techSaved.emit(techWrapper)
         visible = false
     }
 
@@ -143,7 +142,7 @@ class TechEditor : Control(), LogInterface {
         logWarning("Deleting technology... ${techWrapper.technology.title}")
         confirmDeletePanel.hide()
         this.hide()
-        signalBus.editor_deleteTech.emit(techWrapper)
+//        signalBus.editor_deleteTech.emit(techWrapper)
     }
 
     @RegisterFunction

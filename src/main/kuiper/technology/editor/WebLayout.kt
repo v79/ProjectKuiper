@@ -1,7 +1,6 @@
 package technology.editor
 
 import LogInterface
-import SignalBus
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
@@ -22,7 +21,7 @@ import kotlin.math.sin
 class WebLayout : GraphEdit(), LogInterface {
 
     // Globals
-    private lateinit var signalBus: SignalBus
+//    private lateinit var signalBus: SignalBus
 
     @RegisterProperty
     @Export
@@ -57,13 +56,13 @@ class WebLayout : GraphEdit(), LogInterface {
 
     @RegisterFunction
     override fun _ready() {
-        signalBus = getNodeAs("/root/SignalBus")!!
+//        signalBus = getNodeAs("%SignalBus")!!
 
         connectionLayer = getNodeAs("_connection_layer")!!
 
-        signalBus.editor_deleteTech.connect { techW ->
-            deleteTechnology(techW.technology)
-        }
+        /*   signalBus.editor_deleteTech.connect { techW ->
+               deleteTechnology(techW.technology)
+           }*/
     }
 
     @RegisterFunction

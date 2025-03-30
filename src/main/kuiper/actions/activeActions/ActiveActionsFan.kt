@@ -20,8 +20,10 @@ class ActiveActionsFan : Control(), LogInterface {
     override var logEnabled: Boolean = true
 
     // Globals
-    private lateinit var signalBus: SignalBus
     private lateinit var gameState: GameState
+    private val signalBus: SignalBus by lazy {
+        getNodeAs("/root/Kuiper/SignalBus")!!
+    }
 
     // packed scenes
     private val ongoingActionScene =
@@ -37,7 +39,6 @@ class ActiveActionsFan : Control(), LogInterface {
 
     @RegisterFunction
     override fun _ready() {
-        signalBus = getNodeAs("/root/SignalBus")!!
         gameState = getNodeAs("/root/GameState")!!
         ongoingActionsContainer = getNodeAs("%OngoingActionsContainer")!!
 

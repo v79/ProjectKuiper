@@ -1,7 +1,6 @@
 package hexgrid
 
 import LogInterface
-import SignalBus
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
@@ -40,8 +39,8 @@ class Hex : Node2D(), LogInterface {
     @RegisterProperty
     var hexMode: HexMode = HexMode.NORMAL
 
-    // Globals
-    private lateinit var signalBus: SignalBus
+    // Signal bus - editor signal bus required
+//    private val signalBus: SignalBus by lazy { getNodeAs("/root/Kuiper/SignalBus")!! }
 
     // UI elements
     private val locationLabel: Label by lazy { getNodeAs("%LocationLabel")!! }
@@ -66,7 +65,6 @@ class Hex : Node2D(), LogInterface {
 
     @RegisterFunction
     override fun _ready() {
-        signalBus = getNodeAs("/root/SignalBus")!!
 
         if (!hexUnlocked) {
             colour = lockedColor
@@ -171,10 +169,10 @@ class Hex : Node2D(), LogInterface {
         if (hexMode == HexMode.EDITOR) {
             event?.let { e ->
                 if (e.isActionPressed("mouse_left_click".asCachedStringName())) {
-                    signalBus.editor_placeHex.emit(row, col)
+//                    signalBus.editor_placeHex.emit(row, col)
                 }
                 if (e.isActionPressed("mouse_right_click".asCachedStringName())) {
-                    signalBus.editor_clearHex.emit(row, col)
+//                    signalBus.editor_clearHex.emit(row, col)
                 }
             }
         }

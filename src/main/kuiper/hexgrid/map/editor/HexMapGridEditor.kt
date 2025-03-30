@@ -1,7 +1,6 @@
 package hexgrid.map.editor
 
 import LogInterface
-import SignalBus
 import actions.ResourceType
 import godot.annotation.Export
 import godot.annotation.RegisterClass
@@ -9,7 +8,6 @@ import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
 import godot.api.*
 import godot.core.Vector2
-import godot.core.Vector2i
 import godot.core.asStringName
 import godot.core.connect
 import godot.extension.getNodeAs
@@ -32,7 +30,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
     var dimension: Int = 6
 
     // Globals
-    private lateinit var signalBus: SignalBus
+//    private lateinit var signalBus: SignalBus
 
     // Packed scenes
     private val hexScene = ResourceLoader.load("res://src/main/kuiper/hexgrid/Hex.tscn") as PackedScene
@@ -71,7 +69,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
 
     @RegisterFunction
     override fun _ready() {
-        signalBus = getNodeAs("/root/SignalBus")!!
+//        signalBus = getNodeAs("%SignalBus")!!
 
         // load the sponsors
         sponsors = loadSponsors()
@@ -104,19 +102,19 @@ class HexMapGridEditor : GridContainer(), LogInterface {
             }
         }
 
-        signalBus.editor_placeHex.connect { row, col ->
-            hexCoordsLbl.text = "($row,$col)"
-            selectedRow = row
-            selectedCol = col
-            phCoordLbl.text = "@$row,$col"
-            val hex = getNodeAtHex(row, col)
-            if (hex != null && hex.hexUnlocked) {
-                phNameEdit.text = hex.location?.name ?: ""
-                phUnlockedAtStart.buttonPressed = true
-            }
-            placeHexPopup.setPosition(getGlobalMousePosition().toVector2i().minus(Vector2i(50.0, 50.0)))
-            placeHexPopup.visible = true
-        }
+        /*      signalBus.editor_placeHex.connect { row, col ->
+                  hexCoordsLbl.text = "($row,$col)"
+                  selectedRow = row
+                  selectedCol = col
+                  phCoordLbl.text = "@$row,$col"
+                  val hex = getNodeAtHex(row, col)
+                  if (hex != null && hex.hexUnlocked) {
+                      phNameEdit.text = hex.location?.name ?: ""
+                      phUnlockedAtStart.buttonPressed = true
+                  }
+                  placeHexPopup.setPosition(getGlobalMousePosition().toVector2i().minus(Vector2i(50.0, 50.0)))
+                  placeHexPopup.visible = true
+              }*/
     }
 
     @RegisterFunction

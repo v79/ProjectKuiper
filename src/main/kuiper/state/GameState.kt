@@ -32,8 +32,7 @@ class GameState : Node(), LogInterface {
     override var logEnabled: Boolean = true
 
     // Globals
-    @Transient
-    private lateinit var signalBus: SignalBus
+    private val signalBus: SignalBus by lazy { getNodeAs("/root/Kuiper/SignalBus")!! }
 
     @RegisterProperty
     @Export
@@ -50,7 +49,7 @@ class GameState : Node(), LogInterface {
 
     @RegisterFunction
     override fun _ready() {
-        signalBus = getNodeAs("/root/SignalBus")!!
+
     }
 
     /**
@@ -59,7 +58,7 @@ class GameState : Node(), LogInterface {
     fun nextTurn() {
         // Clear notifications; exiting persistent notifications will remain in the tree until dismissed
         notifications.clear()
-        signalBus.nextTurn.emit()
+//        signalBus.nextTurn.emit()
         log("GameState: Next turn")
         // Do research, spending all research points
         notifications.addAll(company.doResearch())

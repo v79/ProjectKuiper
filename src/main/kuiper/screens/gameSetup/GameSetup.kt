@@ -1,7 +1,6 @@
 package screens.gameSetup
 
 import LogInterface
-import SignalBus
 import actions.ResourceType
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
@@ -26,7 +25,6 @@ class GameSetup : Node(), LogInterface {
 
     // Globals
     private lateinit var dataLoader: DataLoader
-    private lateinit var signalBus: SignalBus
 
     @RegisterSignal("countryId")
     val countrySelectSignal by signal1<Int>()
@@ -54,7 +52,6 @@ class GameSetup : Node(), LogInterface {
     @RegisterFunction
     override fun _ready() {
         dataLoader = getNodeAs("/root/DataLoader")!!
-        signalBus = getNodeAs("/root/SignalBus")!!
 
         companyNamePanel = getNodeAs("CompanyNamePanel")!!
         startGameButton = getNodeAs("%StartGame_Button")!!

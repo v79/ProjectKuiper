@@ -1,14 +1,11 @@
 package technology.editor
 
 import LogInterface
-import SignalBus
 import godot.annotation.*
 import godot.api.Control
 import godot.api.FileAccess
-import godot.core.connect
 import godot.core.signal0
 import godot.core.signal1
-import godot.extension.getNodeAs
 import godot.global.GD
 import kotlinx.serialization.json.Json
 import technology.TechStatus
@@ -19,7 +16,7 @@ import technology.Technology
 class TechWebEditor : Control(), LogInterface {
 
     // Globals
-    private lateinit var signalBus: SignalBus
+//    private lateinit var signalBus: SignalBus
 
     @RegisterProperty
     @Export
@@ -40,11 +37,11 @@ class TechWebEditor : Control(), LogInterface {
 
     @RegisterFunction
     override fun _ready() {
-        signalBus = getNodeAs("/root/SignalBus")!!
+//        signalBus = getNodeAs("%SignalBus")!!
 
-        signalBus.editor_deleteTech.connect { techW ->
-            technologies.remove(techW.technology)
-        }
+        /* signalBus.editor_deleteTech.connect { techW ->
+             technologies.remove(techW.technology)
+         }*/
 
         loadTechWeb()
     }

@@ -15,7 +15,7 @@ import technology.Science
 class SciencePanel : Control() {
 
     // Globals
-    private lateinit var signalBus: SignalBus
+    private val signalBus: SignalBus by lazy { getNodeAs("/root/Kuiper/SignalBus")!! }
 
     // UI elements
     private lateinit var iconRow: HBoxContainer
@@ -24,8 +24,6 @@ class SciencePanel : Control() {
 
     @RegisterFunction
     override fun _ready() {
-        signalBus = getNodeAs("/root/SignalBus")!!
-
         iconRow = getNodeAs("%SciencePanel")!!
 
         signalBus.updateScience.connect { scienceName, value ->

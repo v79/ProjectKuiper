@@ -24,7 +24,7 @@ class NotificationPanel : VBoxContainer(), LogInterface {
     override var logEnabled: Boolean = true
 
     // Globals
-    private lateinit var signalBus: SignalBus
+    private val signalBus: SignalBus by lazy { getNodeAs("/root/Kuiper/SignalBus")!! }
 
     // Packed scenes
     private val notificationItemScene =
@@ -42,7 +42,6 @@ class NotificationPanel : VBoxContainer(), LogInterface {
 
     @RegisterFunction
     override fun _ready() {
-        signalBus = getNodeAs("/root/SignalBus")!!
 
         signalBus.notify.connect { wrapper ->
             wrapper.notification?.let { notification ->

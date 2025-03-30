@@ -28,11 +28,7 @@ signals = [
 	update_science,
 	update_resource,
 	update_ongoing_action,
-	action_completed,
-	editor_tech_saved,
-	editor_delete_tech,
-	editor_place_hex,
-	editor_clear_hex
+	action_completed
 ]
 properties = [
     

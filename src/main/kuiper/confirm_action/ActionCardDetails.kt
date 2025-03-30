@@ -19,7 +19,7 @@ import state.Building
 class ActionCardDetails : Control() {
 
     // Globals
-    private lateinit var signalBus: SignalBus
+    private val signalBus: SignalBus by lazy { getNodeAs("/root/Kuiper/SignalBus")!! }
 
     @RegisterProperty
     @Export
@@ -39,8 +39,6 @@ class ActionCardDetails : Control() {
 
     @RegisterFunction
     override fun _ready() {
-        signalBus = getNodeAs("/root/SignalBus")!!
-
         signalBus.showActionConfirmation.connect { _, c ->
             updateCard(c)
         }

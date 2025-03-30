@@ -12,7 +12,7 @@ import loaders.DataLoader
 class CardDeck : Node() {
 
     // Globals
-    private lateinit var signalBus: SignalBus
+    private val signalBus: SignalBus by lazy { getNodeAs("/root/Kuiper/SignalBus")!! }
     private lateinit var dataLoader: DataLoader
 
     private val actions: List<Action> by lazy { dataLoader.loadActionsData() }
@@ -21,7 +21,6 @@ class CardDeck : Node() {
     @RegisterFunction
     override fun _ready() {
         dataLoader = getNodeAs("/root/DataLoader")!!
-        signalBus = getNodeAs("/root/SignalBus")!!
         deck.addAll(actions)
         shuffle()
     }

@@ -1,7 +1,6 @@
 package technology.tree
 
 import LogInterface
-import SignalBus
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
@@ -19,9 +18,6 @@ class TechTree : GraphEdit(), LogInterface {
     @Export
     override var logEnabled: Boolean = true
 
-    // Globals
-    private lateinit var signalBus: SignalBus
-
     // Packed scenes
     private val nodeScene =
         ResourceLoader.load("res://src/main/kuiper/technology/tree/technology_node.tscn") as PackedScene
@@ -36,7 +32,6 @@ class TechTree : GraphEdit(), LogInterface {
 
     @RegisterFunction
     override fun _ready() {
-        signalBus = getNodeAs("/root/SignalBus")!!
 
         connectionLayer = getNodeAs("_connection_layer")!!
         summaryPanel = getNodeAs("%TechSummaryPanel")!!

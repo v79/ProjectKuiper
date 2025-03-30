@@ -13,7 +13,9 @@ import state.Building
 @RegisterClass
 class ActionCard : Node2D() {
 
-    private lateinit var signalBus: SignalBus
+    private val signalBus: SignalBus by lazy {
+        getNodeAs("/root/Kuiper/SignalBus")!!
+    }
 
     @RegisterProperty
     @Export
@@ -77,7 +79,6 @@ class ActionCard : Node2D() {
 
     @RegisterFunction
     override fun _ready() {
-        signalBus = getNodeAs("/root/SignalBus")!!
         startPosition = position
         cardNameLabel.text = cardName
 
