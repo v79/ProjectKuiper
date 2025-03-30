@@ -1,15 +1,12 @@
 // THIS FILE IS GENERATED! DO NOT EDIT OR DELETE IT. EDIT OR DELETE THE ASSOCIATED SOURCE CODE FILE INSTEAD
 // Note: You can however freely move this file inside your godot project if you want. Keep in mind however, that if you rename the originating source code file, this file will be deleted and regenerated as a new file instead of being updated! Other modifications to the source file however, will result in this file being updated.
 
-registeredName = Hex
-fqName = hexgrid.Hex
-relativeSourcePath = src/main/kuiper/hexgrid/Hex.kt
-baseType = Node2D
+registeredName = MapEditorSignalBus
+fqName = hexgrid.map.editor.MapEditorSignalBus
+relativeSourcePath = src/main/kuiper/hexgrid/map/editor/MapEditorSignalBus.kt
+baseType = Node
 supertypes = [
-    godot.api.Node2D,
-	LogInterface,
-	godot.api.CanvasItem,
-	godot.api.Node,
+    godot.api.Node,
 	godot.api.Object,
 	godot.core.KtObject,
 	godot.common.interop.NativeWrapper,
@@ -17,22 +14,13 @@ supertypes = [
 	kotlin.Any
 ]
 signals = [
-    
+    editor_place_hex,
+	editor_clear_hex
 ]
 properties = [
-    id,
-	hex_unlocked,
-	new_radius,
-	hex_mode,
-	editor_signal_bus
+    
 ]
 functions = [
     _ready,
-	_process,
-	_draw,
-	highlight,
-	unhighlight,
-	on_mouse_entered,
-	on_mouse_exited,
-	on_gui_input
+	_process
 ]

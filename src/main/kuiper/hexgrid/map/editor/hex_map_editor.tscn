@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://b3lj8ojhudueu"]
+[gd_scene load_steps=6 format=3 uid="uid://b3lj8ojhudueu"]
 
 [ext_resource type="Script" uid="uid://cnjo42sklflyr" path="res://src/main/kuiper/hexgrid/map/editor/SponsorEditor.kt" id="1_dwvxf"]
 [ext_resource type="FontFile" uid="uid://dlm8mcyi0n4ri" path="res://assets/fonts/SpaceGrotesk-Bold.ttf" id="2_aat5g"]
 [ext_resource type="Script" uid="uid://bqj8mswck507g" path="res://src/main/kuiper/hexgrid/map/editor/HexMapGridEditor.kt" id="2_rdfxg"]
+[ext_resource type="Script" uid="uid://nmxb831dfdox" path="res://src/main/kuiper/hexgrid/map/editor/MapEditorSignalBus.kt" id="2_wrjd0"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rdfxg"]
 bg_color = Color(0.0278245, 0.0278245, 0.0278245, 1)
@@ -16,6 +17,9 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
 script = ExtResource("1_dwvxf")
+
+[node name="MapEditorSignalBus" type="Node" parent="."]
+script = ExtResource("2_wrjd0")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1

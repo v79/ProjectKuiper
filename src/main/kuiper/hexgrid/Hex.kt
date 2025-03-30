@@ -8,6 +8,7 @@ import godot.annotation.RegisterProperty
 import godot.api.*
 import godot.core.*
 import godot.extension.getNodeAs
+import hexgrid.map.editor.MapEditorSignalBus
 import state.Location
 import state.SectorStatus
 import kotlin.math.cos
@@ -38,6 +39,10 @@ class Hex : Node2D(), LogInterface {
 
     @RegisterProperty
     var hexMode: HexMode = HexMode.NORMAL
+
+    @RegisterProperty
+    @Export
+    var editorSignalBus: MapEditorSignalBus? = null
 
     // Signal bus - editor signal bus required
 //    private val signalBus: SignalBus by lazy { getNodeAs("/root/Kuiper/SignalBus")!! }
@@ -163,16 +168,19 @@ class Hex : Node2D(), LogInterface {
         }
     }
 
+    /**
+     * This is only relevant in the editor mode.
+     */
     @RegisterFunction
-    fun onInputEvent(viewport: Node, event: InputEvent?, shapeIdx: Int) {
+    fun onGuiInput(viewport: Node, event: InputEvent?, shapeIdx: Int) {
         // check for clicks
         if (hexMode == HexMode.EDITOR) {
             event?.let { e ->
                 if (e.isActionPressed("mouse_left_click".asCachedStringName())) {
-//                    signalBus.editor_placeHex.emit(row, col)
+                    editorSignalBus?.editor_placeHex?.emit(row, col)
                 }
                 if (e.isActionPressed("mouse_right_click".asCachedStringName())) {
-//                    signalBus.editor_clearHex.emit(row, col)
+                    editorSignalBus?.editor_clearHex?.emit(row, col)
                 }
             }
         }

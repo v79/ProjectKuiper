@@ -8,6 +8,7 @@ import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
 import godot.api.*
 import godot.core.Vector2
+import godot.core.Vector2i
 import godot.core.asStringName
 import godot.core.connect
 import godot.extension.getNodeAs
@@ -30,7 +31,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
     var dimension: Int = 6
 
     // Globals
-//    private lateinit var signalBus: SignalBus
+    private val signalBus: MapEditorSignalBus by lazy { getNodeAs("/root/HexMapEditor/MapEditorSignalBus")!! }
 
     // Packed scenes
     private val hexScene = ResourceLoader.load("res://src/main/kuiper/hexgrid/Hex.tscn") as PackedScene
@@ -69,8 +70,6 @@ class HexMapGridEditor : GridContainer(), LogInterface {
 
     @RegisterFunction
     override fun _ready() {
-//        signalBus = getNodeAs("%SignalBus")!!
-
         // load the sponsors
         sponsors = loadSponsors()
         if (sponsors.size > 0) {
@@ -91,30 +90,29 @@ class HexMapGridEditor : GridContainer(), LogInterface {
                 hex.row = i
                 hex.col = j
                 hex.location = Location("location $i,$j")
+                hex.editorSignalBus = signalBus
                 hex.setName("Hex_${i}_$j")
                 hex.colour = godot.core.Color.mediumPurple
                 val locLabel = hex.getNodeAs<Label>("%LocationLabel")!!
                 locLabel.visible = false
-//                locLabel.setText("${vector2.x},${vector2.y}")
-//                locLabel.setPosition(Vector2(-20.0,-20.0))
                 hex.setPosition(data.position)
                 addChild(hex)
             }
         }
 
-        /*      signalBus.editor_placeHex.connect { row, col ->
-                  hexCoordsLbl.text = "($row,$col)"
-                  selectedRow = row
-                  selectedCol = col
-                  phCoordLbl.text = "@$row,$col"
-                  val hex = getNodeAtHex(row, col)
-                  if (hex != null && hex.hexUnlocked) {
-                      phNameEdit.text = hex.location?.name ?: ""
-                      phUnlockedAtStart.buttonPressed = true
-                  }
-                  placeHexPopup.setPosition(getGlobalMousePosition().toVector2i().minus(Vector2i(50.0, 50.0)))
-                  placeHexPopup.visible = true
-              }*/
+        signalBus.editor_placeHex.connect { row, col ->
+            hexCoordsLbl.text = "($row,$col)"
+            selectedRow = row
+            selectedCol = col
+            phCoordLbl.text = "@$row,$col"
+            val hex = getNodeAtHex(row, col)
+            if (hex != null && hex.hexUnlocked) {
+                phNameEdit.text = hex.location?.name ?: ""
+                phUnlockedAtStart.buttonPressed = true
+            }
+            placeHexPopup.setPosition(getGlobalMousePosition().toVector2i().minus(Vector2i(50.0, 50.0)))
+            placeHexPopup.visible = true
+        }
     }
 
     @RegisterFunction
