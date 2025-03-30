@@ -12,6 +12,7 @@ import godot.api.VBoxContainer
 import godot.core.Color
 import godot.core.HorizontalAlignment
 import godot.core.Vector2
+import godot.core.connect
 import godot.extension.getNodeAs
 import technology.Technology
 
@@ -27,7 +28,7 @@ class TechNode : GraphNode(), LogInterface {
     override var logEnabled: Boolean = false
 
     // Globals
-//    private lateinit var signalBus: SignalBus
+    private val signalBus: EditorSignalBus by lazy { getNodeAs("/root/TechWebEditor/EditorSignalBus")!! }
 
     var technology: Technology = Technology.EMPTY
 
@@ -47,20 +48,17 @@ class TechNode : GraphNode(), LogInterface {
 
     @RegisterFunction
     override fun _ready() {
-//        signalBus = getNodeAs("%SignalBus")!!
-
         vBox = getNodeAs("%VBox")!!
         addIncoming = getNodeAs("%AddIncomingBtn")!!
         addOutgoing = getNodeAs("%AddOutgoingBtn")!!
         editor = getNodeAs("%TechEditor")!!
 
-        /* signalBus.editor_techSaved.connect { techW ->
-             if (techW.technology.id == technology.id) {
-                 technology = techW.technology
-                 updateUI()
-             }
-         }*/
-
+        signalBus.editor_techSaved.connect { techW ->
+            if (techW.technology.id == technology.id) {
+                technology = techW.technology
+                updateUI()
+            }
+        }
         updateUI()
     }
 

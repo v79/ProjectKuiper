@@ -21,10 +21,6 @@ class TechEditor : Control(), LogInterface {
 
     var techWrapper: TechWrapper = TechWrapper()
 
-    // Globals
-//    private lateinit var signalBus: SignalBus
-
-
     // UI Elements
     private lateinit var titleEdit: LineEdit
     private lateinit var tierMenu: MenuButton
@@ -50,8 +46,6 @@ class TechEditor : Control(), LogInterface {
 
     @RegisterFunction
     override fun _ready() {
-//        signalBus = getNodeAs("%SignalBus")!!
-
         titleEdit = getNodeAs("%TitleEdit")!!
         tierMenu = getNodeAs("%TierMenu")!!
         descriptionEdit = getNodeAs("%DescriptionEdit")!!
@@ -73,7 +67,6 @@ class TechEditor : Control(), LogInterface {
         engineeringRange = getNodeAs("%EngineeringRange")!!
 
         multiplierEdit = getNodeAs("%MultiplierEdit")!!
-
 
         tierMenu.getPopup()?.idPressed?.connect { id ->
             setTier(id.toInt())

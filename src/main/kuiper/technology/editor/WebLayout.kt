@@ -21,7 +21,7 @@ import kotlin.math.sin
 class WebLayout : GraphEdit(), LogInterface {
 
     // Globals
-//    private lateinit var signalBus: SignalBus
+    private val signalBus: EditorSignalBus by lazy { getNodeAs("/root/TechWebEditor/EditorSignalBus")!! }
 
     @RegisterProperty
     @Export
@@ -56,13 +56,11 @@ class WebLayout : GraphEdit(), LogInterface {
 
     @RegisterFunction
     override fun _ready() {
-//        signalBus = getNodeAs("%SignalBus")!!
-
         connectionLayer = getNodeAs("_connection_layer")!!
 
-        /*   signalBus.editor_deleteTech.connect { techW ->
-               deleteTechnology(techW.technology)
-           }*/
+        signalBus.editor_deleteTech.connect { techW ->
+            deleteTechnology(techW.technology)
+        }
     }
 
     @RegisterFunction

@@ -74,12 +74,6 @@ class SignalBus : Node() {
     val actionCompleted by signal1<ActionWrapper>()
 
     /*// Signals relating to the game editor, eg. technology setup
-    @RegisterSignal("tech_saved")
-    val editor_techSaved by signal1<TechWrapper>()
-
-    @RegisterSignal("delete_tech")
-    val editor_deleteTech by signal1<TechWrapper>()
-
     @RegisterSignal("place_row", "place_col")
     val editor_placeHex by signal2<Int, Int>()
 
