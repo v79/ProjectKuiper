@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://bsbjnlaqqxars"]
+
+[ext_resource type="Script" uid="uid://bqj8mswck507g" path="res://src/main/kuiper/hexgrid/map/editor/HexMapGridEditor.kt" id="1_4g0p0"]
+
+[node name="HexGridContainer" type="GridContainer"]
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_4g0p0")
