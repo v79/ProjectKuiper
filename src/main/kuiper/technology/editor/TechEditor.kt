@@ -19,6 +19,9 @@ class TechEditor : Control(), LogInterface {
     @Export
     override var logEnabled: Boolean = false
 
+    // Globals
+    private val signalBus: EditorSignalBus by lazy { getNodeAs("/root/TechWebEditor/EditorSignalBus")!! }
+
     var techWrapper: TechWrapper = TechWrapper()
 
     // UI Elements
@@ -105,7 +108,7 @@ class TechEditor : Control(), LogInterface {
         techWrapper.technology.setUnlockRange(Science.MATHEMATICS, mathematicsRange.getRange())
         techWrapper.technology.multiplier = multiplierEdit.text.toDoubleOrNull() ?: 1.0
         log(techWrapper.technology.toString())
-//        signalBus.editor_techSaved.emit(techWrapper)
+        signalBus.editor_techSaved.emit(techWrapper)
         visible = false
     }
 
@@ -135,7 +138,7 @@ class TechEditor : Control(), LogInterface {
         logWarning("Deleting technology... ${techWrapper.technology.title}")
         confirmDeletePanel.hide()
         this.hide()
-//        signalBus.editor_deleteTech.emit(techWrapper)
+        signalBus.editor_deleteTech.emit(techWrapper)
     }
 
     @RegisterFunction

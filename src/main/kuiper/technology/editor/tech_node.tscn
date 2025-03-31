@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://dqfp8nh7k2bk2"]
 
-[ext_resource type="Script" path="res://src/main/kuiper/technology/editor/TechNode.kt" id="1_vcrfw"]
+[ext_resource type="Script" uid="uid://cft5ehcwohhc7" path="res://src/main/kuiper/technology/editor/TechNode.kt" id="1_vcrfw"]
 [ext_resource type="PackedScene" uid="uid://buebhw0isnxxj" path="res://src/main/kuiper/technology/editor/tech_editor.tscn" id="2_ni2ko"]
 
 [node name="TechNode" type="GraphNode"]
