@@ -7,10 +7,7 @@ import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
 import godot.api.*
-import godot.core.Vector2
-import godot.core.Vector2i
-import godot.core.asStringName
-import godot.core.connect
+import godot.core.*
 import godot.extension.getNodeAs
 import hexgrid.Hex
 import hexgrid.HexMode
@@ -38,6 +35,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
 
     // UI elements
     private val sponsorNameEdit: LineEdit by lazy { getNodeAs("%SponsorNameEdit")!! }
+    private val sponsorIdLabel: Label by lazy { getNodeAs("%SponsorIdLbl")!! }
     private val sponsorDescEdit: TextEdit by lazy { getNodeAs("%SponsorDescEdit")!! }
     private val sponsorColorPicker: ColorPickerButton by lazy { getNodeAs("%ColorPickerButton")!! }
     private val sponsorStartGold: SpinBox by lazy { getNodeAs("%SponsorStartGoldEdit")!! }
@@ -67,6 +65,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
     private var sponsor: Sponsor? = null
     private var sponsorJsonPath: String = "res://assets/data/sponsors.json"
     private var sponsors: MutableList<Sponsor> = mutableListOf()
+    private var nextSponsorId = 0
 
     @RegisterFunction
     override fun _ready() {
@@ -76,7 +75,10 @@ class HexMapGridEditor : GridContainer(), LogInterface {
             sponsors.forEach { sponsor ->
                 chooseSponsorButton.getPopup()!!.addItem("${sponsor.id} - ${sponsor.name}", sponsor.id)
             }
+            nextSponsorId = sponsors.size
         }
+        sponsorIdLabel.setText(nextSponsorId.toString())
+
         chooseSponsorButton.getPopup()!!.idPressed.connect { id ->
             onSponsorChosen(id.toInt())
         }
@@ -110,7 +112,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
                 phNameEdit.text = hex.location?.name ?: ""
                 phUnlockedAtStart.buttonPressed = true
             }
-            placeHexPopup.setPosition(getGlobalMousePosition().toVector2i().minus(Vector2i(50.0, 50.0)))
+            placeHexPopup.setPosition(getGlobalMousePosition().toVector2i().minus(Vector2i(50.0, 100.0)))
             placeHexPopup.visible = true
         }
     }
@@ -141,6 +143,38 @@ class HexMapGridEditor : GridContainer(), LogInterface {
     }
 
     @RegisterFunction
+    fun onNewSponsorButtonPressed() {
+        log("Creating new sponsor")
+        nextSponsorId++
+        sponsor = Sponsor(
+            id = nextSponsorId,
+            name = "",
+            colour = Color.white,
+            introText = "",
+            startingResources = mapOf(
+                ResourceType.GOLD to 0,
+                ResourceType.INFLUENCE to 0,
+                ResourceType.CONSTRUCTION_MATERIALS to 0
+            ),
+            baseScienceRate = mapOf(
+                Science.PHYSICS to 0.0f,
+                Science.ENGINEERING to 0.0f,
+                Science.BIOCHEMISTRY to 0.0f,
+                Science.MATHEMATICS to 0.0f,
+                Science.ASTRONOMY to 0.0f,
+                Science.PSYCHOLOGY to 0.0f,
+                Science.EUREKA to 0.0f
+            ),
+            startingTechs = emptyList(),
+            hexDimensions = Pair(dimension, dimension),
+            hexGrid = grid
+        )
+        sponsor?.let {
+            updateUI()
+        }
+    }
+
+    @RegisterFunction
     fun onSponsorChosen(id: Int) {
         log("Switching to sponsor $id")
         sponsor = sponsors.find { it.id == id }
@@ -148,8 +182,13 @@ class HexMapGridEditor : GridContainer(), LogInterface {
             logError("Failed to switch to sponsor $id; null returned")
             return
         }
+        updateUI()
+    }
+
+    private fun updateUI() {
         sponsor?.let {
             sponsorNameEdit.setText(it.name)
+            sponsorIdLabel.setText(it.id.toString())
             sponsorDescEdit.setText(it.introText)
             sponsorColorPicker.color = it.colour
             sponsorStartGold.setValue(it.startingResources[ResourceType.GOLD]?.toDouble() ?: 0.0)
@@ -193,7 +232,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
         val startConMats = sponsorStartConMats.getLineEdit()!!.text
 
         val sponsor = Sponsor(
-            id = sponsors.size,
+            id = nextSponsorId,
             name = sponsorName,
             colour = sponsorColorPicker.color,
             introText = sponsorDesc,
@@ -215,6 +254,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
             hexDimensions = Pair(dimension, dimension),
             hexGrid = grid
         )
+        nextSponsorId++
 
         grid.forEachIndexed { i, row ->
             row.forEachIndexed { j, data ->
@@ -231,6 +271,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
                 }
             }
         }
+        logInfo("Sponsor details: $sponsor")
         return sponsor
     }
 
@@ -244,6 +285,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
             allowStructuredMapKeys = true
         }
         sponsors.find { it.id == sponsor.id }?.let {
+            log("Updating existing sponsor ${it.id} ${it.name}")
             it == sponsor
         } ?: sponsors.add(sponsor)
         val sponsorJson = json.encodeToString(ListSerializer(Sponsor.serializer()), sponsors)
@@ -342,6 +384,8 @@ class HexMapGridEditor : GridContainer(), LogInterface {
         hexNode.hexUnlocked = true
         hexNode.zIndex += 1
     }
+
+    private fun resetGridDisplay(): Unit = TODO()
 
     /*  fun axial_to_oddq(hex: Hex) {
           val col = hex.q

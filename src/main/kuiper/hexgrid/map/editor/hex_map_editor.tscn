@@ -92,6 +92,11 @@ layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "name"
 
+[node name="SponsorIdLbl" type="Label" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "<id>"
+
 [node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 20
@@ -320,7 +325,7 @@ size_flags_horizontal = 3
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/margin_bottom = 120
+theme_override_constants/margin_bottom = 20
 
 [node name="HexCoordsLbl" type="Label" parent="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/MarginContainer"]
 unique_name_in_owner = true
@@ -335,7 +340,7 @@ mouse_filter = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
-theme_override_constants/margin_right = 200
+theme_override_constants/margin_right = 100
 
 [node name="HexGridContainer" type="GridContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2"]
 unique_name_in_owner = true
@@ -395,6 +400,7 @@ layout_mode = 2
 text = "Confirm"
 
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/SaveSponsorBtn" to="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2/HexGridContainer" method="on_save_sponsor_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/NewSponsorBtn" to="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2/HexGridContainer" method="on_new_sponsor_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/DeleteSponsorBtn" to="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2/HexGridContainer" method="delete_sponsor"]
 [connection signal="toggled" from="VBoxContainer/HBoxContainer2/PanelContainer2/PlaceHexPopupPanel/VBoxContainer/HBoxContainer2/PHHexUnlocked" to="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2/HexGridContainer" method="on_p_h_unlocked_at_start_toggled"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/PanelContainer2/PlaceHexPopupPanel/VBoxContainer/HBoxContainer/PHCancel" to="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2/HexGridContainer" method="on_cancel_location"]
