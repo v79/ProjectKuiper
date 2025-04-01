@@ -23,7 +23,8 @@ properties = [
     id,
 	hex_unlocked,
 	new_radius,
-	hex_mode
+	hex_mode,
+	editor_signal_bus
 ]
 functions = [
     _ready,
@@ -33,5 +34,5 @@ functions = [
 	unhighlight,
 	on_mouse_entered,
 	on_mouse_exited,
-	on_input_event
+	on_gui_input
 ]

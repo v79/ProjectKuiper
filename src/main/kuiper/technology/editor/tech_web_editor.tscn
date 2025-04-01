@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://p8uxma4wg6l5"]
+[gd_scene load_steps=4 format=3 uid="uid://p8uxma4wg6l5"]
 
 [ext_resource type="Script" uid="uid://dacndy3nby176" path="res://src/main/kuiper/technology/editor/TechWebEditor.kt" id="1_qduao"]
+[ext_resource type="Script" uid="uid://bxgxeqojqxd0h" path="res://src/main/kuiper/technology/editor/EditorSignalBus.kt" id="2_nj37u"]
 [ext_resource type="Script" uid="uid://dd1il2o6pakdm" path="res://src/main/kuiper/technology/editor/WebLayout.kt" id="2_qpoux"]
 
 [node name="TechWebEditor" type="Control"]
@@ -11,6 +12,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_qduao")
+
+[node name="EditorSignalBus" type="Node" parent="."]
+script = ExtResource("2_nj37u")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1

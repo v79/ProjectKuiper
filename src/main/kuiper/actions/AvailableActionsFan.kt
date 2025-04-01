@@ -14,7 +14,7 @@ import godot.global.GD
 class AvailableActionsFan : Node2D() {
 
     // Globals
-    private lateinit var signalBus: SignalBus
+    private val signalBus: SignalBus by lazy { getNodeAs("/root/Kuiper/SignalBus")!! }
 
     private var actionCards: MutableMap<Int, ActionCard> = mutableMapOf()
 
@@ -57,7 +57,6 @@ class AvailableActionsFan : Node2D() {
 
     @RegisterFunction
     override fun _ready() {
-        signalBus = getNodeAs("/root/SignalBus")!!
         fanContainer = getNodeAs("HBoxContainer/FanContainer")!!
         delayTimer = getNodeAs("%DelayActivationTimer")!!
 
@@ -77,7 +76,6 @@ class AvailableActionsFan : Node2D() {
             cancelActionAndPause()
         }
         signalBus.showActionConfirmation.connect { _, c ->
-
             disableCards(c)
         }
     }

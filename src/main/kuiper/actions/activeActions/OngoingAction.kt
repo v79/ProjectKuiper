@@ -15,7 +15,7 @@ import godot.extension.getNodeAs
 class OngoingAction : Node2D() {
 
     // Globals
-    private lateinit var signalBus: SignalBus
+    private val signalBus: SignalBus by lazy { getNodeAs("/root/Kuiper/SignalBus")!! }
 
     // UI elements
     private lateinit var nameLbl: RichTextLabel
@@ -35,7 +35,6 @@ class OngoingAction : Node2D() {
 
     @RegisterFunction
     override fun _ready() {
-        signalBus = getNodeAs("/root/SignalBus")!!
         nameLbl = getNodeAs("%NameLabel")!!
         cardBackground = getNodeAs("%CardBackground")!!
         turnsLbl = getNodeAs("%TurnsLabel")!!
@@ -109,7 +108,6 @@ class OngoingAction : Node2D() {
             }
         }
     }
-
 
     /**
      * Do a fancy animation to show that the action has completed, then delete the panel

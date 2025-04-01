@@ -29,7 +29,7 @@ class ConfirmAction : Control(), LogInterface {
     override var logEnabled: Boolean = false
 
     // Globals
-    private lateinit var signalBus: SignalBus
+    private val signalBus: SignalBus by lazy { getNodeAs("/root/Kuiper/SignalBus")!! }
 
     lateinit var hex: Hex
     lateinit var card: ActionCard
@@ -59,7 +59,6 @@ class ConfirmAction : Control(), LogInterface {
     @RegisterFunction
     override fun _ready() {
         hide()
-        signalBus = getNodeAs("/root/SignalBus")!!
         titleLabel = getNodeAs("%ConfirmActionTitle")!!
         animationPlayer = getNodeAs("AnimationPlayer")!!
         actionCardDetails = getNodeAs("%ActionCardDetails")!!

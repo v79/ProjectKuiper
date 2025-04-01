@@ -29,7 +29,7 @@ class KuiperGame : PanelContainer(), LogInterface {
 
     // Global state
     private lateinit var gameState: GameState
-    private lateinit var signalBus: SignalBus
+    private val signalBus: SignalBus by lazy { getNodeAs("/root/Kuiper/SignalBus")!! }
 
     // Signals - signals need to be valid Variant types https://docs.godotengine.org/en/stable/contributing/development/core_and_modules/variant_class.html
     @RegisterSignal
@@ -69,7 +69,6 @@ class KuiperGame : PanelContainer(), LogInterface {
     @RegisterFunction
     override fun _ready() {
         gameState = getNodeAs("/root/GameState")!!
-        signalBus = getNodeAs("/root/SignalBus")!!
 
         // Get UI elements
         yearLbl = getNodeAs("%Year_lbl")!!

@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dxi8kllwh6e0g"]
 
-[ext_resource type="Script" path="res://src/main/kuiper/science/ResourceDisplay.kt" id="1_8hicj"]
+[ext_resource type="Script" uid="uid://bs5r84ev08aim" path="res://src/main/kuiper/science/ResourceDisplay.kt" id="1_8hicj"]
 
 [node name="ResourceDisplay" type="Control"]
 layout_mode = 3

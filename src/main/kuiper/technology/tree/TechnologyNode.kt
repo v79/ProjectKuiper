@@ -32,7 +32,7 @@ class TechnologyNode : GraphNode(), LogInterface {
     override var logEnabled: Boolean = false
 
     // Globals
-    private lateinit var signalBus: SignalBus
+    private val signalBus: SignalBus by lazy { getNodeAs("/root/Kuiper/SignalBus")!! }
 
     // UI elements
     private lateinit var progressBar: ProgressBar
@@ -52,7 +52,6 @@ class TechnologyNode : GraphNode(), LogInterface {
 
     @RegisterFunction
     override fun _ready() {
-        signalBus = getNodeAs("/root/SignalBus")!!
 
         progressBar = getNodeAs("%ProgressBar")!!
         titleBar = getTitlebarHbox()!!

@@ -1,6 +1,5 @@
 package notifications
 
-import SignalBus
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.api.*
@@ -11,9 +10,6 @@ import godot.extension.getNodeAs
 
 @RegisterClass
 class NotificationItem : Control() {
-
-    // Globals
-    private lateinit var signalBus: SignalBus
 
     // Data
     var notification: Notification? = null
@@ -26,8 +22,6 @@ class NotificationItem : Control() {
 
     @RegisterFunction
     override fun _ready() {
-        signalBus = getNodeAs("/root/SignalBus")!!
-
         animationPlayer = getNodeAs("%AnimationPlayer")!!
         expiryTimer = getNodeAs("%ExpiryTimer")!!
         label = getNodeAs("%RichTextLabel")!!

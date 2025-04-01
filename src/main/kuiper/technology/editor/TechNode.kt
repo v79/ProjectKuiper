@@ -1,7 +1,6 @@
 package technology.editor
 
 import LogInterface
-import SignalBus
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
@@ -29,7 +28,7 @@ class TechNode : GraphNode(), LogInterface {
     override var logEnabled: Boolean = false
 
     // Globals
-    private lateinit var signalBus: SignalBus
+    private val signalBus: EditorSignalBus by lazy { getNodeAs("/root/TechWebEditor/EditorSignalBus")!! }
 
     var technology: Technology = Technology.EMPTY
 
@@ -49,8 +48,6 @@ class TechNode : GraphNode(), LogInterface {
 
     @RegisterFunction
     override fun _ready() {
-        signalBus = getNodeAs("/root/SignalBus")!!
-
         vBox = getNodeAs("%VBox")!!
         addIncoming = getNodeAs("%AddIncomingBtn")!!
         addOutgoing = getNodeAs("%AddOutgoingBtn")!!
@@ -62,7 +59,6 @@ class TechNode : GraphNode(), LogInterface {
                 updateUI()
             }
         }
-
         updateUI()
     }
 

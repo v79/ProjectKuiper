@@ -16,7 +16,7 @@ import state.GameState
 class ResourcePanel : Control() {
 
     // Globals
-    private lateinit var signalBus: SignalBus
+    private val signalBus: SignalBus by lazy { getNodeAs("/root/Kuiper/SignalBus")!! }
     private lateinit var gameState: GameState
 
     // UI elements
@@ -26,7 +26,6 @@ class ResourcePanel : Control() {
 
     @RegisterFunction
     override fun _ready() {
-        signalBus = getNodeAs("/root/SignalBus")!!
         gameState = getNodeAs("/root/GameState")!!
 
         iconRow = getNodeAs("%ResourcePanel")!!

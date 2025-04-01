@@ -1,7 +1,6 @@
 package technology.editor
 
 import LogInterface
-import SignalBus
 import godot.annotation.*
 import godot.api.Control
 import godot.api.FileAccess
@@ -19,7 +18,7 @@ import technology.Technology
 class TechWebEditor : Control(), LogInterface {
 
     // Globals
-    private lateinit var signalBus: SignalBus
+    private val signalBus: EditorSignalBus by lazy { getNodeAs("/root/TechWebEditor/EditorSignalBus")!! }
 
     @RegisterProperty
     @Export
@@ -40,7 +39,6 @@ class TechWebEditor : Control(), LogInterface {
 
     @RegisterFunction
     override fun _ready() {
-        signalBus = getNodeAs("/root/SignalBus")!!
 
         signalBus.editor_deleteTech.connect { techW ->
             technologies.remove(techW.technology)

@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://b3lj8ojhudueu"]
+[gd_scene load_steps=6 format=3 uid="uid://b3lj8ojhudueu"]
 
 [ext_resource type="Script" uid="uid://cnjo42sklflyr" path="res://src/main/kuiper/hexgrid/map/editor/SponsorEditor.kt" id="1_dwvxf"]
 [ext_resource type="FontFile" uid="uid://dlm8mcyi0n4ri" path="res://assets/fonts/SpaceGrotesk-Bold.ttf" id="2_aat5g"]
 [ext_resource type="Script" uid="uid://bqj8mswck507g" path="res://src/main/kuiper/hexgrid/map/editor/HexMapGridEditor.kt" id="2_rdfxg"]
+[ext_resource type="Script" uid="uid://nmxb831dfdox" path="res://src/main/kuiper/hexgrid/map/editor/MapEditorSignalBus.kt" id="2_wrjd0"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rdfxg"]
 bg_color = Color(0.0278245, 0.0278245, 0.0278245, 1)
@@ -16,6 +17,9 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
 script = ExtResource("1_dwvxf")
+
+[node name="MapEditorSignalBus" type="Node" parent="."]
+script = ExtResource("2_wrjd0")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -87,6 +91,11 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "name"
+
+[node name="SponsorIdLbl" type="Label" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "<id>"
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -316,7 +325,7 @@ size_flags_horizontal = 3
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/margin_bottom = 120
+theme_override_constants/margin_bottom = 20
 
 [node name="HexCoordsLbl" type="Label" parent="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/MarginContainer"]
 unique_name_in_owner = true
@@ -331,7 +340,7 @@ mouse_filter = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
-theme_override_constants/margin_right = 200
+theme_override_constants/margin_right = 100
 
 [node name="HexGridContainer" type="GridContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2"]
 unique_name_in_owner = true
@@ -391,6 +400,7 @@ layout_mode = 2
 text = "Confirm"
 
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/SaveSponsorBtn" to="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2/HexGridContainer" method="on_save_sponsor_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/NewSponsorBtn" to="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2/HexGridContainer" method="on_new_sponsor_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/DeleteSponsorBtn" to="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2/HexGridContainer" method="delete_sponsor"]
 [connection signal="toggled" from="VBoxContainer/HBoxContainer2/PanelContainer2/PlaceHexPopupPanel/VBoxContainer/HBoxContainer2/PHHexUnlocked" to="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2/HexGridContainer" method="on_p_h_unlocked_at_start_toggled"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/PanelContainer2/PlaceHexPopupPanel/VBoxContainer/HBoxContainer/PHCancel" to="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2/HexGridContainer" method="on_cancel_location"]

@@ -1,6 +1,5 @@
 package science
 
-import SignalBus
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
@@ -11,9 +10,6 @@ import godot.global.GD
 
 @RegisterClass
 class ResourceDisplay : Control() {
-
-    // Globals
-    private lateinit var signalBus: SignalBus
 
     @RegisterProperty
     @Export
@@ -38,7 +34,6 @@ class ResourceDisplay : Control() {
 
     @RegisterFunction
     override fun _ready() {
-        signalBus = getNodeAs("/root/SignalBus")!!
 
         label = getNodeAs("%RateLabel")!!
         iconTexture = getNodeAs("%ResourceIcon")!!

@@ -1,7 +1,6 @@
 package technology.editor
 
 import LogInterface
-import SignalBus
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
@@ -20,11 +19,10 @@ class TechEditor : Control(), LogInterface {
     @Export
     override var logEnabled: Boolean = false
 
-    var techWrapper: TechWrapper = TechWrapper()
-
     // Globals
-    private lateinit var signalBus: SignalBus
+    private val signalBus: EditorSignalBus by lazy { getNodeAs("/root/TechWebEditor/EditorSignalBus")!! }
 
+    var techWrapper: TechWrapper = TechWrapper()
 
     // UI Elements
     private lateinit var titleEdit: LineEdit
@@ -51,8 +49,6 @@ class TechEditor : Control(), LogInterface {
 
     @RegisterFunction
     override fun _ready() {
-        signalBus = getNodeAs("/root/SignalBus")!!
-
         titleEdit = getNodeAs("%TitleEdit")!!
         tierMenu = getNodeAs("%TierMenu")!!
         descriptionEdit = getNodeAs("%DescriptionEdit")!!
@@ -74,7 +70,6 @@ class TechEditor : Control(), LogInterface {
         engineeringRange = getNodeAs("%EngineeringRange")!!
 
         multiplierEdit = getNodeAs("%MultiplierEdit")!!
-
 
         tierMenu.getPopup()?.idPressed?.connect { id ->
             setTier(id.toInt())
