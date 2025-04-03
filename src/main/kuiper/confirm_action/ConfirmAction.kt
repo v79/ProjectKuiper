@@ -108,7 +108,7 @@ class ConfirmAction : Control(), LogInterface {
                 benefits.let { (perTurn, completion) ->
                     val sBuilder = StringBuilder()
                     if (perTurn != null && perTurn > 0) {
-                        sBuilder.append("$plus $perTurn ${resourceType.displayName} per turn\n")
+                        sBuilder.append("$plus $perTurn ${resourceType.bbCodeIcon(32)} ${resourceType.displayName} per turn\n")
                     }
                     if (completion != null) {
                         if (sBuilder.isNotEmpty()) {
@@ -125,7 +125,7 @@ class ConfirmAction : Control(), LogInterface {
                 val benefit = action.getScienceBenefit(science)
                 if (benefit != null && benefit > 0f) {
                     benefitsList.appendText(
-                        "${science.bbCodeIcon(32)}[b]$benefit ${science.displayName}[/b] per turn\n"
+                        "$plus ${science.bbCodeIcon(32)}[b]$benefit ${science.displayName}[/b] per turn\n"
                     )
                 }
             }/* if (costsPerTurnList.getChildCount() == 0) {
@@ -155,7 +155,7 @@ class ConfirmAction : Control(), LogInterface {
 
                                 building.runningCosts.forEach { (resourceType, amount) ->
                                     costsPerTurnList.appendText(
-                                        "$minus ${resourceType.bbCodeIcon(32)} $amount ${resourceType.displayName} per turn\n"
+                                        "$minus $amount ${resourceType.bbCodeIcon(32)} ${resourceType.displayName} per turn\n"
                                     )
                                 }
                                 building.sciencesProduced.forEach { (science, amount) ->
@@ -164,6 +164,19 @@ class ConfirmAction : Control(), LogInterface {
                                         "${science.bbCodeIcon(32)}[b]$amount ${science.displayName}[/b] per turn\n"
                                     )
                                 }
+                            }
+
+                            is Building.Factory -> {
+                                buildingSummary.appendText("  New ${building.name} at ${hex.location?.name}")
+                                building.runningCosts.forEach { (resourceType, amount) ->
+                                    costsPerTurnList.appendText(
+                                        "$minus $amount ${resourceType.bbCodeIcon(32)} ${resourceType.displayName} per turn\n"
+                                    )
+                                }
+                            }
+
+                            else -> {
+                                logError("Unknown building type: ${building.name}")
                             }
                         }
 

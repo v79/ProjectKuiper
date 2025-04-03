@@ -13,6 +13,7 @@ import godot.core.StringName
 import godot.core.asStringName
 import godot.core.connect
 import godot.extension.getNodeAs
+import godot.global.GD
 import state.Building
 
 @RegisterClass
@@ -55,6 +56,7 @@ class ActionCardDetails : Control() {
                 ActionType.BUILD -> {
                     setThemeVariation("BuildCard".asStringName())
                     sectorSizeLabel.text = building?.sectors.toString()
+                    GD.print("Updating card with building: ${building?.name} and spritePath ${building?.spritePath}")
                     building?.spritePath?.let { sPath ->
                         val texture = ResourceLoader.load(sPath, "Texture2D") as Texture2D
                         iconTexture.setTexture(texture)

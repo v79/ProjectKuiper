@@ -312,6 +312,16 @@ class Company(var name: String) : LogInterface {
                                 resources[runningCost.key] = resources[runningCost.key]!! - runningCost.value
                             }
                         }
+
+                        is Building.Factory -> {
+                            val factory = building.key as Building.Factory
+                            factory.resourceGeneration.forEach { generation ->
+                                resources[generation.key] = resources[generation.key]!! + generation.value
+                            }
+                            factory.runningCosts.forEach { runningCost ->
+                                resources[runningCost.key] = resources[runningCost.key]!! - runningCost.value
+                            }
+                        }
                     }
                 }
             }

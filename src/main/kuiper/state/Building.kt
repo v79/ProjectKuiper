@@ -44,8 +44,7 @@ sealed interface Building {
      * Name, cost, and production rate should be customized
      */
     @Serializable
-    class ScienceLab(
-    ) : Building {
+    class ScienceLab() : Building {
 
         constructor(name: String, description: String, sectors: Int, contiguous: Boolean) : this() {
             this.name = name
@@ -64,6 +63,24 @@ sealed interface Building {
         override var spritePath: String? = "res://assets/textures/buildings/basic_lab.png"
         var labDescription: String = ""
         var sciencesProduced: Map<Science, Float> = mapOf()
+    }
+
+    @Serializable
+    class Factory() : Building {
+        constructor(name: String, description: String, sectors: Int, contiguous: Boolean) : this() {
+            this.name = name
+            this.factoryDescription = description
+            this.sectors = sectors
+            this.sectorsMustBeContiguous = contiguous
+        }
+
+        override var name: String = "Basic Factory"
+        override var sectors: Int = 1
+        override var sectorsMustBeContiguous: Boolean = true
+        override var resourceGeneration: MutableMap<ResourceType, Int> = mutableMapOf()
+        override var runningCosts: MutableMap<ResourceType, Int> = mutableMapOf()
+        override var spritePath: String? = "res://assets/textures/buildings/basic_factory.png"
+        var factoryDescription: String = ""
     }
 
     // I'd really like a fluent API for building construction
