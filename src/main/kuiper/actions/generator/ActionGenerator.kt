@@ -67,7 +67,7 @@ fun main() {
     buildSpaceship.addScienceMutation(Science.ENGINEERING, MutationType.ADD, 5f)
 
     val factory =
-        Building.Factory(name = "Basic Factory", description = "A basic factory", sectors = 1, contiguous = true)
+        Building.Factory(name = "Basic Factory", description = "A basic factory", sectors = 2, contiguous = true)
     val buildFactory = createAction(
         id++, "Build Factory", "Construct a factory to increase your production", 3, ActionType.BUILD
     )
