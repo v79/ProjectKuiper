@@ -74,7 +74,7 @@ class HexGrid : Control() {
     private fun createHex(i: Int, hexData: HexData) {
         val hex = hexScene.instantiateAs<Hex>()!!
         hex.id = i
-        hex.location = hexData.location
+        hex.hexData = hexData
         hex.hexUnlocked = hexData.location.unlocked
         val dropTarget = hex.getNodeAs<HexDropTarget>("%HexDropTarget")!!
         dropTarget.addToGroup("hexDropTargets".asCachedStringName())

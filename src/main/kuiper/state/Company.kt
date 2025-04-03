@@ -42,7 +42,7 @@ class Company(var name: String) : LogInterface {
     val technologies: MutableList<Technology> = mutableListOf()
 
     /**
-     * Zones are areas of the solar system. Each zone has a list of locations
+     * Zones are areas of the solar system. Each zone has a list of HexData objects
      */
     val zones: MutableList<Zone> = mutableListOf()
 

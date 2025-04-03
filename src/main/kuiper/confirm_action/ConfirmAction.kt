@@ -17,6 +17,7 @@ import godot.extension.getNodeAs
 import godot.extension.instantiateAs
 import hexgrid.Hex
 import state.Building
+import state.GameState
 import state.Location
 import technology.Science
 import utils.clearChildren
@@ -26,12 +27,13 @@ class ConfirmAction : Control(), LogInterface {
 
     @RegisterProperty
     @Export
-    override var logEnabled: Boolean = false
+    override var logEnabled: Boolean = true
 
     // Globals
     private val signalBus: SignalBus by lazy { getNodeAs("/root/Kuiper/SignalBus")!! }
+    private val gameState: GameState by lazy { getNodeAs("/root/GameState")!! }
 
-    lateinit var hex: Hex
+    lateinit var hexNode: Hex
     lateinit var card: ActionCard
     lateinit var location: Location
 
@@ -76,9 +78,9 @@ class ConfirmAction : Control(), LogInterface {
         chooseSectorsContainer.visible = false
 
         signalBus.showActionConfirmation.connect { h, c ->
-            hex = h
+            hexNode = h
             card = c
-            location = h.location ?: Location("**Unknown**")
+            location = h.hexData?.location ?: Location("**Unknown**", false)
             updateUI()
         }
     }
@@ -88,7 +90,7 @@ class ConfirmAction : Control(), LogInterface {
         val plus = "[b][color=WEB_GREEN]+[/color][/b]"
         val minus = "[b][color=WEB_MAROON]-[/color][/b]"
         resetUI()
-        renderHex(hex, location)
+        renderHex(hexNode)
         titleLabel.text = "Play ${card.cardName}?"
         card.action?.let { action ->
             actionCardDetails.updateCard(card)
@@ -151,7 +153,7 @@ class ConfirmAction : Control(), LogInterface {
                             }
 
                             is Building.ScienceLab -> {
-                                buildingSummary.appendText("  New ${building.name} at ${hex.location?.name}")
+                                buildingSummary.appendText("  New ${building.name} at ${hexNode.hexData?.location?.name}")
 
                                 building.runningCosts.forEach { (resourceType, amount) ->
                                     costsPerTurnList.appendText(
@@ -167,7 +169,7 @@ class ConfirmAction : Control(), LogInterface {
                             }
 
                             is Building.Factory -> {
-                                buildingSummary.appendText("  New ${building.name} at ${hex.location?.name}")
+                                buildingSummary.appendText("  New ${building.name} at ${hexNode.hexData?.location?.name}")
                                 building.runningCosts.forEach { (resourceType, amount) ->
                                     costsPerTurnList.appendText(
                                         "$minus $amount ${resourceType.bbCodeIcon(32)} ${resourceType.displayName} per turn\n"
@@ -200,13 +202,31 @@ class ConfirmAction : Control(), LogInterface {
 
     /**
      * Render a larger version of the given hexagon
+     * But I actually want to render its neighbours too
      */
-    private fun renderHex(hex: Hex, location: Location) {
+    private fun renderHex(hex: Hex) {
+        log("renderHex: ${hex.hexData?.location?.name}")
+        // find neighbours
+        val neighbours = if (hex.hexData != null) {
+            log(hex.hexData.toString())
+            gameState.company.zones[0].getNeighbors(hex.hexData!!)
+        } else {
+            emptyList()
+        }
+
+        if (neighbours.isEmpty()) {
+            log("No neighbours found for ${hex.hexData?.location?.name}")
+        } else {
+            log("Found ${neighbours.size} neighbours for ${hex.hexData?.location?.name}")
+        }
+        for (neighbour in neighbours) {
+            log("Neighbour: ${neighbour.location.name}")
+        }
+
         hexBoxContainer.clearChildren()
         val hexToRender = hexScene.instantiateAs<Hex>()!!
         // Would be better if I had a deep copy function?
         hexToRender.id = hex.id
-        hexToRender.location = location
         hexToRender.isConfirmationDialog = true
         hexToRender.hexUnlocked = true
         hexToRender.setName("ConfirmHex${hex.id}")
@@ -251,7 +271,7 @@ class ConfirmAction : Control(), LogInterface {
     fun confirmAction() {
         logWarning("ConfirmAction: confirmAction(): Confirming action ${card.cardName}")
         hide()
-        signalBus.confirmAction.emit(hex, ActionWrapper(card.action!!))
+        signalBus.confirmAction.emit(hexNode, ActionWrapper(card.action!!))
     }
 
     @RegisterFunction

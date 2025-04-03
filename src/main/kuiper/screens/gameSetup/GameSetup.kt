@@ -151,7 +151,10 @@ class GameSetup : Node(), LogInterface {
             description = "Your home zone, where your headquarters is located. HQ can be moved in the future."
             sponsor.hexGrid.forEach { row ->
                 row.forEach { data ->
-                    hexes.add(data)
+                    if (data.location.name.isNotEmpty()) {
+                        hexes.add(data)
+                        log("Adding hex ${data.row}, ${data.column} to zone ${id}; location ${data.location.name}")
+                    }
                 }
             }
             // in the sponsor.hexGrid array, find the first element where the location.isUnlockedAtStart is true
