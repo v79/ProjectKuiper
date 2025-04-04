@@ -63,10 +63,10 @@ class Hex : Node2D(), LogInterface {
     private var highlightColor = Color(1.0, 0.8, 0.8, 1.0)
     var colour: Color = unlockedColor
     var isConfirmationDialog: Boolean = false
+    val fillTriangles: BooleanArray = BooleanArray(6) { false }
 
     @RegisterFunction
     override fun _ready() {
-
         if (!hexUnlocked) {
             colour = lockedColor
         }
@@ -109,6 +109,18 @@ class Hex : Node2D(), LogInterface {
             drawLine(
                 p1, p2, colour, 2.0f
             )
+            if (fillTriangles.isNotEmpty()) {
+                if (fillTriangles[i - 1]) {
+                    val fillPolys = PackedVector2Array()
+                    fillPolys.insert(0, Vector2(0.0, 0.0))
+                    fillPolys.insert(1, p1)
+                    fillPolys.insert(2, p2)
+                    drawColoredPolygon(
+                        fillPolys,
+                        colour
+                    )
+                }
+            }
             p1 = p2
             if (drawInternals) {
                 drawLine(
@@ -116,6 +128,15 @@ class Hex : Node2D(), LogInterface {
                 )
             }
         }
+    }
+
+    /**
+     * Translate the hexagon ID to a sector ID
+     * Visually, sector IDs start in the 'top left' triangle and go clockwise
+     * But hex IDs start 3 triangles on (roughly at 4 o'clock) and go clockwise
+     */
+    private fun translateHexIdToSectorId(hexId: Int): Int {
+        return (hexId + 3) % 6
     }
 
     @RegisterFunction
@@ -138,6 +159,11 @@ class Hex : Node2D(), LogInterface {
             }
             queueRedraw()
         }
+    }
+
+    @RegisterFunction
+    fun redraw() {
+        queueRedraw()
     }
 
     /**

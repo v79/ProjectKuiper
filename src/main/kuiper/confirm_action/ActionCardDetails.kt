@@ -14,7 +14,6 @@ import godot.core.Vector2
 import godot.core.asStringName
 import godot.core.connect
 import godot.extension.getNodeAs
-import godot.global.GD
 import hexgrid.Hex
 import state.Building
 
@@ -62,10 +61,16 @@ class ActionCardDetails : Control() {
                 ActionType.BUILD -> {
                     setThemeVariation("BuildCard".asStringName())
                     sectorSizeLabel.text = building?.sectors.toString()
-                    GD.print("Updating card with building: ${building?.name} and spritePath ${building?.spritePath}")
-                    building?.spritePath?.let { sPath ->
-                        val texture = ResourceLoader.load(sPath, "Texture2D") as Texture2D
-                        iconTexture.setTexture(texture)
+                    building?.let { b ->
+                        b.spritePath?.let { sPath ->
+                            val texture = ResourceLoader.load(sPath, "Texture2D") as Texture2D
+                            iconTexture.setTexture(texture)
+                        }
+                        hex.fillTriangles.fill(false)
+                        for (i in 0 until building.sectors) {
+                            hex.fillTriangles[i] = true
+                        }
+                        hex.redraw()
                     }
                 }
 
