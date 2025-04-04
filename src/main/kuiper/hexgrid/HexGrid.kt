@@ -83,13 +83,13 @@ class HexGrid : Control() {
         dropTargets.add(dropTarget)
         hex.marker = dropTarget
         hex.setName("Hex$i")
-        val label = hex.getNodeAs<Label>("%LocationLabel")!!
+//        val label = hex.getNodeAs<Label>("%LocationLabel")!!
         val boxContainer = BoxContainer()
         boxContainer.setName("Hex${i}_BoxContainer")
         boxContainer.addChild(hex)
         boxContainer.setPosition(hexData.position)
-        label.setPosition(Vector2(-20.0, -18.0)) // TODO: center on hex
-        label.text = hexData.location.name
+//        label.setPosition(Vector2(-20.0, -18.0)) // TODO: center on hex
+//        label.text = hexData.location.name
         hexGridContainer.addChild(boxContainer)
         hexes.add(hex)
     }

@@ -22,7 +22,7 @@ signals = [
 properties = [
     id,
 	hex_unlocked,
-	new_radius,
+	hex_radius,
 	hex_mode,
 	editor_signal_bus
 ]

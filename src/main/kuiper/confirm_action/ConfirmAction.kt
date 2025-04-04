@@ -53,6 +53,7 @@ class ConfirmAction : Control(), LogInterface {
     private lateinit var confirmButton: Button
     private lateinit var chooseSectorsContainer: HBoxContainer
 
+
     // Packed scenes
     private val hexScene = ResourceLoader.load("res://src/main/kuiper/hexgrid/Hex.tscn") as PackedScene
 
@@ -83,6 +84,8 @@ class ConfirmAction : Control(), LogInterface {
             location = h.hexData?.location ?: Location("**Unknown**", false)
             updateUI()
         }
+
+
     }
 
     @RegisterFunction
@@ -231,7 +234,7 @@ class ConfirmAction : Control(), LogInterface {
         hexToRender.hexUnlocked = true
         hexToRender.setName("ConfirmHex${hex.id}")
         // hide the location label because I've got better one down below
-        hexToRender.getNodeAs<Label>("LocationLabel")!!.visible = false
+//        hexToRender.getNodeAs<Label>("LocationLabel")!!.visible = false
         // make it big
         hexToRender.scaleMutate {
             x = 2.0

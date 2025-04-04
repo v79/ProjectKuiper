@@ -36,7 +36,7 @@ class Hex : Node2D(), LogInterface {
 
     @Export
     @RegisterProperty
-    var newRadius: Double = 75.0
+    var hexRadius: Double = 75.0
 
     @RegisterProperty
     var hexMode: HexMode = HexMode.NORMAL
@@ -45,12 +45,7 @@ class Hex : Node2D(), LogInterface {
     @Export
     var editorSignalBus: MapEditorSignalBus? = null
 
-    // Signal bus - editor signal bus required
-//    private val signalBus: SignalBus by lazy { getNodeAs("/root/Kuiper/SignalBus")!! }
-
     // UI elements
-    private val locationLabel: Label by lazy { getNodeAs("%LocationLabel")!! }
-    private val area2D: Area2D by lazy { getNodeAs<Area2D>("%Area2D")!! }
     private val collisionShape2D: CollisionPolygon2D by lazy { getNodeAs("%CollisionShape2D")!! }
     lateinit var marker: HexDropTarget
     var hexData: HexData? = null
@@ -75,7 +70,7 @@ class Hex : Node2D(), LogInterface {
         if (!hexUnlocked) {
             colour = lockedColor
         }
-        pointSet = calculateVerticesForHex(radius = newRadius.toFloat())
+        pointSet = calculateVerticesForHex(radius = hexRadius.toFloat())
         val packedArray = PackedVector2Array(
             pointSet.values.flatMap { listOf(it.first, it.second) }.distinct().toVariantArray()
         )
@@ -108,9 +103,9 @@ class Hex : Node2D(), LogInterface {
         val drawInternals = true
         val a = 2 * Math.PI / 6
 
-        var p1 = Vector2(newRadius, 0.0)
+        var p1 = Vector2(hexRadius, 0.0)
         for (i in 1..6) {
-            val p2 = Vector2(newRadius * cos(a * i), newRadius * sin(a * i))
+            val p2 = Vector2(hexRadius * cos(a * i), hexRadius * sin(a * i))
             drawLine(
                 p1, p2, colour, 2.0f
             )
@@ -125,20 +120,24 @@ class Hex : Node2D(), LogInterface {
 
     @RegisterFunction
     fun highlight() {
-        colour = highlightColor
-        if (hexMode == HexMode.EDITOR) {
-            zIndex += 1
+        if (hexMode != HexMode.CARD) {
+            colour = highlightColor
+            if (hexMode == HexMode.EDITOR) {
+                zIndex += 1
+            }
+            queueRedraw()
         }
-        queueRedraw()
     }
 
     @RegisterFunction
     fun unhighlight() {
-        colour = if (hexUnlocked) unlockedColor else lockedColor
-        if (hexMode == HexMode.EDITOR) {
-            zIndex -= 1
+        if (hexMode != HexMode.CARD) {
+            colour = if (hexUnlocked) unlockedColor else lockedColor
+            if (hexMode == HexMode.EDITOR) {
+                zIndex -= 1
+            }
+            queueRedraw()
         }
-        queueRedraw()
     }
 
     /**
@@ -196,6 +195,7 @@ class Hex : Node2D(), LogInterface {
  */
 enum class HexMode {
     NORMAL,
-    EDITOR
+    EDITOR,
+    CARD
 }
 
