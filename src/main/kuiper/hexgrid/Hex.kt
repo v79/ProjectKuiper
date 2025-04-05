@@ -130,15 +130,6 @@ class Hex : Node2D(), LogInterface {
         }
     }
 
-    /**
-     * Translate the hexagon ID to a sector ID
-     * Visually, sector IDs start in the 'top left' triangle and go clockwise
-     * But hex IDs start 3 triangles on (roughly at 4 o'clock) and go clockwise
-     */
-    private fun translateHexIdToSectorId(hexId: Int): Int {
-        return (hexId + 3) % 6
-    }
-
     @RegisterFunction
     fun highlight() {
         if (hexMode != HexMode.CARD) {

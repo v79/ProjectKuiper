@@ -11,6 +11,7 @@ import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
 import godot.api.*
+import godot.core.Color
 import godot.core.asStringName
 import godot.core.connect
 import godot.extension.getNodeAs
@@ -21,6 +22,7 @@ import state.GameState
 import state.Location
 import technology.Science
 import utils.clearChildren
+import kotlin.math.sqrt
 
 @RegisterClass
 class ConfirmAction : Control(), LogInterface {
@@ -82,6 +84,8 @@ class ConfirmAction : Control(), LogInterface {
             hexNode = h
             card = c
             location = h.hexData?.location ?: Location("**Unknown**", false)
+            hexNode.row = h.hexData?.row ?: -1
+            hexNode.col = h.hexData?.column ?: -1
             updateUI()
         }
 
@@ -133,12 +137,7 @@ class ConfirmAction : Control(), LogInterface {
                         "$plus ${science.bbCodeIcon(32)}[b]$benefit ${science.displayName}[/b] per turn\n"
                     )
                 }
-            }/* if (costsPerTurnList.getChildCount() == 0) {
-                 val costLabel = Label()
-                 costLabel.setName("CostLabel_NONE")
-                 costLabel.text = "  -- None --" // Would be nice if this were in italics
-                 costsPerTurnList.addChild(costLabel)
-             }*/
+            }
             if (action.type == ActionType.BUILD) {
                 if (action.buildingToConstruct == null) {
                     logError("A build action must have a building to construct: ${action.id}->${action.actionName}")
@@ -209,6 +208,7 @@ class ConfirmAction : Control(), LogInterface {
      */
     private fun renderHex(hex: Hex) {
         log("renderHex: ${hex.hexData?.location?.name}")
+        val scaleFactor = 2.0
         // find neighbours
         val neighbours = if (hex.hexData != null) {
             log(hex.hexData.toString())
@@ -223,29 +223,74 @@ class ConfirmAction : Control(), LogInterface {
             log("Found ${neighbours.size} neighbours for ${hex.hexData?.location?.name}")
         }
         for (neighbour in neighbours) {
-            log("Neighbour: ${neighbour.location.name}")
+            log("Neighbour: ${neighbour.location.name} at c${neighbour.column},r${neighbour.row}")
         }
 
-        hexBoxContainer.clearChildren()
-        val hexToRender = hexScene.instantiateAs<Hex>()!!
+        val mainHex = hexScene.instantiateAs<Hex>()!!
         // Would be better if I had a deep copy function?
-        hexToRender.id = hex.id
-        hexToRender.isConfirmationDialog = true
-        hexToRender.hexUnlocked = true
-        hexToRender.setName("ConfirmHex${hex.id}")
-        // hide the location label because I've got better one down below
-//        hexToRender.getNodeAs<Label>("LocationLabel")!!.visible = false
+        mainHex.id = hex.id
+        mainHex.hexData = hex.hexData
+        mainHex.isConfirmationDialog = true
+        mainHex.hexUnlocked = true
+        mainHex.col = hex.col
+        mainHex.row = hex.row
+        mainHex.setName("ConfirmHex${hex.id}")
         // make it big
-        hexToRender.scaleMutate {
-            x = 2.0
-            y = 2.0
+        mainHex.scaleMutate {
+            x = scaleFactor
+            y = scaleFactor
         }
         val boxContainer = BoxContainer()
         boxContainer.setName("ConfirmHex_BoxContainer")
         boxContainer.setMouseFilter(Control.MouseFilter.MOUSE_FILTER_PASS)
-        boxContainer.addChild(hexToRender)
+
         hexBoxContainer.addChild(boxContainer)
         hexLocationLabel.text = location.name
+
+        val height = sqrt(3.0) * hex.hexRadius
+        val horizDistance = 3.0 / 2.0 * hex.hexRadius
+        // How on earth do I get the neighbours to render in the right place?
+        neighbours.forEachIndexed { index, neighbour ->
+            val neighbourHex = hexScene.instantiateAs<Hex>()!!
+            val neighbourPosition = mainHex.position
+            if (neighbour.column < mainHex.col) {
+                neighbourPosition.x = mainHex.position.x - horizDistance
+            }
+            if (neighbour.column > mainHex.col) {
+                neighbourPosition.x = mainHex.position.x + horizDistance
+            }
+            if (neighbour.row < mainHex.row) {
+                neighbourPosition.y = mainHex.position.y - (height / 2.0)
+            }
+            if (neighbour.row > mainHex.row) {
+                neighbourPosition.y = mainHex.position.y + (height / 2.0)
+            }
+            if (neighbour.row == mainHex.row) {
+                neighbourPosition.y += (height / 2.0)
+            }
+            if (neighbour.column == mainHex.col) {
+                neighbourPosition.x += horizDistance
+            }
+            // and recale
+            neighbourPosition.x *= scaleFactor
+            neighbourPosition.y *= scaleFactor
+
+            neighbourHex.colour = Color.dimGray
+            neighbourHex.id = index
+            neighbourHex.hexData = neighbour
+            neighbourHex.isConfirmationDialog = true
+            neighbourHex.hexUnlocked = true
+            neighbourHex.setPosition(neighbourPosition)
+            neighbourHex.setName("${neighbour.location.name.replace(' ', '_')}_${index}")
+            // make it big
+            neighbourHex.scaleMutate {
+                x = scaleFactor
+                y = scaleFactor
+            }
+            neighbourHex.setPosition(neighbourPosition)
+            boxContainer.addChild(neighbourHex)
+        }
+        boxContainer.addChild(mainHex)
     }
 
     @RegisterFunction
@@ -258,6 +303,7 @@ class ConfirmAction : Control(), LogInterface {
         buildingHeading.visible = false
         sectorCountLabel.clear()
         sectorCountLabel.visible = false
+        hexBoxContainer.clearChildren()
     }
 
     @RegisterFunction

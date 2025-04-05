@@ -9,10 +9,7 @@ import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
 import godot.api.*
-import godot.core.StringName
-import godot.core.Vector2
-import godot.core.asStringName
-import godot.core.connect
+import godot.core.*
 import godot.extension.getNodeAs
 import hexgrid.Hex
 import state.Building
@@ -67,6 +64,7 @@ class ActionCardDetails : Control() {
                             iconTexture.setTexture(texture)
                         }
                         hex.fillTriangles.fill(false)
+                        hex.colour = Color.green
                         for (i in 0 until building.sectors) {
                             hex.fillTriangles[i] = true
                         }

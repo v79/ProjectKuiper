@@ -98,24 +98,24 @@ class HexMapGridEditor : GridContainer(), LogInterface {
             row.forEachIndexed { j, data ->
                 val hex = hexScene.instantiate() as Hex
                 hex.hexMode = HexMode.EDITOR
-                hex.row = i
-                hex.col = j
+                hex.row = j
+                hex.col = i
                 hex.hexData = data
                 hex.editorSignalBus = signalBus
-                hex.setName("Hex_${i}_$j")
-                hex.colour = godot.core.Color.mediumPurple
-                val locLabel = hex.getNodeAs<Label>("%LocationLabel")!!
-                locLabel.visible = false
+                hex.setName("Hex_${j}_$i")
+                hex.colour = Color.mediumPurple
+//                val locLabel = hex.getNodeAs<Label>("%LocationLabel")!!
+//                locLabel.visible = false
                 hex.setPosition(data.position)
                 addChild(hex)
             }
         }
 
         signalBus.editor_placeHex.connect { row, col ->
-            hexCoordsLbl.text = "($row,$col)"
+            hexCoordsLbl.text = "(c$col,r$row)"
             selectedRow = row
             selectedCol = col
-            phCoordLbl.text = "@$row,$col"
+            phCoordLbl.text = "@c$col,r$row"
             val hex = getNodeAtHex(row, col)
             if (hex != null && hex.hexUnlocked) {
                 phNameEdit.text = hex.hexData?.location?.name ?: ""
@@ -387,10 +387,10 @@ class HexMapGridEditor : GridContainer(), LogInterface {
         val location = Location(name, phUnlockedAtStart.buttonPressed)
         data.location = location
         hexNode.hexData = data
-        val locLabel = hexNode.getNodeAs<Label>("%LocationLabel")!!
-        locLabel.text = name
-        locLabel.visible = true
-        locLabel.setPosition(Vector2(-20.0, -20.0))
+//        val locLabel = hexNode.getNodeAs<Label>("%LocationLabel")!!
+//        locLabel.text = name
+//        locLabel.visible = true
+//        locLabel.setPosition(Vector2(-20.0, -20.0))
         placeHexPopup.visible = false
         selectedCol = -1
         selectedRow = -1
@@ -418,9 +418,9 @@ class HexMapGridEditor : GridContainer(), LogInterface {
      * Get the hex at the given row and column
      */
     private fun getNodeAtHex(row: Int, col: Int): Hex? {
-        val node = getNodeAs("Hex_${row}_$col".asStringName()) as Hex?
+        val node = getNodeAs("Hex_${col}_$row".asStringName()) as Hex?
         if (node == null) {
-            logError("Hex not found at $row $col")
+            logError("Hex not found at c$col,r$row")
         }
         return node
     }

@@ -32,7 +32,6 @@ class Zone(val id: Int, val name: String, var active: Boolean = false) : LogInte
             if (h.row == hexData.row && h.column == hexData.column) {
                 continue
             }
-//            if (h.location.unlocked) {
             val dx = h.row - hexData.row
             val dy = h.column - hexData.column
             if (dx * dx + dy * dy == 1) {
@@ -41,7 +40,6 @@ class Zone(val id: Int, val name: String, var active: Boolean = false) : LogInte
                     neighbors.add(neighborHex)
                 }
             }
-//            }
         }
         return neighbors
     }
