@@ -51,7 +51,6 @@ class ConfirmAction : Control(), LogInterface {
     private lateinit var buildingSummary: RichTextLabel
     private lateinit var sectorCountLabel: RichTextLabel
     private lateinit var hexBoxContainer: CenterContainer
-    private lateinit var hexLocationLabel: Label
     private lateinit var confirmButton: Button
     private lateinit var chooseSectorsContainer: HBoxContainer
 
@@ -73,7 +72,6 @@ class ConfirmAction : Control(), LogInterface {
         buildingsList = getNodeAs("%BuildingList")!!
         buildingHeading = getNodeAs("%Building_")!!
         hexBoxContainer = getNodeAs("%HexBoxContainer")!!
-        hexLocationLabel = getNodeAs("%HexLocationLabel")!!
         confirmButton = getNodeAs("%ConfirmButton")!!
         buildingSummary = getNodeAs("%BuildingSummary_")!!
         sectorCountLabel = getNodeAs("%SectorCountLabel_")!!
@@ -98,7 +96,7 @@ class ConfirmAction : Control(), LogInterface {
         val minus = "[b][color=WEB_MAROON]-[/color][/b]"
         resetUI()
         renderHex(hexNode)
-        titleLabel.text = "Play ${card.cardName}?"
+        titleLabel.text = "Play ${card.cardName} at ${hexNode.hexData?.location?.name}?"
         card.action?.let { action ->
             actionCardDetails.updateCard(card)
             action.initialCosts.forEach { (resourceType, amount) ->
@@ -245,7 +243,6 @@ class ConfirmAction : Control(), LogInterface {
         boxContainer.setMouseFilter(Control.MouseFilter.MOUSE_FILTER_PASS)
 
         hexBoxContainer.addChild(boxContainer)
-        hexLocationLabel.text = location.name
 
         val height = sqrt(3.0) * hex.hexRadius
         val horizDistance = 3.0 / 2.0 * hex.hexRadius

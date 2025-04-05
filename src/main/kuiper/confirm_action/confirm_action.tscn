@@ -194,12 +194,6 @@ theme_override_constants/margin_bottom = 10
 clip_contents = true
 layout_mode = 2
 
-[node name="HexLocationLabel" type="Label" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/HexSectorContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "<location>"
-horizontal_alignment = 1
-
 [node name="MarginContainer2" type="MarginContainer" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/HexSectorContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_bottom = 80
