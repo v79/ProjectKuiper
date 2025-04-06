@@ -25,6 +25,7 @@ properties = [
 functions = [
     _ready,
 	update_u_i,
+	place_building,
 	reset_u_i,
 	_process,
 	fade_in,

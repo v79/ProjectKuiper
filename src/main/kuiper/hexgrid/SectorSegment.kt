@@ -1,13 +1,11 @@
 package hexgrid
 
 import LogInterface
+import SignalBus
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.api.*
-import godot.core.Color
-import godot.core.PackedVector2Array
-import godot.core.Vector2
-import godot.core.asCachedStringName
+import godot.core.*
 import godot.extension.getNodeAs
 import state.Building
 import state.Location
@@ -21,6 +19,9 @@ class SectorSegment : Polygon2D(), LogInterface {
 
     override var logEnabled = true
 
+    // Globals
+    private val signalBus: SignalBus by lazy { getNodeAs("/root/Kuiper/SignalBus")!! }
+
     // UI elements
     private lateinit var collisionPolygon: CollisionPolygon2D
     private lateinit var sprite2D: Sprite2D
@@ -31,15 +32,33 @@ class SectorSegment : Polygon2D(), LogInterface {
     var isConfirmationDialog: Boolean = false
     var location: Location? = null
     var status: SectorStatus = SectorStatus.EMPTY
+    var selectedForBuilding: Boolean = false
+    private var buildingPlaced: Boolean = false
     private var selected: Boolean = false
     private val emptyColor = Color(0.2, 0.2, 0.2, 0.2)
     private var currentColor: Color = emptyColor
     private var baseColor: Color = emptyColor
 
+
     @RegisterFunction
     override fun _ready() {
         area2D = getNodeAs("Area2D")!!
         sprite2D = getNodeAs("%Sprite2D")!!
+
+        signalBus.placeBuilding.connect { id, locName ->
+            if (isConfirmationDialog) {
+                if (sectorId == id && location?.name == locName) {
+                        placeBuilding()
+                }
+            }
+        }
+        signalBus.clearBuilding.connect { id, locName ->
+            if (isConfirmationDialog) {
+                if (sectorId == id && location?.name == locName) {
+                    clearBuilding()
+                }
+            }
+        }
     }
 
     @RegisterFunction
@@ -83,23 +102,21 @@ class SectorSegment : Polygon2D(), LogInterface {
 
     @RegisterFunction
     fun _on_area_2d_input_event(viewport: Node, event: InputEvent?, shapeIdx: Int) {
-        // check for clicks
         event?.let { e ->
             if (e.isActionPressed("mouse_left_click".asCachedStringName())) {
+                logWarning("lc: buildingPlaced is currently: $buildingPlaced")
                 if (isConfirmationDialog) {
-                    baseColor = currentColor
-                    selected = !selected
-                    color = if (selected) {
-                        Color.red
-                    } else {
-                        baseColor
+                    if (!buildingPlaced) {
+                        signalBus.segmentClicked.emit(sectorId, true)
+                        buildingPlaced = true
                     }
                 }
             }
             if (e.isActionPressed("mouse_right_click".asCachedStringName())) {
+                logWarning("rc: buildingPlaced is currently: $buildingPlaced")
                 if (isConfirmationDialog) {
-                    selected = false
-                    color = baseColor
+                    signalBus.segmentClicked.emit(sectorId, false)
+                    buildingPlaced = false
                 }
             }
         }
@@ -110,10 +127,43 @@ class SectorSegment : Polygon2D(), LogInterface {
         if (location == null) {
             return
         } else if (location!!.unlocked && isConfirmationDialog) {
-            log("Mouse entered location '${location!!.name}' sector $sectorId")
+//            log("Mouse entered location '${location!!.name}' sector $sectorId")
             // show tooltip
         }
 
+    }
+
+    @RegisterFunction
+    fun placeBuilding() {
+        color = baseColor
+        when (status) {
+            SectorStatus.EMPTY -> {
+                color = Color.gold
+            }
+
+            SectorStatus.CONSTRUCTING -> {
+                color = Color.red
+            }
+
+            SectorStatus.DESTROYED -> {
+                color = Color.gold
+            }
+
+            SectorStatus.BUILT -> {
+                color = Color.red
+            }
+        }
+        buildingPlaced = true
+    }
+
+    @RegisterFunction
+    fun clearBuilding() {
+        color = if (status == SectorStatus.BUILT) {
+            Color(1.0, 1.0, 1.0, 1.0)
+        } else {
+            baseColor
+        }
+        buildingPlaced = false
     }
 
     @RegisterFunction

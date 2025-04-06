@@ -2,10 +2,7 @@ package confirm_action
 
 import LogInterface
 import SignalBus
-import actions.ActionCard
-import actions.ActionType
-import actions.ActionWrapper
-import actions.ResourceType
+import actions.*
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
@@ -35,10 +32,6 @@ class ConfirmAction : Control(), LogInterface {
     private val signalBus: SignalBus by lazy { getNodeAs("/root/Kuiper/SignalBus")!! }
     private val gameState: GameState by lazy { getNodeAs("/root/GameState")!! }
 
-    lateinit var hexNode: Hex
-    lateinit var card: ActionCard
-    lateinit var location: Location
-
     // UI elements
     private lateinit var titleLabel: Label
     private lateinit var animationPlayer: AnimationPlayer
@@ -52,13 +45,21 @@ class ConfirmAction : Control(), LogInterface {
     private lateinit var sectorCountLabel: RichTextLabel
     private lateinit var hexBoxContainer: CenterContainer
     private lateinit var confirmButton: Button
+    private lateinit var confirmSectorButton: Button
     private lateinit var chooseSectorsContainer: HBoxContainer
+    private lateinit var placementMessage: RichTextLabel
 
 
     // Packed scenes
     private val hexScene = ResourceLoader.load("res://src/main/kuiper/hexgrid/Hex.tscn") as PackedScene
 
+    // Data
+    lateinit var hexNode: Hex
+    lateinit var card: ActionCard
+    lateinit var location: Location
+    private var action: Action? = null
     private var confirmEnabled = true
+    private var placementStatus: BuildingPlacementStatus = BuildingPlacementStatus.NONE
 
     @RegisterFunction
     override fun _ready() {
@@ -76,6 +77,10 @@ class ConfirmAction : Control(), LogInterface {
         buildingSummary = getNodeAs("%BuildingSummary_")!!
         sectorCountLabel = getNodeAs("%SectorCountLabel_")!!
         chooseSectorsContainer = getNodeAs("%ConfirmSectorContainer")!!
+        placementMessage = getNodeAs("%PlacementMessage")!!
+        confirmSectorButton = getNodeAs("%ConfirmSectorButton")!!
+        confirmSectorButton.disabled = true
+        placementMessage.text = ""
         chooseSectorsContainer.visible = false
 
         signalBus.showActionConfirmation.connect { h, c ->
@@ -87,6 +92,9 @@ class ConfirmAction : Control(), LogInterface {
             updateUI()
         }
 
+        signalBus.segmentClicked.connect { segmentId, leftMouse ->
+            placeBuilding(segmentId, leftMouse)
+        }
 
     }
 
@@ -97,21 +105,22 @@ class ConfirmAction : Control(), LogInterface {
         resetUI()
         renderHex(hexNode)
         titleLabel.text = "Play ${card.cardName} at ${hexNode.hexData?.location?.name}?"
-        card.action?.let { action ->
+        action = card.action
+        action?.let { act ->
             actionCardDetails.updateCard(card)
-            action.initialCosts.forEach { (resourceType, amount) ->
+            act.initialCosts.forEach { (resourceType, amount) ->
                 costsList.appendText(minus)
                 costsList.appendText(resourceType.bbCodeIcon(32))
                 costsList.appendText("$amount [b]${resourceType.displayName}[b]\n")
             }
             ResourceType.entries.forEach { resourceType ->
-                val cost = action.getCost(resourceType)
+                val cost = act.getCost(resourceType)
                 if (cost.second != null) {
                     costsPerTurnList.appendText(minus)
                     costsPerTurnList.appendText(resourceType.bbCodeIcon(32))
                     costsPerTurnList.appendText("${cost.second} ${resourceType.displayName}\n")
                 }
-                val benefits = action.getBenefits(resourceType)
+                val benefits = act.getBenefits(resourceType)
                 benefits.let { (perTurn, completion) ->
                     val sBuilder = StringBuilder()
                     if (perTurn != null && perTurn > 0) {
@@ -129,26 +138,26 @@ class ConfirmAction : Control(), LogInterface {
                 }
             }
             Science.entries.forEach { science ->
-                val benefit = action.getScienceBenefit(science)
+                val benefit = act.getScienceBenefit(science)
                 if (benefit != null && benefit > 0f) {
                     benefitsList.appendText(
                         "$plus ${science.bbCodeIcon(32)}[b]$benefit ${science.displayName}[/b] per turn\n"
                     )
                 }
             }
-            if (action.type == ActionType.BUILD) {
-                if (action.buildingToConstruct == null) {
-                    logError("A build action must have a building to construct: ${action.id}->${action.actionName}")
+            if (act.type == ActionType.BUILD) {
+                if (act.buildingToConstruct == null) {
+                    logError("A build action must have a building to construct: ${act.id}->${act.actionName}")
                 } else {
                     // Valid building, so show the building details
                     confirmEnabled = false
                     chooseSectorsContainer.visible = true
                     buildingSummary.visible = true
 
-                    action.buildingToConstruct?.let b@{ building ->
+                    act.buildingToConstruct?.let b@{ building ->
                         when (building) {
                             is Building.HQ -> {
-                                logError("Cannot build an HQ, should already exist! ${action.id}->${action.actionName}")
+                                logError("Cannot build an HQ, should already exist! ${act.id}->${act.actionName}")
                                 return@b
                             }
 
@@ -201,6 +210,84 @@ class ConfirmAction : Control(), LogInterface {
     }
 
     /**
+     * Attempt to place the building on the SectorSegment
+     * @param segmentId the id of the segment to place the building on. If the building has multiple segments, then this is the first
+     * @param leftMouse true if the left mouse button was clicked, false if the right mouse button was clicked: left for place, right for clear
+     * Updates [placementStatus]
+     * Emits [SignalBus.placeBuilding] if the left mouse button was clicked
+     * Emits [SignalBus.clearBuilding] if the right mouse button was clicked
+     * Disables the confirm button if the building cannot be placed
+     */
+    @RegisterFunction
+    fun placeBuilding(segmentId: Int, leftMouse: Boolean) {
+        if (action != null) {
+            action?.let {
+                if (it.type == ActionType.BUILD) {
+                    it.buildingToConstruct?.let { building ->
+                        val segmentCount = building.sectors
+                        var segmentToHighlight = segmentId
+                        val placementSegments = mutableListOf<Int>()
+                        if (leftMouse) {
+                            if (placementStatus == BuildingPlacementStatus.NONE) {
+                                for (i in 0 until segmentCount) {
+                                    signalBus.placeBuilding.emit(segmentToHighlight, location.name)
+                                    placementSegments.add(segmentToHighlight)
+                                    segmentToHighlight++
+                                    if (segmentToHighlight == 6) {
+                                        segmentToHighlight = 0
+                                    }
+                                }
+                            }
+                        } else {
+                            // Just clear everything
+                            for (i in 0 until 6) {
+                                signalBus.clearBuilding.emit(i, location.name)
+                                placementSegments.clear()
+                            }
+                        }
+                        // Now check if the building is valid
+                        if (leftMouse) {
+                            if (placementStatus == BuildingPlacementStatus.NONE) {
+                                placementStatus = gameState.company.zones[0].checkBuildingPlacement(
+                                    hexNode.hexData!!,
+                                    building,
+                                    placementSegments.toList()
+                                )
+                            }
+                            when (placementStatus) {
+                                BuildingPlacementStatus.OK, BuildingPlacementStatus.NONE -> {
+                                    placementMessage.text = ""
+                                    confirmSectorButton.disabled = false
+                                }
+
+                                BuildingPlacementStatus.BLOCKED -> {
+                                    placementMessage.text =
+                                        "[color=yellow]Building this here will require destroying existing buildings, which will cost an additional +1 ${
+                                            ResourceType.INFLUENCE.bbCodeIcon(32)
+                                        } and take +1 turns to complete.[/color]"
+                                    confirmSectorButton.disabled = false
+                                }
+
+                                BuildingPlacementStatus.INVALID -> {
+                                    placementMessage.text =
+                                        "[color=red]Cannot place building here as it would require destroying the HQ.[/color]"
+                                    confirmSectorButton.disabled = true
+                                }
+                            }
+                        } else {
+                            placementStatus = BuildingPlacementStatus.NONE
+                            placementMessage.text = ""
+                            confirmSectorButton.disabled = true
+                        }
+                    }
+                }
+            }
+        }
+
+
+    }
+
+    /**
      * Render a larger version of the given hexagon
      * But I actually want to render its neighbours too
      */
@@ -217,15 +304,17 @@ class ConfirmAction : Control(), LogInterface {
 
         if (neighbours.isEmpty()) {
             log("No neighbours found for ${hex.hexData?.location?.name}")
-        } else {
-            log("Found ${neighbours.size} neighbours for ${hex.hexData?.location?.name}")
-        }
-        for (neighbour in neighbours) {
-            log("Neighbour: ${neighbour.location.name} at c${neighbour.column},r${neighbour.row}")
         }
 
         val mainHex = hexScene.instantiateAs<Hex>()!!
-        // Would be better if I had a deep copy function?
+        // I need to get information from the confirm action dialogue to the hex, and hence to the sector segment
+        // I need:
+        // 1. The building size (sector count)
+        // 2. The building type
+        // 3. The building sprite
+        // And in return I need to know:
+        // 1. If the sector is occupied, and with what
+
         mainHex.id = hex.id
         mainHex.hexData = hex.hexData
         mainHex.isConfirmationDialog = true
@@ -331,4 +420,15 @@ class ConfirmAction : Control(), LogInterface {
         confirmButton.disabled = false
     }
 
+}
+
+/**
+ * Status of the attempt to place the building
+ * Only INVALID is an error. BLOCKED is a warning, and OK is success
+ */
+enum class BuildingPlacementStatus {
+    OK,
+    BLOCKED,
+    INVALID,
+    NONE
 }

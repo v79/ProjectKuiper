@@ -49,6 +49,15 @@ class SignalBus : Node() {
     @RegisterSignal("hex", "action")
     val confirmAction by signal2<Hex, ActionWrapper>()
 
+    @RegisterSignal("segmentId", "leftClick") // leftClick is true for left click, false for right click
+    val segmentClicked by signal2<Int, Boolean>()
+
+    @RegisterSignal("segmentId","location")
+    val placeBuilding by signal2<Int,String>()
+    @RegisterSignal("segmentId","location")
+    val clearBuilding by signal2<Int,String>()
+
+
     // Signals relating to the card deck
     @RegisterSignal("action")
     val dealCardFromDeck by signal1<ActionWrapper>()

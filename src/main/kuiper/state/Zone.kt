@@ -1,6 +1,7 @@
 package state
 
 import LogInterface
+import confirm_action.BuildingPlacementStatus
 import hexgrid.map.editor.HexData
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
@@ -54,4 +55,46 @@ class Zone(val id: Int, val name: String, var active: Boolean = false) : LogInte
         }
         return neighbors
     }
+
+    /**
+     * Check if a building can be placed in the given location
+     * If all the sectors are empty, then the building can be placed
+     * If any of the sectors contain the HQ, then the building cannot be placed
+     * Otherwise, the building is 'blocked', which means it can be placed but will destroy the existing building(s)
+     * There may be additional considerations for the building type
+     */
+    fun checkBuildingPlacement(hexData: HexData, building: Building, segmentList: List<Int>): BuildingPlacementStatus {
+        var status = BuildingPlacementStatus.INVALID
+        segmentList.forEach { segment ->
+            val sector = hexData.location.sectors[segment]
+            status = when (sector.status) {
+                SectorStatus.EMPTY -> {
+                    BuildingPlacementStatus.OK
+                }
+
+                SectorStatus.CONSTRUCTING -> {
+                    BuildingPlacementStatus.BLOCKED
+                }
+
+                SectorStatus.BUILT -> {
+                    BuildingPlacementStatus.BLOCKED
+                }
+
+                SectorStatus.DESTROYED -> {
+                    BuildingPlacementStatus.OK
+                }
+            }
+            // Cannot build or overbuild the HQ
+            hexData.location.getBuilding(segment)?.let { existing ->
+                if (existing is Building.HQ) {
+                    status = BuildingPlacementStatus.INVALID
+                }
+            }
+            if(status != BuildingPlacementStatus.OK) {
+                return status
+            }
+        }
+        return status
+    }
+
 }
