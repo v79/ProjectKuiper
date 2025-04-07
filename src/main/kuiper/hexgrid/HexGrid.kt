@@ -91,14 +91,6 @@ class HexGrid : Control() {
         hexes.add(hex)
     }
 
-    // Calculate the position of the grid
-    private fun getGridPlacement(): Vector2 {
-        val gridWidth = GRID_COLUMNS * HEX_WIDTH
-        val xOffset = (signalBus.screenWidth - gridWidth) / 2
-        val yOffset = 150
-        return Vector2(xOffset, yOffset)
-    }
-
     @RegisterFunction
     override fun _process(delta: Double) {
         card?.let { card ->
@@ -127,5 +119,19 @@ class HexGrid : Control() {
                 }
             }
         }
+    }
+
+    @RegisterFunction
+    fun updateHex(newHexData: HexData) {
+//        hexes.filter { it.hexData != null }
+//            .first { it.hexData.row == newHexData.row && it.hexData.column == newHexData.column }
+    }
+
+    // Calculate the position of the grid
+    private fun getGridPlacement(): Vector2 {
+        val gridWidth = GRID_COLUMNS * HEX_WIDTH
+        val xOffset = (signalBus.screenWidth - gridWidth) / 2
+        val yOffset = 150
+        return Vector2(xOffset, yOffset)
     }
 }

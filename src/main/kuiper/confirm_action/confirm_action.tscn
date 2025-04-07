@@ -221,11 +221,6 @@ layout_mode = 2
 text = "Choose sectors for building"
 horizontal_alignment = 1
 
-[node name="ConfirmSectorButton" type="Button" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/HexSectorContainer/VBoxContainer/VBoxContainer/ConfirmSectorContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Confirm"
-
 [node name="PlacementMessage" type="RichTextLabel" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/HexSectorContainer/VBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 50)

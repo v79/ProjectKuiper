@@ -3,6 +3,7 @@ package actions
 import godot.annotation.RegisterClass
 import kotlinx.serialization.Serializable
 import state.Building
+import state.Location
 import technology.Science
 
 @RegisterClass
@@ -47,10 +48,14 @@ class Action() {
     }
 
 
+    var buildingToConstruct: Building? = null
+    var location: Location? = null
+    var sectorIds: IntArray? = null
+    var demolitionSectorIds: IntArray? = null
+
     val initialCosts: MutableMap<ResourceType, Int> = mutableMapOf()
     private val mutations: MutableSet<ResourceMutation> = mutableSetOf()
     private val scienceMutations: MutableSet<ScienceMutation> = mutableSetOf()
-    var buildingToConstruct: Building? = null
 
     fun addInitialCost(resourceType: ResourceType, amount: Int) {
         initialCosts[resourceType] = amount
@@ -144,7 +149,7 @@ class Action() {
     // actions either happen each turn, or at expiry
 
     override fun toString(): String {
-        return "Action(id=$id, actionName='$actionName', turns=$turns, type=$type, initialCosts=$initialCosts, mutations=${mutations.size}, scienceMutations=${scienceMutations.size}, buildingToConstruct=${buildingToConstruct})"
+        return "Action(id=$id, actionName='$actionName', turns=$turns, type=$type, initialCosts=$initialCosts, mutations=${mutations.size}, scienceMutations=${scienceMutations.size}, buildingToConstruct=${buildingToConstruct}, sectors=${sectorIds})"
     }
 
 }

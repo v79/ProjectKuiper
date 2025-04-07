@@ -3,6 +3,7 @@ package actions.activeActions
 import LogInterface
 import SignalBus
 import actions.Action
+import actions.ActionType
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.api.Control
@@ -57,6 +58,12 @@ class ActiveActionsFan : Control(), LogInterface {
                 // update the resource panel. Company cannot do this as it doesn't have access to the signal bus
                 gameState.company.resources.forEach { resource ->
                     signalBus.updateResource.emit(resource.key.name, resource.value.toFloat())
+                }
+                // if this a building action, update the hex grid with icons and stuff
+                if (it.type == ActionType.BUILD) {
+                    log("Updating hexgrid for build action")
+                    log(it.toString())
+                    log("Hex: ${hex.hexData}")
                 }
             }
         }

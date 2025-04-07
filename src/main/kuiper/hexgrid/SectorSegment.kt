@@ -32,9 +32,7 @@ class SectorSegment : Polygon2D(), LogInterface {
     var isConfirmationDialog: Boolean = false
     var location: Location? = null
     var status: SectorStatus = SectorStatus.EMPTY
-    var selectedForBuilding: Boolean = false
     private var buildingPlaced: Boolean = false
-    private var selected: Boolean = false
     private val emptyColor = Color(0.2, 0.2, 0.2, 0.2)
     private var currentColor: Color = emptyColor
     private var baseColor: Color = emptyColor
@@ -48,7 +46,7 @@ class SectorSegment : Polygon2D(), LogInterface {
         signalBus.placeBuilding.connect { id, locName ->
             if (isConfirmationDialog) {
                 if (sectorId == id && location?.name == locName) {
-                        placeBuilding()
+                    placeBuilding()
                 }
             }
         }
@@ -130,7 +128,6 @@ class SectorSegment : Polygon2D(), LogInterface {
 //            log("Mouse entered location '${location!!.name}' sector $sectorId")
             // show tooltip
         }
-
     }
 
     @RegisterFunction

@@ -45,7 +45,6 @@ class ConfirmAction : Control(), LogInterface {
     private lateinit var sectorCountLabel: RichTextLabel
     private lateinit var hexBoxContainer: CenterContainer
     private lateinit var confirmButton: Button
-    private lateinit var confirmSectorButton: Button
     private lateinit var chooseSectorsContainer: HBoxContainer
     private lateinit var placementMessage: RichTextLabel
 
@@ -78,8 +77,6 @@ class ConfirmAction : Control(), LogInterface {
         sectorCountLabel = getNodeAs("%SectorCountLabel_")!!
         chooseSectorsContainer = getNodeAs("%ConfirmSectorContainer")!!
         placementMessage = getNodeAs("%PlacementMessage")!!
-        confirmSectorButton = getNodeAs("%ConfirmSectorButton")!!
-        confirmSectorButton.disabled = true
         placementMessage.text = ""
         chooseSectorsContainer.visible = false
 
@@ -96,6 +93,9 @@ class ConfirmAction : Control(), LogInterface {
             placeBuilding(segmentId, leftMouse)
         }
 
+        signalBus.placeBuilding.connect { id, locName ->
+
+        }
     }
 
     @RegisterFunction
@@ -185,10 +185,6 @@ class ConfirmAction : Control(), LogInterface {
                                     )
                                 }
                             }
-
-                            else -> {
-                                logError("Unknown building type: ${building.name}")
-                            }
                         }
 
                         val contiguous = if (building.sectorsMustBeContiguous) " contiguous" else ""
@@ -238,11 +234,13 @@ class ConfirmAction : Control(), LogInterface {
                                     }
                                 }
                             }
+                            it.sectorIds = placementSegments.toIntArray()
                         } else {
                             // Just clear everything
                             for (i in 0 until 6) {
                                 signalBus.clearBuilding.emit(i, location.name)
                                 placementSegments.clear()
+                                it.sectorIds?.set(i, -1)
                             }
                         }
                         // Now check if the building is valid
@@ -257,7 +255,7 @@ class ConfirmAction : Control(), LogInterface {
                             when (placementStatus) {
                                 BuildingPlacementStatus.OK, BuildingPlacementStatus.NONE -> {
                                     placementMessage.text = ""
-                                    confirmSectorButton.disabled = false
+                                    confirmButton.disabled = false
                                 }
 
                                 BuildingPlacementStatus.BLOCKED -> {
@@ -265,19 +263,21 @@ class ConfirmAction : Control(), LogInterface {
                                         "[color=yellow]Building this here will require destroying existing buildings, which will cost an additional +1 ${
                                             ResourceType.INFLUENCE.bbCodeIcon(32)
                                         } and take +1 turns to complete.[/color]"
-                                    confirmSectorButton.disabled = false
+                                    confirmButton.disabled = false
+                                    // TODO: Store the sectors that will be demolished/overbuilt into demolitionSectorIds
+//                                    it.demolitionSectorIds
                                 }
 
                                 BuildingPlacementStatus.INVALID -> {
                                     placementMessage.text =
                                         "[color=red]Cannot place building here as it would require destroying the HQ.[/color]"
-                                    confirmSectorButton.disabled = true
+                                    confirmButton.disabled = true
                                 }
                             }
                         } else {
                             placementStatus = BuildingPlacementStatus.NONE
                             placementMessage.text = ""
-                            confirmSectorButton.disabled = true
+                            confirmButton.disabled = true
                         }
                     }
                 }
@@ -357,7 +357,7 @@ class ConfirmAction : Control(), LogInterface {
             if (neighbour.column == mainHex.col) {
                 neighbourPosition.x += horizDistance
             }
-            // and recale
+            // and rescale
             neighbourPosition.x *= scaleFactor
             neighbourPosition.y *= scaleFactor
 
@@ -406,7 +406,24 @@ class ConfirmAction : Control(), LogInterface {
     fun confirmAction() {
         logWarning("ConfirmAction: confirmAction(): Confirming action ${card.cardName}")
         hide()
-        signalBus.confirmAction.emit(hexNode, ActionWrapper(card.action!!))
+        action?.let { act ->
+            when (act.type) {
+                ActionType.BUILD -> {
+                    act.location = location
+                    logWarning("ConfirmAction: confirmAction(${act.buildingToConstruct}): $act")
+                    signalBus.confirmAction.emit(hexNode, ActionWrapper(act))
+                }
+
+                ActionType.BOOST, ActionType.INVEST, ActionType.EXPLORE -> {
+                    signalBus.confirmAction.emit(hexNode, ActionWrapper(card.action!!))
+                }
+
+                ActionType.NONE -> {
+                    logError("Tried to confirm an action with no type: ${act.id}->${act.actionName}")
+                }
+            }
+        }
+
     }
 
     @RegisterFunction
