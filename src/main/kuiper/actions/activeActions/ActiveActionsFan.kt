@@ -4,6 +4,7 @@ import LogInterface
 import SignalBus
 import actions.Action
 import actions.ActionType
+import actions.BuildingActionWrapper
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.api.Control
@@ -14,6 +15,7 @@ import godot.core.Vector2
 import godot.core.connect
 import godot.extension.getNodeAs
 import state.GameState
+import state.SectorStatus
 
 @RegisterClass
 class ActiveActionsFan : Control(), LogInterface {
@@ -61,9 +63,26 @@ class ActiveActionsFan : Control(), LogInterface {
                 }
                 // if this a building action, update the hex grid with icons and stuff
                 if (it.type == ActionType.BUILD) {
-                    log("Updating hexgrid for build action")
-                    log(it.toString())
-                    log("Hex: ${hex.hexData}")
+                    if (hex.hexData == null) {
+                        logError("HexData is null for hex ${hex.id}")
+                        return@connect
+                    }
+                    if (it.buildingToConstruct == null) {
+                        logError("Building to construct is null for action ${it.id}")
+                        return@connect
+                    }
+                    if (it.sectorIds == null) {
+                        logError("SectorIds is null for action ${it.id}")
+                        return@connect
+                    }
+                    signalBus.updateHex.emit(
+                        BuildingActionWrapper(
+                            hex.hexData!!,
+                            it.sectorIds!!,
+                            it.buildingToConstruct!!,
+                            SectorStatus.CONSTRUCTING
+                        )
+                    )
                 }
             }
         }

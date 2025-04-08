@@ -1,5 +1,6 @@
 package hexgrid.map.editor
 
+import godot.annotation.RegisterClass
 import godot.core.Vector2
 import kotlinx.serialization.Serializable
 import serializers.GDVectorSerializer
@@ -16,3 +17,12 @@ data class HexData(
     @Serializable(with = GDVectorSerializer::class) val position: Vector2,
     var unlockedAtStart: Boolean = false
 )
+
+@RegisterClass
+class HexDataWrapper() : godot.api.Object() {
+    constructor(hexData: HexData) : this() {
+        this.hexData = hexData
+    }
+
+    var hexData: HexData? = null
+}

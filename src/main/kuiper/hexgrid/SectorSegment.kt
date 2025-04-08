@@ -28,7 +28,7 @@ class SectorSegment : Polygon2D(), LogInterface {
     private lateinit var area2D: Area2D
 
     // Data
-    private var sectorId: Int = -1
+    var sectorId: Int = -1
     var isConfirmationDialog: Boolean = false
     var location: Location? = null
     var status: SectorStatus = SectorStatus.EMPTY

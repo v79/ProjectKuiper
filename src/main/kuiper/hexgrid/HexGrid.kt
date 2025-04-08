@@ -1,5 +1,6 @@
 package hexgrid
 
+import LogInterface
 import SignalBus
 import actions.ActionCard
 import actions.CardStatus
@@ -12,10 +13,14 @@ import godot.core.connect
 import godot.extension.getNodeAs
 import godot.extension.instantiateAs
 import hexgrid.map.editor.HexData
+import state.Building
 import state.GameState
+import state.SectorStatus
 
 @RegisterClass
-class HexGrid : Control() {
+class HexGrid : Control(), LogInterface {
+
+    override var logEnabled: Boolean = true
 
     // Globals
     private val signalBus: SignalBus by lazy { getNodeAs("/root/Kuiper/SignalBus")!! }
@@ -60,10 +65,24 @@ class HexGrid : Control() {
         signalBus.droppedCard.connect {
             this.card = null
         }
+
         signalBus.onScreenResized.connect { _, _ ->
             // recalculate grid placement
             val newPlacement = getGridPlacement()
             gridPlacementContainer.setPosition(newPlacement)
+        }
+
+        signalBus.updateHex.connect { buildingActionWrapper ->
+            if (buildingActionWrapper.hexData != null && buildingActionWrapper.building != null && buildingActionWrapper.sectorIds != null && buildingActionWrapper.sectorStatus != null) {
+                updateHex(
+                    buildingActionWrapper.hexData!!,
+                    buildingActionWrapper.building!!,
+                    buildingActionWrapper.sectorIds!!,
+                    buildingActionWrapper.sectorStatus!!
+                )
+            } else {
+                logError("HexGrid: updateHex signal received null data")
+            }
         }
     }
 
@@ -122,9 +141,18 @@ class HexGrid : Control() {
     }
 
     @RegisterFunction
-    fun updateHex(newHexData: HexData) {
-//        hexes.filter { it.hexData != null }
-//            .first { it.hexData.row == newHexData.row && it.hexData.column == newHexData.column }
+    fun updateHex(newHexData: HexData, building: Building, sectorIds: IntArray, sectorStatus: SectorStatus) {
+        log("Updating hex with new data: $newHexData")
+        val hexToUpdate =
+            hexes.first { it.hexData != null && it.hexData!!.row == newHexData.row && it.hexData!!.column == newHexData.column }
+        hexToUpdate.hexData = newHexData
+        sectorIds.forEach { sectorId ->
+            log("Updating sector $sectorId with building $building")
+            hexToUpdate.segments[sectorId].status = sectorStatus
+            hexToUpdate.segments[sectorId].updateUI(
+                sectorId, hexToUpdate.segments[sectorId].polygon, building
+            )
+        }
     }
 
     // Calculate the position of the grid

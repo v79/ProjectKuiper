@@ -64,6 +64,10 @@ class Hex : Node2D(), LogInterface {
     var colour: Color = unlockedColor
     var isConfirmationDialog: Boolean = false
     val fillTriangles: BooleanArray = BooleanArray(6) { false }
+    private val _segments: MutableList<SectorSegment> = mutableListOf()
+    val segments: List<SectorSegment>
+        get() = _segments.toList()
+
 
     @RegisterFunction
     override fun _ready() {
@@ -83,6 +87,7 @@ class Hex : Node2D(), LogInterface {
             segment.isConfirmationDialog = isConfirmationDialog
             segment.status = hexData?.location?.sectors?.get(index - 1)?.status ?: SectorStatus.EMPTY
             addChild(segment)
+            _segments.add(segment)
             segment.updateUI(
                 index - 1,
                 PackedVector2Array(triangle.toList().toVariantArray()),

@@ -34,6 +34,10 @@ data class Location(val name: String, var unlocked: Boolean = false) {
     fun getBuilding(sectorId: Int): Building? {
         return _buildings.entries.find { it.value.contains(sectorId) }?.key
     }
+
+    fun getSectorStatus(sectorId: Int): SectorStatus {
+        return sectors[sectorId].status
+    }
 }
 
 /**
