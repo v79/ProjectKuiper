@@ -409,7 +409,7 @@ class ConfirmAction : Control(), LogInterface {
         action?.let { act ->
             when (act.type) {
                 ActionType.BUILD -> {
-                    act.location = location
+                    act.hexData = hexNode.hexData
                     logWarning("ConfirmAction: confirmAction(${act.buildingToConstruct}): $act")
                     signalBus.confirmAction.emit(hexNode, ActionWrapper(act))
                 }

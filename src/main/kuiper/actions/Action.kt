@@ -4,7 +4,6 @@ import godot.annotation.RegisterClass
 import hexgrid.map.editor.HexData
 import kotlinx.serialization.Serializable
 import state.Building
-import state.Location
 import state.SectorStatus
 import technology.Science
 
@@ -66,7 +65,7 @@ class Action() {
 
 
     var buildingToConstruct: Building? = null
-    var location: Location? = null
+    var hexData: HexData? = null
     var sectorIds: IntArray? = null
     var demolitionSectorIds: IntArray? = null
 

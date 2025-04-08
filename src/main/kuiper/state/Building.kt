@@ -80,7 +80,7 @@ sealed interface Building {
         override var resourceGeneration: MutableMap<ResourceType, Int> = mutableMapOf()
         override var runningCosts: MutableMap<ResourceType, Int> = mutableMapOf()
         override var spritePath: String? = "res://assets/textures/buildings/basic_factory.png"
-        var factoryDescription: String = ""
+        private var factoryDescription: String = ""
     }
 
     // I'd really like a fluent API for building construction

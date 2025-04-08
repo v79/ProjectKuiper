@@ -147,7 +147,7 @@ class HexGrid : Control(), LogInterface {
             hexes.first { it.hexData != null && it.hexData!!.row == newHexData.row && it.hexData!!.column == newHexData.column }
         hexToUpdate.hexData = newHexData
         sectorIds.forEach { sectorId ->
-            log("Updating sector $sectorId with building $building")
+            log("Updating sector $sectorId with building ${building.name}")
             hexToUpdate.segments[sectorId].status = sectorStatus
             hexToUpdate.segments[sectorId].updateUI(
                 sectorId, hexToUpdate.segments[sectorId].polygon, building

@@ -3,6 +3,7 @@ package state
 import LogInterface
 import SignalBus
 import actions.Action
+import actions.ActionType
 import actions.ActionWrapper
 import godot.annotation.Export
 import godot.annotation.RegisterClass
@@ -58,7 +59,6 @@ class GameState : Node(), LogInterface {
     fun nextTurn() {
         // Clear notifications; exiting persistent notifications will remain in the tree until dismissed
         notifications.clear()
-//        signalBus.nextTurn.emit()
         log("GameState: Next turn")
         // Do research, spending all research points
         notifications.addAll(company.doResearch())
@@ -69,6 +69,17 @@ class GameState : Node(), LogInterface {
         // signal completed actions to expire
         completed.forEach { action ->
             signalBus.actionCompleted.emitSignal(ActionWrapper(action))
+            if (action.type == ActionType.BUILD) {
+                // a BUILD action has completed. Update the hex to the correct status so the building sprite will appear
+                log("Completed building action ${action.actionName} on hex ${action.hexData?.location?.name}")
+                val wrapper = actions.BuildingActionWrapper(
+                    action.hexData!!,
+                    action.sectorIds!!,
+                    action.buildingToConstruct!!,
+                    SectorStatus.BUILT
+                )
+                signalBus.updateHex.emit(wrapper)
+            }
         }
         notifications.forEach { notification ->
             signalBus.notify.emit(NotificationWrapper(notification))

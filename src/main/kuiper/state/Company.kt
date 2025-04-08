@@ -61,6 +61,22 @@ class Company(var name: String) : LogInterface {
         action.initialCosts.forEach { cost ->
             resources.merge(cost.key, cost.value, Int::minus)
         }
+        // update the gameState zones
+        zones.forEach { zone ->
+            zone.hexes.forEach { hexData ->
+                if (hexData.row == hex.row && hexData.column == hex.col) {
+                    log("Updating hexData for action ${action.actionName} on hex ${hexData.location.name}")
+                    if (action.type == ActionType.BUILD) {
+                        if (action.buildingToConstruct != null && action.sectorIds != null) {
+                            hexData.location.addBuilding(action.buildingToConstruct!!, action.sectorIds!!, false)
+                        } else {
+                            logError("Error: Building to construct or sector IDs are null for action ${action.actionName}")
+                        }
+                    }
+                }
+            }
+        }
+        log("Company: Activated action ${action.actionName} on hex ${action.hexData?.location?.name}")
     }
 
     /**
@@ -162,6 +178,7 @@ class Company(var name: String) : LogInterface {
                         }
                     }
                 }
+                // building completion has to happen at the gameState level as it needs the SignalBus
             }
         }
         // clean up any expired actions
@@ -286,9 +303,11 @@ class Company(var name: String) : LogInterface {
         zones.forEach { zone ->
             zone.hexes.forEach { hexData ->
                 hexData.location.buildings.forEach { building ->
+                    // should only process BUILT buildings, but I don't have the status here :(
                     when (building.key) {
                         is Building.HQ -> {
                             val hq = building.key as Building.HQ
+                            log("\tProcessing HQ")
                             hq.sciencesProduced.forEach { science ->
                                 sciences[science.key] = sciences[science.key]!! + science.value
                             }
@@ -302,6 +321,7 @@ class Company(var name: String) : LogInterface {
 
                         is Building.ScienceLab -> {
                             val lab = building.key as Building.ScienceLab
+                            log("\tProcessing Science Lab ${lab.name}")
                             lab.sciencesProduced.forEach { science ->
                                 sciences[science.key] = sciences[science.key]!! + science.value
                             }
@@ -315,6 +335,7 @@ class Company(var name: String) : LogInterface {
 
                         is Building.Factory -> {
                             val factory = building.key as Building.Factory
+                            log("\tProcessing Factory ${factory.name}")
                             factory.resourceGeneration.forEach { generation ->
                                 resources[generation.key] = resources[generation.key]!! + generation.value
                             }

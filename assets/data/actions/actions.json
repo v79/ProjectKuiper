@@ -5,10 +5,6 @@
     "description": "Construct a research lab to increase your science production",
     "turns": 3,
     "type": "BUILD",
-    "initialCosts": {
-      "GOLD": 100,
-      "INFLUENCE": 2
-    },
     "buildingToConstruct": {
       "type": "state.Building.ScienceLab",
       "name": "Research Lab",
@@ -24,6 +20,10 @@
         "MATHEMATICS": 5.0,
         "PSYCHOLOGY": 5.0
       }
+    },
+    "initialCosts": {
+      "GOLD": 100,
+      "INFLUENCE": 2
     }
   },
   {
@@ -32,11 +32,6 @@
     "description": "Construct a telescope to increase your astronomy science production",
     "turns": 4,
     "type": "BUILD",
-    "initialCosts": {
-      "GOLD": 200,
-      "INFLUENCE": 1,
-      "CONSTRUCTION_MATERIALS": 25
-    },
     "buildingToConstruct": {
       "type": "state.Building.ScienceLab",
       "name": "Basic Telescope",
@@ -48,6 +43,11 @@
         "ASTRONOMY": 10.0,
         "PHYSICS": 5.0
       }
+    },
+    "initialCosts": {
+      "GOLD": 200,
+      "INFLUENCE": 1,
+      "CONSTRUCTION_MATERIALS": 25
     }
   },
   {
@@ -111,6 +111,14 @@
     "description": "Construct a factory to increase your production",
     "turns": 3,
     "type": "BUILD",
+    "buildingToConstruct": {
+      "type": "state.Building.Factory",
+      "sectors": 2,
+      "resourceGeneration": {
+        "CONSTRUCTION_MATERIALS": 6
+      },
+      "factoryDescription": "A basic factory"
+    },
     "initialCosts": {
       "GOLD": 25,
       "CONSTRUCTION_MATERIALS": 10,
@@ -119,14 +127,9 @@
     "mutations": [
       {
         "resource": "CONSTRUCTION_MATERIALS",
-        "type": "ADD",
-        "amountPerYear": 7
+        "type": "SUBTRACT",
+        "amountPerYear": 5
       }
-    ],
-    "buildingToConstruct": {
-      "type": "state.Building.Factory",
-      "sectors": 2,
-      "factoryDescription": "A basic factory"
-    }
+    ]
   }
 ]

@@ -68,13 +68,15 @@ fun main() {
 
     val factory =
         Building.Factory(name = "Basic Factory", description = "A basic factory", sectors = 2, contiguous = true)
+    factory.resourceGeneration[ResourceType.CONSTRUCTION_MATERIALS] = 6
+
     val buildFactory = createAction(
         id++, "Build Factory", "Construct a factory to increase your production", 3, ActionType.BUILD
     )
     buildFactory.addInitialCost(ResourceType.GOLD, 25)
     buildFactory.addInitialCost(ResourceType.CONSTRUCTION_MATERIALS, 10)
     buildFactory.addInitialCost(ResourceType.INFLUENCE, 2)
-    buildFactory.addMutation(ResourceType.CONSTRUCTION_MATERIALS, MutationType.ADD, 7)
+    buildFactory.addMutation(ResourceType.CONSTRUCTION_MATERIALS, MutationType.SUBTRACT, 5)
     buildFactory.constructBuilding(factory)
 
     // serialize the actions to a file

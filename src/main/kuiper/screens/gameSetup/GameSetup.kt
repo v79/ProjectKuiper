@@ -153,7 +153,7 @@ class GameSetup : Node(), LogInterface {
                 row.forEach { data ->
                     if (data.location.name.isNotEmpty()) {
                         hexes.add(data)
-                        log("Adding hex ${data.row}, ${data.column} to zone ${id}; location ${data.location.name}")
+//                        log("Adding hex ${data.row}, ${data.column} to zone ${id}; location ${data.location.name}")
                     }
                 }
             }
