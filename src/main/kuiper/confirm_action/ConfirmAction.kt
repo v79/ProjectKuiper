@@ -83,9 +83,9 @@ class ConfirmAction : Control(), LogInterface {
         signalBus.showActionConfirmation.connect { h, c ->
             hexNode = h
             card = c
-            location = h.hexData?.location ?: Location("**Unknown**", false)
-            hexNode.row = h.hexData?.row ?: -1
-            hexNode.col = h.hexData?.column ?: -1
+            location = h.location ?: Location(h.row, h.col, "**Unknown**", h.position, false)
+            hexNode.row = h.row
+            hexNode.col = h.col
             updateUI()
         }
 
@@ -104,7 +104,7 @@ class ConfirmAction : Control(), LogInterface {
         val minus = "[b][color=WEB_MAROON]-[/color][/b]"
         resetUI()
         renderHex(hexNode)
-        titleLabel.text = "Play ${card.cardName} at ${hexNode.hexData?.location?.name}?"
+        titleLabel.text = "Play ${card.cardName} at ${hexNode.location?.name}?"
         action = card.action
         action?.let { act ->
             actionCardDetails.updateCard(card)
@@ -162,7 +162,7 @@ class ConfirmAction : Control(), LogInterface {
                             }
 
                             is Building.ScienceLab -> {
-                                buildingSummary.appendText("  New ${building.name} at ${hexNode.hexData?.location?.name}")
+                                buildingSummary.appendText("  New ${building.name} at ${hexNode.location?.name}")
 
                                 building.runningCosts.forEach { (resourceType, amount) ->
                                     costsPerTurnList.appendText(
@@ -178,7 +178,7 @@ class ConfirmAction : Control(), LogInterface {
                             }
 
                             is Building.Factory -> {
-                                buildingSummary.appendText("  New ${building.name} at ${hexNode.hexData?.location?.name}")
+                                buildingSummary.appendText("  New ${building.name} at ${hexNode.location?.name}")
                                 building.runningCosts.forEach { (resourceType, amount) ->
                                     costsPerTurnList.appendText(
                                         "$minus $amount ${resourceType.bbCodeIcon(32)} ${resourceType.displayName} per turn\n"
@@ -247,7 +247,7 @@ class ConfirmAction : Control(), LogInterface {
                         if (leftMouse) {
                             if (placementStatus == BuildingPlacementStatus.NONE) {
                                 placementStatus = gameState.company.zones[0].checkBuildingPlacement(
-                                    hexNode.hexData!!,
+                                    hexNode.location!!,
                                     building,
                                     placementSegments.toList()
                                 )
@@ -292,22 +292,22 @@ class ConfirmAction : Control(), LogInterface {
      * But I actually want to render its neighbours too
      */
     private fun renderHex(hex: Hex) {
-        log("renderHex: ${hex.hexData?.location?.name}")
+        log("renderHex: ${hex.location?.name}")
         val scaleFactor = 2.0
         // find neighbours
-        val neighbours = if (hex.hexData != null) {
-            log(hex.hexData.toString())
-            gameState.company.zones[0].getNeighbors(hex.hexData!!)
+        val neighbours = if (hex.location != null) {
+            log(hex.location.toString())
+            gameState.company.zones[0].getNeighbors(hex.location!!)
         } else {
             emptyList()
         }
 
         if (neighbours.isEmpty()) {
-            log("No neighbours found for ${hex.hexData?.location?.name}")
+            log("No neighbours found for ${hex.location?.name}")
         }
 
         val mainHex = hexScene.instantiateAs<Hex>()!!
-        // I need to get information from the confirm action dialogue to the hex, and hence to the sector segment
+        // I need to get information from the confirmation action dialogue to the hex, and hence to the sector segment
         // I need:
         // 1. The building size (sector count)
         // 2. The building type
@@ -316,7 +316,7 @@ class ConfirmAction : Control(), LogInterface {
         // 1. If the sector is occupied, and with what
 
         mainHex.id = hex.id
-        mainHex.hexData = hex.hexData
+        mainHex.location = hex.location
         mainHex.isConfirmationDialog = true
         mainHex.hexUnlocked = true
         mainHex.col = hex.col
@@ -363,11 +363,11 @@ class ConfirmAction : Control(), LogInterface {
 
             neighbourHex.colour = Color.dimGray
             neighbourHex.id = index
-            neighbourHex.hexData = neighbour
+            neighbourHex.location = neighbour
             neighbourHex.isConfirmationDialog = true
             neighbourHex.hexUnlocked = true
             neighbourHex.setPosition(neighbourPosition)
-            neighbourHex.setName("${neighbour.location.name.replace(' ', '_')}_${index}")
+            neighbourHex.setName("${neighbour.name.replace(' ', '_')}_${index}")
             // make it big
             neighbourHex.scaleMutate {
                 x = scaleFactor
@@ -409,7 +409,7 @@ class ConfirmAction : Control(), LogInterface {
         action?.let { act ->
             when (act.type) {
                 ActionType.BUILD -> {
-                    act.hexData = hexNode.hexData
+                    act.location = hexNode.location
                     logWarning("ConfirmAction: confirmAction(${act.buildingToConstruct}): $act")
                     signalBus.confirmAction.emit(hexNode, ActionWrapper(act))
                 }

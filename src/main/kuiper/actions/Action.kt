@@ -1,9 +1,9 @@
 package actions
 
 import godot.annotation.RegisterClass
-import hexgrid.map.editor.HexData
 import kotlinx.serialization.Serializable
 import state.Building
+import state.Location
 import state.SectorStatus
 import technology.Science
 
@@ -18,14 +18,14 @@ class ActionWrapper() : godot.api.Object() {
 
 @RegisterClass
 class BuildingActionWrapper() : godot.api.Object() {
-    constructor(hexData: HexData, sectorIds: IntArray, building: Building, sectorStatus: SectorStatus) : this() {
-        this.hexData = hexData
+    constructor(location: Location, sectorIds: IntArray, building: Building, sectorStatus: SectorStatus) : this() {
+        this.location = location
         this.sectorIds = sectorIds
         this.building = building
         this.sectorStatus = sectorStatus
     }
 
-    var hexData: HexData? = null
+    var location: Location? = null
     var building: Building? = null
     var sectorIds: IntArray? = null
     var sectorStatus: SectorStatus? = null
@@ -65,7 +65,7 @@ class Action() {
 
 
     var buildingToConstruct: Building? = null
-    var hexData: HexData? = null
+    var location: Location? = null
     var sectorIds: IntArray? = null
     var demolitionSectorIds: IntArray? = null
 

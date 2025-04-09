@@ -42,7 +42,7 @@ class Company(var name: String) : LogInterface {
     val technologies: MutableList<Technology> = mutableListOf()
 
     /**
-     * Zones are areas of the solar system. Each zone has a list of HexData objects
+     * Zones are areas of the solar system. Each zone has a list of Location objects
      */
     val zones: MutableList<Zone> = mutableListOf()
 
@@ -65,10 +65,10 @@ class Company(var name: String) : LogInterface {
         zones.forEach { zone ->
             zone.hexes.forEach { hexData ->
                 if (hexData.row == hex.row && hexData.column == hex.col) {
-                    log("Updating hexData for action ${action.actionName} on hex ${hexData.location.name}")
+                    log("Updating hexData for action ${action.actionName} on hex ${hexData.name}")
                     if (action.type == ActionType.BUILD) {
                         if (action.buildingToConstruct != null && action.sectorIds != null) {
-                            hexData.location.addBuilding(action.buildingToConstruct!!, action.sectorIds!!, false)
+                            hexData.addBuilding(action.buildingToConstruct!!, action.sectorIds!!, false)
                         } else {
                             logError("Error: Building to construct or sector IDs are null for action ${action.actionName}")
                         }
@@ -76,7 +76,7 @@ class Company(var name: String) : LogInterface {
                 }
             }
         }
-        log("Company: Activated action ${action.actionName} on hex ${action.hexData?.location?.name}")
+        log("Company: Activated action ${action.actionName} on hex ${action.location?.name}")
     }
 
     /**
@@ -302,7 +302,7 @@ class Company(var name: String) : LogInterface {
         log("Processing buildings:")
         zones.forEach { zone ->
             zone.hexes.forEach { hexData ->
-                hexData.location.buildings.forEach { building ->
+                hexData.buildings.forEach { building ->
                     // should only process BUILT buildings, but I don't have the status here :(
                     when (building.key) {
                         is Building.HQ -> {
@@ -369,7 +369,7 @@ class Company(var name: String) : LogInterface {
         }
         zones.forEach { zone ->
             zone.hexes.forEach { hexData ->
-                hexData.location.buildings.forEach { building ->
+                hexData.buildings.forEach { building ->
                     building.key.runningCosts.filter { it.key == resourceType }.forEach { cost ->
                         sBuilder.append("[color=red]-")
                         sBuilder.append(cost.value)

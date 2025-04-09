@@ -60,12 +60,12 @@ class HexMapGridEditor : GridContainer(), LogInterface {
     // Data
     private var grid = Array(dimension) {
         Array(dimension) {
-            HexData(
+            Location(
                 row = dimension,
                 column = dimension,
-                location = Location(""),
+                name = "",
                 position = Vector2.ZERO,
-                unlockedAtStart = false
+                unlocked = false
             )
         }
     }
@@ -95,18 +95,18 @@ class HexMapGridEditor : GridContainer(), LogInterface {
         // set up the grid
         grid = calculateGridCoordinates(dimension, dimension)
         grid.forEachIndexed { i, row ->
-            row.forEachIndexed { j, data ->
+            row.forEachIndexed { j, location ->
                 val hex = hexScene.instantiate() as Hex
                 hex.hexMode = HexMode.EDITOR
                 hex.row = j
                 hex.col = i
-                hex.hexData = data
+                hex.location = location
                 hex.editorSignalBus = signalBus
                 hex.setName("Hex_${j}_$i")
                 hex.colour = Color.mediumPurple
 //                val locLabel = hex.getNodeAs<Label>("%LocationLabel")!!
 //                locLabel.visible = false
-                hex.setPosition(data.position)
+                hex.setPosition(location.position)
                 addChild(hex)
             }
         }
@@ -118,7 +118,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
             phCoordLbl.text = "@c$col,r$row"
             val hex = getNodeAtHex(row, col)
             if (hex != null && hex.hexUnlocked) {
-                phNameEdit.text = hex.hexData?.location?.name ?: ""
+                phNameEdit.text = hex.location?.name ?: ""
                 phUnlockedAtStart.buttonPressed = true
             }
             placeHexPopup.setPosition(getGlobalMousePosition().toVector2i().minus(Vector2i(50.0, 100.0)))
@@ -204,10 +204,10 @@ class HexMapGridEditor : GridContainer(), LogInterface {
         }
 
         // update the grid
-        grid.forEach { editorData ->
-            editorData.forEach { value ->
-                if (value.location.name.isNotEmpty()) {
-                    storeHexLocation(value.row, value.column, value.location.name)
+        grid.forEach { locations ->
+            locations.forEach { location ->
+                if (location.name.isNotEmpty()) {
+                    storeHexLocation(location.row, location.column, location.name)
                 }
             }
         }
@@ -256,17 +256,23 @@ class HexMapGridEditor : GridContainer(), LogInterface {
         nextSponsorId++
 
         grid.forEachIndexed { i, row ->
-            row.forEachIndexed { j, data ->
+            row.forEachIndexed { j, location ->
                 val hex = getNodeAtHex(i, j)
                 if (hex == null) {
                     logError("No hex found at $i $j")
                     return null
                 } else {
                     if (hex.hexUnlocked) {
-                        logInfo("Hex ($i,$j) ${hex.hexData?.location?.name} (Starts unlocked: ${data.unlockedAtStart})")
-                        data.location = hex.hexData?.location ?: Location("<no name>", data.unlockedAtStart)
+                        logInfo("Hex ($i,$j) ${hex.location?.name} (Starts unlocked: ${location})")
+//                        location = hex.location ?: Location(j, i, "<no name>", Vector2.ZERO, data.location)
+                        location.name = hex.location?.name ?: ""
+                        location.unlocked = hex.location?.unlocked ?: false
+                    } else {
+                        logInfo("Hex ($i,$j) ${hex.location?.name} (Starts locked: ${location})")
+                        location.name = hex.location?.name ?: ""
+                        location.unlocked = false
                     }
-                    sponsor.hexGrid[i][j] = data
+                    sponsor.hexGrid[i][j] = location
                 }
             }
         }
@@ -341,16 +347,16 @@ class HexMapGridEditor : GridContainer(), LogInterface {
     /**
      * Calculate the grid pixel coordinates for the given number of rows and columns
      */
-    private fun calculateGridCoordinates(xCount: Int, yCount: Int): Array<Array<HexData>> {
+    private fun calculateGridCoordinates(xCount: Int, yCount: Int): Array<Array<Location>> {
         // flat topped, evenq orientation
         val hexCoords = Array(xCount) {
             Array(yCount) {
-                HexData(
+                Location(
                     row = xCount,
                     column = yCount,
-                    location = Location(""),
+                    name = "",
                     position = Vector2.ZERO,
-                    unlockedAtStart = false
+                    unlocked = false
                 )
             }
         }
@@ -365,12 +371,12 @@ class HexMapGridEditor : GridContainer(), LogInterface {
             for (j in 0 until yCount) {
                 val x = i * horizDistance
                 val y = j * height + (i % 2) * (height / 2)
-                hexCoords[i][j] = HexData(
+                hexCoords[i][j] = Location(
                     row = i,
                     column = j,
-                    location = Location(""),
+                    name = "",
                     position = Vector2(x, y),
-                    unlockedAtStart = false
+                    unlocked = false
                 )
             }
         }
@@ -381,12 +387,12 @@ class HexMapGridEditor : GridContainer(), LogInterface {
      * Store the details of the given hex into the grid
      */
     private fun storeHexLocation(row: Int, col: Int, name: String) {
-        val data = grid[row][col]
-        data.unlockedAtStart = phUnlockedAtStart.buttonPressed
+        val location = grid[row][col]
+        location.unlocked = phUnlockedAtStart.buttonPressed
         val hexNode = getNodeAtHex(row, col) ?: return
-        val location = Location(name, phUnlockedAtStart.buttonPressed)
-        data.location = location
-        hexNode.hexData = data
+        location.name = name
+        location.unlocked = phUnlockedAtStart.buttonPressed
+        hexNode.location = location
 //        val locLabel = hexNode.getNodeAs<Label>("%LocationLabel")!!
 //        locLabel.text = name
 //        locLabel.visible = true

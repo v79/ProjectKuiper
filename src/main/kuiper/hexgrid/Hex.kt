@@ -8,18 +8,18 @@ import godot.annotation.RegisterProperty
 import godot.api.*
 import godot.core.*
 import godot.extension.getNodeAs
-import hexgrid.map.editor.HexData
 import hexgrid.map.editor.MapEditorSignalBus
+import state.Location
 import state.SectorStatus
 import kotlin.math.cos
 import kotlin.math.sin
 
 /**
  * A Hex is a Godot node that represents a location in the world/region map.
- * See [HexData] for the game representation of the same concept, not tied to the Godot Node
+ * See [Location] for the game representation of the same concept, not tied to the Godot Node
  * A hex has six internal triangles, each of which represents a site where a facility can be built.
  * A facility may span more than one sector/triangle
- * There are two special Hexes - the company HQ, and the space launch centre
+ * There are two special Locations - the company HQ, and the space launch centre
  */
 @RegisterClass
 class Hex : Node2D(), LogInterface {
@@ -48,7 +48,6 @@ class Hex : Node2D(), LogInterface {
     // UI elements
     private val collisionShape2D: CollisionPolygon2D by lazy { getNodeAs("%CollisionShape2D")!! }
     lateinit var marker: HexDropTarget
-    var hexData: HexData? = null
 
     // Packed scenes
     private val sectorScene = ResourceLoader.load("res://src/main/kuiper/hexgrid/sector_segment.tscn") as PackedScene
@@ -57,6 +56,7 @@ class Hex : Node2D(), LogInterface {
     var row: Int = 0
     var col: Int = 0
 
+    var location: Location? = null
     private lateinit var pointSet: Map<Int, Triple<Vector2, Vector2, Vector2>>
     private var unlockedColor = Color(1.0, 1.0, 1.0, 1.0)
     private var lockedColor = Color(0.2, 0.2, 0.2, 1.0)
@@ -83,15 +83,15 @@ class Hex : Node2D(), LogInterface {
             val segment = sectorScene.instantiate() as SectorSegment
             segment.setName("Sector${index - 1}")
             segment.setTextureRepeat(CanvasItem.TextureRepeat.TEXTURE_REPEAT_DISABLED)
-            segment.location = hexData?.location
+            segment.location = location
             segment.isConfirmationDialog = isConfirmationDialog
-            segment.status = hexData?.location?.sectors?.get(index - 1)?.status ?: SectorStatus.EMPTY
+            segment.status = location?.sectors?.get(index - 1)?.status ?: SectorStatus.EMPTY
             addChild(segment)
             _segments.add(segment)
             segment.updateUI(
                 index - 1,
                 PackedVector2Array(triangle.toList().toVariantArray()),
-                hexData?.location?.getBuilding(index - 1)
+                location?.getBuilding(index - 1)
             )
         }
     }

@@ -1,12 +1,20 @@
 package state
 
+import godot.core.Vector2
 import kotlinx.serialization.Serializable
+import serializers.GDVectorSerializer
 
 /**
  * A Location represents a single buildable hex within a Zone
  */
 @Serializable
-data class Location(val name: String, var unlocked: Boolean = false) {
+data class Location(
+    var row: Int,
+    var column: Int,
+    var name: String,
+    @Serializable(with = GDVectorSerializer::class) val position: Vector2,
+    var unlocked: Boolean = false
+) {
     // locations may have some interesting properties in the future, such as base production rates
 
     // a location is divided into 6 sectors, each of which can be built on

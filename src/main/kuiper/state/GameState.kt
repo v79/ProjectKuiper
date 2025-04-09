@@ -71,9 +71,9 @@ class GameState : Node(), LogInterface {
             signalBus.actionCompleted.emitSignal(ActionWrapper(action))
             if (action.type == ActionType.BUILD) {
                 // a BUILD action has completed. Update the hex to the correct status so the building sprite will appear
-                log("Completed building action ${action.actionName} on hex ${action.hexData?.location?.name}")
+                log("Completed building action ${action.actionName} on hex ${action.location?.name}")
                 val wrapper = actions.BuildingActionWrapper(
-                    action.hexData!!,
+                    action.location!!,
                     action.sectorIds!!,
                     action.buildingToConstruct!!,
                     SectorStatus.BUILT

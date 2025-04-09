@@ -63,8 +63,8 @@ class ActiveActionsFan : Control(), LogInterface {
                 }
                 // if this a building action, update the hex grid with icons and stuff
                 if (it.type == ActionType.BUILD) {
-                    if (hex.hexData == null) {
-                        logError("HexData is null for hex ${hex.id}")
+                    if (hex.location == null) {
+                        logError("Location is null for hex ${hex.id}")
                         return@connect
                     }
                     if (it.buildingToConstruct == null) {
@@ -77,7 +77,7 @@ class ActiveActionsFan : Control(), LogInterface {
                     }
                     signalBus.updateHex.emit(
                         BuildingActionWrapper(
-                            hex.hexData!!,
+                            hex.location!!,
                             it.sectorIds!!,
                             it.buildingToConstruct!!,
                             SectorStatus.CONSTRUCTING

@@ -1,11 +1,13 @@
 package hexgrid
 
 import LogInterface
-import SignalBus
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.api.*
-import godot.core.*
+import godot.core.Color
+import godot.core.PackedVector2Array
+import godot.core.Vector2
+import godot.core.asCachedStringName
 import godot.extension.getNodeAs
 import state.Building
 import state.Location
@@ -20,7 +22,7 @@ class SectorSegment : Polygon2D(), LogInterface {
     override var logEnabled = true
 
     // Globals
-    private val signalBus: SignalBus by lazy { getNodeAs("/root/Kuiper/SignalBus")!! }
+//    private val signalBus: SignalBus by lazy { getNodeAs("/root/Kuiper/SignalBus")!! }
 
     // UI elements
     private lateinit var collisionPolygon: CollisionPolygon2D
@@ -43,20 +45,20 @@ class SectorSegment : Polygon2D(), LogInterface {
         area2D = getNodeAs("Area2D")!!
         sprite2D = getNodeAs("%Sprite2D")!!
 
-        signalBus.placeBuilding.connect { id, locName ->
-            if (isConfirmationDialog) {
-                if (sectorId == id && location?.name == locName) {
-                    placeBuilding()
-                }
-            }
-        }
-        signalBus.clearBuilding.connect { id, locName ->
-            if (isConfirmationDialog) {
-                if (sectorId == id && location?.name == locName) {
-                    clearBuilding()
-                }
-            }
-        }
+//        signalBus.placeBuilding.connect { id, locName ->
+//            if (isConfirmationDialog) {
+//                if (sectorId == id && location?.name == locName) {
+//                    placeBuilding()
+//                }
+//            }
+//        }
+//        signalBus.clearBuilding.connect { id, locName ->
+//            if (isConfirmationDialog) {
+//                if (sectorId == id && location?.name == locName) {
+//                    clearBuilding()
+//                }
+//            }
+//        }
     }
 
     @RegisterFunction
@@ -105,7 +107,7 @@ class SectorSegment : Polygon2D(), LogInterface {
                 logWarning("lc: buildingPlaced is currently: $buildingPlaced")
                 if (isConfirmationDialog) {
                     if (!buildingPlaced) {
-                        signalBus.segmentClicked.emit(sectorId, true)
+//                        signalBus.segmentClicked.emit(sectorId, true)
                         buildingPlaced = true
                     }
                 }
@@ -113,7 +115,7 @@ class SectorSegment : Polygon2D(), LogInterface {
             if (e.isActionPressed("mouse_right_click".asCachedStringName())) {
                 logWarning("rc: buildingPlaced is currently: $buildingPlaced")
                 if (isConfirmationDialog) {
-                    signalBus.segmentClicked.emit(sectorId, false)
+//                    signalBus.segmentClicked.emit(sectorId, false)
                     buildingPlaced = false
                 }
             }
