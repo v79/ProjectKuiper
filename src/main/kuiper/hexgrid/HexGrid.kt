@@ -92,9 +92,12 @@ class HexGrid : Control(), LogInterface {
      */
     private fun createHex(i: Int, location: Location) {
         val hex = hexScene.instantiateAs<Hex>()!!
+        hex.signalBus = signalBus
         hex.id = i
         hex.location = location
         hex.hexUnlocked = location.unlocked
+        hex.row = location.row
+        hex.col = location.column
         val dropTarget = hex.getNodeAs<HexDropTarget>("%HexDropTarget")!!
         dropTarget.addToGroup("hexDropTargets".asCachedStringName())
         dropTarget.setName("HexDropTarget$i")
@@ -146,7 +149,11 @@ class HexGrid : Control(), LogInterface {
     fun updateHex(newLocationData: Location, building: Building, sectorIds: IntArray, sectorStatus: SectorStatus) {
         log("Updating hex with new data: $newLocationData")
         val hexToUpdate =
-            hexes.first { it.row == newLocationData.row && it.col == newLocationData.column }
+            hexes.firstOrNull { it.row == newLocationData.row && it.col == newLocationData.column }
+        if (hexToUpdate == null) {
+            logError("HexGrid: No hex found at row ${newLocationData.row} and column ${newLocationData.column} in hexes")
+            return
+        }
         hexToUpdate.location = newLocationData
         sectorIds.forEach { sectorId ->
             log("Updating sector $sectorId with building ${building.name}")

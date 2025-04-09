@@ -48,7 +48,6 @@ class ConfirmAction : Control(), LogInterface {
     private lateinit var chooseSectorsContainer: HBoxContainer
     private lateinit var placementMessage: RichTextLabel
 
-
     // Packed scenes
     private val hexScene = ResourceLoader.load("res://src/main/kuiper/hexgrid/Hex.tscn") as PackedScene
 
@@ -91,10 +90,6 @@ class ConfirmAction : Control(), LogInterface {
 
         signalBus.segmentClicked.connect { segmentId, leftMouse ->
             placeBuilding(segmentId, leftMouse)
-        }
-
-        signalBus.placeBuilding.connect { id, locName ->
-
         }
     }
 
@@ -240,7 +235,6 @@ class ConfirmAction : Control(), LogInterface {
                             for (i in 0 until 6) {
                                 signalBus.clearBuilding.emit(i, location.name)
                                 placementSegments.clear()
-                                it.sectorIds?.set(i, -1)
                             }
                         }
                         // Now check if the building is valid
@@ -314,7 +308,7 @@ class ConfirmAction : Control(), LogInterface {
         // 3. The building sprite
         // And in return I need to know:
         // 1. If the sector is occupied, and with what
-
+        mainHex.signalBus = signalBus
         mainHex.id = hex.id
         mainHex.location = hex.location
         mainHex.isConfirmationDialog = true

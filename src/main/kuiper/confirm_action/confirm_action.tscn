@@ -218,7 +218,8 @@ alignment = 1
 
 [node name="ConfirmSectorLabel" type="Label" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/HexSectorContainer/VBoxContainer/VBoxContainer/ConfirmSectorContainer"]
 layout_mode = 2
-text = "Choose sectors for building"
+text = "Choose sectors for building
+Left-click to place, right-click to clear"
 horizontal_alignment = 1
 
 [node name="PlacementMessage" type="RichTextLabel" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/HexSectorContainer/VBoxContainer/VBoxContainer"]

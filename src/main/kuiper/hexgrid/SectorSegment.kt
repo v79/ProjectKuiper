@@ -1,13 +1,11 @@
 package hexgrid
 
 import LogInterface
+import SignalBus
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.api.*
-import godot.core.Color
-import godot.core.PackedVector2Array
-import godot.core.Vector2
-import godot.core.asCachedStringName
+import godot.core.*
 import godot.extension.getNodeAs
 import state.Building
 import state.Location
@@ -21,8 +19,7 @@ class SectorSegment : Polygon2D(), LogInterface {
 
     override var logEnabled = true
 
-    // Globals
-//    private val signalBus: SignalBus by lazy { getNodeAs("/root/Kuiper/SignalBus")!! }
+    var signalBus: SignalBus? = null
 
     // UI elements
     private lateinit var collisionPolygon: CollisionPolygon2D
@@ -45,20 +42,20 @@ class SectorSegment : Polygon2D(), LogInterface {
         area2D = getNodeAs("Area2D")!!
         sprite2D = getNodeAs("%Sprite2D")!!
 
-//        signalBus.placeBuilding.connect { id, locName ->
-//            if (isConfirmationDialog) {
-//                if (sectorId == id && location?.name == locName) {
-//                    placeBuilding()
-//                }
-//            }
-//        }
-//        signalBus.clearBuilding.connect { id, locName ->
-//            if (isConfirmationDialog) {
-//                if (sectorId == id && location?.name == locName) {
-//                    clearBuilding()
-//                }
-//            }
-//        }
+        signalBus?.placeBuilding?.connect { id, locName ->
+            if (isConfirmationDialog) {
+                if (sectorId == id && location?.name == locName) {
+                    placeBuilding()
+                }
+            }
+        }
+        signalBus?.clearBuilding?.connect { id, locName ->
+            if (isConfirmationDialog) {
+                if (sectorId == id && location?.name == locName) {
+                    clearBuilding()
+                }
+            }
+        }
     }
 
     @RegisterFunction
@@ -104,18 +101,16 @@ class SectorSegment : Polygon2D(), LogInterface {
     fun _on_area_2d_input_event(viewport: Node, event: InputEvent?, shapeIdx: Int) {
         event?.let { e ->
             if (e.isActionPressed("mouse_left_click".asCachedStringName())) {
-                logWarning("lc: buildingPlaced is currently: $buildingPlaced")
                 if (isConfirmationDialog) {
                     if (!buildingPlaced) {
-//                        signalBus.segmentClicked.emit(sectorId, true)
+                        signalBus?.segmentClicked?.emit(sectorId, true)
                         buildingPlaced = true
                     }
                 }
             }
             if (e.isActionPressed("mouse_right_click".asCachedStringName())) {
-                logWarning("rc: buildingPlaced is currently: $buildingPlaced")
                 if (isConfirmationDialog) {
-//                    signalBus.segmentClicked.emit(sectorId, false)
+                    signalBus?.segmentClicked?.emit(sectorId, false)
                     buildingPlaced = false
                 }
             }
@@ -137,7 +132,7 @@ class SectorSegment : Polygon2D(), LogInterface {
         color = baseColor
         when (status) {
             SectorStatus.EMPTY -> {
-                color = Color.gold
+                color = Color.green
             }
 
             SectorStatus.CONSTRUCTING -> {
@@ -145,7 +140,7 @@ class SectorSegment : Polygon2D(), LogInterface {
             }
 
             SectorStatus.DESTROYED -> {
-                color = Color.gold
+                color = Color.green
             }
 
             SectorStatus.BUILT -> {
@@ -175,6 +170,7 @@ class SectorSegment : Polygon2D(), LogInterface {
      *       _
      *    /3\4/5\
      *    \2/1\0/
+     *       ¯
      */
     private fun calculateSpriteOffset(): Vector2 {
         when (sectorId) {

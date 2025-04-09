@@ -1,6 +1,7 @@
 package hexgrid
 
 import LogInterface
+import SignalBus
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
@@ -45,6 +46,9 @@ class Hex : Node2D(), LogInterface {
     @Export
     var editorSignalBus: MapEditorSignalBus? = null
 
+    @RegisterProperty
+    var signalBus: SignalBus? = null
+
     // UI elements
     private val collisionShape2D: CollisionPolygon2D by lazy { getNodeAs("%CollisionShape2D")!! }
     lateinit var marker: HexDropTarget
@@ -80,19 +84,26 @@ class Hex : Node2D(), LogInterface {
         )
         collisionShape2D.polygon = packedArray
         pointSet.forEach { (index, triangle) ->
-            val segment = sectorScene.instantiate() as SectorSegment
-            segment.setName("Sector${index - 1}")
-            segment.setTextureRepeat(CanvasItem.TextureRepeat.TEXTURE_REPEAT_DISABLED)
-            segment.location = location
-            segment.isConfirmationDialog = isConfirmationDialog
-            segment.status = location?.sectors?.get(index - 1)?.status ?: SectorStatus.EMPTY
-            addChild(segment)
-            _segments.add(segment)
-            segment.updateUI(
-                index - 1,
-                PackedVector2Array(triangle.toList().toVariantArray()),
-                location?.getBuilding(index - 1)
-            )
+            // the editor doesn't need sector segments
+            if (editorSignalBus == null) {
+                // this loop creates one more segment than we need, for some reason; ignore the one with no location
+                if (this.location != null) {
+                    val segment = sectorScene.instantiate() as SectorSegment
+                    segment.signalBus = signalBus
+                    segment.setName("Sector${index - 1}")
+                    segment.setTextureRepeat(CanvasItem.TextureRepeat.TEXTURE_REPEAT_DISABLED)
+                    segment.location = location
+                    segment.isConfirmationDialog = isConfirmationDialog
+                    segment.status = location?.sectors?.get(index - 1)?.status ?: SectorStatus.EMPTY
+                    addChild(segment)
+                    _segments.add(segment)
+                    segment.updateUI(
+                        index - 1,
+                        PackedVector2Array(triangle.toList().toVariantArray()),
+                        location?.getBuilding(index - 1)
+                    )
+                }
+            }
         }
     }
 
