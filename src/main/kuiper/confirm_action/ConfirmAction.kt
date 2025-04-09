@@ -15,6 +15,7 @@ import godot.extension.getNodeAs
 import godot.extension.instantiateAs
 import hexgrid.Hex
 import state.Building
+import state.BuildingStatus
 import state.GameState
 import state.Location
 import technology.Science
@@ -57,7 +58,7 @@ class ConfirmAction : Control(), LogInterface {
     lateinit var location: Location
     private var action: Action? = null
     private var confirmEnabled = true
-    private var placementStatus: BuildingPlacementStatus = BuildingPlacementStatus.NONE
+    private var placementStatus: SectorPlacementStatus = SectorPlacementStatus.NONE
 
     @RegisterFunction
     override fun _ready() {
@@ -219,7 +220,7 @@ class ConfirmAction : Control(), LogInterface {
                         var segmentToHighlight = segmentId
                         val placementSegments = mutableListOf<Int>()
                         if (leftMouse) {
-                            if (placementStatus == BuildingPlacementStatus.NONE) {
+                            if (placementStatus == SectorPlacementStatus.NONE) {
                                 for (i in 0 until segmentCount) {
                                     signalBus.placeBuilding.emit(segmentToHighlight, location.name)
                                     placementSegments.add(segmentToHighlight)
@@ -232,6 +233,7 @@ class ConfirmAction : Control(), LogInterface {
                             it.sectorIds = placementSegments.toIntArray()
                         } else {
                             // Just clear everything
+                            building.status = BuildingStatus.NONE
                             for (i in 0 until 6) {
                                 signalBus.clearBuilding.emit(i, location.name)
                                 placementSegments.clear()
@@ -239,7 +241,7 @@ class ConfirmAction : Control(), LogInterface {
                         }
                         // Now check if the building is valid
                         if (leftMouse) {
-                            if (placementStatus == BuildingPlacementStatus.NONE) {
+                            if (placementStatus == SectorPlacementStatus.NONE) {
                                 placementStatus = gameState.company.zones[0].checkBuildingPlacement(
                                     hexNode.location!!,
                                     building,
@@ -247,12 +249,13 @@ class ConfirmAction : Control(), LogInterface {
                                 )
                             }
                             when (placementStatus) {
-                                BuildingPlacementStatus.OK, BuildingPlacementStatus.NONE -> {
+                                SectorPlacementStatus.OK, SectorPlacementStatus.NONE -> {
                                     placementMessage.text = ""
                                     confirmButton.disabled = false
+                                    building.status = BuildingStatus.PLACED
                                 }
 
-                                BuildingPlacementStatus.BLOCKED -> {
+                                SectorPlacementStatus.BLOCKED -> {
                                     placementMessage.text =
                                         "[color=yellow]Building this here will require destroying existing buildings, which will cost an additional +1 ${
                                             ResourceType.INFLUENCE.bbCodeIcon(32)
@@ -262,14 +265,14 @@ class ConfirmAction : Control(), LogInterface {
 //                                    it.demolitionSectorIds
                                 }
 
-                                BuildingPlacementStatus.INVALID -> {
+                                SectorPlacementStatus.INVALID -> {
                                     placementMessage.text =
                                         "[color=red]Cannot place building here as it would require destroying the HQ.[/color]"
                                     confirmButton.disabled = true
                                 }
                             }
                         } else {
-                            placementStatus = BuildingPlacementStatus.NONE
+                            placementStatus = SectorPlacementStatus.NONE
                             placementMessage.text = ""
                             confirmButton.disabled = true
                         }
@@ -437,7 +440,7 @@ class ConfirmAction : Control(), LogInterface {
  * Status of the attempt to place the building
  * Only INVALID is an error. BLOCKED is a warning, and OK is success
  */
-enum class BuildingPlacementStatus {
+enum class SectorPlacementStatus {
     OK,
     BLOCKED,
     INVALID,

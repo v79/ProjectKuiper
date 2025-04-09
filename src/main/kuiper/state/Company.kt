@@ -174,11 +174,14 @@ class Company(var name: String) : LogInterface {
 
                         is ScienceMutation -> {
                             // it doesn't make sense to have a completion mutation for science, but no need to warn
-//                            logWarning("Error: completion mutation for science doesn't make sense: $mutation")
+                            logWarning("Error: completion mutation for science doesn't make sense: $mutation")
                         }
                     }
                 }
-                // building completion has to happen at the gameState level as it needs the SignalBus
+                if (action.type == ActionType.BUILD && action.buildingToConstruct != null) {
+                    action.buildingToConstruct?.let { building -> building.status = BuildingStatus.BUILT }
+                    // GameState will also send a signal when the building is complete
+                }
             }
         }
         // clean up any expired actions
@@ -303,44 +306,45 @@ class Company(var name: String) : LogInterface {
         zones.forEach { zone ->
             zone.hexes.forEach { hexData ->
                 hexData.buildings.forEach { building ->
-                    // should only process BUILT buildings, but I don't have the status here :(
-                    when (building.key) {
-                        is Building.HQ -> {
-                            val hq = building.key as Building.HQ
-                            log("\tProcessing HQ")
-                            hq.sciencesProduced.forEach { science ->
-                                sciences[science.key] = sciences[science.key]!! + science.value
+                    if (building.key.status == BuildingStatus.BUILT) {
+                        when (building.key) {
+                            is Building.HQ -> {
+                                val hq = building.key as Building.HQ
+                                log("\tProcessing HQ")
+                                hq.sciencesProduced.forEach { science ->
+                                    sciences[science.key] = sciences[science.key]!! + science.value
+                                }
+                                hq.resourceGeneration.forEach { generation ->
+                                    resources[generation.key] = resources[generation.key]!! + generation.value
+                                }
+                                hq.runningCosts.forEach { runningCost ->
+                                    resources[runningCost.key] = resources[runningCost.key]!! - runningCost.value
+                                }
                             }
-                            hq.resourceGeneration.forEach { generation ->
-                                resources[generation.key] = resources[generation.key]!! + generation.value
-                            }
-                            hq.runningCosts.forEach { runningCost ->
-                                resources[runningCost.key] = resources[runningCost.key]!! - runningCost.value
-                            }
-                        }
 
-                        is Building.ScienceLab -> {
-                            val lab = building.key as Building.ScienceLab
-                            log("\tProcessing Science Lab ${lab.name}")
-                            lab.sciencesProduced.forEach { science ->
-                                sciences[science.key] = sciences[science.key]!! + science.value
+                            is Building.ScienceLab -> {
+                                val lab = building.key as Building.ScienceLab
+                                log("\tProcessing Science Lab ${lab.name}")
+                                lab.sciencesProduced.forEach { science ->
+                                    sciences[science.key] = sciences[science.key]!! + science.value
+                                }
+                                lab.resourceGeneration.forEach { generation ->
+                                    resources[generation.key] = resources[generation.key]!! + generation.value
+                                }
+                                lab.runningCosts.forEach { runningCost ->
+                                    resources[runningCost.key] = resources[runningCost.key]!! - runningCost.value
+                                }
                             }
-                            lab.resourceGeneration.forEach { generation ->
-                                resources[generation.key] = resources[generation.key]!! + generation.value
-                            }
-                            lab.runningCosts.forEach { runningCost ->
-                                resources[runningCost.key] = resources[runningCost.key]!! - runningCost.value
-                            }
-                        }
 
-                        is Building.Factory -> {
-                            val factory = building.key as Building.Factory
-                            log("\tProcessing Factory ${factory.name}")
-                            factory.resourceGeneration.forEach { generation ->
-                                resources[generation.key] = resources[generation.key]!! + generation.value
-                            }
-                            factory.runningCosts.forEach { runningCost ->
-                                resources[runningCost.key] = resources[runningCost.key]!! - runningCost.value
+                            is Building.Factory -> {
+                                val factory = building.key as Building.Factory
+                                log("\tProcessing Factory ${factory.name}")
+                                factory.resourceGeneration.forEach { generation ->
+                                    resources[generation.key] = resources[generation.key]!! + generation.value
+                                }
+                                factory.runningCosts.forEach { runningCost ->
+                                    resources[runningCost.key] = resources[runningCost.key]!! - runningCost.value
+                                }
                             }
                         }
                     }

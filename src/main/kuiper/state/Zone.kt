@@ -1,7 +1,7 @@
 package state
 
 import LogInterface
-import confirm_action.BuildingPlacementStatus
+import confirm_action.SectorPlacementStatus
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
@@ -66,34 +66,34 @@ class Zone(val id: Int, val name: String, var active: Boolean = false) : LogInte
         location: Location,
         building: Building,
         segmentList: List<Int>
-    ): BuildingPlacementStatus {
-        var status = BuildingPlacementStatus.INVALID
+    ): SectorPlacementStatus {
+        var status = SectorPlacementStatus.INVALID
         segmentList.forEach { segment ->
             val sector = location.sectors[segment]
             status = when (sector.status) {
                 SectorStatus.EMPTY -> {
-                    BuildingPlacementStatus.OK
+                    SectorPlacementStatus.OK
                 }
 
                 SectorStatus.CONSTRUCTING -> {
-                    BuildingPlacementStatus.BLOCKED
+                    SectorPlacementStatus.BLOCKED
                 }
 
                 SectorStatus.BUILT -> {
-                    BuildingPlacementStatus.BLOCKED
+                    SectorPlacementStatus.BLOCKED
                 }
 
                 SectorStatus.DESTROYED -> {
-                    BuildingPlacementStatus.OK
+                    SectorPlacementStatus.OK
                 }
             }
             // Cannot build or overbuild the HQ
             location.getBuilding(segment)?.let { existing ->
                 if (existing is Building.HQ) {
-                    status = BuildingPlacementStatus.INVALID
+                    status = SectorPlacementStatus.INVALID
                 }
             }
-            if (status != BuildingPlacementStatus.OK) {
+            if (status != SectorPlacementStatus.OK) {
                 return status
             }
         }

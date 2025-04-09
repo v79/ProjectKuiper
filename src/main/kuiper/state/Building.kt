@@ -18,6 +18,7 @@ sealed interface Building {
     var sectorsMustBeContiguous: Boolean
     var runningCosts: MutableMap<ResourceType, Int>
     var resourceGeneration: MutableMap<ResourceType, Int>
+    var status: BuildingStatus
 
     // spritePath?
     var spritePath: String?
@@ -33,6 +34,7 @@ sealed interface Building {
         override var runningCosts: MutableMap<ResourceType, Int> = mutableMapOf()
         override var resourceGeneration: MutableMap<ResourceType, Int> = mutableMapOf()
         override var spritePath: String? = "res://assets/textures/buildings/hq.png"
+        override var status: BuildingStatus = BuildingStatus.BUILT
         var baseCostToBuild = 0
         val sciencesProduced: MutableMap<Science, Float> = mutableMapOf()
         var baseInfluenceGenerated = 1
@@ -58,6 +60,7 @@ sealed interface Building {
         override var sectorsMustBeContiguous: Boolean = true
         override var resourceGeneration: MutableMap<ResourceType, Int> = mutableMapOf()
         override var runningCosts: MutableMap<ResourceType, Int> = mutableMapOf()
+        override var status: BuildingStatus = BuildingStatus.NONE
 
         // TODO: This should be part of the constructor, so that different labs can have different icons
         override var spritePath: String? = "res://assets/textures/buildings/basic_lab.png"
@@ -80,9 +83,18 @@ sealed interface Building {
         override var resourceGeneration: MutableMap<ResourceType, Int> = mutableMapOf()
         override var runningCosts: MutableMap<ResourceType, Int> = mutableMapOf()
         override var spritePath: String? = "res://assets/textures/buildings/basic_factory.png"
+        override var status: BuildingStatus = BuildingStatus.NONE
         private var factoryDescription: String = ""
     }
 
     // I'd really like a fluent API for building construction
 
+}
+
+enum class BuildingStatus {
+    NONE,
+    PLACED,
+    UNDER_CONSTRUCTION,
+    BUILT,
+    DESTROYED
 }
