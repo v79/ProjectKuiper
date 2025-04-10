@@ -104,11 +104,13 @@ class Company(var name: String) : LogInterface {
 
     /**
      * Execute all the active actions, decrementing the turns remaining and applying the mutations
+     * TODO: this should be split into separate functions for each action type
      */
     fun doActions(): List<Action> {
         val completed: MutableList<Action> = mutableListOf()
         log("Company: Executing ${activeActions.size} active actions")
         activeActions.forEach act@{ action ->
+            log("\tAction ${action.id}: ${action.actionName}; turns remaining: ${action.turnsRemaining}")
             // construct buildings
 
             // progress projects
@@ -119,7 +121,7 @@ class Company(var name: String) : LogInterface {
                 when (mutation) {
                     is ResourceMutation -> {
                         if (mutation.amountPerYear != 0) {
-                            log("Executing mutation: ${action.id} $mutation")
+                            log("\t\tExecuting mutation: ${action.id} $mutation")
                             when (mutation.type) {
                                 MutationType.ADD -> addResource(mutation.resource, mutation.amountPerYear)
                                 MutationType.SUBTRACT -> addResource(mutation.resource, -mutation.amountPerYear)
@@ -133,7 +135,7 @@ class Company(var name: String) : LogInterface {
 
                     is ScienceMutation -> {
                         if (mutation.amount != 0.0f) {
-                            log("Executing science mutation: ${action.id} $mutation")
+                            log("\t\tExecuting science mutation: ${action.id} $mutation")
                             when (mutation.type) {
                                 MutationType.ADD -> sciences.merge(
                                     mutation.science, mutation.amount, Float::plus
@@ -154,6 +156,12 @@ class Company(var name: String) : LogInterface {
 
             }
 
+            if (action.type == ActionType.BUILD && action.buildingToConstruct != null) {
+                action.buildingToConstruct?.let { building ->
+                    building.status = BuildingStatus.UNDER_CONSTRUCTION
+                }
+            }
+
             action.turnsRemaining--
             // perform completion mutations, which happen when the action expires
             if (action.turnsRemaining == 0) {
@@ -163,7 +171,7 @@ class Company(var name: String) : LogInterface {
                             if (mutation.completionAmount == null) {
                                 return@mut
                             }
-                            log("Executing completion mutation: ${action.id} $mutation")
+                            log("\tExecuting completion mutation: ${action.id} $mutation")
                             when (mutation.type) {
                                 MutationType.ADD -> addResource(mutation.resource, mutation.completionAmount)
                                 MutationType.SUBTRACT -> addResource(mutation.resource, -mutation.completionAmount)
@@ -180,6 +188,17 @@ class Company(var name: String) : LogInterface {
                 }
                 if (action.type == ActionType.BUILD && action.buildingToConstruct != null) {
                     action.buildingToConstruct?.let { building -> building.status = BuildingStatus.BUILT }
+                    action.sectorIds?.forEach { sectorId ->
+                        zones.forEach { zone ->
+                            zone.hexes.forEach { location ->
+                                if (location.row == action.location?.row && location.column == action.location?.column) {
+                                    log("\t\tBuilding ${action.buildingToConstruct?.name} in sector $sectorId complete")
+                                    location.getBuilding(sectorId)?.status = BuildingStatus.BUILT
+                                    location.sectors[sectorId].status = SectorStatus.BUILT
+                                }
+                            }
+                        }
+                    }
                     // GameState will also send a signal when the building is complete
                 }
             }
@@ -239,7 +258,7 @@ class Company(var name: String) : LogInterface {
                         )
                         notificationHistory.add(notification.technology.id)
                     }
-                    log("Company: Technology ${technology.title} now ${technology.progressPct}% complete")
+                    log("\tCompany: Technology ${technology.title} now ${technology.progressPct}% complete")
                 }
 
                 // unlock any techs that require this one if all of its requirements are at least 50% researched
@@ -253,12 +272,12 @@ class Company(var name: String) : LogInterface {
                             notifications.add(notification)
                         }
                         notificationHistory.add(notification.technology.id)
-                        log("Unlocking technology ${it.title}")
+                        log("\tUnlocking technology ${it.title}")
                     }
                 }
 
                 if (technology.progressPct >= 100.0) {
-                    logWarning("Company: Technology ${technology.title} is complete!")
+                    log("\tCompany: Technology ${technology.title} is complete!")
                     // prune any progress notifications for this tech
 //                    notificationHistory.removeIf { it == technology.id && technology.status == TechStatus.RESEARCHED }
                     if (technology.status != TechStatus.RESEARCHED) {
@@ -302,7 +321,7 @@ class Company(var name: String) : LogInterface {
      */
     fun processBuildings(): List<Notification> {
         val notifications: MutableList<Notification> = mutableListOf()
-        log("Processing buildings:")
+        log("Company: Processing buildings:")
         zones.forEach { zone ->
             zone.hexes.forEach { hexData ->
                 hexData.buildings.forEach { building ->

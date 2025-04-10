@@ -35,9 +35,8 @@ class ActiveActionsFan : Control(), LogInterface {
     // UI elements
     private lateinit var ongoingActionsContainer: VBoxContainer
 
-    // list of going actions as an ordered list
+    // data
     private val ongoingActions: MutableList<Action> = mutableListOf()
-
     private val cardHeight: Double = 50.0
 
     @RegisterFunction
@@ -124,7 +123,7 @@ class ActiveActionsFan : Control(), LogInterface {
      */
     private fun placeActions() {
         var yPos = 0.0
-        ongoingActions.forEachIndexed { index, action ->
+        ongoingActions.forEachIndexed { _, action ->
             val ongoingAction = ongoingActionsContainer.getNodeAs<OngoingAction>("OngoingAction_${action.id}")
             if (ongoingAction != null) {
                 ongoingAction.setPosition(Vector2(0.0, yPos))

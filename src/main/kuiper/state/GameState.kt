@@ -123,7 +123,6 @@ class GameState : Node(), LogInterface {
     fun save() {
         log("GameState: Saving game state")
         val jsonString = json.encodeToString(serializer(), this)
-        logInfo(jsonString)
         if (!DirAccess.dirExistsAbsolute("user://saves")) {
             DirAccess.makeDirRecursiveAbsolute("user://saves")
         }

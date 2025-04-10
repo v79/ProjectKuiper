@@ -59,11 +59,6 @@ class Action() {
     // but for now, the only 'entity' would be the company HQ
     // var entity: Entity? = null
 
-    init {
-        turnsRemaining = turns
-    }
-
-
     var buildingToConstruct: Building? = null
     var location: Location? = null
     var sectorIds: IntArray? = null
