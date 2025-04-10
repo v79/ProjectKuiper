@@ -7,15 +7,39 @@ import technology.Technology
 
 /**
  * General in-game notifications which will be displayed on the right-hand notification panel.
+ * That message property should be a val.
  */
-@Serializable
-sealed class Notification(val message: String, val persistent: Boolean = false) {
-    class ResearchComplete(val technology: Technology, message: String) :
-        Notification(message = message, persistent = true)
 
-    class ResearchProgress(val technology: Technology, message: String) : Notification(message = message)
-    class ResearchStalled(val technology: Technology, message: String) : Notification(message = message)
-    class ActionComplete(val action: Action, message: String) : Notification(message = message)
-    class NoScienceWarning(val science: Science, message: String) : Notification(message = message)
-    class TechUnlocked(val technology: Technology, message: String) : Notification(message = message, persistent = true)
+@Serializable
+sealed class Notification {
+    abstract var message: String
+    open var persistent: Boolean = false
+}
+
+@Serializable
+class ResearchCompleteNotification(val technology: Technology, override var message: String) :
+    Notification()
+
+@Serializable
+class ResearchProgressNotification(val technology: Technology, override var message: String) :
+    Notification()
+
+@Serializable
+class ResearchStalledNotification(val technology: Technology, override var message: String) :
+    Notification()
+
+@Serializable
+class ActionCompleteNotification(val action: Action, override var message: String) :
+    Notification()
+
+@Serializable
+class NoScienceWarningNotification(val science: Science, override var message: String, val count: Int = 15) :
+    Notification()
+
+@Serializable
+class TechUnlockedNotification(val technology: Technology, override var message: String) :
+    Notification() {
+    init {
+        persistent = true
+    }
 }

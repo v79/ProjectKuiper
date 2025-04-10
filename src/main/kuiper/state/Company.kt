@@ -4,7 +4,7 @@ import LogInterface
 import actions.*
 import hexgrid.Hex
 import kotlinx.serialization.Serializable
-import notifications.Notification
+import notifications.*
 import technology.Science
 import technology.TechStatus
 import technology.TechTier
@@ -201,7 +201,7 @@ class Company(var name: String) : LogInterface {
                 if (science.value == 0.0f) {
                     logWarning("Science doesn't have value: $science")
                     notifications.add(
-                        Notification.NoScienceWarning(
+                        NoScienceWarningNotification(
                             science.key, "There are no ${science.key.displayName} points available to spend this turn"
                         )
                     )
@@ -230,7 +230,7 @@ class Company(var name: String) : LogInterface {
             if (technology.tier != TechTier.TIER_0) {
                 // send a notification if the tech research is 50% complete
                 if (technology.progressPct > 50.0f) {
-                    val notification = Notification.ResearchProgress(
+                    val notification = ResearchProgressNotification(
                         technology, "Researching ${technology.title} now 50% complete"
                     )
                     if (!notificationHistory.contains(notification.technology.id)) {
@@ -246,7 +246,7 @@ class Company(var name: String) : LogInterface {
                 technologies.filter { tech -> tech.requires.contains(technology.id) }.forEach {
                     if (getRequiredTechsFor(it).all { reqTech -> reqTech.progressPct > 50.0 }) {
                         it.status = TechStatus.UNLOCKED
-                        val notification = Notification.TechUnlocked(
+                        val notification = TechUnlockedNotification(
                             it, "Technology ${it.title} is now unlocked for research"
                         )
                         if (!notificationHistory.contains(notification.technology.id)) {
@@ -262,7 +262,7 @@ class Company(var name: String) : LogInterface {
                     // prune any progress notifications for this tech
 //                    notificationHistory.removeIf { it == technology.id && technology.status == TechStatus.RESEARCHED }
                     if (technology.status != TechStatus.RESEARCHED) {
-                        val notification = Notification.ResearchComplete(
+                        val notification = ResearchCompleteNotification(
                             technology, "Research complete: ${technology.title}"
                         )
                         // TODO: this doesn't work either, there will have been a previous notification for this ID!

@@ -17,6 +17,7 @@ import godot.extension.getNodeAs
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlinx.serialization.json.Json
+import notifications.ActionCompleteNotification
 import notifications.Notification
 import notifications.NotificationWrapper
 import java.util.*
@@ -65,7 +66,7 @@ class GameState : Node(), LogInterface {
         notifications.addAll(company.clearResearch())
         val completed = company.doActions()
         notifications.addAll(company.processBuildings())
-        notifications.addAll(completed.map { Notification.ActionComplete(it, "Action completed: ${it.actionName}") })
+        notifications.addAll(completed.map { ActionCompleteNotification(it, "Action completed: ${it.actionName}") })
         // signal completed actions to expire
         completed.forEach { action ->
             signalBus.actionCompleted.emitSignal(ActionWrapper(action))
