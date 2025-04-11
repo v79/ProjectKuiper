@@ -7,6 +7,7 @@ relativeSourcePath = src/main/kuiper/actions/AvailableActionsFan.kt
 baseType = Node2D
 supertypes = [
     godot.api.Node2D,
+	LogInterface,
 	godot.api.CanvasItem,
 	godot.api.Node,
 	godot.api.Object,
