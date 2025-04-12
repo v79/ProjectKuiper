@@ -76,7 +76,7 @@ class Zone(val id: Int, val name: String, var active: Boolean = false) : LogInte
                 }
 
                 SectorStatus.CONSTRUCTING -> {
-                    SectorPlacementStatus.BLOCKED
+                    SectorPlacementStatus.UNDER_CONSTRUCTION
                 }
 
                 SectorStatus.BUILT -> {

@@ -36,6 +36,10 @@ class SectorSegment : Polygon2D(), LogInterface {
     private var currentColor: Color = emptyColor
     private var baseColor: Color = emptyColor
 
+    private val underConstructionSpritePath =
+        "res://assets/textures/icons/icon-conmats-128x128.png"
+    private val underConstructionSprite = ResourceLoader.load(underConstructionSpritePath, "Texture") as Texture2D
+
 
     @RegisterFunction
     override fun _ready() {
@@ -91,7 +95,11 @@ class SectorSegment : Polygon2D(), LogInterface {
             }
 
             SectorStatus.CONSTRUCTING -> {
-                currentColor = Color(8.0, 0.6, 0.2, 1.0)
+                sprite2D.texture = underConstructionSprite
+                sprite2D.centered = false
+                sprite2D.setScale(Vector2(0.3, 0.3))
+                sprite2D.setOffset(calculateSpriteOffset())
+                currentColor = emptyColor
             }
         }
         color = currentColor

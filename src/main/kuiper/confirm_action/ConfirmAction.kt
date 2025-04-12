@@ -212,6 +212,7 @@ class ConfirmAction : Control(), LogInterface {
      */
     @RegisterFunction
     fun placeBuilding(segmentId: Int, leftMouse: Boolean) {
+        placementStatus = SectorPlacementStatus.NONE
         if (action != null) {
             action?.let {
                 if (it.type == ActionType.BUILD) {
@@ -286,8 +287,6 @@ class ConfirmAction : Control(), LogInterface {
                 }
             }
         }
-
-
     }
 
     /**
