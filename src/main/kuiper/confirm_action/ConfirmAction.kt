@@ -265,6 +265,12 @@ class ConfirmAction : Control(), LogInterface {
 //                                    it.demolitionSectorIds
                                 }
 
+                                SectorPlacementStatus.UNDER_CONSTRUCTION -> {
+                                    placementMessage.text =
+                                        "[color=red]Cannot place building here as there is another already under construction.[/color]"
+                                    confirmButton.disabled = true
+                                }
+
                                 SectorPlacementStatus.INVALID -> {
                                     placementMessage.text =
                                         "[color=red]Cannot place building here as it would require destroying the HQ.[/color]"
@@ -409,6 +415,7 @@ class ConfirmAction : Control(), LogInterface {
                     act.location = hexNode.location
                     logWarning("ConfirmAction: confirmAction(${act.buildingToConstruct}): $act")
                     signalBus.confirmAction.emit(hexNode, ActionWrapper(act))
+                    // set the sector segments status to UNDER_CONSTRUCTION
                 }
 
                 ActionType.BOOST, ActionType.INVEST, ActionType.EXPLORE -> {
@@ -444,5 +451,6 @@ enum class SectorPlacementStatus {
     OK,
     BLOCKED,
     INVALID,
+    UNDER_CONSTRUCTION,
     NONE
 }
