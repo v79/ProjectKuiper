@@ -9,6 +9,7 @@ import godot.annotation.RegisterProperty
 import godot.api.*
 import godot.core.connect
 import godot.extension.getNodeAs
+import godot.global.GD
 
 @RegisterClass
 class AvailableActionsFan : Node2D(), LogInterface {

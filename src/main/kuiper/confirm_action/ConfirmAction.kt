@@ -415,6 +415,7 @@ class ConfirmAction : Control(), LogInterface {
                     act.location = hexNode.location
                     logWarning("ConfirmAction: confirmAction(${act.buildingToConstruct}): $act")
                     signalBus.confirmAction.emit(hexNode, ActionWrapper(act))
+                    signalBus.cancelActionConfirmation.emit()
                     // set the sector segments status to UNDER_CONSTRUCTION
                 }
 

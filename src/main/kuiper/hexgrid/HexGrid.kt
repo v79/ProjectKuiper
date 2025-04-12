@@ -12,6 +12,7 @@ import godot.core.asCachedStringName
 import godot.core.connect
 import godot.extension.getNodeAs
 import godot.extension.instantiateAs
+import godot.global.GD
 import state.Building
 import state.GameState
 import state.Location

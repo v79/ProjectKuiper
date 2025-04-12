@@ -133,7 +133,8 @@ class ActionCard : Node2D() {
 
                 // clear rotation when dragging but revert when released
                 getTree()!!.createTween()?.tweenProperty(this, "rotation".asNodePath(), GD.degToRad(0.0f), 0.5)
-            } else if (Input.isActionJustReleased("mouse_left_click".asCachedStringName())) {
+            }
+            if (Input.isActionJustReleased("mouse_left_click".asCachedStringName())) {
                 if (placedOnHex != null) {
                     status = CardStatus.PLACED_ON_HEX
                     // now we trigger the confirmation dialog and other cool stuff by emitting a signal
