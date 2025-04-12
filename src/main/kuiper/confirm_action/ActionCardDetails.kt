@@ -9,10 +9,9 @@ import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
 import godot.api.*
-import godot.core.StringName
-import godot.core.asStringName
-import godot.core.connect
+import godot.core.*
 import godot.extension.getNodeAs
+import hexgrid.Hex
 import state.Building
 
 @RegisterClass
@@ -35,10 +34,13 @@ class ActionCardDetails : Control() {
     private val descLabel: Label by lazy { getNodeAs("%CardDescription")!! }
     private val sectorSizeLabel: Label by lazy { getNodeAs("%SectorSize")!! }
     private val iconTexture: TextureRect by lazy { getNodeAs("%IconTexture")!! }
-
+    private val hexContainer: BoxContainer by lazy { getNodeAs("%HexContainer")!! }
+    private val hex: Hex by lazy { getNodeAs("%Hex")!! }
 
     @RegisterFunction
     override fun _ready() {
+        hex.setScale(Vector2(0.75, 0.75))
+
         signalBus.showActionConfirmation.connect { _, c ->
             updateCard(c)
         }
@@ -48,6 +50,7 @@ class ActionCardDetails : Control() {
     fun updateCard(card: ActionCard) {
         titleLabel.text = card.cardName
         iconTexture.setTexture(null)
+        hex.setPosition(Vector2(130, 15)) // Hard-coded position, I can't get the hexContainer's size for some reason
         card.action?.let { action ->
             val building: Building? = action.buildingToConstruct
             // set the theme variation to display the correct texture for the card
@@ -55,17 +58,27 @@ class ActionCardDetails : Control() {
                 ActionType.BUILD -> {
                     setThemeVariation("BuildCard".asStringName())
                     sectorSizeLabel.text = building?.sectors.toString()
-                    building?.spritePath?.let { sPath ->
-                        val texture = ResourceLoader.load(sPath, "Texture2D") as Texture2D
-                        iconTexture.setTexture(texture)
+                    building?.let { b ->
+                        b.spritePath?.let { sPath ->
+                            val texture = ResourceLoader.load(sPath, "Texture2D") as Texture2D
+                            iconTexture.setTexture(texture)
+                        }
+                        hex.fillTriangles.fill(false)
+                        hex.colour = Color.green
+                        for (i in 0 until building.sectors) {
+                            hex.fillTriangles[i] = true
+                        }
+                        hex.redraw()
                     }
                 }
 
                 ActionType.INVEST -> {
+                    hex.visible = false
                     setThemeVariation("InvestCard".asStringName())
                 }
 
                 else -> {
+                    hex.visible = false
                     setThemeVariation()
                 }
             }

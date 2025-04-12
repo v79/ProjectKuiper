@@ -3,6 +3,8 @@ package actions.activeActions
 import LogInterface
 import SignalBus
 import actions.Action
+import actions.ActionType
+import actions.BuildingActionWrapper
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.api.Control
@@ -13,6 +15,7 @@ import godot.core.Vector2
 import godot.core.connect
 import godot.extension.getNodeAs
 import state.GameState
+import state.SectorStatus
 
 @RegisterClass
 class ActiveActionsFan : Control(), LogInterface {
@@ -32,9 +35,8 @@ class ActiveActionsFan : Control(), LogInterface {
     // UI elements
     private lateinit var ongoingActionsContainer: VBoxContainer
 
-    // list of going actions as an ordered list
+    // data
     private val ongoingActions: MutableList<Action> = mutableListOf()
-
     private val cardHeight: Double = 50.0
 
     @RegisterFunction
@@ -57,6 +59,29 @@ class ActiveActionsFan : Control(), LogInterface {
                 // update the resource panel. Company cannot do this as it doesn't have access to the signal bus
                 gameState.company.resources.forEach { resource ->
                     signalBus.updateResource.emit(resource.key.name, resource.value.toFloat())
+                }
+                // if this a building action, update the hex grid with icons and stuff
+                if (it.type == ActionType.BUILD) {
+                    if (hex.location == null) {
+                        logError("Location is null for hex ${hex.id}")
+                        return@connect
+                    }
+                    if (it.buildingToConstruct == null) {
+                        logError("Building to construct is null for action ${it.id}")
+                        return@connect
+                    }
+                    if (it.sectorIds == null) {
+                        logError("SectorIds is null for action ${it.id}")
+                        return@connect
+                    }
+                    signalBus.updateHex.emit(
+                        BuildingActionWrapper(
+                            hex.location!!,
+                            it.sectorIds!!,
+                            it.buildingToConstruct!!,
+                            SectorStatus.CONSTRUCTING
+                        )
+                    )
                 }
             }
         }
@@ -98,7 +123,7 @@ class ActiveActionsFan : Control(), LogInterface {
      */
     private fun placeActions() {
         var yPos = 0.0
-        ongoingActions.forEachIndexed { index, action ->
+        ongoingActions.forEachIndexed { _, action ->
             val ongoingAction = ongoingActionsContainer.getNodeAs<OngoingAction>("OngoingAction_${action.id}")
             if (ongoingAction != null) {
                 ongoingAction.setPosition(Vector2(0.0, yPos))

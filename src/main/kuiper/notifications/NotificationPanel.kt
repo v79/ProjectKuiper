@@ -85,7 +85,7 @@ class NotificationPanel : VBoxContainer(), LogInterface {
     @RegisterFunction
     fun _on_button_pressed() {
         log("Creating dummy notification")
-        val n = Notification.ResearchProgress(
+        val n = ResearchProgressNotification(
             Technology(
                 -1, "Dummy tech", "Fake technology", TechTier.TIER_2, TechStatus.RESEARCHED
             ), "You have made progress in researching a new technology"

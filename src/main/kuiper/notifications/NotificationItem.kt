@@ -53,27 +53,27 @@ class NotificationItem : Control() {
         this.notification = notification
         this.setTooltipText(notification.message)
         when (notification) {
-            is Notification.ResearchProgress -> {
+            is ResearchProgressNotification -> {
                 label.text = "P"
             }
 
-            is Notification.ActionComplete -> {
+            is ActionCompleteNotification -> {
                 label.text = "A"
             }
 
-            is Notification.ResearchComplete -> {
+            is ResearchCompleteNotification -> {
                 label.text = "R"
             }
 
-            is Notification.ResearchStalled -> {
+            is ResearchStalledNotification -> {
                 label.text = "S"
             }
 
-            is Notification.NoScienceWarning -> {
+            is NoScienceWarningNotification -> {
                 label.text = "0"
             }
 
-            is Notification.TechUnlocked -> {
+            is TechUnlockedNotification -> {
                 label.text = "U"
             }
         }

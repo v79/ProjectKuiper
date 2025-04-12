@@ -22,6 +22,10 @@ config/icon="res://assets/saturn-1024.png"
 GameState="*res://src/main/kuiper/state/GameState.kt"
 DataLoader="*res://src/main/kuiper/loaders/DataLoader.kt"
 
+[debug]
+
+file_logging/enable_file_logging=true
+
 [display]
 
 window/size/viewport_width=1600

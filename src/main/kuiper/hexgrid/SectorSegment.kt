@@ -1,13 +1,11 @@
 package hexgrid
 
 import LogInterface
+import SignalBus
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.api.*
-import godot.core.Color
-import godot.core.PackedVector2Array
-import godot.core.Vector2
-import godot.core.asCachedStringName
+import godot.core.*
 import godot.extension.getNodeAs
 import state.Building
 import state.Location
@@ -21,25 +19,47 @@ class SectorSegment : Polygon2D(), LogInterface {
 
     override var logEnabled = true
 
+    var signalBus: SignalBus? = null
+
     // UI elements
     private lateinit var collisionPolygon: CollisionPolygon2D
     private lateinit var sprite2D: Sprite2D
     private lateinit var area2D: Area2D
 
     // Data
-    private var sectorId: Int = -1
+    var sectorId: Int = -1
     var isConfirmationDialog: Boolean = false
     var location: Location? = null
     var status: SectorStatus = SectorStatus.EMPTY
-    private var selected: Boolean = false
+    private var buildingPlaced: Boolean = false
     private val emptyColor = Color(0.2, 0.2, 0.2, 0.2)
     private var currentColor: Color = emptyColor
     private var baseColor: Color = emptyColor
+
+    private val underConstructionSpritePath =
+        "res://assets/textures/icons/icon-conmats-128x128.png"
+    private val underConstructionSprite = ResourceLoader.load(underConstructionSpritePath, "Texture") as Texture2D
+
 
     @RegisterFunction
     override fun _ready() {
         area2D = getNodeAs("Area2D")!!
         sprite2D = getNodeAs("%Sprite2D")!!
+
+        signalBus?.placeBuilding?.connect { id, locName ->
+            if (isConfirmationDialog) {
+                if (sectorId == id && location?.name == locName) {
+                    placeBuilding()
+                }
+            }
+        }
+        signalBus?.clearBuilding?.connect { id, locName ->
+            if (isConfirmationDialog) {
+                if (sectorId == id && location?.name == locName) {
+                    clearBuilding()
+                }
+            }
+        }
     }
 
     @RegisterFunction
@@ -75,7 +95,11 @@ class SectorSegment : Polygon2D(), LogInterface {
             }
 
             SectorStatus.CONSTRUCTING -> {
-                currentColor = Color(8.0, 0.6, 0.2, 1.0)
+                sprite2D.texture = underConstructionSprite
+                sprite2D.centered = false
+                sprite2D.setScale(Vector2(0.3, 0.3))
+                sprite2D.setOffset(calculateSpriteOffset())
+                currentColor = emptyColor
             }
         }
         color = currentColor
@@ -83,23 +107,19 @@ class SectorSegment : Polygon2D(), LogInterface {
 
     @RegisterFunction
     fun _on_area_2d_input_event(viewport: Node, event: InputEvent?, shapeIdx: Int) {
-        // check for clicks
         event?.let { e ->
             if (e.isActionPressed("mouse_left_click".asCachedStringName())) {
                 if (isConfirmationDialog) {
-                    baseColor = currentColor
-                    selected = !selected
-                    color = if (selected) {
-                        Color.red
-                    } else {
-                        baseColor
+                    if (!buildingPlaced) {
+                        signalBus?.segmentClicked?.emit(sectorId, true)
+                        buildingPlaced = true
                     }
                 }
             }
             if (e.isActionPressed("mouse_right_click".asCachedStringName())) {
                 if (isConfirmationDialog) {
-                    selected = false
-                    color = baseColor
+                    signalBus?.segmentClicked?.emit(sectorId, false)
+                    buildingPlaced = false
                 }
             }
         }
@@ -110,10 +130,42 @@ class SectorSegment : Polygon2D(), LogInterface {
         if (location == null) {
             return
         } else if (location!!.unlocked && isConfirmationDialog) {
-            log("Mouse entered location '${location!!.name}' sector $sectorId")
+//            log("Mouse entered location '${location!!.name}' sector $sectorId")
             // show tooltip
         }
+    }
 
+    @RegisterFunction
+    fun placeBuilding() {
+        color = baseColor
+        when (status) {
+            SectorStatus.EMPTY -> {
+                color = Color.green
+            }
+
+            SectorStatus.CONSTRUCTING -> {
+                color = Color.red
+            }
+
+            SectorStatus.DESTROYED -> {
+                color = Color.green
+            }
+
+            SectorStatus.BUILT -> {
+                color = Color.red
+            }
+        }
+        buildingPlaced = true
+    }
+
+    @RegisterFunction
+    fun clearBuilding() {
+        color = if (status == SectorStatus.BUILT) {
+            Color(1.0, 1.0, 1.0, 1.0)
+        } else {
+            baseColor
+        }
+        buildingPlaced = false
     }
 
     @RegisterFunction
@@ -126,6 +178,7 @@ class SectorSegment : Polygon2D(), LogInterface {
      *       _
      *    /3\4/5\
      *    \2/1\0/
+     *       ¯
      */
     private fun calculateSpriteOffset(): Vector2 {
         when (sectorId) {

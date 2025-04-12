@@ -3,6 +3,8 @@ package actions
 import godot.annotation.RegisterClass
 import kotlinx.serialization.Serializable
 import state.Building
+import state.Location
+import state.SectorStatus
 import technology.Science
 
 @RegisterClass
@@ -12,6 +14,21 @@ class ActionWrapper() : godot.api.Object() {
     }
 
     var action: Action? = null
+}
+
+@RegisterClass
+class BuildingActionWrapper() : godot.api.Object() {
+    constructor(location: Location, sectorIds: IntArray, building: Building, sectorStatus: SectorStatus) : this() {
+        this.location = location
+        this.sectorIds = sectorIds
+        this.building = building
+        this.sectorStatus = sectorStatus
+    }
+
+    var location: Location? = null
+    var building: Building? = null
+    var sectorIds: IntArray? = null
+    var sectorStatus: SectorStatus? = null
 }
 
 /**
@@ -42,15 +59,14 @@ class Action() {
     // but for now, the only 'entity' would be the company HQ
     // var entity: Entity? = null
 
-    init {
-        turnsRemaining = turns
-    }
-
+    var buildingToConstruct: Building? = null
+    var location: Location? = null
+    var sectorIds: IntArray? = null
+    var demolitionSectorIds: IntArray? = null
 
     val initialCosts: MutableMap<ResourceType, Int> = mutableMapOf()
     private val mutations: MutableSet<ResourceMutation> = mutableSetOf()
     private val scienceMutations: MutableSet<ScienceMutation> = mutableSetOf()
-    var buildingToConstruct: Building? = null
 
     fun addInitialCost(resourceType: ResourceType, amount: Int) {
         initialCosts[resourceType] = amount
@@ -144,7 +160,7 @@ class Action() {
     // actions either happen each turn, or at expiry
 
     override fun toString(): String {
-        return "Action(id=$id, actionName='$actionName', turns=$turns, type=$type, initialCosts=$initialCosts, mutations=${mutations.size}, scienceMutations=${scienceMutations.size}, buildingToConstruct=${buildingToConstruct})"
+        return "Action(id=$id, actionName='$actionName', turns=$turns, type=$type, initialCosts=$initialCosts, mutations=${mutations.size}, scienceMutations=${scienceMutations.size}, buildingToConstruct=${buildingToConstruct}, sectors=${sectorIds})"
     }
 
 }

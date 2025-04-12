@@ -4,7 +4,7 @@ import LogInterface
 import actions.*
 import hexgrid.Hex
 import kotlinx.serialization.Serializable
-import notifications.Notification
+import notifications.*
 import technology.Science
 import technology.TechStatus
 import technology.TechTier
@@ -42,7 +42,7 @@ class Company(var name: String) : LogInterface {
     val technologies: MutableList<Technology> = mutableListOf()
 
     /**
-     * Zones are areas of the solar system. Each zone has a list of locations
+     * Zones are areas of the solar system. Each zone has a list of Location objects
      */
     val zones: MutableList<Zone> = mutableListOf()
 
@@ -61,6 +61,22 @@ class Company(var name: String) : LogInterface {
         action.initialCosts.forEach { cost ->
             resources.merge(cost.key, cost.value, Int::minus)
         }
+        // update the gameState zones
+        zones.forEach { zone ->
+            zone.hexes.forEach { hexData ->
+                if (hexData.row == hex.row && hexData.column == hex.col) {
+                    log("Updating hexData for action ${action.actionName} on hex ${hexData.name}")
+                    if (action.type == ActionType.BUILD) {
+                        if (action.buildingToConstruct != null && action.sectorIds != null) {
+                            hexData.addBuilding(action.buildingToConstruct!!, action.sectorIds!!, false)
+                        } else {
+                            logError("Error: Building to construct or sector IDs are null for action ${action.actionName}")
+                        }
+                    }
+                }
+            }
+        }
+        log("Company: Activated action ${action.actionName} on hex ${action.location?.name}")
     }
 
     /**
@@ -88,11 +104,13 @@ class Company(var name: String) : LogInterface {
 
     /**
      * Execute all the active actions, decrementing the turns remaining and applying the mutations
+     * TODO: this should be split into separate functions for each action type
      */
     fun doActions(): List<Action> {
         val completed: MutableList<Action> = mutableListOf()
         log("Company: Executing ${activeActions.size} active actions")
         activeActions.forEach act@{ action ->
+            log("\tAction ${action.id}: ${action.actionName}; turns remaining: ${action.turnsRemaining}")
             // construct buildings
 
             // progress projects
@@ -103,7 +121,7 @@ class Company(var name: String) : LogInterface {
                 when (mutation) {
                     is ResourceMutation -> {
                         if (mutation.amountPerYear != 0) {
-                            log("Executing mutation: ${action.id} $mutation")
+                            log("\t\tExecuting mutation: ${action.id} $mutation")
                             when (mutation.type) {
                                 MutationType.ADD -> addResource(mutation.resource, mutation.amountPerYear)
                                 MutationType.SUBTRACT -> addResource(mutation.resource, -mutation.amountPerYear)
@@ -117,7 +135,7 @@ class Company(var name: String) : LogInterface {
 
                     is ScienceMutation -> {
                         if (mutation.amount != 0.0f) {
-                            log("Executing science mutation: ${action.id} $mutation")
+                            log("\t\tExecuting science mutation: ${action.id} $mutation")
                             when (mutation.type) {
                                 MutationType.ADD -> sciences.merge(
                                     mutation.science, mutation.amount, Float::plus
@@ -138,6 +156,12 @@ class Company(var name: String) : LogInterface {
 
             }
 
+            if (action.type == ActionType.BUILD && action.buildingToConstruct != null) {
+                action.buildingToConstruct?.let { building ->
+                    building.status = BuildingStatus.UNDER_CONSTRUCTION
+                }
+            }
+
             action.turnsRemaining--
             // perform completion mutations, which happen when the action expires
             if (action.turnsRemaining == 0) {
@@ -147,7 +171,7 @@ class Company(var name: String) : LogInterface {
                             if (mutation.completionAmount == null) {
                                 return@mut
                             }
-                            log("Executing completion mutation: ${action.id} $mutation")
+                            log("\tExecuting completion mutation: ${action.id} $mutation")
                             when (mutation.type) {
                                 MutationType.ADD -> addResource(mutation.resource, mutation.completionAmount)
                                 MutationType.SUBTRACT -> addResource(mutation.resource, -mutation.completionAmount)
@@ -158,9 +182,24 @@ class Company(var name: String) : LogInterface {
 
                         is ScienceMutation -> {
                             // it doesn't make sense to have a completion mutation for science, but no need to warn
-//                            logWarning("Error: completion mutation for science doesn't make sense: $mutation")
+                            logWarning("Error: completion mutation for science doesn't make sense: $mutation")
                         }
                     }
+                }
+                if (action.type == ActionType.BUILD && action.buildingToConstruct != null) {
+                    action.buildingToConstruct?.let { building -> building.status = BuildingStatus.BUILT }
+                    action.sectorIds?.forEach { sectorId ->
+                        zones.forEach { zone ->
+                            zone.hexes.forEach { location ->
+                                if (location.row == action.location?.row && location.column == action.location?.column) {
+                                    log("\t\tBuilding ${action.buildingToConstruct?.name} in sector $sectorId complete")
+                                    location.getBuilding(sectorId)?.status = BuildingStatus.BUILT
+                                    location.sectors[sectorId].status = SectorStatus.BUILT
+                                }
+                            }
+                        }
+                    }
+                    // GameState will also send a signal when the building is complete
                 }
             }
         }
@@ -181,7 +220,7 @@ class Company(var name: String) : LogInterface {
                 if (science.value == 0.0f) {
                     logWarning("Science doesn't have value: $science")
                     notifications.add(
-                        Notification.NoScienceWarning(
+                        NoScienceWarningNotification(
                             science.key, "There are no ${science.key.displayName} points available to spend this turn"
                         )
                     )
@@ -210,7 +249,7 @@ class Company(var name: String) : LogInterface {
             if (technology.tier != TechTier.TIER_0) {
                 // send a notification if the tech research is 50% complete
                 if (technology.progressPct > 50.0f) {
-                    val notification = Notification.ResearchProgress(
+                    val notification = ResearchProgressNotification(
                         technology, "Researching ${technology.title} now 50% complete"
                     )
                     if (!notificationHistory.contains(notification.technology.id)) {
@@ -219,30 +258,30 @@ class Company(var name: String) : LogInterface {
                         )
                         notificationHistory.add(notification.technology.id)
                     }
-                    log("Company: Technology ${technology.title} now ${technology.progressPct}% complete")
+                    log("\tCompany: Technology ${technology.title} now ${technology.progressPct}% complete")
                 }
 
                 // unlock any techs that require this one if all of its requirements are at least 50% researched
                 technologies.filter { tech -> tech.requires.contains(technology.id) }.forEach {
                     if (getRequiredTechsFor(it).all { reqTech -> reqTech.progressPct > 50.0 }) {
                         it.status = TechStatus.UNLOCKED
-                        val notification = Notification.TechUnlocked(
+                        val notification = TechUnlockedNotification(
                             it, "Technology ${it.title} is now unlocked for research"
                         )
                         if (!notificationHistory.contains(notification.technology.id)) {
                             notifications.add(notification)
                         }
                         notificationHistory.add(notification.technology.id)
-                        log("Unlocking technology ${it.title}")
+                        log("\tUnlocking technology ${it.title}")
                     }
                 }
 
                 if (technology.progressPct >= 100.0) {
-                    logWarning("Company: Technology ${technology.title} is complete!")
+                    log("\tCompany: Technology ${technology.title} is complete!")
                     // prune any progress notifications for this tech
 //                    notificationHistory.removeIf { it == technology.id && technology.status == TechStatus.RESEARCHED }
                     if (technology.status != TechStatus.RESEARCHED) {
-                        val notification = Notification.ResearchComplete(
+                        val notification = ResearchCompleteNotification(
                             technology, "Research complete: ${technology.title}"
                         )
                         // TODO: this doesn't work either, there will have been a previous notification for this ID!
@@ -282,34 +321,49 @@ class Company(var name: String) : LogInterface {
      */
     fun processBuildings(): List<Notification> {
         val notifications: MutableList<Notification> = mutableListOf()
-        log("Processing buildings:")
+        log("Company: Processing buildings:")
         zones.forEach { zone ->
             zone.hexes.forEach { hexData ->
-                hexData.location.buildings.forEach { building ->
-                    when (building.key) {
-                        is Building.HQ -> {
-                            val hq = building.key as Building.HQ
-                            hq.sciencesProduced.forEach { science ->
-                                sciences[science.key] = sciences[science.key]!! + science.value
+                hexData.buildings.forEach { building ->
+                    if (building.key.status == BuildingStatus.BUILT) {
+                        when (building.key) {
+                            is Building.HQ -> {
+                                val hq = building.key as Building.HQ
+                                log("\tProcessing HQ")
+                                hq.sciencesProduced.forEach { science ->
+                                    sciences[science.key] = sciences[science.key]!! + science.value
+                                }
+                                hq.resourceGeneration.forEach { generation ->
+                                    resources[generation.key] = resources[generation.key]!! + generation.value
+                                }
+                                hq.runningCosts.forEach { runningCost ->
+                                    resources[runningCost.key] = resources[runningCost.key]!! - runningCost.value
+                                }
                             }
-                            hq.resourceGeneration.forEach { generation ->
-                                resources[generation.key] = resources[generation.key]!! + generation.value
-                            }
-                            hq.runningCosts.forEach { runningCost ->
-                                resources[runningCost.key] = resources[runningCost.key]!! - runningCost.value
-                            }
-                        }
 
-                        is Building.ScienceLab -> {
-                            val lab = building.key as Building.ScienceLab
-                            lab.sciencesProduced.forEach { science ->
-                                sciences[science.key] = sciences[science.key]!! + science.value
+                            is Building.ScienceLab -> {
+                                val lab = building.key as Building.ScienceLab
+                                log("\tProcessing Science Lab ${lab.name}")
+                                lab.sciencesProduced.forEach { science ->
+                                    sciences[science.key] = sciences[science.key]!! + science.value
+                                }
+                                lab.resourceGeneration.forEach { generation ->
+                                    resources[generation.key] = resources[generation.key]!! + generation.value
+                                }
+                                lab.runningCosts.forEach { runningCost ->
+                                    resources[runningCost.key] = resources[runningCost.key]!! - runningCost.value
+                                }
                             }
-                            lab.resourceGeneration.forEach { generation ->
-                                resources[generation.key] = resources[generation.key]!! + generation.value
-                            }
-                            lab.runningCosts.forEach { runningCost ->
-                                resources[runningCost.key] = resources[runningCost.key]!! - runningCost.value
+
+                            is Building.Factory -> {
+                                val factory = building.key as Building.Factory
+                                log("\tProcessing Factory ${factory.name}")
+                                factory.resourceGeneration.forEach { generation ->
+                                    resources[generation.key] = resources[generation.key]!! + generation.value
+                                }
+                                factory.runningCosts.forEach { runningCost ->
+                                    resources[runningCost.key] = resources[runningCost.key]!! - runningCost.value
+                                }
                             }
                         }
                     }
@@ -338,7 +392,7 @@ class Company(var name: String) : LogInterface {
         }
         zones.forEach { zone ->
             zone.hexes.forEach { hexData ->
-                hexData.location.buildings.forEach { building ->
+                hexData.buildings.forEach { building ->
                     building.key.runningCosts.filter { it.key == resourceType }.forEach { cost ->
                         sBuilder.append("[color=red]-")
                         sBuilder.append(cost.value)

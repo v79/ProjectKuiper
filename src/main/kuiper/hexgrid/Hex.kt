@@ -1,6 +1,7 @@
 package hexgrid
 
 import LogInterface
+import SignalBus
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
@@ -15,10 +16,11 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 /**
- * A Hex represents a location in the world/region map.
+ * A Hex is a Godot node that represents a location in the world/region map.
+ * See [Location] for the game representation of the same concept, not tied to the Godot Node
  * A hex has six internal triangles, each of which represents a site where a facility can be built.
  * A facility may span more than one sector/triangle
- * There are two special Hexes - the company HQ, and the space launch centre
+ * There are two special Locations - the company HQ, and the space launch centre
  */
 @RegisterClass
 class Hex : Node2D(), LogInterface {
@@ -35,7 +37,7 @@ class Hex : Node2D(), LogInterface {
 
     @Export
     @RegisterProperty
-    var newRadius: Double = 75.0
+    var hexRadius: Double = 75.0
 
     @RegisterProperty
     var hexMode: HexMode = HexMode.NORMAL
@@ -44,15 +46,12 @@ class Hex : Node2D(), LogInterface {
     @Export
     var editorSignalBus: MapEditorSignalBus? = null
 
-    // Signal bus - editor signal bus required
-//    private val signalBus: SignalBus by lazy { getNodeAs("/root/Kuiper/SignalBus")!! }
+    @RegisterProperty
+    var signalBus: SignalBus? = null
 
     // UI elements
-    private val locationLabel: Label by lazy { getNodeAs("%LocationLabel")!! }
-    private val area2D: Area2D by lazy { getNodeAs<Area2D>("%Area2D")!! }
     private val collisionShape2D: CollisionPolygon2D by lazy { getNodeAs("%CollisionShape2D")!! }
     lateinit var marker: HexDropTarget
-    var location: Location? = null
 
     // Packed scenes
     private val sectorScene = ResourceLoader.load("res://src/main/kuiper/hexgrid/sector_segment.tscn") as PackedScene
@@ -61,35 +60,50 @@ class Hex : Node2D(), LogInterface {
     var row: Int = 0
     var col: Int = 0
 
+    var location: Location? = null
     private lateinit var pointSet: Map<Int, Triple<Vector2, Vector2, Vector2>>
     private var unlockedColor = Color(1.0, 1.0, 1.0, 1.0)
     private var lockedColor = Color(0.2, 0.2, 0.2, 1.0)
     private var highlightColor = Color(1.0, 0.8, 0.8, 1.0)
     var colour: Color = unlockedColor
     var isConfirmationDialog: Boolean = false
+    val fillTriangles: BooleanArray = BooleanArray(6) { false }
+    private val _segments: MutableList<SectorSegment> = mutableListOf()
+    val segments: List<SectorSegment>
+        get() = _segments.toList()
+
 
     @RegisterFunction
     override fun _ready() {
-
         if (!hexUnlocked) {
             colour = lockedColor
         }
-        pointSet = calculateVerticesForHex(radius = newRadius.toFloat())
+        pointSet = calculateVerticesForHex(radius = hexRadius.toFloat())
         val packedArray = PackedVector2Array(
             pointSet.values.flatMap { listOf(it.first, it.second) }.distinct().toVariantArray()
         )
         collisionShape2D.polygon = packedArray
         pointSet.forEach { (index, triangle) ->
-            val segment = sectorScene.instantiate() as SectorSegment
-            segment.setName("Sector${index - 1}")
-            segment.setTextureRepeat(CanvasItem.TextureRepeat.TEXTURE_REPEAT_DISABLED)
-            segment.location = location
-            segment.isConfirmationDialog = isConfirmationDialog
-            segment.status = location?.sectors?.get(index - 1)?.status ?: SectorStatus.EMPTY
-            addChild(segment)
-            segment.updateUI(
-                index - 1, PackedVector2Array(triangle.toList().toVariantArray()), location?.getBuilding(index - 1)
-            )
+            // the editor doesn't need sector segments
+            if (editorSignalBus == null) {
+                // this loop creates one more segment than we need, for some reason; ignore the one with no location
+                if (this.location != null) {
+                    val segment = sectorScene.instantiate() as SectorSegment
+                    segment.signalBus = signalBus
+                    segment.setName("Sector${index - 1}")
+                    segment.setTextureRepeat(CanvasItem.TextureRepeat.TEXTURE_REPEAT_DISABLED)
+                    segment.location = location
+                    segment.isConfirmationDialog = isConfirmationDialog
+                    segment.status = location?.sectors?.get(index - 1)?.status ?: SectorStatus.EMPTY
+                    addChild(segment)
+                    _segments.add(segment)
+                    segment.updateUI(
+                        index - 1,
+                        PackedVector2Array(triangle.toList().toVariantArray()),
+                        location?.getBuilding(index - 1)
+                    )
+                }
+            }
         }
     }
 
@@ -105,12 +119,24 @@ class Hex : Node2D(), LogInterface {
         val drawInternals = true
         val a = 2 * Math.PI / 6
 
-        var p1 = Vector2(newRadius, 0.0)
+        var p1 = Vector2(hexRadius, 0.0)
         for (i in 1..6) {
-            val p2 = Vector2(newRadius * cos(a * i), newRadius * sin(a * i))
+            val p2 = Vector2(hexRadius * cos(a * i), hexRadius * sin(a * i))
             drawLine(
                 p1, p2, colour, 2.0f
             )
+            if (fillTriangles.isNotEmpty()) {
+                if (fillTriangles[i - 1]) {
+                    val fillPolys = PackedVector2Array()
+                    fillPolys.insert(0, Vector2(0.0, 0.0))
+                    fillPolys.insert(1, p1)
+                    fillPolys.insert(2, p2)
+                    drawColoredPolygon(
+                        fillPolys,
+                        colour
+                    )
+                }
+            }
             p1 = p2
             if (drawInternals) {
                 drawLine(
@@ -122,19 +148,28 @@ class Hex : Node2D(), LogInterface {
 
     @RegisterFunction
     fun highlight() {
-        colour = highlightColor
-        if (hexMode == HexMode.EDITOR) {
-            zIndex += 1
+        if (hexMode != HexMode.CARD) {
+            colour = highlightColor
+            if (hexMode == HexMode.EDITOR) {
+                zIndex += 1
+            }
+            queueRedraw()
         }
-        queueRedraw()
     }
 
     @RegisterFunction
     fun unhighlight() {
-        colour = if (hexUnlocked) unlockedColor else lockedColor
-        if (hexMode == HexMode.EDITOR) {
-            zIndex -= 1
+        if (hexMode != HexMode.CARD) {
+            colour = if (hexUnlocked) unlockedColor else lockedColor
+            if (hexMode == HexMode.EDITOR) {
+                zIndex -= 1
+            }
+            queueRedraw()
         }
+    }
+
+    @RegisterFunction
+    fun redraw() {
         queueRedraw()
     }
 
@@ -193,6 +228,7 @@ class Hex : Node2D(), LogInterface {
  */
 enum class HexMode {
     NORMAL,
-    EDITOR
+    EDITOR,
+    CARD
 }
 

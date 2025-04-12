@@ -121,7 +121,7 @@ class GameSetup : Node(), LogInterface {
 
         // globals are added to the tree first, so will be the first child
         val gameState = getTree()?.root?.getChild(0) as GameState
-        val sponsor = sponsorList[selectedSponsor - 1]
+        val sponsor = sponsorList[selectedSponsor]
         log("Randomising technology costs")
         technologies.forEach { technology -> technology.randomiseCosts() }
         gameState.let { gS ->
@@ -150,19 +150,22 @@ class GameSetup : Node(), LogInterface {
         zoneList[0].apply {
             description = "Your home zone, where your headquarters is located. HQ can be moved in the future."
             sponsor.hexGrid.forEach { row ->
-                row.forEach { data ->
-                    hexes.add(data)
+                row.forEach { location ->
+                    if (location.name.isNotEmpty()) {
+                        hexes.add(location)
+//                        log("Adding hex ${data.row}, ${data.column} to zone ${id}; location ${data.location.name}")
+                    }
                 }
             }
             // in the sponsor.hexGrid array, find the first element where the location.isUnlockedAtStart is true
-            val hqLocation = sponsor.hexGrid.flatten().firstOrNull { it.unlockedAtStart }
+            val hqLocation = sponsor.hexGrid.flatten().firstOrNull { it.unlocked }
             if (hqLocation != null) {
                 val hq = Building.HQ()
                 hq.sciencesProduced.putAll(sponsor.baseScienceRate)
                 hq.resourceGeneration[ResourceType.INFLUENCE] = 1
                 hq.resourceGeneration[ResourceType.GOLD] = 25
                 val sector = GD.randiRange(0, 5)
-                hqLocation.location.addBuilding(hq, intArrayOf(sector), true)
+                hqLocation.addBuilding(hq, intArrayOf(sector), true)
             }
         }
         return zoneList

@@ -1,5 +1,6 @@
 import actions.ActionCard
 import actions.ActionWrapper
+import actions.BuildingActionWrapper
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterSignal
@@ -48,6 +49,19 @@ class SignalBus : Node() {
 
     @RegisterSignal("hex", "action")
     val confirmAction by signal2<Hex, ActionWrapper>()
+
+    @RegisterSignal("segmentId", "leftClick") // leftClick is true for left click, false for right click
+    val segmentClicked by signal2<Int, Boolean>()
+
+    @RegisterSignal("segmentId", "location")
+    val placeBuilding by signal2<Int, String>()
+
+    @RegisterSignal("segmentId", "location")
+    val clearBuilding by signal2<Int, String>()
+
+    @RegisterSignal("buildingActionWrapper")
+    val updateHex by signal1<BuildingActionWrapper>()
+
 
     // Signals relating to the card deck
     @RegisterSignal("action")

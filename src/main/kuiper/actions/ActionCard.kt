@@ -112,10 +112,10 @@ class ActionCard : Node2D() {
     @RegisterFunction
     override fun _process(delta: Double) {
         if (isDraggable && status != CardStatus.DISABLED) {
-            if (Input.isActionJustPressed("mouse_left_click".asStringName())) {
+            if (Input.isActionJustPressed("mouse_left_click".asCachedStringName())) {
                 offset = getGlobalMousePosition() - globalPosition
             }
-            if (Input.isActionPressed("mouse_left_click".asStringName())) {
+            if (Input.isActionPressed("mouse_left_click".asCachedStringName())) {
                 status = CardStatus.DRAGGING
                 isDraggingCard.emitSignal(this)
                 // limit drags to bounding box
@@ -133,7 +133,8 @@ class ActionCard : Node2D() {
 
                 // clear rotation when dragging but revert when released
                 getTree()!!.createTween()?.tweenProperty(this, "rotation".asNodePath(), GD.degToRad(0.0f), 0.5)
-            } else if (Input.isActionJustReleased("mouse_left_click".asStringName())) {
+            }
+            if (Input.isActionJustReleased("mouse_left_click".asCachedStringName())) {
                 if (placedOnHex != null) {
                     status = CardStatus.PLACED_ON_HEX
                     // now we trigger the confirmation dialog and other cool stuff by emitting a signal
@@ -225,7 +226,7 @@ class ActionCard : Node2D() {
         // set the texture based on the Action type
         when (action.type) {
             ActionType.BUILD -> {
-                setThemeVariation("BuildCard".asStringName())
+                setThemeVariation("BuildCard".asCachedStringName())
                 sectorSizeLabel.text = building?.sectors.toString()
                 if (building != null) {
                     building.spritePath?.let { sPath ->
@@ -236,7 +237,7 @@ class ActionCard : Node2D() {
             }
 
             ActionType.INVEST -> {
-                setThemeVariation("InvestCard".asStringName())
+                setThemeVariation("InvestCard".asCachedStringName())
             }
 
             else -> {

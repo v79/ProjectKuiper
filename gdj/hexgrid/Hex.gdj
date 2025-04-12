@@ -22,9 +22,10 @@ signals = [
 properties = [
     id,
 	hex_unlocked,
-	new_radius,
+	hex_radius,
 	hex_mode,
-	editor_signal_bus
+	editor_signal_bus,
+	signal_bus
 ]
 functions = [
     _ready,
@@ -32,6 +33,7 @@ functions = [
 	_draw,
 	highlight,
 	unhighlight,
+	redraw,
 	on_mouse_entered,
 	on_mouse_exited,
 	on_gui_input

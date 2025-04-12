@@ -5,17 +5,13 @@
     "description": "Construct a research lab to increase your science production",
     "turns": 3,
     "type": "BUILD",
-    "initialCosts": {
-      "GOLD": 100,
-      "INFLUENCE": 2
-    },
     "buildingToConstruct": {
       "type": "state.Building.ScienceLab",
       "name": "Research Lab",
-      "labDescription": "A basic research lab",
       "runningCosts": {
         "GOLD": 10
       },
+      "labDescription": "A basic research lab",
       "sciencesProduced": {
         "PHYSICS": 5.0,
         "ASTRONOMY": 5.0,
@@ -24,6 +20,10 @@
         "MATHEMATICS": 5.0,
         "PSYCHOLOGY": 5.0
       }
+    },
+    "initialCosts": {
+      "GOLD": 100,
+      "INFLUENCE": 2
     }
   },
   {
@@ -32,22 +32,22 @@
     "description": "Construct a telescope to increase your astronomy science production",
     "turns": 4,
     "type": "BUILD",
-    "initialCosts": {
-      "GOLD": 200,
-      "INFLUENCE": 1,
-      "CONSTRUCTION_MATERIALS": 25
-    },
     "buildingToConstruct": {
       "type": "state.Building.ScienceLab",
       "name": "Basic Telescope",
-      "labDescription": "A basic telescope",
       "runningCosts": {
         "GOLD": 5
       },
+      "labDescription": "A basic telescope",
       "sciencesProduced": {
         "ASTRONOMY": 10.0,
         "PHYSICS": 5.0
       }
+    },
+    "initialCosts": {
+      "GOLD": 200,
+      "INFLUENCE": 1,
+      "CONSTRUCTION_MATERIALS": 25
     }
   },
   {
@@ -102,6 +102,33 @@
         "science": "ENGINEERING",
         "type": "ADD",
         "amount": 5.0
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "actionName": "Build Factory",
+    "description": "Construct a factory to increase your production",
+    "turns": 3,
+    "type": "BUILD",
+    "buildingToConstruct": {
+      "type": "state.Building.Factory",
+      "sectors": 2,
+      "resourceGeneration": {
+        "CONSTRUCTION_MATERIALS": 6
+      },
+      "factoryDescription": "A basic factory"
+    },
+    "initialCosts": {
+      "GOLD": 25,
+      "CONSTRUCTION_MATERIALS": 10,
+      "INFLUENCE": 2
+    },
+    "mutations": [
+      {
+        "resource": "CONSTRUCTION_MATERIALS",
+        "type": "SUBTRACT",
+        "amountPerYear": 5
       }
     ]
   }

@@ -1,14 +1,20 @@
 package state
 
-import hexgrid.Hex
+import godot.core.Vector2
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
+import serializers.GDVectorSerializer
 
 /**
  * A Location represents a single buildable hex within a Zone
  */
 @Serializable
-class Location(val name: String, var unlocked: Boolean = false) {
+data class Location(
+    var row: Int,
+    var column: Int,
+    var name: String,
+    @Serializable(with = GDVectorSerializer::class) val position: Vector2,
+    var unlocked: Boolean = false
+) {
     // locations may have some interesting properties in the future, such as base production rates
 
     // a location is divided into 6 sectors, each of which can be built on
@@ -18,9 +24,6 @@ class Location(val name: String, var unlocked: Boolean = false) {
     private val _buildings: MutableMap<Building, IntArray> = mutableMapOf()
 
     val sectors = List(6) { Sector(it) }
-
-    @Transient
-    val hex: Hex? = null
 
     /**
      * Add a building to this location
@@ -39,15 +42,17 @@ class Location(val name: String, var unlocked: Boolean = false) {
     fun getBuilding(sectorId: Int): Building? {
         return _buildings.entries.find { it.value.contains(sectorId) }?.key
     }
+
+    fun getSectorStatus(sectorId: Int): SectorStatus {
+        return sectors[sectorId].status
+    }
 }
 
 /**
  * A Sector represents a single buildable sector within a Location, and is represented by a triangle within a Hex
  */
 @Serializable
-class Sector(val id: Int, var status: SectorStatus = SectorStatus.EMPTY) {
-
-}
+class Sector(val id: Int, var status: SectorStatus = SectorStatus.EMPTY)
 
 /**
  * The status of a Sector

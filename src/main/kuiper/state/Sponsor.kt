@@ -2,7 +2,6 @@ package state
 
 import actions.ResourceType
 import godot.core.Color
-import hexgrid.map.editor.HexData
 import kotlinx.serialization.Serializable
 import serializers.GDColorSerializer
 import technology.Science
@@ -15,7 +14,7 @@ data class Sponsor(
     val baseScienceRate: Map<Science, Float>,
     val startingTechs: List<Int> = emptyList(),
     val hexDimensions: Pair<Int, Int> = Pair(1, 1),
-    val hexGrid: Array<Array<HexData>> = emptyArray()
+    val hexGrid: Array<Array<Location>> = emptyArray()
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

@@ -3,6 +3,7 @@ package state
 import LogInterface
 import SignalBus
 import actions.Action
+import actions.ActionType
 import actions.ActionWrapper
 import godot.annotation.Export
 import godot.annotation.RegisterClass
@@ -16,6 +17,7 @@ import godot.extension.getNodeAs
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlinx.serialization.json.Json
+import notifications.ActionCompleteNotification
 import notifications.Notification
 import notifications.NotificationWrapper
 import java.util.*
@@ -58,17 +60,27 @@ class GameState : Node(), LogInterface {
     fun nextTurn() {
         // Clear notifications; exiting persistent notifications will remain in the tree until dismissed
         notifications.clear()
-//        signalBus.nextTurn.emit()
         log("GameState: Next turn")
         // Do research, spending all research points
         notifications.addAll(company.doResearch())
         notifications.addAll(company.clearResearch())
         val completed = company.doActions()
         notifications.addAll(company.processBuildings())
-        notifications.addAll(completed.map { Notification.ActionComplete(it, "Action completed: ${it.actionName}") })
+        notifications.addAll(completed.map { ActionCompleteNotification(it, "Action completed: ${it.actionName}") })
         // signal completed actions to expire
         completed.forEach { action ->
             signalBus.actionCompleted.emitSignal(ActionWrapper(action))
+            if (action.type == ActionType.BUILD) {
+                // a BUILD action has completed. Update the hex to the correct status so the building sprite will appear
+                log("Completed building action ${action.actionName} on hex ${action.location?.name}")
+                val wrapper = actions.BuildingActionWrapper(
+                    action.location!!,
+                    action.sectorIds!!,
+                    action.buildingToConstruct!!,
+                    SectorStatus.BUILT
+                )
+                signalBus.updateHex.emit(wrapper)
+            }
         }
         notifications.forEach { notification ->
             signalBus.notify.emit(NotificationWrapper(notification))
@@ -111,7 +123,6 @@ class GameState : Node(), LogInterface {
     fun save() {
         log("GameState: Saving game state")
         val jsonString = json.encodeToString(serializer(), this)
-        logInfo(jsonString)
         if (!DirAccess.dirExistsAbsolute("user://saves")) {
             DirAccess.makeDirRecursiveAbsolute("user://saves")
         }

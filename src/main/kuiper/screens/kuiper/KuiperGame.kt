@@ -95,7 +95,7 @@ class KuiperGame : PanelContainer(), LogInterface {
         }
 
         signalBus.showActionConfirmation.connect { hex, card ->
-            confirmAction.hex = hex
+            confirmAction.hexNode = hex
             confirmAction.card = card
             confirmAction.fadeIn()
             getTree()?.getNodesInGroup("HexGrid".asStringName())

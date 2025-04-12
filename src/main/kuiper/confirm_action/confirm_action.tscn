@@ -131,6 +131,7 @@ theme = ExtResource("1_qg714")
 script = ExtResource("1_po0r3")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
+clip_contents = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -181,7 +182,7 @@ horizontal_alignment = 1
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer"]
+[node name="HexSectorContainer" type="MarginContainer" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 10
@@ -189,47 +190,48 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/HexSectorContainer"]
+clip_contents = true
 layout_mode = 2
 
-[node name="HexLocationLabel" type="Label" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "<location>"
-horizontal_alignment = 1
-
-[node name="MarginContainer2" type="MarginContainer" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer/VBoxContainer"]
+[node name="MarginContainer2" type="MarginContainer" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/HexSectorContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_bottom = 80
 
-[node name="HexBoxContainer" type="CenterContainer" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer/VBoxContainer"]
+[node name="HexBoxContainer" type="CenterContainer" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/HexSectorContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/HexSectorContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/margin_top = 200
+theme_override_constants/margin_top = 100
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/HexSectorContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="ConfirmSectorContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer/VBoxContainer/VBoxContainer"]
+[node name="ConfirmSectorContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/HexSectorContainer/VBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="ConfirmSectorLabel" type="Label" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer/VBoxContainer/VBoxContainer/ConfirmSectorContainer"]
+[node name="ConfirmSectorLabel" type="Label" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/HexSectorContainer/VBoxContainer/VBoxContainer/ConfirmSectorContainer"]
 layout_mode = 2
-text = "Choose sectors for building"
+text = "Choose sectors for building
+Left-click to place, right-click to clear"
 horizontal_alignment = 1
 
-[node name="ConformSectorButton" type="Button" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer/VBoxContainer/VBoxContainer/ConfirmSectorContainer"]
+[node name="PlacementMessage" type="RichTextLabel" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/HexSectorContainer/VBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
-text = "Confirm"
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+horizontal_alignment = 1
 
-[node name="MarginContainer2" type="MarginContainer" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer"]
+[node name="CardDetailsContainer" type="MarginContainer" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(700, 0)
 layout_mode = 2
 theme_override_constants/margin_left = 10
@@ -237,73 +239,73 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/CardDetailsContainer"]
 layout_mode = 2
 
-[node name="ActionCardDetails" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer2/HBoxContainer" instance=ExtResource("2_v23dy")]
+[node name="ActionCardDetails" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/CardDetailsContainer/HBoxContainer" instance=ExtResource("2_v23dy")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer2/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/CardDetailsContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Costs_" type="Label" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer"]
+[node name="Costs_" type="Label" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/CardDetailsContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 theme_type_variation = &"BoldLabel"
 text = "Upfront costs:"
 
-[node name="CostsList" type="RichTextLabel" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer"]
+[node name="CostsList" type="RichTextLabel" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/CardDetailsContainer/HBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 bbcode_enabled = true
 fit_content = true
 scroll_active = false
 
-[node name="CostsPerTurn_" type="Label" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer"]
+[node name="CostsPerTurn_" type="Label" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/CardDetailsContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 theme = ExtResource("1_qg714")
 theme_type_variation = &"BoldLabel"
 text = "Costs per turn:"
 
-[node name="CostsPerTurnList" type="RichTextLabel" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer"]
+[node name="CostsPerTurnList" type="RichTextLabel" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/CardDetailsContainer/HBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 bbcode_enabled = true
 fit_content = true
 scroll_active = false
 
-[node name="Benefits_" type="Label" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer"]
+[node name="Benefits_" type="Label" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/CardDetailsContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 theme_type_variation = &"BoldLabel"
 text = "Benefits:"
 
-[node name="BenefitsList" type="RichTextLabel" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer"]
+[node name="BenefitsList" type="RichTextLabel" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/CardDetailsContainer/HBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 bbcode_enabled = true
 fit_content = true
 scroll_active = false
 
-[node name="Building_" type="Label" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer"]
+[node name="Building_" type="Label" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/CardDetailsContainer/HBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"BoldLabel"
 text = "Building:"
 
-[node name="BuildingSummary_" type="RichTextLabel" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer"]
+[node name="BuildingSummary_" type="RichTextLabel" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/CardDetailsContainer/HBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="BuildingList" type="RichTextLabel" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer"]
+[node name="BuildingList" type="RichTextLabel" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/CardDetailsContainer/HBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 bbcode_enabled = true
 fit_content = true
 scroll_active = false
 
-[node name="SectorCountLabel_" type="RichTextLabel" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/MarginContainer2/HBoxContainer/VBoxContainer"]
+[node name="SectorCountLabel_" type="RichTextLabel" parent="HBoxContainer/VBoxContainer/ConfirmActionPanel/VBoxContainer/HBoxContainer/CardDetailsContainer/HBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 bbcode_enabled = true

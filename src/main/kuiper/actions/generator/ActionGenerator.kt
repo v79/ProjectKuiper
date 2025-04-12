@@ -3,9 +3,9 @@ package actions.generator
 import actions.Action
 import actions.ActionType
 import actions.MutationType
+import actions.ResourceType
 import kotlinx.serialization.json.Json
 import state.Building
-import actions.ResourceType
 import technology.Science
 import java.io.File
 
@@ -31,7 +31,11 @@ fun main() {
     buildResearchLab.constructBuilding(lab)
 
     val basicTelescope = createAction(
-        id++, "Build Basic Telescope", "Construct a telescope to increase your astronomy science production", 4, ActionType.BUILD
+        id++,
+        "Build Basic Telescope",
+        "Construct a telescope to increase your astronomy science production",
+        4,
+        ActionType.BUILD
     )
     basicTelescope.addInitialCost(ResourceType.GOLD, 200)
     basicTelescope.addInitialCost(ResourceType.INFLUENCE, 1)
@@ -62,12 +66,24 @@ fun main() {
     buildSpaceship.addScienceMutation(Science.ASTRONOMY, MutationType.ADD, 5f)
     buildSpaceship.addScienceMutation(Science.ENGINEERING, MutationType.ADD, 5f)
 
+    val factory =
+        Building.Factory(name = "Basic Factory", description = "A basic factory", sectors = 2, contiguous = true)
+    factory.resourceGeneration[ResourceType.CONSTRUCTION_MATERIALS] = 6
+
+    val buildFactory = createAction(
+        id++, "Build Factory", "Construct a factory to increase your production", 3, ActionType.BUILD
+    )
+    buildFactory.addInitialCost(ResourceType.GOLD, 25)
+    buildFactory.addInitialCost(ResourceType.CONSTRUCTION_MATERIALS, 10)
+    buildFactory.addInitialCost(ResourceType.INFLUENCE, 2)
+    buildFactory.addMutation(ResourceType.CONSTRUCTION_MATERIALS, MutationType.SUBTRACT, 5)
+    buildFactory.constructBuilding(factory)
 
     // serialize the actions to a file
     val json = Json { prettyPrint = false }
     println()
     println("Serializing actions...")
-    val allActions = listOf(buildResearchLab, basicTelescope, investCash, buildSpaceship)
+    val allActions = listOf(buildResearchLab, basicTelescope, investCash, buildSpaceship, buildFactory)
     allActions.forEach { action ->
         println("Action: ${action.type} ${action.id} ${action.actionName} takes ${action.turns} turns")
         action.initialCosts.forEach { (type, cost) ->

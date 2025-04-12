@@ -58,8 +58,17 @@ class HexMapGridEditor : GridContainer(), LogInterface {
     private val chooseSponsorButton: MenuButton by lazy { getNodeAs("%LoadSponsorBtn")!! }
 
     // Data
-    private var grid =
-        Array(dimension) { Array(dimension) { HexData(dimension, dimension, Location(""), Vector2.ZERO) } }
+    private var grid = Array(dimension) {
+        Array(dimension) {
+            Location(
+                row = dimension,
+                column = dimension,
+                name = "",
+                position = Vector2.ZERO,
+                unlocked = false
+            )
+        }
+    }
     private var selectedRow = -1
     private var selectedCol = -1
     private var sponsor: Sponsor? = null
@@ -86,27 +95,27 @@ class HexMapGridEditor : GridContainer(), LogInterface {
         // set up the grid
         grid = calculateGridCoordinates(dimension, dimension)
         grid.forEachIndexed { i, row ->
-            row.forEachIndexed { j, data ->
+            row.forEachIndexed { j, location ->
                 val hex = hexScene.instantiate() as Hex
                 hex.hexMode = HexMode.EDITOR
-                hex.row = i
-                hex.col = j
-                hex.location = Location("location $i,$j")
+                hex.row = j
+                hex.col = i
+                hex.location = location
                 hex.editorSignalBus = signalBus
-                hex.setName("Hex_${i}_$j")
-                hex.colour = godot.core.Color.mediumPurple
-                val locLabel = hex.getNodeAs<Label>("%LocationLabel")!!
-                locLabel.visible = false
-                hex.setPosition(data.position)
+                hex.setName("Hex_${j}_$i")
+                hex.colour = Color.mediumPurple
+//                val locLabel = hex.getNodeAs<Label>("%LocationLabel")!!
+//                locLabel.visible = false
+                hex.setPosition(location.position)
                 addChild(hex)
             }
         }
 
         signalBus.editor_placeHex.connect { row, col ->
-            hexCoordsLbl.text = "($row,$col)"
+            hexCoordsLbl.text = "(c$col,r$row)"
             selectedRow = row
             selectedCol = col
-            phCoordLbl.text = "@$row,$col"
+            phCoordLbl.text = "@c$col,r$row"
             val hex = getNodeAtHex(row, col)
             if (hex != null && hex.hexUnlocked) {
                 phNameEdit.text = hex.location?.name ?: ""
@@ -147,16 +156,9 @@ class HexMapGridEditor : GridContainer(), LogInterface {
         log("Creating new sponsor")
         nextSponsorId++
         sponsor = Sponsor(
-            id = nextSponsorId,
-            name = "",
-            colour = Color.white,
-            introText = "",
-            startingResources = mapOf(
-                ResourceType.GOLD to 0,
-                ResourceType.INFLUENCE to 0,
-                ResourceType.CONSTRUCTION_MATERIALS to 0
-            ),
-            baseScienceRate = mapOf(
+            id = nextSponsorId, name = "", colour = Color.white, introText = "", startingResources = mapOf(
+                ResourceType.GOLD to 0, ResourceType.INFLUENCE to 0, ResourceType.CONSTRUCTION_MATERIALS to 0
+            ), baseScienceRate = mapOf(
                 Science.PHYSICS to 0.0f,
                 Science.ENGINEERING to 0.0f,
                 Science.BIOCHEMISTRY to 0.0f,
@@ -164,10 +166,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
                 Science.ASTRONOMY to 0.0f,
                 Science.PSYCHOLOGY to 0.0f,
                 Science.EUREKA to 0.0f
-            ),
-            startingTechs = emptyList(),
-            hexDimensions = Pair(dimension, dimension),
-            hexGrid = grid
+            ), startingTechs = emptyList(), hexDimensions = Pair(dimension, dimension), hexGrid = grid
         )
         sponsor?.let {
             updateUI()
@@ -205,10 +204,10 @@ class HexMapGridEditor : GridContainer(), LogInterface {
         }
 
         // update the grid
-        grid.forEach { editorData ->
-            editorData.forEach { value ->
-                if (value.location.name.isNotEmpty()) {
-                    storeHexLocation(value.row, value.column, value.location.name)
+        grid.forEach { locations ->
+            locations.forEach { location ->
+                if (location.name.isNotEmpty()) {
+                    storeHexLocation(location.row, location.column, location.name)
                 }
             }
         }
@@ -257,17 +256,23 @@ class HexMapGridEditor : GridContainer(), LogInterface {
         nextSponsorId++
 
         grid.forEachIndexed { i, row ->
-            row.forEachIndexed { j, data ->
+            row.forEachIndexed { j, location ->
                 val hex = getNodeAtHex(i, j)
                 if (hex == null) {
                     logError("No hex found at $i $j")
                     return null
                 } else {
                     if (hex.hexUnlocked) {
-                        logInfo("Hex ($i,$j) ${hex.location?.name} (Starts unlocked: ${data.unlockedAtStart})")
-                        data.location = hex.location ?: Location("<no name>", data.unlockedAtStart)
+                        logInfo("Hex ($i,$j) ${hex.location?.name} (Starts unlocked: ${location})")
+//                        location = hex.location ?: Location(j, i, "<no name>", Vector2.ZERO, data.location)
+                        location.name = hex.location?.name ?: ""
+                        location.unlocked = hex.location?.unlocked ?: false
+                    } else {
+                        logInfo("Hex ($i,$j) ${hex.location?.name} (Starts locked: ${location})")
+                        location.name = hex.location?.name ?: ""
+                        location.unlocked = false
                     }
-                    sponsor.hexGrid[i][j] = data
+                    sponsor.hexGrid[i][j] = location
                 }
             }
         }
@@ -342,9 +347,19 @@ class HexMapGridEditor : GridContainer(), LogInterface {
     /**
      * Calculate the grid pixel coordinates for the given number of rows and columns
      */
-    private fun calculateGridCoordinates(xCount: Int, yCount: Int): Array<Array<HexData>> {
+    private fun calculateGridCoordinates(xCount: Int, yCount: Int): Array<Array<Location>> {
         // flat topped, evenq orientation
-        val hexCoords = Array(xCount) { Array(yCount) { HexData(xCount, yCount, Location(""), Vector2.ZERO) } }
+        val hexCoords = Array(xCount) {
+            Array(yCount) {
+                Location(
+                    row = xCount,
+                    column = yCount,
+                    name = "",
+                    position = Vector2.ZERO,
+                    unlocked = false
+                )
+            }
+        }
         val radius = 75.0
         val diameter = radius * 2
         val width = diameter
@@ -356,7 +371,13 @@ class HexMapGridEditor : GridContainer(), LogInterface {
             for (j in 0 until yCount) {
                 val x = i * horizDistance
                 val y = j * height + (i % 2) * (height / 2)
-                hexCoords[i][j] = HexData(i, j, Location(""), Vector2(x, y))
+                hexCoords[i][j] = Location(
+                    row = i,
+                    column = j,
+                    name = "",
+                    position = Vector2(x, y),
+                    unlocked = false
+                )
             }
         }
         return hexCoords
@@ -366,16 +387,16 @@ class HexMapGridEditor : GridContainer(), LogInterface {
      * Store the details of the given hex into the grid
      */
     private fun storeHexLocation(row: Int, col: Int, name: String) {
-        val hex = grid[row][col]
-        hex.unlockedAtStart = phUnlockedAtStart.buttonPressed
+        val location = grid[row][col]
+        location.unlocked = phUnlockedAtStart.buttonPressed
         val hexNode = getNodeAtHex(row, col) ?: return
-        val location = Location(name, phUnlockedAtStart.buttonPressed)
+        location.name = name
+        location.unlocked = phUnlockedAtStart.buttonPressed
         hexNode.location = location
-        hex.location = location
-        val locLabel = hexNode.getNodeAs<Label>("%LocationLabel")!!
-        locLabel.text = name
-        locLabel.visible = true
-        locLabel.setPosition(Vector2(-20.0, -20.0))
+//        val locLabel = hexNode.getNodeAs<Label>("%LocationLabel")!!
+//        locLabel.text = name
+//        locLabel.visible = true
+//        locLabel.setPosition(Vector2(-20.0, -20.0))
         placeHexPopup.visible = false
         selectedCol = -1
         selectedRow = -1
@@ -403,9 +424,9 @@ class HexMapGridEditor : GridContainer(), LogInterface {
      * Get the hex at the given row and column
      */
     private fun getNodeAtHex(row: Int, col: Int): Hex? {
-        val node = getNodeAs("Hex_${row}_$col".asStringName()) as Hex?
+        val node = getNodeAs("Hex_${col}_$row".asStringName()) as Hex?
         if (node == null) {
-            logError("Hex not found at $row $col")
+            logError("Hex not found at c$col,r$row")
         }
         return node
     }

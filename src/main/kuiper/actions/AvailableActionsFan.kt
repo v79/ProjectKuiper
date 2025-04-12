@@ -1,5 +1,6 @@
 package actions
 
+import LogInterface
 import SignalBus
 import godot.annotation.Export
 import godot.annotation.RegisterClass
@@ -11,7 +12,9 @@ import godot.extension.getNodeAs
 import godot.global.GD
 
 @RegisterClass
-class AvailableActionsFan : Node2D() {
+class AvailableActionsFan : Node2D(), LogInterface {
+
+    override var logEnabled: Boolean = true
 
     // Globals
     private val signalBus: SignalBus by lazy { getNodeAs("/root/Kuiper/SignalBus")!! }
@@ -174,7 +177,7 @@ class AvailableActionsFan : Node2D() {
             }
             index++
         }
-        GD.printErr("While searching for card $id, it was not found. Returning -1")
+        logError("While searching for card $id, it was not found. Returning -1")
         return -1
     }
 
@@ -185,13 +188,13 @@ class AvailableActionsFan : Node2D() {
     @RegisterFunction
     fun addActionCard(action: Action?) {
         if (action == null) {
-            GD.printErr("Tried to add a null action card")
+            logError("Tried to add a null action card")
             return
         }
         val card = actionCardScene.instantiate() as ActionCard
         card.setAction(action)
 
-        actionCards[action.id] = card
+        actionCards[card.cardId] = card
         fanContainer.addChild(card)
 
         // connect signals
@@ -248,7 +251,7 @@ class AvailableActionsFan : Node2D() {
             enableAllCards()
             card.queueFree()
         } else {
-            GD.printErr("Tried to remove card $id, but it was not found")
+            logError("Tried to remove card $id, but it was not found")
         }
     }
 

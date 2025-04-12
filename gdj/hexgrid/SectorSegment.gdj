@@ -28,5 +28,7 @@ functions = [
 	update_u_i,
 	_on_area_2d_input_event,
 	mouse_entered,
+	place_building,
+	clear_building,
 	mouse_exited
 ]
