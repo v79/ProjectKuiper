@@ -361,7 +361,7 @@ size_flags_horizontal = 3
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/margin_bottom = 20
+theme_override_constants/margin_bottom = 45
 
 [node name="HexCoordsLbl" type="Label" parent="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/MarginContainer"]
 unique_name_in_owner = true
@@ -376,7 +376,7 @@ mouse_filter = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
-theme_override_constants/margin_right = 100
+theme_override_constants/margin_right = 125
 
 [node name="HexGridContainer" type="GridContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2"]
 unique_name_in_owner = true

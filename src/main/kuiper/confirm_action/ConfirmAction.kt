@@ -14,6 +14,7 @@ import godot.core.connect
 import godot.extension.getNodeAs
 import godot.extension.instantiateAs
 import hexgrid.Hex
+import hexgrid.HexMode
 import state.Building
 import state.BuildingStatus
 import state.GameState
@@ -362,8 +363,7 @@ class ConfirmAction : Control(), LogInterface {
             // and rescale
             neighbourPosition.x *= scaleFactor
             neighbourPosition.y *= scaleFactor
-
-            neighbourHex.colour = Color.dimGray
+            neighbourHex.hexMode = HexMode.LOCKED
             neighbourHex.id = index
             neighbourHex.location = neighbour
             neighbourHex.isConfirmationDialog = true

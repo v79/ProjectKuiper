@@ -98,27 +98,26 @@ class HexMapGridEditor : GridContainer(), LogInterface {
 
         // set up the grid
         grid = calculateGridCoordinates(dimension, dimension)
-        grid.forEachIndexed { i, row ->
+        grid.forEachIndexed { col, row ->
             row.forEachIndexed { j, location ->
                 val hex = hexScene.instantiate() as Hex
-                hex.hexMode = HexMode.EDITOR
+                hex.hexMode = HexMode.EDITOR_BLANK
                 hex.row = j
-                hex.col = i
+                hex.col = col
                 hex.location = location
                 hex.editorSignalBus = signalBus
-                hex.setName("Hex_${j}_$i")
-                hex.colour = Color.mediumPurple
+                hex.setName("Hex_${col}_$j")
                 hex.setPosition(location.position)
                 addChild(hex)
             }
         }
 
-        signalBus.editor_placeHex.connect { row, col ->
+        signalBus.editor_placeHex.connect { col, row ->
             hexCoordsLbl.text = "(c$col,r$row)"
-            selectedRow = row
             selectedCol = col
+            selectedRow = row
             phCoordLbl.text = "@c$col,r$row"
-            val hex = getNodeAtHex(row, col)
+            val hex = getNodeAtHex(col, row)
             if (hex != null && hex.hexUnlocked) {
                 phNameEdit.text = hex.location?.name ?: ""
                 phUnlockedAtStart.buttonPressed = true
@@ -130,7 +129,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
 
     @RegisterFunction
     fun onConfirmLocation() {
-        storeHexLocation(selectedRow, selectedCol, phNameEdit.text, phUnlockedAtStart.buttonPressed)
+        storeHexLocation(selectedCol, selectedRow, phNameEdit.text, phUnlockedAtStart.buttonPressed)
     }
 
     @RegisterFunction
@@ -211,9 +210,9 @@ class HexMapGridEditor : GridContainer(), LogInterface {
         grid.forEach { col ->
             col.forEach { location ->
                 if (location.name.isNotEmpty()) {
-                    storeHexLocation(location.row, location.column, location.name, location.unlocked)
+                    storeHexLocation(location.column, location.row, location.name, location.unlocked)
                 } else {
-                    val hex = getNodeAtHex(location.row, location.column)
+                    val hex = getNodeAtHex(location.column, location.row)
                     if (hex != null) {
                         hex.hexUnlocked = false
                         hex.location = null
@@ -290,23 +289,23 @@ class HexMapGridEditor : GridContainer(), LogInterface {
         )
         nextSponsorId++
 
-        grid.forEachIndexed { i, row ->
+        grid.forEachIndexed { col, row ->
             row.forEachIndexed { j, location ->
-                val hex = getNodeAtHex(i, j)
+                val hex = getNodeAtHex(col, j)
                 if (hex == null) {
-                    logError("No hex found at $i $j")
+                    logError("No hex found at $col, $j")
                     return null
                 } else {
                     if (hex.hexUnlocked) {
-                        logInfo("Hex ($i,$j) ${hex.location?.name} (Starts unlocked: ${location})")
+                        logInfo("Hex ($col,$j) ${hex.location?.name} (Starts unlocked: ${location})")
                         location.name = hex.location?.name ?: ""
                         location.unlocked = hex.location?.unlocked ?: false
                     } else {
-                        logInfo("Hex ($i,$j) ${hex.location?.name} (Starts locked: ${location})")
+                        logInfo("Hex ($col,$j) ${hex.location?.name} (Starts locked: ${location})")
                         location.name = hex.location?.name ?: ""
                         location.unlocked = false
                     }
-                    sponsor.hexGrid[i][j] = location
+                    sponsor.hexGrid[col][j] = location
                 }
             }
         }
@@ -432,9 +431,9 @@ class HexMapGridEditor : GridContainer(), LogInterface {
         phUnlockedAtStart.buttonPressed = false
         hexNode.hexUnlocked = true
         hexNode.zIndex += 1
-
+        hexNode.hexMode = HexMode.EDITOR_LOCATION_SET
         updateLocationList()
-
+        hexNode.queueRedraw()
     }
 
     @RegisterFunction
@@ -458,7 +457,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
                 hexNode.unhighlight()
                 location.unlocked = false
                 location.name = ""
-                hexNode.colour = Color(0.2, 0.2, 0.2, 1.0)
+                hexNode.hexMode = HexMode.EDITOR_BLANK
             }
         }
     }

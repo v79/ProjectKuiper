@@ -36,7 +36,7 @@ class Hex : Node2D(), LogInterface {
     var hexUnlocked: Boolean = false
 
     @RegisterProperty
-    var hexMode: HexMode = HexMode.NORMAL
+    var hexMode: HexMode = HexMode.LOCKED
 
     @RegisterProperty
     @Export
@@ -56,12 +56,8 @@ class Hex : Node2D(), LogInterface {
     var row: Int = 0
     var col: Int = 0
 
-    var location: Location? = null
     private lateinit var pointSet: Map<Int, Triple<Vector2, Vector2, Vector2>>
-    private var unlockedColor = Color(1.0, 1.0, 1.0, 1.0)
-    private var lockedColor = Color(0.2, 0.2, 0.2, 1.0)
-    private var highlightColor = Color(1.0, 0.8, 0.8, 1.0)
-    var colour: Color = unlockedColor
+    var location: Location? = null
     var isConfirmationDialog: Boolean = false
     val fillTriangles: BooleanArray = BooleanArray(6) { false }
     private val _segments: MutableList<SectorSegment> = mutableListOf()
@@ -70,21 +66,19 @@ class Hex : Node2D(), LogInterface {
 
     companion object {
         const val HEX_RADIUS = 100.0
+        val HIGHLIGHT_COLOR = Color.pink
     }
 
 
     @RegisterFunction
     override fun _ready() {
-        if (!hexUnlocked) {
-            colour = lockedColor
-        }
         pointSet = calculateVerticesForHex(radius = HEX_RADIUS.toFloat())
         val packedArray = PackedVector2Array(
             pointSet.values.flatMap { listOf(it.first, it.second) }.distinct().toVariantArray()
         )
         collisionShape2D.polygon = packedArray
         pointSet.forEach { (index, triangle) ->
-            // the editor doesn't need sector segments
+            // the editor doesn't need sector segments; only draw if the editor signal bus is null
             if (editorSignalBus == null) {
                 // this loop creates one more segment than we need, for some reason; ignore the one with no location
                 if (this.location != null) {
@@ -112,7 +106,7 @@ class Hex : Node2D(), LogInterface {
     }
 
     /**
-     * Draw the hexagon outline
+     * Draw the hexagon outline and the triangles inside it
      */
     @RegisterFunction
     override fun _draw() {
@@ -123,7 +117,7 @@ class Hex : Node2D(), LogInterface {
         for (i in 1..6) {
             val p2 = Vector2(HEX_RADIUS * cos(a * i), HEX_RADIUS * sin(a * i))
             drawLine(
-                p1, p2, colour, 2.0f
+                p1, p2, hexMode.color, 2.0f
             )
             if (fillTriangles.isNotEmpty()) {
                 if (fillTriangles[i - 1]) {
@@ -133,14 +127,14 @@ class Hex : Node2D(), LogInterface {
                     fillPolys.insert(2, p2)
                     drawColoredPolygon(
                         fillPolys,
-                        colour
+                        hexMode.color
                     )
                 }
             }
             p1 = p2
             if (drawInternals) {
                 drawLine(
-                    Vector2(0.0, 0.0), p2, colour, 1.0f
+                    Vector2(0.0, 0.0), p2, hexMode.color, 1.0f
                 )
             }
         }
@@ -148,20 +142,36 @@ class Hex : Node2D(), LogInterface {
 
     @RegisterFunction
     fun highlight() {
-        if (hexMode != HexMode.CARD) {
-            colour = highlightColor
-            if (hexMode == HexMode.EDITOR) {
+        when (hexMode) {
+            HexMode.EDITOR_BLANK -> {
+                selfModulate = HIGHLIGHT_COLOR
                 zIndex += 1
             }
-            queueRedraw()
+
+            HexMode.EDITOR_LOCATION_SET -> {
+                selfModulate = HIGHLIGHT_COLOR
+                zIndex += 1
+            }
+
+            HexMode.LOCKED -> {
+                // do nothing
+            }
+
+            HexMode.ACTIVE -> {
+                selfModulate = HIGHLIGHT_COLOR
+            }
+
+            else -> {
+                // do nothing
+            }
         }
     }
 
     @RegisterFunction
     fun unhighlight() {
         if (hexMode != HexMode.CARD) {
-            colour = if (hexUnlocked) unlockedColor else lockedColor
-            if (hexMode == HexMode.EDITOR) {
+            selfModulate = Color.white
+            if (hexMode == HexMode.EDITOR_BLANK || hexMode == HexMode.EDITOR_LOCATION_SET) {
                 zIndex -= 1
             }
             queueRedraw()
@@ -191,14 +201,14 @@ class Hex : Node2D(), LogInterface {
 
     @RegisterFunction
     fun onMouseEntered() {
-        if (hexMode == HexMode.EDITOR) {
+        if (hexMode == HexMode.EDITOR_BLANK || hexMode == HexMode.EDITOR_LOCATION_SET) {
             highlight()
         }
     }
 
     @RegisterFunction
     fun onMouseExited() {
-        if (hexMode == HexMode.EDITOR) {
+        if (hexMode == HexMode.EDITOR_BLANK || hexMode == HexMode.EDITOR_LOCATION_SET) {
             unhighlight()
         }
     }
@@ -209,13 +219,13 @@ class Hex : Node2D(), LogInterface {
     @RegisterFunction
     fun onGuiInput(viewport: Node, event: InputEvent?, shapeIdx: Int) {
         // check for clicks
-        if (hexMode == HexMode.EDITOR) {
+        if (hexMode == HexMode.EDITOR_BLANK || hexMode == HexMode.EDITOR_LOCATION_SET) {
             event?.let { e ->
                 if (e.isActionPressed("mouse_left_click".asCachedStringName())) {
-                    editorSignalBus?.editor_placeHex?.emit(row, col)
+                    editorSignalBus?.editor_placeHex?.emit(col, row)
                 }
                 if (e.isActionPressed("mouse_right_click".asCachedStringName())) {
-                    editorSignalBus?.editor_clearHex?.emit(row, col)
+                    editorSignalBus?.editor_clearHex?.emit(col,row)
                 }
             }
         }
@@ -224,11 +234,13 @@ class Hex : Node2D(), LogInterface {
 
 /**
  * The Hex class is used quite differently in the game map and the editor.
- * So this enum is used to differentiate between the two modes.
+ * So this enum is used to differentiate between the different modes, and affects how the hex is drawn and interacted with
  */
-enum class HexMode {
-    NORMAL,
-    EDITOR,
-    CARD
+enum class HexMode(val color: Color) {
+    EDITOR_BLANK(Color(0.2f, 0.2f, 0.2f, 1.0f)),
+    EDITOR_LOCATION_SET(Color(1.0f, 1.0f, 1.0f, 0.5f)),
+    LOCKED(Color(0.2f, 0.2f, 0.2f, 1f)),
+    ACTIVE(Color(1.0f, 1.0f, 1.0f, 1f)),
+    CARD(Color(1.0f, 1.0f, 1.0f, 1f)),
 }
 

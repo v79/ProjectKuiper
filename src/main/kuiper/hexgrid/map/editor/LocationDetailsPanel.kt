@@ -16,7 +16,7 @@ class LocationDetailsPanel : PanelContainer() {
     // UI elements
     val locationNameEdit: LineEdit by lazy { getNodeAs("%LocationNameEdit")!! }
     val unlockedCheckbox: CheckBox by lazy { getNodeAs("%UnlockedCheckbox")!! }
-    val colRowLabel: Label by lazy { getNodeAs("%ColRowLabel")!! }
+    private val colRowLabel: Label by lazy { getNodeAs("%ColRowLabel")!! }
 
     // Data
     var col: Int = -1

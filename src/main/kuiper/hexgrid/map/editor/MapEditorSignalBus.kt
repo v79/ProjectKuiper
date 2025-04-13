@@ -10,10 +10,10 @@ import godot.core.signal4
 @RegisterClass
 class MapEditorSignalBus : Node() {
 
-    @RegisterSignal("place_row", "place_col")
+    @RegisterSignal("place_col", "place_row")
     val editor_placeHex by signal2<Int, Int>()
 
-    @RegisterSignal("clear_row", "clear_col")
+    @RegisterSignal("clear_col", "clear_row")
     val editor_clearHex by signal2<Int, Int>()
 
     @RegisterSignal("updateCol", "updateRow", "updateName", "updateUnlocked")
