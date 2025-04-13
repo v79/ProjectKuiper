@@ -5,6 +5,7 @@ import godot.annotation.RegisterFunction
 import godot.annotation.RegisterSignal
 import godot.api.Node
 import godot.core.signal2
+import godot.core.signal4
 
 @RegisterClass
 class MapEditorSignalBus : Node() {
@@ -14,6 +15,12 @@ class MapEditorSignalBus : Node() {
 
     @RegisterSignal("clear_row", "clear_col")
     val editor_clearHex by signal2<Int, Int>()
+
+    @RegisterSignal("updateCol", "updateRow", "updateName", "updateUnlocked")
+    val editor_updateLocation by signal4<Int, Int, String, Boolean>()
+
+    @RegisterSignal("deleteCol","deleteRow")
+    val editor_deleteLocation by signal2<Int, Int>()
 
     @RegisterFunction
     override fun _ready() {

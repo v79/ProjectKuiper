@@ -38,9 +38,7 @@ class HexGrid : Control(), LogInterface {
     private val hexes: MutableList<Hex> = mutableListOf()
     private var card: ActionCard? = null
 
-    private val MAX_HEXES = 10
     private val GRID_COLUMNS = 5
-    private val HEX_WIDTH = 200
 
     @RegisterFunction
     override fun _ready() {
@@ -167,9 +165,9 @@ class HexGrid : Control(), LogInterface {
 
     // Calculate the position of the grid
     private fun getGridPlacement(): Vector2 {
-        val gridWidth = GRID_COLUMNS * HEX_WIDTH
+        val gridWidth = GRID_COLUMNS * Hex.HEX_RADIUS
         val xOffset = (signalBus.screenWidth - gridWidth) / 2
-        val yOffset = 150
+        val yOffset = Hex.HEX_RADIUS * 2
         return Vector2(xOffset, yOffset)
     }
 }

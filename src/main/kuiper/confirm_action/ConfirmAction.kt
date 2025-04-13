@@ -295,7 +295,7 @@ class ConfirmAction : Control(), LogInterface {
      */
     private fun renderHex(hex: Hex) {
         log("renderHex: ${hex.location?.name}")
-        val scaleFactor = 2.0
+        val scaleFactor = 1.5
         // find neighbours
         val neighbours = if (hex.location != null) {
             log(hex.location.toString())
@@ -335,8 +335,8 @@ class ConfirmAction : Control(), LogInterface {
 
         hexBoxContainer.addChild(boxContainer)
 
-        val height = sqrt(3.0) * hex.hexRadius
-        val horizDistance = 3.0 / 2.0 * hex.hexRadius
+        val height = sqrt(3.0) * Hex.HEX_RADIUS
+        val horizDistance = 3.0 / 2.0 * Hex.HEX_RADIUS
         // How on earth do I get the neighbours to render in the right place?
         neighbours.forEachIndexed { index, neighbour ->
             val neighbourHex = hexScene.instantiateAs<Hex>()!!

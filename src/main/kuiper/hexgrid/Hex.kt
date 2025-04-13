@@ -35,10 +35,6 @@ class Hex : Node2D(), LogInterface {
     @RegisterProperty
     var hexUnlocked: Boolean = false
 
-    @Export
-    @RegisterProperty
-    var hexRadius: Double = 75.0
-
     @RegisterProperty
     var hexMode: HexMode = HexMode.NORMAL
 
@@ -72,13 +68,17 @@ class Hex : Node2D(), LogInterface {
     val segments: List<SectorSegment>
         get() = _segments.toList()
 
+    companion object {
+        const val HEX_RADIUS = 100.0
+    }
+
 
     @RegisterFunction
     override fun _ready() {
         if (!hexUnlocked) {
             colour = lockedColor
         }
-        pointSet = calculateVerticesForHex(radius = hexRadius.toFloat())
+        pointSet = calculateVerticesForHex(radius = HEX_RADIUS.toFloat())
         val packedArray = PackedVector2Array(
             pointSet.values.flatMap { listOf(it.first, it.second) }.distinct().toVariantArray()
         )
@@ -119,9 +119,9 @@ class Hex : Node2D(), LogInterface {
         val drawInternals = true
         val a = 2 * Math.PI / 6
 
-        var p1 = Vector2(hexRadius, 0.0)
+        var p1 = Vector2(HEX_RADIUS, 0.0)
         for (i in 1..6) {
-            val p2 = Vector2(hexRadius * cos(a * i), hexRadius * sin(a * i))
+            val p2 = Vector2(HEX_RADIUS * cos(a * i), HEX_RADIUS * sin(a * i))
             drawLine(
                 p1, p2, colour, 2.0f
             )

@@ -32,5 +32,6 @@ functions = [
 	on_save_sponsor_button_pressed,
 	on_new_sponsor_button_pressed,
 	on_sponsor_chosen,
-	delete_sponsor
+	delete_sponsor,
+	update_location
 ]
