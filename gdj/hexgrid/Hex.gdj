@@ -21,7 +21,6 @@ signals = [
 ]
 properties = [
     id,
-	hex_unlocked,
 	hex_mode,
 	editor_signal_bus,
 	signal_bus

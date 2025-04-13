@@ -94,7 +94,6 @@ class HexGrid : Control(), LogInterface {
         hex.signalBus = signalBus
         hex.id = i
         hex.location = location
-        hex.hexUnlocked = location.unlocked
         hex.row = location.row
         hex.col = location.column
         val dropTarget = hex.getNodeAs<HexDropTarget>("%HexDropTarget")!!
@@ -118,7 +117,7 @@ class HexGrid : Control(), LogInterface {
             if (card.status == CardStatus.DRAGGING) {
                 for (dropTarget in dropTargets) {
                     if (dropTarget.hex != null) {
-                        if (dropTarget.hex!!.hexUnlocked) {
+                        if (dropTarget.hex!!.hexMode == HexMode.ACTIVE) {
                             if (card.globalPosition.distanceTo(dropTarget.globalPosition) <= card.clickRadius / 2) {
                                 dropTarget.hex?.highlight()
                                 signalBus.cardOnHex.emit(dropTarget.hex!!)
@@ -136,7 +135,7 @@ class HexGrid : Control(), LogInterface {
             for (dropTarget in dropTargets) {
                 // This redraws every frame, which is inefficient, so only do it for unlocked hexes. Tiny saving.
                 dropTarget.hex?.let {
-                    if (it.hexUnlocked) {
+                    if (it.hexMode == HexMode.ACTIVE) {
                         dropTarget.unhighlight()
                     }
                 }

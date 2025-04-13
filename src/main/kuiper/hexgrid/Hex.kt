@@ -31,10 +31,6 @@ class Hex : Node2D(), LogInterface {
     @RegisterProperty
     var id: Int = 0
 
-    @Export
-    @RegisterProperty
-    var hexUnlocked: Boolean = false
-
     @RegisterProperty
     var hexMode: HexMode = HexMode.LOCKED
 

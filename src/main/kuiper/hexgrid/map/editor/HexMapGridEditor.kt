@@ -9,6 +9,7 @@ import godot.annotation.RegisterProperty
 import godot.api.*
 import godot.core.*
 import godot.extension.getNodeAs
+import godot.global.GD
 import hexgrid.Hex
 import hexgrid.HexMode
 import kotlinx.serialization.builtins.ListSerializer
@@ -16,7 +17,6 @@ import kotlinx.serialization.json.Json
 import state.Location
 import state.Sponsor
 import technology.Science
-import utils.clearChildren
 import kotlin.math.sqrt
 
 @RegisterClass
@@ -118,12 +118,16 @@ class HexMapGridEditor : GridContainer(), LogInterface {
             selectedRow = row
             phCoordLbl.text = "@c$col,r$row"
             val hex = getNodeAtHex(col, row)
-            if (hex != null && hex.hexUnlocked) {
+            if (hex != null) {
                 phNameEdit.text = hex.location?.name ?: ""
-                phUnlockedAtStart.buttonPressed = true
+                phUnlockedAtStart.buttonPressed = hex.location?.unlocked ?: false
+                placeHexPopup.setPosition(getGlobalMousePosition().toVector2i().minus(Vector2i(50.0, 100.0)))
+                placeHexPopup.visible = true
             }
-            placeHexPopup.setPosition(getGlobalMousePosition().toVector2i().minus(Vector2i(50.0, 100.0)))
-            placeHexPopup.visible = true
+        }
+
+        signalBus.editor_updateLocation.connect { col, row, newName, newUnlocked ->
+            updateLocation(col, row, newName, newUnlocked)
         }
     }
 
@@ -203,7 +207,8 @@ class HexMapGridEditor : GridContainer(), LogInterface {
             astronomy.setValue(it.baseScienceRate[Science.ASTRONOMY]?.toDouble() ?: 0.0)
             psychology.setValue(it.baseScienceRate[Science.PSYCHOLOGY]?.toDouble() ?: 0.0)
             eureka.setValue(it.baseScienceRate[Science.EUREKA]?.toDouble() ?: 0.0)
-            grid = it.hexGrid // ultimately, I want the sponsor's hexGrid to be minimal, not complete with all the empty hexes
+            grid =
+                it.hexGrid // ultimately, I want the sponsor's hexGrid to be minimal, not complete with all the empty hexes
         }
 
         // update the grid
@@ -214,7 +219,6 @@ class HexMapGridEditor : GridContainer(), LogInterface {
                 } else {
                     val hex = getNodeAtHex(location.column, location.row)
                     if (hex != null) {
-                        hex.hexUnlocked = false
                         hex.location = null
                         hex.zIndex -= 1
                         hex.unhighlight()
@@ -231,17 +235,20 @@ class HexMapGridEditor : GridContainer(), LogInterface {
      * Populate the list of locations
      */
     private fun updateLocationList() {
-        locationListBox.clearChildren()
         grid.forEach { column ->
-            column.forEach { hex ->
-                if (hex.name.isNotEmpty()) {
-                    val panel = locadationDetailsScene.instantiate() as LocationDetailsPanel
-                    panel.signalBus = signalBus
-                    panel.col = hex.column
-                    panel.row = hex.row
-                    panel.unlockedCheckbox.buttonPressed = hex.unlocked
-                    panel.locationNameEdit.text = hex.name
-                    locationListBox.addChild(panel)
+            column.forEach { location ->
+                if (location.name.isNotEmpty()) {
+                    if (!locationListBox.hasNode("Location_${location.column}_${location.row})".asNodePath())) {
+                        GD.print("Creating LocationDetailsPanel for ${location.column},${location.row}")
+                        val newPanel = locadationDetailsScene.instantiate() as LocationDetailsPanel
+                        newPanel.signalBus = signalBus
+                        newPanel.col = location.column
+                        newPanel.row = location.row
+                        newPanel.unlockedCheckbox.buttonPressed = location.unlocked
+                        newPanel.locationNameEdit.text = location.name
+                        newPanel.setName("Location_${location.column}_${location.row}")
+                        locationListBox.addChild(newPanel)
+                    }
                 }
             }
         }
@@ -296,15 +303,10 @@ class HexMapGridEditor : GridContainer(), LogInterface {
                     logError("No hex found at $col, $j")
                     return null
                 } else {
-                    if (hex.hexUnlocked) {
-                        logInfo("Hex ($col,$j) ${hex.location?.name} (Starts unlocked: ${location})")
-                        location.name = hex.location?.name ?: ""
-                        location.unlocked = hex.location?.unlocked ?: false
-                    } else {
-                        logInfo("Hex ($col,$j) ${hex.location?.name} (Starts locked: ${location})")
-                        location.name = hex.location?.name ?: ""
-                        location.unlocked = false
-                    }
+                    logInfo("Hex ($col,$j) ${hex.location?.name} (Starts locked: ${location})")
+                    location.name = hex.location?.name ?: ""
+                    location.unlocked = false
+
                     sponsor.hexGrid[col][j] = location
                 }
             }
@@ -418,6 +420,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
      * Store the details of the given hex into the grid
      */
     private fun storeHexLocation(col: Int, row: Int, name: String, unlocked: Boolean) {
+        GD.print("Storing hex location $col, $row with name $name and unlocked $unlocked")
         val location = grid[col][row]
         location.unlocked = unlocked
         val hexNode = getNodeAtHex(col, row) ?: return
@@ -429,7 +432,6 @@ class HexMapGridEditor : GridContainer(), LogInterface {
         selectedRow = -1
         phNameEdit.text = ""
         phUnlockedAtStart.buttonPressed = false
-        hexNode.hexUnlocked = true
         hexNode.zIndex += 1
         hexNode.hexMode = HexMode.EDITOR_LOCATION_SET
         updateLocationList()
@@ -438,12 +440,12 @@ class HexMapGridEditor : GridContainer(), LogInterface {
 
     @RegisterFunction
     fun updateLocation(col: Int, row: Int, name: String, unlocked: Boolean) {
+        GD.print("Updating location hex location $col, $row with name $name and unlocked $unlocked")
         val location = grid[col][row]
         location.name = name
         location.unlocked = unlocked
         val hexNode = getNodeAtHex(col, row) ?: return
         hexNode.location = location
-        hexNode.hexUnlocked = unlocked
         hexNode.zIndex += 1
         hexNode.highlight()
 

@@ -321,9 +321,9 @@ class ConfirmAction : Control(), LogInterface {
         mainHex.id = hex.id
         mainHex.location = hex.location
         mainHex.isConfirmationDialog = true
-        mainHex.hexUnlocked = true
         mainHex.col = hex.col
         mainHex.row = hex.row
+        mainHex.hexMode = HexMode.CARD
         mainHex.setName("ConfirmHex${hex.id}")
         // make it big
         mainHex.scaleMutate {
@@ -367,7 +367,6 @@ class ConfirmAction : Control(), LogInterface {
             neighbourHex.id = index
             neighbourHex.location = neighbour
             neighbourHex.isConfirmationDialog = true
-            neighbourHex.hexUnlocked = true
             neighbourHex.setPosition(neighbourPosition)
             neighbourHex.setName("${neighbour.name.replace(' ', '_')}_${index}")
             // make it big
