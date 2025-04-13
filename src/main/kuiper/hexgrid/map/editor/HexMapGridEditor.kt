@@ -17,6 +17,7 @@ import kotlinx.serialization.json.Json
 import state.Location
 import state.Sponsor
 import technology.Science
+import utils.clearChildren
 import kotlin.math.sqrt
 
 @RegisterClass
@@ -64,11 +65,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
     private var grid = Array(dimension) {
         Array(dimension) {
             Location(
-                row = dimension,
-                column = dimension,
-                name = "",
-                position = Vector2.ZERO,
-                unlocked = false
+                row = dimension, column = dimension, name = "", position = Vector2.ZERO, unlocked = false
             )
         }
     }
@@ -189,6 +186,17 @@ class HexMapGridEditor : GridContainer(), LogInterface {
             return
         }
         updateUI()
+        locationListBox.clearChildren()
+        sponsor?.hexGrid?.forEachIndexed { col, row ->
+            row.forEachIndexed { j, location ->
+                if (location.name.isNotEmpty()) {
+                    addLocationListEntry(location)
+                }
+            }
+        }
+        sponsor?.let {
+            grid = it.hexGrid
+        }
     }
 
     private fun updateUI() {
@@ -222,32 +230,6 @@ class HexMapGridEditor : GridContainer(), LogInterface {
                         hex.location = null
                         hex.zIndex -= 1
                         hex.unhighlight()
-                    }
-                }
-            }
-        }
-
-        // list all the locations
-        updateLocationList()
-    }
-
-    /**
-     * Populate the list of locations
-     */
-    private fun updateLocationList() {
-        grid.forEach { column ->
-            column.forEach { location ->
-                if (location.name.isNotEmpty()) {
-                    if (!locationListBox.hasNode("Location_${location.column}_${location.row})".asNodePath())) {
-                        GD.print("Creating LocationDetailsPanel for ${location.column},${location.row}")
-                        val newPanel = locadationDetailsScene.instantiate() as LocationDetailsPanel
-                        newPanel.signalBus = signalBus
-                        newPanel.col = location.column
-                        newPanel.row = location.row
-                        newPanel.unlockedCheckbox.buttonPressed = location.unlocked
-                        newPanel.locationNameEdit.text = location.name
-                        newPanel.setName("Location_${location.column}_${location.row}")
-                        locationListBox.addChild(newPanel)
                     }
                 }
             }
@@ -303,7 +285,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
                     logError("No hex found at $col, $j")
                     return null
                 } else {
-                    logInfo("Hex ($col,$j) ${hex.location?.name} (Starts locked: ${location})")
+//                    logInfo("Hex ($col,$j) ${hex.location?.name} (Starts locked: ${location})")
                     location.name = hex.location?.name ?: ""
                     location.unlocked = false
 
@@ -324,10 +306,22 @@ class HexMapGridEditor : GridContainer(), LogInterface {
             encodeDefaults = true
             allowStructuredMapKeys = true
         }
-        sponsors.find { it.id == sponsor.id }?.let {
-            log("Updating existing sponsor ${it.id} ${it.name}")
-            it == sponsor
-        } ?: sponsors.add(sponsor)
+        val existingSponsor = sponsors.find { it.id == sponsor.id }
+        if (existingSponsor != null) {
+            log("Replacing existing sponsor ${existingSponsor.id} ${existingSponsor.name}")
+            sponsors.remove(existingSponsor)
+            sponsors.add(sponsor)
+            GD.print(sponsor)
+            sponsor.hexGrid.forEachIndexed { col, row ->
+                row.forEachIndexed { j, location ->
+                    GD.print("\tLocation ($col,$j) ${location.name} (Unlocked: ${location.unlocked})")
+                }
+            }
+        } else {
+            log("Adding new sponsor ${sponsor.id} ${sponsor.name}")
+            sponsors.add(sponsor)
+        }
+
         val sponsorJson = json.encodeToString(ListSerializer(Sponsor.serializer()), sponsors)
         if (!DirAccess.dirExistsAbsolute("res://assets/data")) {
             DirAccess.makeDirRecursiveAbsolute("res://assets/data")
@@ -387,11 +381,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
         val hexCoords = Array(xCount) {
             Array(yCount) {
                 Location(
-                    row = xCount,
-                    column = yCount,
-                    name = "",
-                    position = Vector2.ZERO,
-                    unlocked = false
+                    row = xCount, column = yCount, name = "", position = Vector2.ZERO, unlocked = false
                 )
             }
         }
@@ -405,11 +395,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
                 val x = i * horizDistance
                 val y = j * height + (i % 2) * (height / 2)
                 hexCoords[i][j] = Location(
-                    row = j,
-                    column = i,
-                    name = "",
-                    position = Vector2(x, y),
-                    unlocked = false
+                    row = j, column = i, name = "", position = Vector2(x, y), unlocked = false
                 )
             }
         }
@@ -434,32 +420,49 @@ class HexMapGridEditor : GridContainer(), LogInterface {
         phUnlockedAtStart.buttonPressed = false
         hexNode.zIndex += 1
         hexNode.hexMode = HexMode.EDITOR_LOCATION_SET
-        updateLocationList()
+        addLocationListEntry(location)
         hexNode.queueRedraw()
     }
 
     @RegisterFunction
     fun updateLocation(col: Int, row: Int, name: String, unlocked: Boolean) {
-        GD.print("Updating location hex location $col, $row with name $name and unlocked $unlocked")
-        val location = grid[col][row]
-        location.name = name
-        location.unlocked = unlocked
+        log("Updating location hex location $col, $row with name $name and unlocked $unlocked")
+        grid[col][row].let {
+            it.name = name
+            it.unlocked = unlocked
+        }
+        log("Updated grid[$col][$row] to $name, $unlocked (${grid[col][row].unlocked})")
         val hexNode = getNodeAtHex(col, row) ?: return
-        hexNode.location = location
+        hexNode.location = grid[col][row]
         hexNode.zIndex += 1
         hexNode.highlight()
-
-        updateLocationList()
     }
 
+    /**
+     * Add the given location to the list of locations
+     */
+    private fun addLocationListEntry(location: Location) {
+        val newPanel = locadationDetailsScene.instantiate() as LocationDetailsPanel
+        newPanel.signalBus = signalBus
+        newPanel.col = location.column
+        newPanel.row = location.row
+        newPanel.unlockedCheckbox.buttonPressed = location.unlocked
+        newPanel.locationNameEdit.text = location.name
+        newPanel.setName("Location_${location.column}_${location.row}")
+        locationListBox.addChild(newPanel)
+    }
+
+    /**
+     * Clear the grid and reset the display, wiping all locations
+     */
     private fun resetGridDisplay() {
         grid.forEach { col ->
             col.forEach { location ->
                 val hexNode = getNodeAtHex(location.column, location.row) ?: return
-                hexNode.unhighlight()
+                hexNode.hexMode = HexMode.EDITOR_BLANK
                 location.unlocked = false
                 location.name = ""
-                hexNode.hexMode = HexMode.EDITOR_BLANK
+                hexNode.unhighlight()
             }
         }
     }

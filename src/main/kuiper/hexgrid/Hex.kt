@@ -13,6 +13,7 @@ import hexgrid.map.editor.MapEditorSignalBus
 import state.Location
 import state.SectorStatus
 import kotlin.math.cos
+import kotlin.math.max
 import kotlin.math.sin
 
 /**
@@ -168,7 +169,7 @@ class Hex : Node2D(), LogInterface {
         if (hexMode != HexMode.CARD) {
             selfModulate = Color.white
             if (hexMode == HexMode.EDITOR_BLANK || hexMode == HexMode.EDITOR_LOCATION_SET) {
-                zIndex -= 1
+                zIndex = max(zIndex - 1, 0)
             }
             queueRedraw()
         }
@@ -221,7 +222,7 @@ class Hex : Node2D(), LogInterface {
                     editorSignalBus?.editor_placeHex?.emit(col, row)
                 }
                 if (e.isActionPressed("mouse_right_click".asCachedStringName())) {
-                    editorSignalBus?.editor_clearHex?.emit(col,row)
+                    editorSignalBus?.editor_clearHex?.emit(col, row)
                 }
             }
         }
@@ -233,10 +234,10 @@ class Hex : Node2D(), LogInterface {
  * So this enum is used to differentiate between the different modes, and affects how the hex is drawn and interacted with
  */
 enum class HexMode(val color: Color) {
-    EDITOR_BLANK(Color(0.2f, 0.2f, 0.2f, 1.0f)),
+    EDITOR_BLANK(Color(0.3f, 0.3f, 0.3f, 1.0f)),
     EDITOR_LOCATION_SET(Color(1.0f, 1.0f, 1.0f, 0.5f)),
-    LOCKED(Color(0.2f, 0.2f, 0.2f, 1f)),
-    ACTIVE(Color(1.0f, 1.0f, 1.0f, 1f)),
-    CARD(Color(1.0f, 1.0f, 1.0f, 1f)),
+    LOCKED(Color(0.3f, 0.3f, 0.3f, 1.0f)),
+    ACTIVE(Color(1.0f, 1.0f, 1.0f, 1.0f)),
+    CARD(Color(1.0f, 1.0f, 1.0f, 1.0f)),
 }
 
