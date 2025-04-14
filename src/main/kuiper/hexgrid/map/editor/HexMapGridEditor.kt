@@ -74,7 +74,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
     private var sponsor: Sponsor? = null
     private var sponsorJsonPath: String = "res://assets/data/sponsors.json"
     private var sponsors: MutableList<Sponsor> = mutableListOf()
-    private var nextSponsorId = 0
+    private var sponsorId = 0
 
     @RegisterFunction
     override fun _ready() {
@@ -85,9 +85,9 @@ class HexMapGridEditor : GridContainer(), LogInterface {
             sponsors.forEach { sponsor ->
                 chooseSponsorButton.getPopup()!!.addItem("${sponsor.id} - ${sponsor.name}", sponsor.id)
             }
-            nextSponsorId = sponsors.size
+            sponsorId = sponsors.size
         }
-        sponsorIdLabel.setText(nextSponsorId.toString())
+        sponsorIdLabel.setText(sponsorId.toString())
 
         chooseSponsorButton.getPopup()!!.idPressed.connect { id ->
             onSponsorChosen(id.toInt())
@@ -150,17 +150,18 @@ class HexMapGridEditor : GridContainer(), LogInterface {
 
     @RegisterFunction
     fun onSaveSponsorButtonPressed() {
-        sponsor = storeSponsorDetails()
+        sponsor = createSponsor()
         sponsor?.let { saveSponsor(it) }
     }
 
     @RegisterFunction
     fun onNewSponsorButtonPressed() {
         log("Creating new sponsor")
-        resetGridDisplay() // clear the grid, removes locations
-        nextSponsorId++
+        resetGridDisplay() // clear the grid
+        resetLocationList()
+        sponsorId++
         sponsor = Sponsor(
-            id = nextSponsorId, name = "", colour = Color.white, introText = "", startingResources = mapOf(
+            id = sponsorId, name = "", colour = Color.white, introText = "", startingResources = mapOf(
                 ResourceType.GOLD to 0, ResourceType.INFLUENCE to 0, ResourceType.CONSTRUCTION_MATERIALS to 0
             ), baseScienceRate = mapOf(
                 Science.PHYSICS to 0.0f,
@@ -186,18 +187,11 @@ class HexMapGridEditor : GridContainer(), LogInterface {
             logError("Failed to switch to sponsor $id; null returned")
             return
         }
-        updateUI()
         locationListBox.clearChildren()
-        sponsor?.hexGrid?.forEach { row ->
-            row.forEachIndexed { j, location ->
-                if (location.name.isNotEmpty()) {
-                    addLocationListEntry(location)
-                }
-            }
-        }
         sponsor?.let {
             grid = it.hexGrid
         }
+        updateUI()
     }
 
     private fun updateUI() {
@@ -241,7 +235,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
     /**
      * Extract the sponsor information from the UI and store it in a Sponsor object
      */
-    private fun storeSponsorDetails(): Sponsor? {
+    private fun createSponsor(): Sponsor? {
         val sponsorName = sponsorNameEdit.text
         val sponsorDesc = sponsorDescEdit.text
         logInfo("Saving sponsor '$sponsorName' with description '$sponsorDesc'.")
@@ -256,7 +250,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
         val startConMats = sponsorStartConMats.getLineEdit()!!.text
 
         val sponsor = Sponsor(
-            id = nextSponsorId,
+            id = sponsorId,
             name = sponsorName,
             colour = sponsorColorPicker.color,
             introText = sponsorDesc,
@@ -278,7 +272,6 @@ class HexMapGridEditor : GridContainer(), LogInterface {
             hexDimensions = Pair(dimension, dimension),
             hexGrid = grid
         )
-        nextSponsorId++
 
         grid.forEachIndexed { col, row ->
             row.forEachIndexed { j, location ->
@@ -467,6 +460,13 @@ class HexMapGridEditor : GridContainer(), LogInterface {
                 hexNode.unhighlight()
             }
         }
+    }
+
+    /**
+     * Clear the location list
+     */
+    private fun resetLocationList() {
+        locationListBox.clearChildren()
     }
 
     /**
