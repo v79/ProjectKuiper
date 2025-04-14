@@ -26,6 +26,6 @@ properties = [
 functions = [
     _ready,
 	location_name_changed,
-	unlocked_checkbox_toggled,
+	unlocked_checkbox_pressed,
 	delete_location_pressed
 ]

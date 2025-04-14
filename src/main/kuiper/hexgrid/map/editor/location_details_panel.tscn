@@ -41,5 +41,5 @@ theme_override_colors/font_color = Color(1, 0, 0, 1)
 text = "X"
 
 [connection signal="text_changed" from="VBoxContainer/LocationNameEdit" to="." method="location_name_changed"]
-[connection signal="toggled" from="VBoxContainer/HBoxContainer/UnlockedCheckbox" to="." method="unlocked_checkbox_toggled"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/UnlockedCheckbox" to="." method="unlocked_checkbox_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/DeleteLocationBtn" to="." method="delete_location_pressed"]

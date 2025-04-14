@@ -138,6 +138,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
         selectedRow = -1
         selectedCol = -1
         placeHexPopup.visible = false
+        phUnlockedAtStart.buttonPressed = false
     }
 
     @RegisterFunction
@@ -156,7 +157,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
     @RegisterFunction
     fun onNewSponsorButtonPressed() {
         log("Creating new sponsor")
-        resetGridDisplay()
+        resetGridDisplay() // clear the grid, removes locations
         nextSponsorId++
         sponsor = Sponsor(
             id = nextSponsorId, name = "", colour = Color.white, introText = "", startingResources = mapOf(
@@ -187,7 +188,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
         }
         updateUI()
         locationListBox.clearChildren()
-        sponsor?.hexGrid?.forEachIndexed { col, row ->
+        sponsor?.hexGrid?.forEach { row ->
             row.forEachIndexed { j, location ->
                 if (location.name.isNotEmpty()) {
                     addLocationListEntry(location)
@@ -223,6 +224,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
         grid.forEach { col ->
             col.forEach { location ->
                 if (location.name.isNotEmpty()) {
+                    log("Storing hex location $col, $location.row with name ${location.name} and unlocked ${location.unlocked}")
                     storeHexLocation(location.column, location.row, location.name, location.unlocked)
                 } else {
                     val hex = getNodeAtHex(location.column, location.row)
@@ -287,7 +289,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
                 } else {
 //                    logInfo("Hex ($col,$j) ${hex.location?.name} (Starts locked: ${location})")
                     location.name = hex.location?.name ?: ""
-                    location.unlocked = false
+                    location.unlocked = hex.location?.unlocked ?: false
 
                     sponsor.hexGrid[col][j] = location
                 }
@@ -407,12 +409,12 @@ class HexMapGridEditor : GridContainer(), LogInterface {
      */
     private fun storeHexLocation(col: Int, row: Int, name: String, unlocked: Boolean) {
         GD.print("Storing hex location $col, $row with name $name and unlocked $unlocked")
-        val location = grid[col][row]
-        location.unlocked = unlocked
+        grid[col][row].apply {
+            this.unlocked = unlocked
+            this.name = name
+        }
         val hexNode = getNodeAtHex(col, row) ?: return
-        location.name = name
-        location.unlocked = unlocked
-        hexNode.location = location
+        hexNode.location = grid[col][row]
         placeHexPopup.visible = false
         selectedCol = -1
         selectedRow = -1
@@ -420,7 +422,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
         phUnlockedAtStart.buttonPressed = false
         hexNode.zIndex += 1
         hexNode.hexMode = HexMode.EDITOR_LOCATION_SET
-        addLocationListEntry(location)
+        addLocationListEntry(grid[col][row])
         hexNode.queueRedraw()
     }
 

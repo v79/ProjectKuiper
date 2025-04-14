@@ -7,7 +7,6 @@ import godot.api.Label
 import godot.api.LineEdit
 import godot.api.PanelContainer
 import godot.extension.getNodeAs
-import godot.global.GD
 
 @RegisterClass
 class LocationDetailsPanel : PanelContainer() {
@@ -40,13 +39,12 @@ class LocationDetailsPanel : PanelContainer() {
     }
 
     @RegisterFunction
-    fun unlockedCheckboxToggled(checked: Boolean) {
-        GD.print("Checkbox for ${locationNameEdit.text} toggled: $checked")
+    fun unlockedCheckboxPressed() {
         signalBus?.editor_updateLocation?.emit(
             col,
             row,
             locationNameEdit.text,
-            checked
+            unlockedCheckbox.buttonPressed
         )
     }
 
