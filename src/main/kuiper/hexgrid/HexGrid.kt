@@ -96,6 +96,7 @@ class HexGrid : Control(), LogInterface {
         hex.location = location
         hex.row = location.row
         hex.col = location.column
+        hex.hexMode = if (location.unlocked) HexMode.ACTIVE else HexMode.LOCKED
         val dropTarget = hex.getNodeAs<HexDropTarget>("%HexDropTarget")!!
         dropTarget.addToGroup("hexDropTargets".asCachedStringName())
         dropTarget.setName("HexDropTarget$i")
