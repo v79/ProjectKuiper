@@ -62,6 +62,7 @@ class HexMapGridEditor : GridContainer(), LogInterface {
     private val loadSponsorBtn: Button by lazy { getNodeAs("%LoadSponsorBtn")!! }
     private val saveSponsorBtn: Button by lazy { getNodeAs("%SaveSponsorBtn")!! }
     private val confirmSaveDialog: ConfirmationDialog by lazy { getNodeAs("%SaveConfirmationDialog")!! }
+    private val loadFileDialog: FileDialog by lazy { getNodeAs("%LoadFileDialog")!! }
 
     private val sponsorValid: Boolean
         get() {
@@ -186,8 +187,31 @@ class HexMapGridEditor : GridContainer(), LogInterface {
     }
 
     @RegisterFunction
-    fun onSponsorChosen(id: Int) {
-        logError("Sponsor loading not implemented")
+    fun onLoadSponsorButtonPressed() {
+        loadFileDialog.currentDir = "res://assets/data/sponsors"
+        loadFileDialog.filters = PackedStringArray(listOf("*.sponsor.json").toVariantArray())
+        loadFileDialog.show()
+    }
+
+    @RegisterFunction
+    fun onLoadFileDialogFileSelected(path: String) {
+        log("Loading sponsor file $path")
+        resetGridDisplay()
+        resetLocationList()
+        val json = Json {
+            allowStructuredMapKeys = true
+        }
+        val sponsorFile =
+            FileAccess.open(path, FileAccess.ModeFlags.READ)
+        sponsorFile?.let { file ->
+            val jsonString = file.getAsText()
+            try {
+                sponsor = json.decodeFromString(Sponsor.serializer(), jsonString)
+                updateUI()
+            } catch (e: Exception) {
+                logError("Failed to parse sponsor file $path: ${e.message}")
+            }
+        }
     }
 
     private fun updateUI() {
@@ -225,15 +249,13 @@ class HexMapGridEditor : GridContainer(), LogInterface {
                 }
             }
         }
-
-        // list all the locations
-        updateLocationList()
     }
 
     /**
      * Populate the list of locations
      */
     private fun updateLocationList() {
+        log("Updating location list")
         grid.forEach { column ->
             column.forEach { location ->
                 if (location.name.isNotEmpty()) {

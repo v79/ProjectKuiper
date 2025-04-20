@@ -32,7 +32,8 @@ functions = [
 	on_p_h_unlocked_at_start_toggled,
 	on_save_sponsor_button_pressed,
 	on_new_sponsor_button_pressed,
-	on_sponsor_chosen,
+	on_load_sponsor_button_pressed,
+	on_load_file_dialog_file_selected,
 	on_save_confirmation_confirmed,
 	delete_sponsor,
 	update_location

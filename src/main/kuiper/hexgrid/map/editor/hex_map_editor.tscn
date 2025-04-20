@@ -353,7 +353,7 @@ layout_mode = 2
 custom_minimum_size = Vector2(900, 0)
 layout_mode = 2
 text = "Click on a highlighted hex to enable it for the map and assign it a name. Toggle whether the hex should be unlocked at game startup.
-Add starting buildings. There must be at least one HQ building sector."
+Add starting buildings. There must be at least one unlocked sector."
 autowrap_mode = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer"]
@@ -444,6 +444,14 @@ size = Vector2i(300, 200)
 ok_button_text = "Save"
 dialog_autowrap = true
 
+[node name="LoadFileDialog" type="FileDialog" parent="VBoxContainer"]
+unique_name_in_owner = true
+title = "Open a File"
+initial_position = 1
+ok_button_text = "Open"
+file_mode = 0
+
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/LoadSponsorBtn" to="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2/HexGridContainer" method="on_load_sponsor_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/SaveSponsorBtn" to="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2/HexGridContainer" method="on_save_sponsor_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/NewSponsorBtn" to="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2/HexGridContainer" method="on_new_sponsor_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/DeleteSponsorBtn" to="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2/HexGridContainer" method="delete_sponsor"]
@@ -451,3 +459,4 @@ dialog_autowrap = true
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/PanelContainer2/PlaceHexPopupPanel/VBoxContainer/HBoxContainer/PHCancel" to="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2/HexGridContainer" method="on_cancel_location"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/PanelContainer2/PlaceHexPopupPanel/VBoxContainer/HBoxContainer/PHConfirm" to="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2/HexGridContainer" method="on_confirm_location"]
 [connection signal="confirmed" from="VBoxContainer/SaveConfirmationDialog" to="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2/HexGridContainer" method="on_save_confirmation_confirmed"]
+[connection signal="file_selected" from="VBoxContainer/LoadFileDialog" to="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2/HexGridContainer" method="on_load_file_dialog_file_selected"]
