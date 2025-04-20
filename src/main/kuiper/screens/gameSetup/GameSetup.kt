@@ -121,21 +121,27 @@ class GameSetup : Node(), LogInterface {
 
         // globals are added to the tree first, so will be the first child
         val gameState = getTree()?.root?.getChild(0) as GameState
-        val sponsor = sponsorList[selectedSponsor]
-        log("Randomising technology costs")
-        technologies.forEach { technology -> technology.randomiseCosts() }
-        gameState.let { gS ->
-            gS.year = 1965
-            gS.sponsor = sponsor
-            gS.company.zones.addAll(setupZones(sponsor))
-            gS.company.let { company ->
-                company.name = companyNameEdit.text
-                company.sciences.putAll(sponsor.baseScienceRate)
-                company.resources.putAll(sponsor.startingResources)
-                company.technologies.addAll(technologies)
+        val sponsor = sponsorList.find { it.id == selectedSponsor }
+        if (sponsor != null) {
+            log("Randomising technology costs")
+            technologies.forEach { technology -> technology.randomiseCosts() }
+
+            // an optimisation at this point could be to remove all the hexes that have no location
+            gameState.let { gS ->
+                gS.year = 1965
+                gS.sponsor = sponsor
+                gS.company.zones.addAll(setupZones(sponsor))
+                gS.company.let { company ->
+                    company.name = companyNameEdit.text
+                    company.sciences.putAll(sponsor.baseScienceRate)
+                    company.resources.putAll(sponsor.startingResources)
+                    company.technologies.addAll(technologies)
+                }
             }
+            getTree()?.changeSceneToFile("res://src/main/kuiper/screens/kuiper/game.tscn")
+        } else {
+            logError("Attempted to load sponsor with ID $selectedSponsor, but it was not found in the list.")
         }
-        getTree()?.changeSceneToFile("res://src/main/kuiper/screens/kuiper/game.tscn")
     }
 
     private fun setupZones(sponsor: Sponsor): List<Zone> {

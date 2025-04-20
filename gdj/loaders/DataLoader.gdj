@@ -7,6 +7,7 @@ relativeSourcePath = src/main/kuiper/loaders/DataLoader.kt
 baseType = Node
 supertypes = [
     godot.api.Node,
+	LogInterface,
 	godot.api.Object,
 	godot.core.KtObject,
 	godot.common.interop.NativeWrapper,
