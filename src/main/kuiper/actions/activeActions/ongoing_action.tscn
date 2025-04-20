@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://ctup7kb1s8c34"]
 
-[ext_resource type="Script" path="res://src/main/kuiper/actions/activeActions/OngoingAction.kt" id="1_3l4vc"]
+[ext_resource type="Script" uid="uid://c43lbi2ild5ay" path="res://src/main/kuiper/actions/activeActions/OngoingAction.kt" id="1_3l4vc"]
 [ext_resource type="Theme" uid="uid://cn2v6cwhff2nv" path="res://assets/themes/card_theme.tres" id="2_4p0gu"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cjetw"]
@@ -39,8 +39,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_txgfb"]
 _data = {
-"RESET": SubResource("Animation_b0e1t"),
-"remove_panel": SubResource("Animation_g8wf6")
+&"RESET": SubResource("Animation_b0e1t"),
+&"remove_panel": SubResource("Animation_g8wf6")
 }
 
 [node name="OngoingAction" type="Node2D"]
@@ -108,7 +108,7 @@ one_shot = true
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 unique_name_in_owner = true
 libraries = {
-"": SubResource("AnimationLibrary_txgfb")
+&"": SubResource("AnimationLibrary_txgfb")
 }
 
 [connection signal="mouse_entered" from="Area2D" to="." method="_on_area_2d_mouse_entered"]

@@ -1,0 +1,45 @@
+[gd_scene load_steps=2 format=3 uid="uid://bhf60kub6t65u"]
+
+[ext_resource type="Script" uid="uid://bvtuuy3elp5o4" path="res://src/main/kuiper/hexgrid/map/editor/LocationDetailsPanel.kt" id="1_vo7su"]
+
+[node name="LocationDetailsPanel" type="PanelContainer"]
+script = ExtResource("1_vo7su")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="LocationNameEdit" type="LineEdit" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Location Name"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="UnlockedCheckbox" type="CheckBox" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Unlocked" type="Label" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Unlocked"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="ColRowLabel" type="Label" parent="VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "(col,row)"
+
+[node name="DeleteLocationBtn" type="Button" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+tooltip_text = "Delete this location"
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+text = "X"
+
+[connection signal="text_changed" from="VBoxContainer/LocationNameEdit" to="." method="location_name_changed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/UnlockedCheckbox" to="." method="unlocked_checkbox_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/DeleteLocationBtn" to="." method="delete_location_pressed"]

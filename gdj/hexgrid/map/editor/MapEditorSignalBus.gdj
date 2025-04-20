@@ -15,7 +15,9 @@ supertypes = [
 ]
 signals = [
     editor_place_hex,
-	editor_clear_hex
+	editor_clear_hex,
+	editor_update_location,
+	editor_delete_location
 ]
 properties = [
     

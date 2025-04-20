@@ -1,7 +1,9 @@
 package loaders
 
+import LogInterface
 import actions.Action
 import godot.annotation.RegisterClass
+import godot.api.DirAccess
 import godot.api.FileAccess
 import godot.api.Node
 import godot.global.GD
@@ -13,11 +15,13 @@ import technology.Technology
  * Autoload 'singleton' class to load data files
  */
 @RegisterClass
-class DataLoader : Node() {
+class DataLoader : Node(), LogInterface {
+
+    override var logEnabled: Boolean = true
 
     // file paths
     private val actionsJsonPath = "res://assets/data/actions/actions.json"
-    private val sponsorJsonPath = "res://assets/data/sponsors.json"
+    private val sponsorDataFolder = "res://assets/data/sponsors"
     private val techTreeJsonPath = "res://assets/data/technologies/techweb.json"
 
     /**
@@ -36,20 +40,46 @@ class DataLoader : Node() {
     }
 
     /**
-     * Load sponsors data from the sponsors.json file
+     * Load each of the sponsor data files in the sponsorDataFolder
      */
     fun loadSponsorData(): List<Sponsor> {
-        val sponsorFile = FileAccess.open(sponsorJsonPath, FileAccess.ModeFlags.READ)
-        if (sponsorFile == null) {
-            GD.printErr("Failed to load sponsor data from $sponsorJsonPath")
+        val sponsorList = mutableListOf<Sponsor>()
+
+        if (!DirAccess.dirExistsAbsolute(sponsorDataFolder)) {
+            logError("Sponsors data directory does not exist")
             return emptyList()
         }
+        val dir = DirAccess.open(sponsorDataFolder)
+        var count = 0
         val json = Json {
             allowStructuredMapKeys = true
         }
-        val sponsorJson = json.decodeFromString<List<Sponsor>>(sponsorFile.getAsText())
-        GD.print("Loaded ${sponsorJson.size} sponsors")
-        return sponsorJson
+        dir?.let { dir ->
+            dir.listDirBegin()
+            var fileName = dir.getNext()
+            while (fileName != "") {
+                if (fileName.endsWith(".sponsor.json")) {
+                    log("Found sponsor file $fileName")
+                    val sponsorFile =
+                        FileAccess.open("${sponsorDataFolder}/${fileName}", FileAccess.ModeFlags.READ)
+                    sponsorFile?.let { file ->
+                        val jsonString = file.getAsText()
+                        try {
+                            val sponsor = json.decodeFromString(Sponsor.serializer(), jsonString)
+                            sponsorList.add(sponsor)
+                        } catch (e: Exception) {
+                            logError("Failed to parse sponsor file $fileName: ${e.message}")
+                        }
+                        file.close()
+                    } ?: run {
+                        logError("Failed to open sponsor file $fileName")
+                    }
+                    count++
+                }
+                fileName = dir.getNext()
+            }
+        }
+        return sponsorList.toList()
     }
 
     /**

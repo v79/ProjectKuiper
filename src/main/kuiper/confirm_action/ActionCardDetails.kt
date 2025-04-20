@@ -64,7 +64,7 @@ class ActionCardDetails : Control() {
                             iconTexture.setTexture(texture)
                         }
                         hex.fillTriangles.fill(false)
-                        hex.colour = Color.green
+                        hex.selfModulate = Color.green
                         for (i in 0 until building.sectors) {
                             hex.fillTriangles[i] = true
                         }

@@ -12,7 +12,8 @@ data class Location(
     var row: Int,
     var column: Int,
     var name: String,
-    @Serializable(with = GDVectorSerializer::class) val position: Vector2,
+    @Serializable(with = GDVectorSerializer::class)
+    val position: Vector2,
     var unlocked: Boolean = false
 ) {
     // locations may have some interesting properties in the future, such as base production rates

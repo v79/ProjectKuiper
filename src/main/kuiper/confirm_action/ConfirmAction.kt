@@ -14,6 +14,7 @@ import godot.core.connect
 import godot.extension.getNodeAs
 import godot.extension.instantiateAs
 import hexgrid.Hex
+import hexgrid.HexMode
 import state.Building
 import state.BuildingStatus
 import state.GameState
@@ -295,7 +296,7 @@ class ConfirmAction : Control(), LogInterface {
      */
     private fun renderHex(hex: Hex) {
         log("renderHex: ${hex.location?.name}")
-        val scaleFactor = 2.0
+        val scaleFactor = 1.5
         // find neighbours
         val neighbours = if (hex.location != null) {
             log(hex.location.toString())
@@ -320,9 +321,9 @@ class ConfirmAction : Control(), LogInterface {
         mainHex.id = hex.id
         mainHex.location = hex.location
         mainHex.isConfirmationDialog = true
-        mainHex.hexUnlocked = true
         mainHex.col = hex.col
         mainHex.row = hex.row
+        mainHex.hexMode = HexMode.CARD
         mainHex.setName("ConfirmHex${hex.id}")
         // make it big
         mainHex.scaleMutate {
@@ -335,8 +336,8 @@ class ConfirmAction : Control(), LogInterface {
 
         hexBoxContainer.addChild(boxContainer)
 
-        val height = sqrt(3.0) * hex.hexRadius
-        val horizDistance = 3.0 / 2.0 * hex.hexRadius
+        val height = sqrt(3.0) * Hex.HEX_RADIUS
+        val horizDistance = 3.0 / 2.0 * Hex.HEX_RADIUS
         // How on earth do I get the neighbours to render in the right place?
         neighbours.forEachIndexed { index, neighbour ->
             val neighbourHex = hexScene.instantiateAs<Hex>()!!
@@ -362,12 +363,10 @@ class ConfirmAction : Control(), LogInterface {
             // and rescale
             neighbourPosition.x *= scaleFactor
             neighbourPosition.y *= scaleFactor
-
-            neighbourHex.colour = Color.dimGray
+            neighbourHex.hexMode = HexMode.LOCKED
             neighbourHex.id = index
             neighbourHex.location = neighbour
             neighbourHex.isConfirmationDialog = true
-            neighbourHex.hexUnlocked = true
             neighbourHex.setPosition(neighbourPosition)
             neighbourHex.setName("${neighbour.name.replace(' ', '_')}_${index}")
             // make it big

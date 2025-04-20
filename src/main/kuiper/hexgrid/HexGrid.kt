@@ -38,9 +38,7 @@ class HexGrid : Control(), LogInterface {
     private val hexes: MutableList<Hex> = mutableListOf()
     private var card: ActionCard? = null
 
-    private val MAX_HEXES = 10
     private val GRID_COLUMNS = 5
-    private val HEX_WIDTH = 200
 
     @RegisterFunction
     override fun _ready() {
@@ -96,9 +94,9 @@ class HexGrid : Control(), LogInterface {
         hex.signalBus = signalBus
         hex.id = i
         hex.location = location
-        hex.hexUnlocked = location.unlocked
         hex.row = location.row
         hex.col = location.column
+        hex.hexMode = if (location.unlocked) HexMode.ACTIVE else HexMode.LOCKED
         val dropTarget = hex.getNodeAs<HexDropTarget>("%HexDropTarget")!!
         dropTarget.addToGroup("hexDropTargets".asCachedStringName())
         dropTarget.setName("HexDropTarget$i")
@@ -120,7 +118,7 @@ class HexGrid : Control(), LogInterface {
             if (card.status == CardStatus.DRAGGING) {
                 for (dropTarget in dropTargets) {
                     if (dropTarget.hex != null) {
-                        if (dropTarget.hex!!.hexUnlocked) {
+                        if (dropTarget.hex!!.hexMode == HexMode.ACTIVE) {
                             if (card.globalPosition.distanceTo(dropTarget.globalPosition) <= card.clickRadius / 2) {
                                 dropTarget.hex?.highlight()
                                 signalBus.cardOnHex.emit(dropTarget.hex!!)
@@ -138,7 +136,7 @@ class HexGrid : Control(), LogInterface {
             for (dropTarget in dropTargets) {
                 // This redraws every frame, which is inefficient, so only do it for unlocked hexes. Tiny saving.
                 dropTarget.hex?.let {
-                    if (it.hexUnlocked) {
+                    if (it.hexMode == HexMode.ACTIVE) {
                         dropTarget.unhighlight()
                     }
                 }
@@ -167,9 +165,9 @@ class HexGrid : Control(), LogInterface {
 
     // Calculate the position of the grid
     private fun getGridPlacement(): Vector2 {
-        val gridWidth = GRID_COLUMNS * HEX_WIDTH
+        val gridWidth = GRID_COLUMNS * Hex.HEX_RADIUS
         val xOffset = (signalBus.screenWidth - gridWidth) / 2
-        val yOffset = 150
+        val yOffset = Hex.HEX_RADIUS * 2
         return Vector2(xOffset, yOffset)
     }
 }

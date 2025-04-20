@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://d0w0wqm220vq8"]
 
-[ext_resource type="Script" path="res://src/main/kuiper/screens/gameSetup/GameSetup.kt" id="1_n7xff"]
+[ext_resource type="Script" uid="uid://bbk3gvh2xwiqu" path="res://src/main/kuiper/screens/gameSetup/GameSetup.kt" id="1_n7xff"]
 [ext_resource type="Theme" uid="uid://dwjw02q78v0i1" path="res://assets/themes/theme.tres" id="2_pk6mu"]
 
 [node name="GameSetup" type="CanvasLayer"]

@@ -1,0 +1,1383 @@
+{
+    "id": 4,
+    "name": "Western Europe",
+    "colour": {
+        "r": 0.021820068359375,
+        "g": 0.10569095611572266,
+        "b": 0.55859375,
+        "a": 1.0,
+        "r8": 6,
+        "g8": 27,
+        "b8": 142,
+        "a8": 255,
+        "h": 0.640625,
+        "s": 0.9609375,
+        "v": 0.55859375
+    },
+    "introText": "Easy mode",
+    "startingResources": {
+        "GOLD": 100,
+        "INFLUENCE": 10,
+        "CONSTRUCTION_MATERIALS": 100
+    },
+    "baseScienceRate": {
+        "PHYSICS": 10.0,
+        "ENGINEERING": 10.0,
+        "BIOCHEMISTRY": 10.0,
+        "MATHEMATICS": 10.0,
+        "ASTRONOMY": 10.0,
+        "PSYCHOLOGY": 10.0,
+        "EUREKA": 10.0
+    },
+    "startingTechs": [],
+    "hexDimensions": {
+        "first": 6,
+        "second": 6
+    },
+    "hexGrid": [
+        [
+            {
+                "row": 0,
+                "column": 0,
+                "name": "",
+                "position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            },
+            {
+                "row": 1,
+                "column": 0,
+                "name": "",
+                "position": {
+                    "x": 0.0,
+                    "y": 173.20508075688772
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            },
+            {
+                "row": 2,
+                "column": 0,
+                "name": "",
+                "position": {
+                    "x": 0.0,
+                    "y": 346.41016151377545
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            },
+            {
+                "row": 3,
+                "column": 0,
+                "name": "",
+                "position": {
+                    "x": 0.0,
+                    "y": 519.6152422706632
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            },
+            {
+                "row": 4,
+                "column": 0,
+                "name": "French Guiana",
+                "position": {
+                    "x": 0.0,
+                    "y": 692.8203230275509
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            },
+            {
+                "row": 5,
+                "column": 0,
+                "name": "",
+                "position": {
+                    "x": 0.0,
+                    "y": 866.0254037844386
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            }
+        ],
+        [
+            {
+                "row": 0,
+                "column": 1,
+                "name": "Great Britain",
+                "position": {
+                    "x": 150.0,
+                    "y": 86.60254037844386
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            },
+            {
+                "row": 1,
+                "column": 1,
+                "name": "",
+                "position": {
+                    "x": 150.0,
+                    "y": 259.8076211353316
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            },
+            {
+                "row": 2,
+                "column": 1,
+                "name": "Iberia",
+                "position": {
+                    "x": 150.0,
+                    "y": 433.0127018922193
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            },
+            {
+                "row": 3,
+                "column": 1,
+                "name": "",
+                "position": {
+                    "x": 150.0,
+                    "y": 606.2177826491071
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            },
+            {
+                "row": 4,
+                "column": 1,
+                "name": "",
+                "position": {
+                    "x": 150.0,
+                    "y": 779.4228634059948
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            },
+            {
+                "row": 5,
+                "column": 1,
+                "name": "",
+                "position": {
+                    "x": 150.0,
+                    "y": 952.6279441628825
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            }
+        ],
+        [
+            {
+                "row": 0,
+                "column": 2,
+                "name": "",
+                "position": {
+                    "x": 300.0,
+                    "y": 0.0
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            },
+            {
+                "row": 1,
+                "column": 2,
+                "name": "",
+                "position": {
+                    "x": 300.0,
+                    "y": 173.20508075688772
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            },
+            {
+                "row": 2,
+                "column": 2,
+                "name": "France",
+                "position": {
+                    "x": 300.0,
+                    "y": 346.41016151377545
+                },
+                "unlocked": true,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            },
+            {
+                "row": 3,
+                "column": 2,
+                "name": "",
+                "position": {
+                    "x": 300.0,
+                    "y": 519.6152422706632
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            },
+            {
+                "row": 4,
+                "column": 2,
+                "name": "",
+                "position": {
+                    "x": 300.0,
+                    "y": 692.8203230275509
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            },
+            {
+                "row": 5,
+                "column": 2,
+                "name": "",
+                "position": {
+                    "x": 300.0,
+                    "y": 866.0254037844386
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            }
+        ],
+        [
+            {
+                "row": 0,
+                "column": 3,
+                "name": "",
+                "position": {
+                    "x": 450.0,
+                    "y": 86.60254037844386
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            },
+            {
+                "row": 1,
+                "column": 3,
+                "name": "Germany",
+                "position": {
+                    "x": 450.0,
+                    "y": 259.8076211353316
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            },
+            {
+                "row": 2,
+                "column": 3,
+                "name": "Italy",
+                "position": {
+                    "x": 450.0,
+                    "y": 433.0127018922193
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            },
+            {
+                "row": 3,
+                "column": 3,
+                "name": "",
+                "position": {
+                    "x": 450.0,
+                    "y": 606.2177826491071
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            },
+            {
+                "row": 4,
+                "column": 3,
+                "name": "",
+                "position": {
+                    "x": 450.0,
+                    "y": 779.4228634059948
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            },
+            {
+                "row": 5,
+                "column": 3,
+                "name": "",
+                "position": {
+                    "x": 450.0,
+                    "y": 952.6279441628825
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            }
+        ],
+        [
+            {
+                "row": 0,
+                "column": 4,
+                "name": "Scandanavia",
+                "position": {
+                    "x": 600.0,
+                    "y": 0.0
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            },
+            {
+                "row": 1,
+                "column": 4,
+                "name": "",
+                "position": {
+                    "x": 600.0,
+                    "y": 173.20508075688772
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            },
+            {
+                "row": 2,
+                "column": 4,
+                "name": "",
+                "position": {
+                    "x": 600.0,
+                    "y": 346.41016151377545
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            },
+            {
+                "row": 3,
+                "column": 4,
+                "name": "",
+                "position": {
+                    "x": 600.0,
+                    "y": 519.6152422706632
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            },
+            {
+                "row": 4,
+                "column": 4,
+                "name": "",
+                "position": {
+                    "x": 600.0,
+                    "y": 692.8203230275509
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            },
+            {
+                "row": 5,
+                "column": 4,
+                "name": "",
+                "position": {
+                    "x": 600.0,
+                    "y": 866.0254037844386
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            }
+        ],
+        [
+            {
+                "row": 0,
+                "column": 5,
+                "name": "",
+                "position": {
+                    "x": 750.0,
+                    "y": 86.60254037844386
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            },
+            {
+                "row": 1,
+                "column": 5,
+                "name": "",
+                "position": {
+                    "x": 750.0,
+                    "y": 259.8076211353316
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            },
+            {
+                "row": 2,
+                "column": 5,
+                "name": "",
+                "position": {
+                    "x": 750.0,
+                    "y": 433.0127018922193
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            },
+            {
+                "row": 3,
+                "column": 5,
+                "name": "",
+                "position": {
+                    "x": 750.0,
+                    "y": 606.2177826491071
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            },
+            {
+                "row": 4,
+                "column": 5,
+                "name": "",
+                "position": {
+                    "x": 750.0,
+                    "y": 779.4228634059948
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            },
+            {
+                "row": 5,
+                "column": 5,
+                "name": "",
+                "position": {
+                    "x": 750.0,
+                    "y": 952.6279441628825
+                },
+                "unlocked": false,
+                "_buildings": [],
+                "sectors": [
+                    {
+                        "id": 0,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 1,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 2,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 3,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 4,
+                        "status": "EMPTY"
+                    },
+                    {
+                        "id": 5,
+                        "status": "EMPTY"
+                    }
+                ]
+            }
+        ]
+    ]
+}
