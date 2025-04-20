@@ -34,16 +34,16 @@ custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="LoadSponsorBtn" type="MenuButton" parent="VBoxContainer/HBoxContainer"]
+[node name="LoadSponsorBtn" type="Button" parent="VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Choose Sponsor..."
-flat = false
+text = "Load Sponsor..."
 
 [node name="SaveSponsorBtn" type="Button" parent="VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Save all"
+disabled = true
+text = "Save Sponsor"
 
 [node name="NewSponsorBtn" type="Button" parent="VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
@@ -57,6 +57,7 @@ size_flags_horizontal = 3
 [node name="DeleteSponsorBtn" type="Button" parent="VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+disabled = true
 text = "Delete"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
@@ -435,9 +436,18 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Confirm"
 
+[node name="SaveConfirmationDialog" type="ConfirmationDialog" parent="VBoxContainer"]
+unique_name_in_owner = true
+title = "Save Sponsor?"
+initial_position = 1
+size = Vector2i(300, 200)
+ok_button_text = "Save"
+dialog_autowrap = true
+
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/SaveSponsorBtn" to="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2/HexGridContainer" method="on_save_sponsor_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/NewSponsorBtn" to="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2/HexGridContainer" method="on_new_sponsor_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/DeleteSponsorBtn" to="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2/HexGridContainer" method="delete_sponsor"]
 [connection signal="toggled" from="VBoxContainer/HBoxContainer2/PanelContainer2/PlaceHexPopupPanel/VBoxContainer/HBoxContainer2/PHHexUnlocked" to="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2/HexGridContainer" method="on_p_h_unlocked_at_start_toggled"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/PanelContainer2/PlaceHexPopupPanel/VBoxContainer/HBoxContainer/PHCancel" to="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2/HexGridContainer" method="on_cancel_location"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/PanelContainer2/PlaceHexPopupPanel/VBoxContainer/HBoxContainer/PHConfirm" to="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2/HexGridContainer" method="on_confirm_location"]
+[connection signal="confirmed" from="VBoxContainer/SaveConfirmationDialog" to="VBoxContainer/HBoxContainer2/PanelContainer2/VBoxContainer/HBoxContainer2/HexGridContainer" method="on_save_confirmation_confirmed"]
