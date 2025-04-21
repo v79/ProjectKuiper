@@ -50,7 +50,7 @@ class Company(var name: String) : LogInterface {
      * Notification history/memory to ensure we don't sent the same notification multiple times.
      * This can be pruned regularly
      */
-    private val notificationHistory: MutableSet<Int> = mutableSetOf()
+    private val notificationHistory: MutableMap<Int, Notification> = mutableMapOf()
 
     /**
      * Activate the given action, adding it to the list of active actions, and spend any initial costs
@@ -248,7 +248,7 @@ class Company(var name: String) : LogInterface {
         technologies.forEach { technology ->
             if (technology.tier != TechTier.TIER_0) {
                 // send a notification if the tech research is 50% complete
-                if (technology.progressPct > 50.0f) {
+                if (technology.progressPct >= 50.0f && technology.progressPct < 100.0f) {
                     val notification = ResearchProgressNotification(
                         technology, "Researching ${technology.title} now 50% complete"
                     )
@@ -256,7 +256,7 @@ class Company(var name: String) : LogInterface {
                         notifications.add(
                             notification
                         )
-                        notificationHistory.add(notification.technology.id)
+                        notificationHistory.put(notification.technology.id, notification)
                     }
                     log("\tCompany: Technology ${technology.title} now ${technology.progressPct}% complete")
                 }
@@ -271,24 +271,21 @@ class Company(var name: String) : LogInterface {
                         if (!notificationHistory.contains(notification.technology.id)) {
                             notifications.add(notification)
                         }
-                        notificationHistory.add(notification.technology.id)
+                        notificationHistory.put(notification.technology.id, notification)
                         log("\tUnlocking technology ${it.title}")
                     }
                 }
 
                 if (technology.progressPct >= 100.0) {
                     log("\tCompany: Technology ${technology.title} is complete!")
-                    // prune any progress notifications for this tech
-//                    notificationHistory.removeIf { it == technology.id && technology.status == TechStatus.RESEARCHED }
                     if (technology.status != TechStatus.RESEARCHED) {
                         val notification = ResearchCompleteNotification(
                             technology, "Research complete: ${technology.title}"
                         )
-                        // TODO: this doesn't work either, there will have been a previous notification for this ID!
-                        if (!notificationHistory.contains(notification.technology.id)) {
-                            notifications.add(notification)
+                        if(notificationHistory[technology.id] == null || notificationHistory[technology.id] is ResearchProgressNotification) {
+                           notifications.add(notification)
                         }
-                        notificationHistory.add(notification.technology.id)
+                        notificationHistory.put(notification.technology.id, notification)
                         // Show a debug error if a tech is researched before all its requirements are
                         getRequiredTechsFor(technology).forEach {
                             if (it.status != TechStatus.RESEARCHED) {
