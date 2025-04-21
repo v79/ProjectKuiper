@@ -19,6 +19,8 @@ class Company(var name: String) : LogInterface {
 
     override var logEnabled = true
 
+    var year: Int = 0
+
     /**
      * Resources are the primary currency of the game
      */
@@ -221,7 +223,7 @@ class Company(var name: String) : LogInterface {
                     logWarning("Science doesn't have value: $science")
                     notifications.add(
                         NoScienceWarningNotification(
-                            science.key, "There are no ${science.key.displayName} points available to spend this turn"
+                            science.key, "There are no ${science.key.displayName} points available to spend this turn", year
                         )
                     )
                 }
@@ -250,7 +252,7 @@ class Company(var name: String) : LogInterface {
                 // send a notification if the tech research is 50% complete
                 if (technology.progressPct >= 50.0f && technology.progressPct < 100.0f) {
                     val notification = ResearchProgressNotification(
-                        technology, "Researching ${technology.title} now 50% complete"
+                        technology, "Researching ${technology.title} now 50% complete", year
                     )
                     if (!notificationHistory.contains(notification.technology.id)) {
                         notifications.add(
@@ -266,7 +268,7 @@ class Company(var name: String) : LogInterface {
                     if (getRequiredTechsFor(it).all { reqTech -> reqTech.progressPct > 50.0 }) {
                         it.status = TechStatus.UNLOCKED
                         val notification = TechUnlockedNotification(
-                            it, "Technology ${it.title} is now unlocked for research"
+                            it, "Technology ${it.title} is now unlocked for research", year
                         )
                         if (!notificationHistory.contains(notification.technology.id)) {
                             notifications.add(notification)
@@ -280,7 +282,7 @@ class Company(var name: String) : LogInterface {
                     log("\tCompany: Technology ${technology.title} is complete!")
                     if (technology.status != TechStatus.RESEARCHED) {
                         val notification = ResearchCompleteNotification(
-                            technology, "Research complete: ${technology.title}"
+                            technology, "Research complete: ${technology.title}", year
                         )
                         if(notificationHistory[technology.id] == null || notificationHistory[technology.id] is ResearchProgressNotification) {
                            notifications.add(notification)

@@ -14,32 +14,42 @@ import technology.Technology
 sealed class Notification {
     abstract var message: String
     open var persistent: Boolean = false
+    abstract var year: Int
 }
 
 @Serializable
-class ResearchCompleteNotification(val technology: Technology, override var message: String) :
-    Notification()
-
-@Serializable
-class ResearchProgressNotification(val technology: Technology, override var message: String) :
-    Notification()
-
-@Serializable
-class ResearchStalledNotification(val technology: Technology, override var message: String) :
-    Notification()
-
-@Serializable
-class ActionCompleteNotification(val action: Action, override var message: String) :
-    Notification()
-
-@Serializable
-class NoScienceWarningNotification(val science: Science, override var message: String, val count: Int = 15) :
-    Notification()
-
-@Serializable
-class TechUnlockedNotification(val technology: Technology, override var message: String) :
+class ResearchCompleteNotification(val technology: Technology, override var message: String, override var year: Int) :
     Notification() {
     init {
         persistent = true
     }
 }
+
+@Serializable
+class ResearchProgressNotification(val technology: Technology, override var message: String, override var year: Int) :
+    Notification()
+
+@Serializable
+class ResearchStalledNotification(val technology: Technology, override var message: String, override var year: Int) :
+    Notification() {
+    init {
+        persistent = true
+    }
+}
+
+@Serializable
+class ActionCompleteNotification(val action: Action, override var message: String, override var year: Int) :
+    Notification()
+
+@Serializable
+class NoScienceWarningNotification(
+    val science: Science,
+    override var message: String,
+    override var year: Int,
+    val count: Int = 15
+) :
+    Notification()
+
+@Serializable
+class TechUnlockedNotification(val technology: Technology, override var message: String, override var year: Int) :
+    Notification()

@@ -41,7 +41,7 @@ class NotificationItem : Control() {
         }
     }
 
-    private fun dismissNotification() {
+    fun dismissNotification() {
         animationPlayer.play("dismiss".asStringName())
         expiryTimer.start()
         expiryTimer.timeout.connect {
