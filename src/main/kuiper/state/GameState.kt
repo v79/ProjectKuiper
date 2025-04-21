@@ -66,7 +66,13 @@ class GameState : Node(), LogInterface {
         notifications.addAll(company.clearResearch())
         val completed = company.doActions()
         notifications.addAll(company.processBuildings())
-        notifications.addAll(completed.map { ActionCompleteNotification(it, "Action completed: ${it.actionName}") })
+        notifications.addAll(completed.map {
+            ActionCompleteNotification(
+                it,
+                "Action completed: ${it.actionName}",
+                year
+            )
+        })
         // signal completed actions to expire
         completed.forEach { action ->
             signalBus.actionCompleted.emitSignal(ActionWrapper(action))
@@ -87,6 +93,9 @@ class GameState : Node(), LogInterface {
         }
         // increment the year
         year++
+        company.year = year
+        // Inform other nodes that the turn has ended
+        signalBus.nextTurn.emit(year)
     }
 
     fun stateToString(): String {

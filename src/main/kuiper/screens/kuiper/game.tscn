@@ -160,11 +160,6 @@ size_flags_vertical = 8
 theme_override_constants/separation = 20
 alignment = 2
 
-[node name="FakeNotification" type="Button" parent="BottomRow_hbox"]
-layout_mode = 2
-text = "Notify me"
-alignment = 2
-
 [node name="AddCardButton" type="Button" parent="BottomRow_hbox"]
 layout_mode = 2
 text = "Add card"
@@ -222,7 +217,6 @@ mouse_filter = 1
 [connection signal="end_turn_signal" from="." to="." method="on_end_turn"]
 [connection signal="esc_menu_signal" from="." to="." method="on_escape_menu"]
 [connection signal="pressed" from="AspectRatioContainer/VBoxContainer/TopRow_hbox/MainMenuButton" to="." method="on_escape_menu"]
-[connection signal="pressed" from="BottomRow_hbox/FakeNotification" to="AspectRatioContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/NotificationPanel" method="_on_button_pressed"]
 [connection signal="pressed" from="BottomRow_hbox/AddCardButton" to="CardDeck" method="get_card"]
 [connection signal="pressed" from="BottomRow_hbox/RemoveCardButton" to="AvailableActionsFan" method="remove_random_card"]
 [connection signal="pressed" from="BottomRow_hbox/EndTurn_btn" to="." method="on_end_turn"]

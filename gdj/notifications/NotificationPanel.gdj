@@ -23,10 +23,9 @@ signals = [
     
 ]
 properties = [
-    log_enabled
+    
 ]
 functions = [
     _ready,
-	_process,
-	_on_button_pressed
+	_process
 ]

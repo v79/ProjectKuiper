@@ -68,8 +68,8 @@ class SignalBus : Node() {
     val dealCardFromDeck by signal1<ActionWrapper>()
 
     // Signals for updating UI each turn
-    @RegisterSignal
-    val nextTurn by signal0()
+    @RegisterSignal("year")
+    val nextTurn by signal1<Int>()
 
     @RegisterSignal("notification")
     val notify by signal1<NotificationWrapper>()
