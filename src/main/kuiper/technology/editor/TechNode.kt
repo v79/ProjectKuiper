@@ -88,7 +88,7 @@ class TechNode : GraphNode(), LogInterface {
             }
             setName("Unlocks_${slotCounter}")
             if (direction == PortDirection.OUT) {
-                setHorizontalAlignment(HorizontalAlignment.HORIZONTAL_ALIGNMENT_RIGHT)
+                setHorizontalAlignment(HorizontalAlignment.RIGHT)
             }
         }
         addChild(newLabel)

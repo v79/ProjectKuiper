@@ -99,12 +99,12 @@ class KuiperGame : PanelContainer(), LogInterface {
             confirmAction.card = card
             confirmAction.fadeIn()
             getTree()?.getNodesInGroup("HexGrid".asStringName())
-                ?.forEach { node -> node.setProcessMode(ProcessMode.PROCESS_MODE_DISABLED) }
+                ?.forEach { node -> node.setProcessMode(ProcessMode.DISABLED) }
         }
 
         signalBus.cancelActionConfirmation.connect {
             getTree()?.getNodesInGroup("HexGrid".asStringName())
-                ?.forEach { node -> node.setProcessMode(ProcessMode.PROCESS_MODE_INHERIT) }
+                ?.forEach { node -> node.setProcessMode(ProcessMode.INHERIT) }
 
         }
 
@@ -178,9 +178,9 @@ class KuiperGame : PanelContainer(), LogInterface {
     private fun toggleGroupProcessing(groupName: StringName, enabled: Boolean) {
         getTree()?.getNodesInGroup(groupName)?.forEach { node ->
             if (enabled) {
-                node.processMode = ProcessMode.PROCESS_MODE_INHERIT
+                node.processMode = ProcessMode.INHERIT
             } else {
-                node.processMode = ProcessMode.PROCESS_MODE_DISABLED
+                node.processMode = ProcessMode.DISABLED
             }
         }
     }

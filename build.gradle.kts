@@ -1,5 +1,5 @@
 plugins {
-    id("com.utopia-rise.godot-kotlin-jvm") version "0.12.3-4.4.1"
+    id("com.utopia-rise.godot-kotlin-jvm") version "0.13.0-4.4.1"
     // godot-kotlin-jvm uses Kotlin 2.0.21
     kotlin("plugin.serialization") version "2.0.21"
 }

@@ -8,7 +8,6 @@ import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
 import godot.api.*
-import godot.core.Color
 import godot.core.asStringName
 import godot.core.connect
 import godot.extension.getNodeAs
@@ -332,7 +331,7 @@ class ConfirmAction : Control(), LogInterface {
         }
         val boxContainer = BoxContainer()
         boxContainer.setName("ConfirmHex_BoxContainer")
-        boxContainer.setMouseFilter(Control.MouseFilter.MOUSE_FILTER_PASS)
+        boxContainer.setMouseFilter(MouseFilter.PASS)
 
         hexBoxContainer.addChild(boxContainer)
 

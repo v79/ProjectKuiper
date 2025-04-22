@@ -82,7 +82,7 @@ class Hex : Node2D(), LogInterface {
                     val segment = sectorScene.instantiate() as SectorSegment
                     segment.signalBus = signalBus
                     segment.setName("Sector${index - 1}")
-                    segment.setTextureRepeat(CanvasItem.TextureRepeat.TEXTURE_REPEAT_DISABLED)
+                    segment.setTextureRepeat(TextureRepeat.DISABLED)
                     segment.location = location
                     segment.isConfirmationDialog = isConfirmationDialog
                     segment.status = location?.sectors?.get(index - 1)?.status ?: SectorStatus.EMPTY
