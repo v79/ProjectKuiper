@@ -13,8 +13,8 @@ fun Node.hasChildren(): Boolean {
  * Clear all children from a node by calling queueFree on each child
  */
 fun Node.clearChildren() {
-    this.getChildren().forEach {
-        this.removeChild(it)
-        it.queueFree()
+    this.getChildren().forEach { child ->
+        this.removeChild(child)
+        child.queueFree()
     }
 }

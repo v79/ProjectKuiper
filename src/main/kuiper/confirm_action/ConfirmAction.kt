@@ -59,6 +59,9 @@ class ConfirmAction : Control(), LogInterface {
     private var action: Action? = null
     private var confirmEnabled = true
     private var placementStatus: SectorPlacementStatus = SectorPlacementStatus.NONE
+    private var overbuilding: Boolean = false
+    private var baseInfCost: Int = 0
+    private var baseTurns: Int = 0
 
     @RegisterFunction
     override fun _ready() {
@@ -86,6 +89,9 @@ class ConfirmAction : Control(), LogInterface {
             location = h.location ?: Location(h.row, h.col, "**Unknown**", h.position, false)
             hexNode.row = h.row
             hexNode.col = h.col
+            action = card.action
+            baseInfCost = action?.initialCosts?.get(ResourceType.INFLUENCE) ?: 1
+            baseTurns = action?.turns ?: 1
             updateUI()
         }
 
@@ -101,7 +107,6 @@ class ConfirmAction : Control(), LogInterface {
         resetUI()
         renderHex(hexNode)
         titleLabel.text = "Play ${card.cardName} at ${hexNode.location?.name}?"
-        action = card.action
         action?.let { act ->
             actionCardDetails.updateCard(card)
             act.initialCosts.forEach { (resourceType, amount) ->
@@ -109,6 +114,7 @@ class ConfirmAction : Control(), LogInterface {
                 costsList.appendText(resourceType.bbCodeIcon(32))
                 costsList.appendText("$amount [b]${resourceType.displayName}[b]\n")
             }
+            costsList.appendText("${act.turns} turns\n")
             ResourceType.entries.forEach { resourceType ->
                 val cost = act.getCost(resourceType)
                 if (cost.second != null) {
@@ -185,7 +191,7 @@ class ConfirmAction : Control(), LogInterface {
 
                         val contiguous = if (building.sectorsMustBeContiguous) " contiguous" else ""
                         val s = if (building.sectors == 1) "" else "s"
-                        sectorCountLabel.appendText("  Requires ${building.sectors}${contiguous} sector$s")
+                        sectorCountLabel.appendText("  Requires ${building.sectors}${contiguous} sector$s\n")
                         if (buildingsList.text.isNotEmpty()) {
                             buildingHeading.text = "Once construction complete:"
                         } else {
@@ -208,11 +214,12 @@ class ConfirmAction : Control(), LogInterface {
      * Updates [placementStatus]
      * Emits [SignalBus.placeBuilding] if the left mouse button was clicked
      * Emits [SignalBus.clearBuilding] if the right mouse button was clicked
-     * Disables the confirm button if the building cannot be placed
+     * Disables the confirmation button if the building cannot be placed
      */
     @RegisterFunction
     fun placeBuilding(segmentId: Int, leftMouse: Boolean) {
         placementStatus = SectorPlacementStatus.NONE
+        overbuilding = false
         if (action != null) {
             action?.let {
                 if (it.type == ActionType.BUILD) {
@@ -235,6 +242,8 @@ class ConfirmAction : Control(), LogInterface {
                         } else {
                             // Just clear everything
                             building.status = BuildingStatus.NONE
+                            action?.turns = baseTurns
+                            action?.initialCosts[ResourceType.INFLUENCE] = baseInfCost
                             for (i in 0 until 6) {
                                 signalBus.clearBuilding.emit(i, location.name)
                                 placementSegments.clear()
@@ -262,6 +271,12 @@ class ConfirmAction : Control(), LogInterface {
                                             ResourceType.INFLUENCE.bbCodeIcon(32)
                                         } and take +1 turns to complete.[/color]"
                                     confirmButton.disabled = false
+                                    overbuilding = true
+                                    action?.let { act ->
+                                        act.initialCosts[ResourceType.INFLUENCE] =
+                                            act.initialCosts[ResourceType.INFLUENCE]?.plus(1) ?: 1
+                                        act.turns += 1
+                                    }
                                     // TODO: Store the sectors that will be demolished/overbuilt into demolitionSectorIds
 //                                    it.demolitionSectorIds
                                 }
@@ -279,6 +294,7 @@ class ConfirmAction : Control(), LogInterface {
                                 }
                             }
                         } else {
+                            // Right mouse is used to clear the placement. Reset values to default
                             placementStatus = SectorPlacementStatus.NONE
                             placementMessage.text = ""
                             confirmButton.disabled = true
@@ -290,8 +306,7 @@ class ConfirmAction : Control(), LogInterface {
     }
 
     /**
-     * Render a larger version of the given hexagon
-     * But I actually want to render its neighbours too
+     * Render a larger version of the given hexagon, and render the neighbours too.
      */
     private fun renderHex(hex: Hex) {
         log("renderHex: ${hex.location?.name}")
@@ -425,7 +440,6 @@ class ConfirmAction : Control(), LogInterface {
                 }
             }
         }
-
     }
 
     @RegisterFunction
