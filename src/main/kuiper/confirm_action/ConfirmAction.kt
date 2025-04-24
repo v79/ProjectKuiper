@@ -12,6 +12,7 @@ import godot.core.asStringName
 import godot.core.connect
 import godot.extension.getNodeAs
 import godot.extension.instantiateAs
+import godot.global.GD
 import hexgrid.Hex
 import hexgrid.HexMode
 import state.Building
@@ -220,87 +221,89 @@ class ConfirmAction : Control(), LogInterface {
     fun placeBuilding(segmentId: Int, leftMouse: Boolean) {
         placementStatus = SectorPlacementStatus.NONE
         overbuilding = false
-        if (action != null) {
-            action?.let {
-                if (it.type == ActionType.BUILD) {
-                    it.buildingToConstruct?.let { building ->
-                        val segmentCount = building.sectors
-                        var segmentToHighlight = segmentId
-                        val placementSegments = mutableListOf<Int>()
-                        if (leftMouse) {
-                            if (placementStatus == SectorPlacementStatus.NONE) {
-                                for (i in 0 until segmentCount) {
-                                    signalBus.placeBuilding.emit(segmentToHighlight, location.name)
-                                    placementSegments.add(segmentToHighlight)
-                                    segmentToHighlight++
-                                    if (segmentToHighlight == 6) {
-                                        segmentToHighlight = 0
-                                    }
+        action?.let {
+            if (it.type == ActionType.BUILD) {
+                it.buildingToConstruct?.let { building ->
+                    val segmentCount = building.sectors
+                    var segmentToHighlight = segmentId
+                    val placementSegments = mutableListOf<Int>()
+                    if (leftMouse) {
+                        if (placementStatus == SectorPlacementStatus.NONE) {
+                            for (i in 0 until segmentCount) {
+                                GD.print("Placing building and updating segment $segmentToHighlight")
+                                signalBus.placeBuilding.emit(segmentToHighlight, location.name)
+                                placementSegments.add(segmentToHighlight)
+                                segmentToHighlight++
+                                if (segmentToHighlight == 6) {
+                                    GD.print("Wrapped round to segment 0")
+                                    segmentToHighlight = 0
                                 }
-                            }
-                            it.sectorIds = placementSegments.toIntArray()
-                        } else {
-                            // Just clear everything
-                            building.status = BuildingStatus.NONE
-                            action?.turns = baseTurns
-                            action?.initialCosts[ResourceType.INFLUENCE] = baseInfCost
-                            for (i in 0 until 6) {
-                                signalBus.clearBuilding.emit(i, location.name)
-                                placementSegments.clear()
                             }
                         }
-                        // Now check if the building is valid
-                        if (leftMouse) {
-                            if (placementStatus == SectorPlacementStatus.NONE) {
-                                placementStatus = gameState.company.zones[0].checkBuildingPlacement(
-                                    hexNode.location!!,
-                                    building,
-                                    placementSegments.toList()
-                                )
-                            }
-                            when (placementStatus) {
-                                SectorPlacementStatus.OK, SectorPlacementStatus.NONE -> {
-                                    placementMessage.text = ""
-                                    confirmButton.disabled = false
-                                    building.status = BuildingStatus.PLACED
-                                }
-
-                                SectorPlacementStatus.BLOCKED -> {
-                                    placementMessage.text =
-                                        "[color=yellow]Building this here will require destroying existing buildings, which will cost an additional +1 ${
-                                            ResourceType.INFLUENCE.bbCodeIcon(32)
-                                        } and take +1 turns to complete.[/color]"
-                                    confirmButton.disabled = false
-                                    overbuilding = true
-                                    action?.let { act ->
-                                        act.initialCosts[ResourceType.INFLUENCE] =
-                                            act.initialCosts[ResourceType.INFLUENCE]?.plus(1) ?: 1
-                                        act.turns += 1
-                                    }
-                                    // TODO: Store the sectors that will be demolished/overbuilt into demolitionSectorIds
-//                                    it.demolitionSectorIds
-                                }
-
-                                SectorPlacementStatus.UNDER_CONSTRUCTION -> {
-                                    placementMessage.text =
-                                        "[color=red]Cannot place building here as there is another already under construction.[/color]"
-                                    confirmButton.disabled = true
-                                }
-
-                                SectorPlacementStatus.INVALID -> {
-                                    placementMessage.text =
-                                        "[color=red]Cannot place building here as it would require destroying the HQ.[/color]"
-                                    confirmButton.disabled = true
-                                }
-                            }
-                        } else {
-                            // Right mouse is used to clear the placement. Reset values to default
-                            placementStatus = SectorPlacementStatus.NONE
-                            placementMessage.text = ""
-                            confirmButton.disabled = true
+                        it.sectorIds = placementSegments.toIntArray()
+                    } else {
+                        // Just clear everything
+                        building.status = BuildingStatus.NONE
+                        action?.turns = baseTurns
+                        action?.initialCosts[ResourceType.INFLUENCE] = baseInfCost
+                        for (i in 0 until 6) {
+                            signalBus.clearBuilding.emit(i, location.name)
+                            placementSegments.clear()
                         }
                     }
+                    // Now check if the building is valid
+                    if (leftMouse) {
+                        if (placementStatus == SectorPlacementStatus.NONE) {
+                            placementStatus = gameState.company.zones[0].checkBuildingPlacement(
+                                hexNode.location!!,
+                                building,
+                                placementSegments.toList()
+                            )
+                        }
+                        when (placementStatus) {
+                            SectorPlacementStatus.OK, SectorPlacementStatus.NONE -> {
+                                placementMessage.text = ""
+                                confirmButton.disabled = false
+                                building.status = BuildingStatus.PLACED
+                            }
+
+                            SectorPlacementStatus.BLOCKED -> {
+                                placementMessage.text =
+                                    "[color=yellow]Building this here will require destroying existing buildings, which will cost an additional +1 ${
+                                        ResourceType.INFLUENCE.bbCodeIcon(32)
+                                    } and take +1 turns to complete.[/color]"
+                                confirmButton.disabled = false
+                                overbuilding = true
+                                action?.let { act ->
+                                    act.initialCosts[ResourceType.INFLUENCE] =
+                                        act.initialCosts[ResourceType.INFLUENCE]?.plus(1) ?: 1
+                                    act.turns += 1
+                                }
+                                // TODO: Store the sectors that will be demolished/overbuilt into demolitionSectorIds
+//                                    it.demolitionSectorIds
+                            }
+
+                            SectorPlacementStatus.UNDER_CONSTRUCTION -> {
+                                placementMessage.text =
+                                    "[color=red]Cannot place building here as there is another already under construction.[/color]"
+                                confirmButton.disabled = true
+                            }
+
+                            SectorPlacementStatus.INVALID -> {
+                                placementMessage.text =
+                                    "[color=red]Cannot place building here as it would require destroying the HQ.[/color]"
+                                confirmButton.disabled = true
+                            }
+                        }
+                    } else {
+                        // Right mouse is used to clear the placement. Reset values to default
+                        placementStatus = SectorPlacementStatus.NONE
+                        placementMessage.text = ""
+                        confirmButton.disabled = true
+                    }
                 }
+            } else {
+                logError("Tried to place a building but the action is not a build action: ${it.id}->${it.actionName}")
             }
         }
     }

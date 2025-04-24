@@ -148,7 +148,7 @@ class SectorSegment : Polygon2D(), LogInterface {
             }
 
             SectorStatus.DESTROYED -> {
-                color = Color.green
+                color = Color.darkGreen
             }
 
             SectorStatus.BUILT -> {
